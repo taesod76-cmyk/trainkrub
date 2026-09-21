@@ -265,6 +265,9 @@
   .quick-login-row .qc{font-size:11px;color:var(--text-faint);font-family:var(--font-mono);flex-shrink:0}
   .auth-switch{text-align:center;font-size:12px;color:var(--text-dim);margin-top:18px}
   .auth-switch a{color:var(--red);font-weight:600;cursor:pointer}
+  .auth-divider{display:flex;align-items:center;gap:12px;margin:18px 0 12px;color:var(--text-faint);font-size:12px}
+  .auth-divider::before,.auth-divider::after{content:'';height:1px;flex:1;background:var(--border)}
+  .auth-divider span{padding:0 4px}
   .auth-back{text-align:center;font-size:12px;color:var(--text-dim);margin-top:16px;display:block;cursor:pointer}
   .auth-error{background:var(--red-glow);color:#f0838f;font-size:12px;padding:10px 12px;border-radius:9px;margin-bottom:14px}
 
@@ -470,7 +473,7 @@ const i18n = {
     logout:'ออกจากระบบ',
 
     auth_login_heading:'เข้าสู่ระบบ', auth_as:'ระบบ', auth_phone_label:'เบอร์โทรศัพท์', auth_username_label:'ชื่อผู้ใช้', auth_password_label:'รหัสผ่าน',
-    auth_login_btn:'เข้าสู่ระบบ', auth_no_account:'ยังไม่มีบัญชี?', auth_register_link:'สมัครสมาชิกใหม่',
+    auth_login_btn:'เข้าสู่ระบบ', auth_new_user_note:'สำหรับลูกค้าและเทรนเนอร์ใหม่ ต้องสมัครสมาชิกก่อนจึงจะเข้าสู่ระบบได้', auth_no_account:'ยังไม่มีบัญชี?', auth_register_link:'สมัครสมาชิกใหม่',
     auth_no_trainer_account:'ยังไม่ได้เป็นเทรนเนอร์ในระบบ?', auth_apply_link:'สมัครเทรนเนอร์ใหม่',
     auth_register_heading:'สมัครสมาชิกลูกค้าใหม่', auth_name_label:'ชื่อ-นามสกุล', auth_register_btn:'สมัครสมาชิกและเข้าสู่ระบบ', auth_back_to_login:'กลับไปเข้าสู่ระบบ',
     auth_apply_heading:'สมัครเป็นเทรนเนอร์ใหม่', auth_apply_note:'เทรนเนอร์จะไม่ปรากฏในระบบทันที ต้องรอผู้ดูแลระบบตรวจสอบและอนุมัติก่อน จึงจะเข้าสู่ระบบด้วยรหัสผ่านที่ตั้งไว้ได้',
@@ -565,7 +568,7 @@ const i18n = {
     notif_done:'บันทึกเทรนเสร็จสิ้นกับ {who} — เหลือ {count} ครั้ง', notif_noshow:'{who} ไม่มาตามนัด — เหลือ {count} ครั้ง',
     notif_full:'แพ็กเกจใช้ครบแล้ว แจ้งเตือนให้ต่อแพ็กเกจ', notif_approved:'ใบสมัครเทรนเนอร์ของคุณได้รับการอนุมัติแล้ว ยินดีต้อนรับสู่ระบบ!', notif_app_rejected:'ใบสมัครเทรนเนอร์ของคุณถูกปฏิเสธ',
     notif_when_now:'เมื่อสักครู่',
-    quick_login_label:'เข้าสู่ระบบด่วน — แตะรายชื่อเพื่อกรอกและเข้าสู่ระบบทันที',
+    legacy_quick_login_label:'เข้าสู่ระบบด่วน — แตะรายชื่อเพื่อกรอกและเข้าสู่ระบบทันที',
     seed_note_admin:'สำหรับผู้ดูแลระบบที่ได้รับสิทธิ์เท่านั้น หากต้องการชื่อผู้ใช้และรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบโดยตรง',
     footer_note:'ข้อมูลทั้งหมดถูกเก็บไว้ในฐานข้อมูลกลางที่ใช้ร่วมกันทั้ง 3 ระบบ (Customer / Trainer / Admin) และซิงค์กันแบบเรียลไทม์'
   },
@@ -673,7 +676,7 @@ const i18n = {
     notif_done:'Session completed with {who} — {count} sessions left', notif_noshow:'{who} did not show up — {count} sessions left',
     notif_full:'Package fully used — remind the customer to renew', notif_approved:'Your trainer application was approved. Welcome!', notif_app_rejected:'Your trainer application was rejected',
     notif_when_now:'Just now',
-    quick_login_label:'Quick login — tap a name to auto-fill and sign in instantly',
+    legacy_quick_login_label:'Quick login — tap a name to auto-fill and sign in instantly',
     seed_note_admin:'Admin access is restricted. Contact your system administrator directly for the login credentials.',
     footer_note:'All data lives in one shared database used by all 3 systems (Customer / Trainer / Admin) and stays in sync in real time.'
   }
@@ -2138,6 +2141,10 @@ async function renderAuth(){
     if(authRole==='admin'){
       inner += `<div class="auth-hint">${t('seed_note_admin')}</div>`;
     } else {
+      inner += `<div class="auth-hint">${t('auth_new_user_note')}</div>`;
+    }
+    /* Customer and trainer accounts are never pre-created. They must register. */
+    if(false){
       const list = authRole==='trainer' ? await dbGetAll('trainer:') : await dbGetAll('customer:');
       list.sort((a,b)=> a.id.localeCompare(b.id));
       inner += `
@@ -2153,8 +2160,8 @@ async function renderAuth(){
         </div>
       `;
     }
-    if(authRole==='customer') inner += `<div class="auth-switch">${t('auth_no_account')} <a id="toRegister">${t('auth_register_link')}</a></div>`;
-    if(authRole==='trainer') inner += `<div class="auth-switch">${t('auth_no_trainer_account')} <a id="toApply">${t('auth_apply_link')}</a></div>`;
+    if(authRole==='customer') inner += `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-danger-outline btn-block" id="toRegister">👤+ ${t('auth_register_link')}</button>`;
+    if(authRole==='trainer') inner += `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-danger-outline btn-block" id="toApply">🏋+ ${t('auth_apply_link')}</button>`;
   } else if(authMode==='register'){
     inner += `
       <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">👤</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_register_heading')}</h2></div>
@@ -2476,6 +2483,10 @@ if('serviceWorker' in navigator && !window.frameElement){
 (async function boot(){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
   await seedIfNeeded();
+  await Promise.all(['t1','t2','t3','t4','t5'].map(id=>dbDelete('trainer:'+id)));
+  await Promise.all(['c1','c2','c3'].map(id=>dbDelete('customer:'+id)));
+  await dbDelete('trainerApp:app1');
+  await Promise.all(['cp1','cp2','cp3'].map(id=>dbDelete('custpkg:'+id)));
   await renderRoot();
 })();
 </script>
