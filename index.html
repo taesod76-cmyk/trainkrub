@@ -2144,7 +2144,7 @@ async function renderAuth(){
       inner += `<div class="auth-hint">${t('auth_new_user_note')}</div>`;
     }
     /* Customer and trainer accounts are never pre-created. They must register. */
-    if(false){
+    if(authRole==='trainer' || authRole==='customer'){
       const list = authRole==='trainer' ? await dbGetAll('trainer:') : await dbGetAll('customer:');
       list.sort((a,b)=> a.id.localeCompare(b.id));
       inner += `
@@ -2257,30 +2257,6 @@ async function doLogin(){
   const id = (document.getElementById('authId').value||'').trim();
   const pw = (document.getElementById('authPw').value||'').trim();
   if(!id || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
-
-  /* Demo credentials are intentionally kept as a fallback for the
-     trainer/customer quick-login buttons only, so a missing/empty storage
-     layer never incorrectly reports those valid demo logins as invalid.
-     Admin is deliberately NOT included here: its username and password are
-     private, live only in the admin:admin record, and must never be
-     hardcoded anywhere reachable from the client. */
-  const demoAccounts = {
-    trainer: {id:'0833333333', pw:'1234', role:'trainer', name:'โค้ชเต้', accountId:'t3'},
-    customer:{id:'0911111111', pw:'1234', role:'customer', name:'เป้', accountId:'c1'}
-  };
-  const demo = demoAccounts[authRole];
-  const normalizedId = id.replace(/\s+/g,'');
-  if(demo && normalizedId === demo.id && pw === demo.pw){
-    session = {
-      id: demo.accountId || 'admin',
-      role: demo.role,
-      name: demo.name
-    };
-    authError='';
-    route='dashboard';
-    renderRoot();
-    return;
-  }
 
   if(authRole==='admin'){
     const admin = await dbGet('admin:admin');
