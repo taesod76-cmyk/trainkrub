@@ -1080,8 +1080,11 @@ async function renderRoot(){
 }
 
 async function doLogout(){
-  if(supabaseClient){ try{ await supabaseClient.auth.signOut(); }catch(e){ console.warn('Supabase sign-out failed:',e); } }
+  if(supabaseClient){
+    try{ const { data } = await supabaseClient.auth.getSession(); if(data?.session) await supabaseClient.auth.signOut(); }catch(e){ console.warn('Supabase sign-out failed:',e); }
+  }
   session = null; route = 'dashboard'; routeParams = {};
+  clearRenderCaches();
   toast(t('auth_toast_logout'));
   renderRoot();
 }
@@ -2333,6 +2336,7 @@ async function finishGoogleSession(){
 }
 
 async function doLogin(){
+  clearRenderCaches();
   const id = (document.getElementById('authId').value||'').trim();
   const pw = (document.getElementById('authPw').value||'').trim();
   if(!id || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
@@ -2372,6 +2376,7 @@ async function doLogin(){
 }
 
 async function doRegister(){
+  clearRenderCaches();
   const name = (document.getElementById('regName').value||'').trim();
   const phone = (document.getElementById('regPhone').value||'').trim();
   const pw = (document.getElementById('regPw').value||'').trim();
