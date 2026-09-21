@@ -510,6 +510,8 @@ const i18n = {
     cp_expired_warn:'แพ็กเกจก่อนหน้าของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้งอยู่ กรุณาซื้อแพ็กเกจใหม่เพื่อจองต่อ',
     notif_h1:'การแจ้งเตือน', notif_eyebrow:'ล่าสุด', notif_p:'ทุกความเคลื่อนไหวเกี่ยวกับการจองของคุณ', notif_empty:'ยังไม่มีการแจ้งเตือน',
     prof_h1:'โปรไฟล์ของฉัน', prof_eyebrow:'บัญชีของฉัน', prof_p:'ข้อมูลบัญชีของคุณ', prof_name:'ชื่อ-นามสกุล', prof_phone:'เบอร์โทรศัพท์', prof_save:'บันทึกข้อมูล', prof_saved:'บันทึกข้อมูลแล้ว',
+    pw_title:'เปลี่ยนรหัสผ่าน', pw_current:'รหัสผ่านปัจจุบัน', pw_new:'รหัสผ่านใหม่', pw_confirm:'ยืนยันรหัสผ่านใหม่', pw_save:'บันทึกรหัสผ่าน', pw_fill:'กรุณากรอกข้อมูลให้ครบ', pw_current_wrong:'รหัสผ่านปัจจุบันไม่ถูกต้อง', pw_too_short:'รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร', pw_mismatch:'รหัสผ่านใหม่ไม่ตรงกัน', pw_changed:'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว',
+    google_login:'เข้าสู่ระบบด้วย Google', google_setup_needed:'การเข้าสู่ระบบด้วย Google ยังไม่ได้เปิดใช้งาน กรุณาตั้งค่า Supabase/Google ก่อน', google_failed:'ไม่สามารถเข้าสู่ระบบด้วย Google ได้ กรุณาลองใหม่', google_password_note:'บัญชีนี้เข้าสู่ระบบผ่าน Google การเปลี่ยนรหัสผ่านให้จัดการจากบัญชี Google ของคุณ',
 
     t_dash_h1:'สวัสดี, {name}', t_dash_p:'ภาพรวมงานของคุณวันนี้',
     tq_eyebrow:'รอดำเนินการ', tq_h1:'คำขอนัดหมาย', tq_p:'ตอบรับเพื่อยืนยันคิว ระบบจะตัดจำนวนครั้งของลูกค้าโดยอัตโนมัติหลังบันทึกว่าเทรนเสร็จสิ้น',
@@ -568,7 +570,7 @@ const i18n = {
     notif_done:'บันทึกเทรนเสร็จสิ้นกับ {who} — เหลือ {count} ครั้ง', notif_noshow:'{who} ไม่มาตามนัด — เหลือ {count} ครั้ง',
     notif_full:'แพ็กเกจใช้ครบแล้ว แจ้งเตือนให้ต่อแพ็กเกจ', notif_approved:'ใบสมัครเทรนเนอร์ของคุณได้รับการอนุมัติแล้ว ยินดีต้อนรับสู่ระบบ!', notif_app_rejected:'ใบสมัครเทรนเนอร์ของคุณถูกปฏิเสธ',
     notif_when_now:'เมื่อสักครู่',
-    legacy_quick_login_label:'เข้าสู่ระบบด่วน — แตะรายชื่อเพื่อกรอกและเข้าสู่ระบบทันที',
+    quick_login_use:'เข้าสู่ระบบด่วน — แตะรายชื่อเพื่อกรอกและเข้าสู่ระบบทันที',
     seed_note_admin:'สำหรับผู้ดูแลระบบที่ได้รับสิทธิ์เท่านั้น หากต้องการชื่อผู้ใช้และรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบโดยตรง',
     footer_note:'ข้อมูลทั้งหมดถูกเก็บไว้ในฐานข้อมูลกลางที่ใช้ร่วมกันทั้ง 3 ระบบ (Customer / Trainer / Admin) และซิงค์กันแบบเรียลไทม์'
   },
@@ -618,6 +620,8 @@ const i18n = {
     cp_expired_warn:'Your previous package has expired. Even with sessions remaining, please buy a new package to keep booking.',
     notif_h1:'Notifications', notif_eyebrow:'Recent', notif_p:'Everything about your bookings, in one place', notif_empty:'No notifications yet',
     prof_h1:'My profile', prof_eyebrow:'My account', prof_p:'Your account details', prof_name:'Full name', prof_phone:'Phone number', prof_save:'Save changes', prof_saved:'Profile saved',
+    pw_title:'Change password', pw_current:'Current password', pw_new:'New password', pw_confirm:'Confirm new password', pw_save:'Save password', pw_fill:'Please complete all fields', pw_current_wrong:'Current password is incorrect', pw_too_short:'New password must be at least 6 characters', pw_mismatch:'New passwords do not match', pw_changed:'Password changed successfully',
+    google_login:'Continue with Google', google_setup_needed:'Google sign-in is not enabled yet. Please configure Supabase/Google first.', google_failed:'Google sign-in failed. Please try again.', google_password_note:'This account signs in with Google. Manage its password from your Google account.',
 
     t_dash_h1:'Hi, {name}', t_dash_p:"Here's your overview for today",
     tq_eyebrow:'Action needed', tq_h1:'Booking requests', tq_p:'Accept to confirm the slot. Sessions are deducted automatically once you log the session as complete.',
@@ -676,7 +680,7 @@ const i18n = {
     notif_done:'Session completed with {who} — {count} sessions left', notif_noshow:'{who} did not show up — {count} sessions left',
     notif_full:'Package fully used — remind the customer to renew', notif_approved:'Your trainer application was approved. Welcome!', notif_app_rejected:'Your trainer application was rejected',
     notif_when_now:'Just now',
-    legacy_quick_login_label:'Quick login — tap a name to auto-fill and sign in instantly',
+    quick_login_use:'Quick login — tap a name to auto-fill and sign in instantly',
     seed_note_admin:'Admin access is restricted. Contact your system administrator directly for the login credentials.',
     footer_note:'All data lives in one shared database used by all 3 systems (Customer / Trainer / Admin) and stays in sync in real time.'
   }
@@ -1075,7 +1079,8 @@ async function renderRoot(){
   await renderView();
 }
 
-function doLogout(){
+async function doLogout(){
+  if(supabaseClient){ try{ await supabaseClient.auth.signOut(); }catch(e){ console.warn('Supabase sign-out failed:',e); } }
   session = null; route = 'dashboard'; routeParams = {};
   toast(t('auth_toast_logout'));
   renderRoot();
@@ -1576,6 +1581,23 @@ async function propagateNameChange(role, id, newName){
   }
 }
 
+async function changeOwnPassword(role){
+  const key = role==='trainer' ? 'trainer:'+session.id : 'customer:'+session.id;
+  const rec = await dbGet(key);
+  if(!rec) return;
+  const current = (document.getElementById(role==='trainer'?'trPwCurrent':'cPwCurrent')?.value||'').trim();
+  const next = (document.getElementById(role==='trainer'?'trPwNew':'cPwNew')?.value||'').trim();
+  const confirm = (document.getElementById(role==='trainer'?'trPwConfirm':'cPwConfirm')?.value||'').trim();
+  if(!current || !next || !confirm){ toast(t('pw_fill')); return; }
+  if(rec.password !== current){ toast(t('pw_current_wrong')); return; }
+  if(next.length < 6){ toast(t('pw_too_short')); return; }
+  if(next !== confirm){ toast(t('pw_mismatch')); return; }
+  rec.password = next;
+  await dbSet(key, rec);
+  toast(t('pw_changed'));
+  renderRoot();
+}
+
 async function renderCProfile(){
   const c = await dbGet('customer:'+session.id);
   return `
@@ -1585,6 +1607,13 @@ async function renderCProfile(){
       <div class="field"><label>${t('prof_phone')}</label><input type="text" id="cProfPhone" value="${esc(c.phone)}"></div>
       <button class="btn btn-primary btn-block" id="cProfSave">${t('prof_save')}</button>
     </div>
+    ${c.authProvider==='google' ? `<div class="card" style="max-width:480px;margin-top:16px"><div class="card-head"><h3>🔐 ${t('pw_title')}</h3></div><div class="auth-hint">${t('google_password_note')}</div></div>` : `<div class="card" style="max-width:480px;margin-top:16px">
+      <div class="card-head"><h3>${t('pw_title')}</h3></div>
+      <div class="field"><label>${t('pw_current')}</label><input type="password" id="cPwCurrent" autocomplete="current-password"></div>
+      <div class="field"><label>${t('pw_new')}</label><input type="password" id="cPwNew" autocomplete="new-password"></div>
+      <div class="field"><label>${t('pw_confirm')}</label><input type="password" id="cPwConfirm" autocomplete="new-password"></div>
+      <button class="btn btn-block" id="cPwSave">${t('pw_save')}</button>
+    </div>`}
   `;
 }
 async function saveCProfile(){
@@ -1872,6 +1901,13 @@ async function renderTProfile(){
         </div>
         <button class="btn btn-primary btn-block" id="pfSaveBtn">${t('tpz_save_btn')}</button>
       </div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-head"><h3>${t('pw_title')}</h3></div>
+        <div class="field"><label>${t('pw_current')}</label><input type="password" id="trPwCurrent" autocomplete="current-password"></div>
+        <div class="field"><label>${t('pw_new')}</label><input type="password" id="trPwNew" autocomplete="new-password"></div>
+        <div class="field"><label>${t('pw_confirm')}</label><input type="password" id="trPwConfirm" autocomplete="new-password"></div>
+        <button class="btn btn-block" id="trPwSave">${t('pw_save')}</button>
+      </div>
       <div class="card" id="certsCard">${certsCardInner(tr)}</div>
     </div>
   `;
@@ -2137,6 +2173,7 @@ async function renderAuth(){
       <div class="field"><label>${idLabel}</label><input type="text" id="authId" placeholder="${idPh}"></div>
       <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="authPw"></div>
       <button class="btn btn-primary btn-block" id="loginBtn">${t('auth_login_btn')}</button>
+      ${authRole==='customer' ? `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-block" id="googleLoginBtn" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#222;border:1px solid #ddd">G&nbsp; ${t('google_login')}</button>` : ''}
     `;
     if(authRole==='admin'){
       inner += `<div class="auth-hint">${t('seed_note_admin')}</div>`;
@@ -2151,10 +2188,10 @@ async function renderAuth(){
         <div class="quick-login-label">${t('quick_login_label')}</div>
         <div class="quick-login-list">
           ${list.map(u=>`
-            <button type="button" class="quick-login-row" data-qid="${esc(u.username||u.phone)}" data-qpw="${esc(u.password)}">
+            <button type="button" class="quick-login-row" data-qid="${esc(u.username||u.phone)}">
               <span class="avatar" style="width:28px;height:28px;font-size:11px">${esc((u.name||'').replace('โค้ช','').charAt(0))}</span>
               <span class="qn">${esc(u.name)}</span>
-              <span class="qc">${esc(u.username||u.phone)} / ${esc(u.password)}</span>
+              <span class="qc">${esc(u.username||u.phone)} · ${t('quick_login_use')}</span>
             </button>
           `).join('')}
         </div>
@@ -2221,10 +2258,16 @@ async function renderAuth(){
   const back1 = document.getElementById('backToLogin'); if(back1) back1.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
-  document.querySelectorAll('.quick-login-row').forEach(row=>row.addEventListener('click', ()=>{
+  const googleLoginBtn = document.getElementById('googleLoginBtn'); if(googleLoginBtn) googleLoginBtn.addEventListener('click', signInWithGoogle);
+  document.querySelectorAll('.quick-login-row').forEach(row=>row.addEventListener('click', async ()=>{
     const idEl = document.getElementById('authId'), pwEl = document.getElementById('authPw');
-    if(idEl) idEl.value = row.dataset.qid;
-    if(pwEl) pwEl.value = row.dataset.qpw;
+    const qid = row.dataset.qid || '';
+    const prefix = authRole==='trainer' ? 'trainer:' : 'customer:';
+    const list = await dbGetAll(prefix);
+    const account = list.find(u=> (u.username||u.phone)===qid || u.phone===qid);
+    if(!account){ authError=t('auth_toast_wrong'); renderAuth(); return; }
+    if(idEl) idEl.value = account.username || account.phone || '';
+    if(pwEl) pwEl.value = account.password || '';
     doLogin();
   }));
   const regBtn = document.getElementById('registerBtn'); if(regBtn) regBtn.addEventListener('click', doRegister);
@@ -2251,6 +2294,42 @@ async function renderAuth(){
     const listEl = document.getElementById('apCertList');
     if(listEl) listEl.innerHTML = pendingApplicationCerts.map(c=>`<span class="cert-badge" style="margin-right:6px">${esc(c.name)}</span>`).join('');
   });
+}
+
+async function signInWithGoogle(){
+  if(!supabaseClient){ toast(t('google_setup_needed')); return; }
+  try{
+    const redirectTo = window.location.origin + window.location.pathname;
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider:'google',
+      options:{ redirectTo }
+    });
+    if(error) throw error;
+  }catch(e){
+    console.warn('Google sign-in failed:', e);
+    toast(t('google_failed'));
+  }
+}
+
+async function finishGoogleSession(){
+  if(!supabaseClient) return false;
+  try{
+    const { data, error } = await supabaseClient.auth.getSession();
+    if(error || !data?.session?.user) return false;
+    const u = data.session.user;
+    const email = u.email || '';
+    const displayName = u.user_metadata?.full_name || u.user_metadata?.name || email.split('@')[0] || 'Google User';
+    const avatar = u.user_metadata?.avatar_url || '';
+    const existingCustomer = (await dbGetAll('customer:')).find(x=>x.googleId===u.id || (email && x.email===email));
+    if(existingCustomer){
+      session={id:existingCustomer.id,role:'customer',name:existingCustomer.name};
+      authError=''; route='dashboard'; renderRoot(); return true;
+    }
+    const c={id:newId('c'),username:'google:'+u.id,password:'',name:displayName,phone:'',email,googleId:u.id,avatar,status:'active',role:'customer',authProvider:'google'};
+    await dbSet('customer:'+c.id,c);
+    session={id:c.id,role:'customer',name:c.name};
+    toast(t('auth_toast_registered')); authError=''; route='dashboard'; renderRoot(); return true;
+  }catch(e){ console.warn('Google session handling failed:',e); return false; }
 }
 
 async function doLogin(){
@@ -2297,6 +2376,7 @@ async function doRegister(){
   const phone = (document.getElementById('regPhone').value||'').trim();
   const pw = (document.getElementById('regPw').value||'').trim();
   if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+  if(pw.length < 6){ authError = t('pw_too_short'); renderAuth(); return; }
   const customers = await dbGetAll('customer:');
   if(customers.some(x=>x.phone===phone || x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
   const c = {id:newId('c'), username:phone, password:pw, name, phone, status:'active', role:'customer'};
@@ -2314,6 +2394,7 @@ async function doApply(){
   const pw = (document.getElementById('apPw').value||'').trim();
   const bio = (document.getElementById('apBio').value||'').trim();
   if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+  if(pw.length < 6){ authError = t('pw_too_short'); renderAuth(); return; }
   const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
   if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
   const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:pendingApplicationCerts, submittedAt:new Date().toISOString(), status:'pending'};
@@ -2349,6 +2430,8 @@ function wireView(){
   document.querySelectorAll('[data-buy-pkg]').forEach(el=>el.addEventListener('click', ()=> buyPackage(el.dataset.buyPkg)));
 
   const cProfSave = document.getElementById('cProfSave'); if(cProfSave) cProfSave.addEventListener('click', saveCProfile);
+  const cPwSave = document.getElementById('cPwSave'); if(cPwSave) cPwSave.addEventListener('click', ()=>changeOwnPassword('customer'));
+  const trPwSave = document.getElementById('trPwSave'); if(trPwSave) trPwSave.addEventListener('click', ()=>changeOwnPassword('trainer'));
 
   document.querySelectorAll('[data-accept-booking]').forEach(el=>el.addEventListener('click', ()=> respondBooking(el.dataset.acceptBooking, true)));
   document.querySelectorAll('[data-accept-duo]').forEach(el=>el.addEventListener('click', ()=> acceptDuo(el.dataset.acceptDuo)));
@@ -2458,6 +2541,7 @@ if('serviceWorker' in navigator && !window.frameElement){
 /* ---------------- boot ---------------- */
 (async function boot(){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
+  if(await finishGoogleSession()) return;
   await seedIfNeeded();
   await Promise.all(['t1','t2','t3','t4','t5'].map(id=>dbDelete('trainer:'+id)));
   await Promise.all(['c1','c2','c3'].map(id=>dbDelete('customer:'+id)));
