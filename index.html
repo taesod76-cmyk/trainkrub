@@ -1,0 +1,2483 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เทรนครับ (TRAINKRUB)</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0c0a0a">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+<link rel="shortcut icon" href="icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="เทรนครับ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0a0a;--surface:#161212;--surface-2:#1f1919;--surface-3:#2a2222;
+    --line:rgba(245,238,232,0.09);--line-strong:rgba(245,238,232,0.16);
+    --red:#e0293f;--red-dim:#7d1a23;--red-glow:rgba(224,41,63,0.18);
+    --text:#f5efe9;--text-dim:#9c9291;--text-faint:#5f5654;
+    --font-display:'Anton', sans-serif;--font-body:'Work Sans', sans-serif;--font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{width:100%;overflow-x:hidden}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased;min-height:100vh;width:100%;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font-family:var(--font-body);cursor:pointer}
+  ::selection{background:var(--red);color:#fff}
+  button,.day-pill,.time-slot,.nav button,.role-tab button,.cat-pill{transition:transform .12s ease,background .15s ease,color .15s ease,border-color .15s ease}
+  button:active,.day-pill:active,.time-slot:active,.nav button:active,.role-tab button:active,.cat-pill:active{transform:scale(0.94)}
+
+  .shell{max-width:1180px;margin:0 auto;padding:0 24px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--line);gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+  .brand-mark{width:46px;height:46px;border-radius:11px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;color:#0c0a0a;flex-shrink:0;object-fit:cover;border:1px solid var(--line-strong);box-shadow:0 6px 18px -4px rgba(224,41,63,0.5)}
+  .brand-text{line-height:1.15}
+  .name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .wordmark{background:var(--red);color:#fff;font-size:10px;font-weight:800;letter-spacing:1.2px;padding:3px 8px;border-radius:5px;text-transform:uppercase;font-family:var(--font-body);box-shadow:0 3px 10px -2px rgba(224,41,63,0.6)}
+  .brand-text .name{font-family:var(--font-display);font-size:20px;letter-spacing:0.4px}
+  .brand-text .sub{font-size:11px;color:var(--text-faint);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+
+  .top-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .lang-toggle{display:flex;border:1px solid var(--line-strong);border-radius:99px;padding:3px;gap:2px}
+  .lang-toggle button{border:none;background:transparent;color:var(--text-dim);font-size:11px;font-weight:700;padding:7px 12px;border-radius:99px;letter-spacing:0.5px}
+  .lang-toggle button.active{background:var(--surface-3);color:var(--text)}
+
+  .user-chip{display:none;align-items:center;gap:8px;font-size:12px;color:var(--text-dim);border:1px solid var(--line-strong);border-radius:99px;padding:6px 8px 6px 14px}
+  .user-chip.show{display:inline-flex}
+  .user-chip b{color:var(--text);font-weight:600}
+  .user-chip .role-pill{background:var(--red-glow);color:var(--red);font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:0.4px}
+  .user-chip button{border:none;background:var(--surface-2);color:var(--text-dim);font-size:11px;font-weight:600;padding:6px 11px;border-radius:99px}
+  .user-chip button:hover{color:var(--text);background:var(--surface-3)}
+
+  .nav{display:flex;gap:4px;padding:14px 0;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+  .nav::-webkit-scrollbar{display:none;height:0}
+  .nav button{border:none;background:transparent;color:var(--text-dim);font-size:13px;font-weight:500;padding:9px 16px;border-radius:8px;white-space:nowrap;position:relative}
+  .nav button:hover{color:var(--text);background:var(--surface-2)}
+  .nav button.active{color:var(--text);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line-strong)}
+  .nav .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--text-faint);margin-right:8px;vertical-align:middle}
+  .nav button.active .dot{background:var(--red)}
+  .nav .count{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;margin-left:7px;border-radius:99px;background:var(--red);color:#fff;font-size:10px;font-weight:700}
+
+  .view{padding:36px 0 64px}
+  .anim-in{animation:fadeSlide .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .page-head{margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+  .page-head .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:8px}
+  .page-head h1{font-family:var(--font-display);font-size:32px;font-weight:400;letter-spacing:0.3px}
+  .page-head p{color:var(--text-dim);font-size:14px;margin-top:6px;max-width:560px}
+
+  .grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+  /* Grid/flex children default to min-width:auto, which lets an item with a
+     wide intrinsic minimum (a <select> sizes itself to its longest option,
+     a long unbroken string, a table) push the whole track past the viewport.
+     Pinning them to 0 lets the track actually shrink on small screens. */
+  .grid-2>*,.grid-3>*,.grid-4>*{min-width:0}
+  .card{min-width:0}
+  select,input[type=text],input[type=password],input[type=number],input[type=date],textarea{min-width:0;max-width:100%}
+  select{text-overflow:ellipsis}
+  @media(min-width:821px){.c-dash-pkg{order:2}.c-dash-main{order:1}}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:980px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:820px){.grid-2,.grid-3{grid-template-columns:1fr}}
+  @media(max-width:520px){.grid-4{grid-template-columns:1fr}}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px}
+  .card:last-child{margin-bottom:0}
+  .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap}
+  .card-head h3{font-size:15px;font-weight:600}
+  .card-head .hint{font-size:12px;color:var(--text-faint)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:9px;padding:12px 20px;font-size:13px;font-weight:600;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);letter-spacing:0.2px}
+  .btn:hover{background:var(--surface-3);border-color:var(--text-faint)}
+  .btn:disabled{opacity:0.4;pointer-events:none}
+  .btn-primary{background:var(--red);border-color:var(--red);color:#fff}
+  .btn-primary:hover{background:#f13650;border-color:#f13650}
+  .btn-ghost{background:transparent;border-color:transparent;color:var(--text-dim)}
+  .btn-danger-outline{background:transparent;border-color:var(--red-dim);color:#f0838f}
+  .btn-danger-outline:hover{background:rgba(224,41,63,0.1)}
+  .btn-sm{padding:8px 14px;font-size:12px}
+  .btn-block{width:100%}
+
+  label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:6px;font-weight:500}
+  input[type=text],input[type=password],input[type=number],input[type=date],select,textarea{width:100%;background:var(--surface-2);border:1px solid var(--line-strong);color:var(--text);border-radius:9px;padding:12px 14px;font-size:14px;font-family:var(--font-body);outline:none;resize:vertical}
+  input:focus,textarea:focus,select:focus{border-color:var(--red)}
+  .field{margin-bottom:16px}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:600px){.field-row{grid-template-columns:1fr}}
+
+  .search-row{display:flex;gap:10px;margin-bottom:18px}
+  .trainer-row{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--surface-2);flex-wrap:wrap}
+  .trainer-row.pinned{border-color:var(--red-dim);background:rgba(224,41,63,0.06)}
+  .avatar{width:44px;height:44px;border-radius:50%;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--red);flex-shrink:0;border:1px solid var(--line-strong)}
+  .trainer-row .meta{flex:1;min-width:140px}
+  .trainer-row .meta .n{font-weight:600;font-size:14px}
+  .trainer-row .meta .s{font-size:12px;color:var(--text-faint)}
+  .trainer-row .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .pin-btn{background:transparent;border:1px solid var(--line-strong);color:var(--text-faint);border-radius:9px;width:40px;height:40px;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1}
+  .pin-btn:hover{border-color:var(--text-dim);color:var(--text-dim)}
+  .pin-btn.pinned{background:var(--red-glow);border-color:var(--red);color:var(--red)}
+  .badge-pinned{background:var(--red-glow);color:var(--red)}
+
+  .cat-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+  .cat-pill{flex:1 1 140px;text-align:center;padding:12px 8px;border-radius:10px;border:1px solid var(--line-strong);font-size:12px;font-weight:600;background:transparent;color:var(--text-dim);line-height:1.4}
+  .cat-pill.sel{background:var(--red);border-color:var(--red);color:#fff}
+
+  .day-strip{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px}
+  .day-pill{flex-shrink:0;width:64px;text-align:center;padding:10px 0;border-radius:10px;border:1px solid var(--line-strong)}
+  .day-pill .d{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px}
+  .day-pill .n{font-family:var(--font-mono);font-size:14px;font-weight:600;margin-top:3px}
+  .day-pill.sel{background:var(--red);border-color:var(--red)}
+  .day-pill.sel .d,.day-pill.sel .n{color:#fff}
+
+  .time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+  @media(max-width:480px){.time-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:360px){.time-grid{grid-template-columns:repeat(2,1fr)}}
+  .time-slot{padding:11px 0;text-align:center;border-radius:9px;border:1px solid var(--line-strong);font-size:13px;font-family:var(--font-mono);position:relative}
+  .time-slot.sel{background:var(--red);border-color:var(--red);color:#fff}
+  .time-slot.taken{opacity:0.3;pointer-events:none;text-decoration:line-through}
+  /* one customer has already requested this slot — still bookable, and the
+     trainer decides afterwards whether to run it as a pair session */
+  .time-slot.duo-open{border-color:#f0ab3c;color:#f0ab3c}
+  .time-slot.duo-open.sel{background:var(--red);border-color:var(--red);color:#fff}
+  .time-slot.duo-open::after{content:'';position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:#f0ab3c}
+  .time-slot.duo-open.sel::after{background:#fff}
+  .slot-hint{font-size:11px;color:var(--text-faint);line-height:1.6;margin:-4px 0 12px}
+  /* full explanation shown once an amber (pair-open) slot is actually picked */
+  .duo-notice{display:flex;gap:12px;align-items:flex-start;border:1px solid #f0ab3c;border-radius:12px;padding:14px;margin:0 0 14px;background:rgba(240,171,60,0.07)}
+  .duo-notice .dn-icon{font-size:20px;line-height:1.2;flex-shrink:0}
+  .duo-notice .dn-title{font-size:13px;font-weight:700;color:#f0ab3c;margin-bottom:4px}
+  .duo-notice p{font-size:12px;color:var(--text-dim);line-height:1.65}
+  .btn-duo{background:#f0ab3c;border-color:#f0ab3c;color:#2a1c05}
+  .btn-duo:hover{background:#f7bd5c;border-color:#f7bd5c}
+  .badge-duo{background:rgba(240,171,60,0.14);color:#f0ab3c}
+  .duo-group{border:1px solid #f0ab3c;border-radius:12px;padding:16px;margin-bottom:12px;background:rgba(240,171,60,0.05)}
+  .duo-group .duo-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .duo-group .duo-head .n{font-weight:600;font-size:14px}
+  .duo-group .duo-head .t{font-size:12px;color:var(--text-faint);margin-top:2px;font-family:var(--font-mono)}
+  .duo-group .duo-hint{font-size:11px;color:var(--text-faint);line-height:1.6;margin-bottom:12px}
+  .duo-person{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);margin-bottom:8px}
+  .duo-person .pn{font-size:13px;font-weight:600}
+  .duo-person .acts{display:flex;gap:6px;flex-wrap:wrap}
+
+  .summary-row{display:flex;justify-content:space-between;padding:9px 0;font-size:13px;border-bottom:1px solid var(--line)}
+  .summary-row:last-child{border-bottom:none}
+  .summary-row .k{color:var(--text-dim)}
+  .summary-row .v{font-weight:600;font-family:var(--font-mono)}
+
+  .ring-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0 4px}
+  .ring{position:relative;width:168px;height:168px}
+  .ring svg{transform:rotate(-90deg)}
+  .ring circle{transition:stroke-dashoffset .5s ease}
+  .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring-label .num{font-family:var(--font-display);font-size:40px;line-height:1}
+  .ring-label .of{font-size:11px;color:var(--text-faint);margin-top:4px;letter-spacing:0.5px}
+
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;letter-spacing:0.2px;white-space:nowrap}
+  .badge-pending{background:rgba(240,171,60,0.14);color:#f0ab3c}
+  .badge-confirmed{background:rgba(60,150,240,0.14);color:#5aa9f0}
+  .badge-done{background:rgba(60,200,120,0.14);color:#4fd68a}
+  .badge-noshow{background:var(--red-glow);color:#f0838f}
+  .badge-rejected{background:var(--red-glow);color:#f0838f}
+  .badge-cancelled{background:var(--surface-3);color:var(--text-faint)}
+  .badge-active{background:rgba(60,200,120,0.14);color:#4fd68a}
+  .badge-suspended{background:var(--red-glow);color:#f0838f}
+  .badge-role{background:var(--surface-3);color:var(--text-dim)}
+
+  .req-card{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--surface-2)}
+  .req-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+  .req-top .n{font-weight:600;font-size:14px}
+  .req-top .t{font-size:12px;color:var(--text-faint);margin-top:2px}
+  .req-actions{display:flex;gap:8px}
+  .req-actions .btn{flex:1;padding:9px 0;font-size:12px}
+
+  .sched-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .sched-row:last-child{border-bottom:none}
+  .sched-row .time{font-family:var(--font-mono);font-size:13px;color:var(--text-dim);width:52px;flex-shrink:0}
+  .sched-row .who{flex:1;font-size:13px;font-weight:500;min-width:120px}
+  .sched-row .acts{display:flex;gap:8px}
+
+  .notif-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .notif-item:last-child{border-bottom:none}
+  .notif-item.unread{background:rgba(224,41,63,0.04)}
+  .notif-ico{width:34px;height:34px;border-radius:9px;background:var(--red-glow);color:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:700}
+  .notif-item .body{font-size:13px;line-height:1.5;flex:1}
+  .notif-item .body .ttl{font-weight:600;margin-bottom:2px}
+  .notif-item .when{font-size:11px;color:var(--text-faint);margin-top:2px}
+
+  .empty{text-align:center;padding:40px 10px;color:var(--text-faint);font-size:13px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface-3);border:1px solid var(--line-strong);color:var(--text);padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;z-index:50;max-width:90vw}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .dot{width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;margin-right:9px}
+
+  .stat-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .stat-card .lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px}
+  .stat-card .val{font-family:var(--font-display);font-size:30px;margin-top:8px}
+  .stat-card .val.accent{color:var(--red)}
+
+  .cert-chip{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);margin-bottom:8px}
+  .cert-chip .ic{width:30px;height:30px;border-radius:8px;background:var(--red-glow);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  .cert-chip .info{flex:1;min-width:0}
+  .cert-chip .info .n{font-size:13px;font-weight:600}
+  .cert-chip .info .s{font-size:11px;color:var(--text-faint)}
+  .cert-badge-row{display:flex;flex-wrap:wrap;gap:8px}
+  .cert-badge{font-size:11px;padding:6px 12px;border-radius:99px;background:var(--surface-3);border:1px solid var(--line-strong);color:var(--text-dim)}
+
+  .table{width:100%;border-collapse:collapse}
+  .table th{text-align:left;font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.6px;padding:0 10px 10px;border-bottom:1px solid var(--line)}
+  .table td{padding:12px 10px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .table tr:last-child td{border-bottom:none}
+  .table input,.table select{padding:8px 10px;font-size:12px}
+  .table-wrap{overflow-x:auto}
+
+  .profile-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+  .profile-header .avatar{width:60px;height:60px;font-size:20px}
+  .profile-header .n{font-family:var(--font-display);font-size:20px}
+  .profile-header .s{font-size:12px;color:var(--text-faint)}
+  .back-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim);margin-bottom:14px;cursor:pointer}
+  .back-link:hover{color:var(--text)}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+  .modal-overlay.show{display:flex}
+  .modal-box{background:var(--surface);border:1px solid var(--line-strong);border-radius:18px;padding:42px 32px;text-align:center;max-width:380px;width:100%;animation:popIn .3s ease}
+  @keyframes popIn{from{opacity:0;transform:scale(.9) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+  .modal-icon{width:64px;height:64px;border-radius:50%;background:var(--red-glow);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px;animation:pulse 1.5s ease-in-out infinite}
+  .modal-box h2{font-family:var(--font-display);font-size:26px;margin-bottom:10px;letter-spacing:.3px}
+  .modal-box p{color:var(--text-dim);font-size:14px;margin-bottom:24px;line-height:1.6}
+
+  .auth-wrap{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:30px 10px}
+  .auth-box{max-width:420px;width:100%;animation:fadeSlide .3s ease}
+  .auth-mark{width:52px;height:52px;border-radius:13px;background:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:22px}
+  .auth-hint{font-size:11px;color:var(--text-faint);text-align:center;margin-top:14px;line-height:1.6;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+  .quick-login-label{font-size:11px;color:var(--text-faint);text-align:center;margin-top:18px;margin-bottom:10px;letter-spacing:0.3px}
+  .quick-login-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto}
+  .quick-login-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);color:var(--text);font-family:var(--font-body)}
+  .quick-login-row:hover{background:var(--surface-3);border-color:var(--red-dim)}
+  .quick-login-row .qn{font-size:13px;font-weight:600;flex:1;min-width:0}
+  .quick-login-row .qc{font-size:11px;color:var(--text-faint);font-family:var(--font-mono);flex-shrink:0}
+  .auth-switch{text-align:center;font-size:12px;color:var(--text-dim);margin-top:18px}
+  .auth-switch a{color:var(--red);font-weight:600;cursor:pointer}
+  .auth-back{text-align:center;font-size:12px;color:var(--text-dim);margin-top:16px;display:block;cursor:pointer}
+  .auth-error{background:var(--red-glow);color:#f0838f;font-size:12px;padding:10px 12px;border-radius:9px;margin-bottom:14px}
+
+  .role-tab{display:flex;border:1px solid var(--line-strong);border-radius:99px;padding:3px;gap:2px;margin:0 auto 24px;width:fit-content}
+  .icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);display:flex;align-items:center;justify-content:center;position:relative;font-size:14px;font-weight:600;flex-shrink:0;padding:0}
+  .icon-btn:hover{background:var(--surface-3)}
+  .icon-btn .badge-dot{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
+  .role-tab button{border:none;background:transparent;color:var(--text-dim);font-size:12px;font-weight:600;padding:8px 16px;border-radius:99px;letter-spacing:0.3px;white-space:nowrap}
+  .role-tab button.active{background:var(--red);color:#fff}
+
+  .loading-shell{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:13px}
+  .pkg-buy-row{display:flex;align-items:center;justify-content:space-between;padding:14px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--surface-2);flex-wrap:wrap;gap:10px}
+  .pkg-buy-row .info .n{font-weight:600;font-size:14px}
+  .pkg-buy-row .info .s{font-size:12px;color:var(--text-faint);margin-top:2px}
+  .footer-note{font-size:11px;color:var(--text-faint);text-align:center;margin-top:30px;line-height:1.7}
+
+  /* ---------------- responsive refinements ----------------
+     Desktop keeps the layout above as-is (max-width:1180px shell).
+     These queries progressively tighten spacing, type scale and
+     touch targets down through tablet and phone widths so every
+     view — auth, dashboards, booking, tables, modal — stays usable
+     with one hand on a small screen. */
+  @media(max-width:1024px){
+    .shell{padding:0 18px}
+  }
+  @media(max-width:820px){
+    .view{padding:28px 0 56px}
+    .page-head h1{font-size:28px}
+    .ring{width:148px;height:148px}
+    .ring-label .num{font-size:34px}
+  }
+  @media(max-width:600px){
+    .shell{padding:0 16px}
+    .user-chip .role-pill{display:none}
+    .topbar{padding:16px 0;gap:10px}
+    .brand-mark{width:38px;height:38px;font-size:18px;border-radius:9px}
+    .brand-text .name{font-size:16px}
+    .wordmark{font-size:9px;padding:2px 6px}
+    .top-controls{gap:8px}
+    .nav{padding:12px 0}
+    .nav button{padding:8px 12px;font-size:12.5px}
+    .view{padding:22px 0 48px}
+    .page-head{margin-bottom:20px}
+    .page-head .eyebrow{font-size:10px}
+    .page-head h1{font-size:24px}
+    .page-head p{font-size:13px}
+    .card{padding:16px;border-radius:12px;margin-bottom:14px}
+    .card-head h3{font-size:14px}
+    .stat-card{padding:14px}
+    .stat-card .val{font-size:24px}
+    .modal-box{padding:30px 20px;border-radius:14px}
+    .modal-icon{width:54px;height:54px;font-size:24px}
+    .modal-box h2{font-size:21px}
+    .auth-wrap{padding:16px 6px;min-height:unset}
+    .auth-mark{width:46px;height:46px;font-size:19px}
+    .profile-header .avatar{width:50px;height:50px;font-size:17px}
+    .day-pill{width:56px}
+    .table th,.table td{padding:10px 8px;font-size:12.5px}
+    .btn{padding:11px 16px}
+  }
+  @media(max-width:380px){
+    .shell{padding:0 12px}
+    .page-head h1{font-size:21px}
+    .lang-toggle button{padding:6px 9px;font-size:10px}
+    .icon-btn{width:36px;height:36px;font-size:13px}
+    .user-chip{padding:5px 6px 5px 11px;font-size:11px}
+    .cat-pill{flex-basis:100%}
+    .day-pill{width:52px}
+  }
+  /* every direct tap target keeps a comfortable minimum hit area
+     on touch devices, regardless of viewport width */
+  @media(hover:none) and (pointer:coarse){
+    .btn,.nav button,.day-pill,.time-slot,.cat-pill,.role-tab button,.lang-toggle button{min-height:40px}
+    .icon-btn{width:40px;height:40px}
+  }
+
+  /* ---------------- phone/tablet tap targets & table reflow ----------------
+     Width-based (not pointer-based) so the sizes hold on touch laptops and
+     in any browser that doesn't report a coarse pointer. */
+  @media(max-width:768px){
+    .btn,.nav button,.day-pill,.time-slot,.cat-pill,.role-tab button{min-height:42px}
+    .user-chip button{min-height:38px;padding:9px 14px}
+    .icon-btn{width:42px;height:42px}
+    .lang-toggle button{min-height:38px;padding:9px 14px}
+    /* trim the chrome so the user chip, language switch and icons fit on
+       one comfortable row instead of stacking into three */
+    .user-chip .signed-label{display:none}
+    .user-chip{padding:5px 6px 5px 12px;gap:7px;min-width:0}
+    .user-chip b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
+    /* keep the two round icon buttons together instead of letting the bell
+       get pushed onto a line of its own */
+    #profileIconBtn{order:1}
+    #notifIconBtn{order:2}
+    #userChip{order:3}
+    #langToggle{order:4}
+    .device-toggle-btn{width:46px;height:46px;font-size:19px;right:14px;bottom:14px}
+    /* inline text links in the auth screen were only ~19px tall to tap */
+    .auth-back,.auth-switch a{display:inline-block;padding:11px 6px;min-height:42px;line-height:20px}
+    .inp-num{width:100%}
+
+    /* Data tables don't fit a phone, so each row becomes its own card with
+       the column header shown inline as a label. No sideways scrolling. */
+    .table-wrap{overflow:visible}
+    .table,.table tbody,.table tr,.table td{display:block;width:100%}
+    .table thead{display:none}
+    .table tr{border:1px solid var(--line);border-radius:12px;background:var(--surface-2);padding:12px 14px;margin-bottom:10px}
+    .table td{border:none;padding:7px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:right}
+    .table td::before{content:attr(data-label);font-size:11px;color:var(--text-faint);font-weight:600;text-align:left;flex-shrink:0;letter-spacing:0.3px}
+    .table td:not([data-label]){justify-content:stretch}
+    .table td.td-actions{padding-top:12px;margin-top:4px;border-top:1px solid var(--line)}
+    .table td.td-actions .btn{width:100%}
+    .table td input,.table td select{max-width:60%}
+  }
+  @media(max-width:420px){
+    .table td{flex-wrap:wrap;justify-content:flex-start;text-align:left;gap:4px}
+    .table td input,.table td select{max-width:100%}
+  }
+
+  /* ---------------- device preview toggle ----------------
+     Floating button (bottom-right on every screen) that opens a
+     framed live preview of this same page rendered at a mobile
+     phone width — or, if you're already viewing on a narrow
+     screen, at a desktop width — so the mobile and desktop
+     layouts can be checked without resizing the real window. */
+  .device-toggle-btn{position:fixed;right:20px;bottom:20px;z-index:150;width:52px;height:52px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px -6px rgba(224,41,63,0.65)}
+  .device-toggle-btn:hover{background:#f13650}
+  .device-frame-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:160;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px}
+  .device-frame-overlay.show{display:flex}
+  .device-frame-topbar{display:flex;align-items:center;gap:16px;color:var(--text-dim);font-size:12px;font-weight:600;letter-spacing:0.3px}
+  .device-frame-topbar button{background:var(--surface-2);border:1px solid var(--line-strong);color:var(--text);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600}
+  .device-frame-topbar button:hover{background:var(--surface-3)}
+  .device-frame-shell{border-radius:30px;border:8px solid #131010;background:#000;box-shadow:0 24px 70px rgba(0,0,0,0.6);overflow:hidden;max-width:94vw;max-height:80vh}
+  .device-frame-shell iframe{display:block;width:100%;height:100%;border:none;background:var(--bg)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="topbar">
+    <div class="brand" id="brandHome">
+      <img class="brand-mark" src="data:image/webp;base64,UklGRv4JAABXRUJQVlA4IPIJAABQMACdASqAAIAAPmEsk0akIqGhKJeJiIAMCWY4AAyQkKkefZcwN3vKq4g8yHm3/W+tX+9ep383/6X3APGA9THmA/Wz/nf573kvQ16AH9E/unpaex/+3PsAfrh6YH7P/B9/ZP91+2XwJ/sZ/863Ltg+zu7p6h3Xf+U/Jnk12tv8t+RnDLAA+tP+s40frd/rvQ1/yX5Sc8dQA/P3/I+2D5MP+P7mfeF9Lf+H3C/5h/Zv9v+avGtMDKmvnucGTIDtDQuwW+NkPsNhkpKnudBuhYsXoWq6x8IXix6Y9D2DrXW2nPpPyq29CSHoTosKwgjNSI1rJk+jnbfF5FCOinlWRHJu9ekZN3UoVKntRJXQnqSlU/oZAvlwD3fLmeWEDUMHV0qiQ82CXEN3ILqIbqRTmsf+W889euvLbntlrjyyMs5HmZUeicOvvqvdPkUXahFzlxJ1B5sB+aPdUkYN4paOwmGyWR/afznFkhC72EnoPdGyojhYRp5fC4/dDUP59I2tkaSbnUuZT6uf2eeXgAD+/cY6MXjqOCfaxHpmHGWdKKOLeKBz9NWxKHxNaSDVz3HCsJ63VGkwU3WhWRvnYxWg5+oiMBi/wD4RnvbGnM5je6r89Q+0vJbLqXgUOHdlM889gx4Yg+par7qwb8q8V9twvWiekdXkfJGccwWeD0Skg+Yk+0fYQQKyK/MZ1Ug3IntC0IJvGkJX5K5MNRSoPamI/idA3RFKGPwqtpQP628phdYxjw5+Z+8Jxamwd9c4uRBoH+TPlVn02hmONW1aT8ahbWJPe0/qL5oOC7Lpt8YzIBjbtBsn89gScf1tQO7wxJxOMEN2FM/igcMZYiz0BjDFSdlwgIXhvBLELQqh75XCRY5wtt/7BhA+PvJBBRlkczbxYGkGhr6D8F6Q6XOjN/UtaUJYR6rPY+rJqODP6I/AVPYywrvRsqqpObZ5F8DXSmbjTnd5wlakfnxv7y6Kkbia+L3QxjX/2DRzEOLFA+7xEm/EcfrfoqLl48UrBsFwJBYHvq3ZZo4ofypRsxU3E9BRLsB0u9b+Q1LMi1ioYgxgcoohRZhnhlisZ9uU6shsQEU66Z6RXaE78mO/so5c4l+mWoQppPWxgUTge0Z21QgF0WayWZua2rfbeuAf1cD1vqh+GBeyPvL7ZOllgkzAr5udZ1ljKTtVjf8ZMe+9vPLIHwCQ6fieb2XkyKZheJvIXl+fhNK0+BlIeag2SItCI9nYQ8EJDm4LTVGIlbg44DGAiubhDc5sOJmRqB+Ov1YYK0JV+2w/iBWXP437pWa7o28D8/1+kbEBKbpsVqpF9Teeh+vU+oULqauXIlvhxTEullaMxGU5Gq4E6q85f9e08sKPxLRo6huSq+LLq46QUkM3zbxZpUGgbp53deC5DLcHG4KON9fqDX5Fqq7moqq74EjBYjKuOow+eA3B1z15XbeSBpky/+VEpMSREKKdwi+tkKn4WWMvppHZ/t4++SPNT6W2/8lL/ibBvqjqi7GgnX+edmjy8R0I4vcQs91b17rwbg8sgQ7uAoyRIpbGwVCs2S4AZTFZcSuECbWOVDg0CJe3U/yxOtaU+sys9leADuCqn9RjXsBLVvEQ3jwmwaRpUFWgHp5nTzN/PLzmXhFKL7nQ/gDBawgVYsxWC2x/wN9bKxqbOdyZta+8x0E92ORYZFMBP0akOwmXvG+789rQRmOkq0TEpo/0Qhk/RoXXznPKt3DoYLPVI9gQEuq2VVCYs1VndyHLe9DZMv2nU9+hFwRctn6vl0UfZAOH1rXabcSuoy0S3YpjcVvzqYcTTCeVkQE4nPck7eXgksikvBabtrrnRiyDe1j4keOmDehHW+ieQztF49JeCW/ZKX2CuY3vKZ6iB3gkFCuoUKGh15BOt0j9rTy1qe7vMxioLUHVUldSjcuqwYnEIHjrGj4mm+PjXAVN5mRyq4MnpxSDVE1y+u5Cz6t712vQogR2ycJkIyRrh83NaCJHptOetw60Ab1q2sCPRjqvdP0rgMx2fNM+R7PJsH6Faow6IPcR1tOWDxvoKA8kwDE2ttzXRJdD8t88Xh5b1NlK033TWEd2sBi+4YYqRlsewlgtAslNIPoFvHPk2yH+E5fjhdDfPebS7e8ZKM45247XVxlYXygCgMj109TZwXdKLgtkt4p+fQV4wf1pdGIxVMJvhBn5tVeW1lQ10KCrTdF3/kAHsKDfMzv2ORLBQolwBMWamvNVH7vtadLEF27m45+1cUIhRUMgJxjoEGRytd/aj9ZS0+6/ArkIxumUI4dnEaKR+BEMd8jSVWjSGRCgkdM7TpPNjRE7WTquJJDpIfMiDXg4Pg2TY4BB00PV6Qv8WNY8atejXpV9yTM7wCfIwDxMf9IoSKawKcMCIopHrsXUAik70k2HXRRSa5MjDplLwjkT5/W4iO5hHq6DvioLKpQx0Sy+FLIPOPR6IxwE7q/Qj/YHlFx/dfd0mU5vyb6/mQcqReY2c7ThRwoCNG4QBZEmyG2VL7LNwsgSQH/RfVDiZzFADFgf5VVunrQSxabFLG8fCdaLqsVdXIFxPXSYXo1SKsgLxgFB3M3KH1G3jM2BedyRxsApkgsFFZJK4nuv+n/YZZu1S3pvim1g6oTh31rkx4t4rq5/e8qemtxcoY/zTCdWOcSWAIAzc9qdsY1bgC5ApAUtT5miIn/cPzWvipVrgPI87Rt3PFasW//xqaPzfqFTru9KlOMVvLfdxxAhgej6f7lKGDZA/u8z8HCi9S2A9RnQaBcPP8So+TYMtKIKbl3rAyq1/n2oIOVaGE844XUxS7nMK0aiM3BfrjNQp5a76oDI8h3DJNiqC+bum/b6ZwTUgIRuaWzhnrEs48FQoqiTkQZJB3zXEAta61BZD8rQjAiSJeaM14QdZPRd/J489j9U67i7r+DhXRb+vwwJrnlzMXfEC9VUYFPS/ASML0iSKIuq/L37ZZecfxrWJJKGLPX/JiubJ1JALwIQx3mtH7DovLi+9cRE7RlaF4u3SmxEWiBTujaiTKLuZiscdhvhaAQd8d2K+Dgno4VTnCDje4PPCL1Se/oXbRIaaHsNTjuv5QIL6Gja4dCPuC6pvosFAa5Dhzbnc1l7//Kuo7wO4FZfup6hRqyxFzQJsVHV+ptIPq8H+XwF9Z9fzRs6X3zoF+f1AJ6VNPS8qBvo1/e8+v12rg8u2/fUoJzce4YUd1/XqV6OHPFRlUcCx1S83nz0XmKgBKIaY4A5cwCs1g7rdpbnuhECjGioYQYT+v+eKUXnmXwrFCD51SODkg/Erp/YZjGdf4mtjhaOq2s5q6V21tlbigK14P5ZOsAd21Lhp8F0Sva2Q9VcOcFhIAtpJF6koTi15TELmBNMvnx5lT0wTSf2OOqNr/M3l7+rgc79tzAAAA==" alt="TRAINKRUB" width="46" height="46" decoding="async">
+      <div class="brand-text">
+        <div class="name-row"><span class="wordmark">TRAINKRUB</span><span class="name">เทรนครับ</span></div>
+        <div class="sub" id="brandSub">Fitness booking</div>
+      </div>
+    </div>
+    <div class="top-controls">
+      <button class="icon-btn" id="profileIconBtn" style="display:none"></button>
+      <div class="user-chip" id="userChip"></div>
+      <div class="lang-toggle" id="langToggle">
+        <button class="active" data-lang="th">TH</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <button class="icon-btn" id="notifIconBtn" style="display:none">🔔<span class="badge-dot" id="notifBadge" style="display:none"></span></button>
+    </div>
+  </div>
+
+  <div class="nav" id="mainNav" style="display:none"></div>
+
+  <div id="app"></div>
+</div>
+
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal-box">
+    <div class="modal-icon">✓</div>
+    <h2 id="modalTitle"></h2>
+    <p id="modalBody"></p>
+    <button class="btn btn-primary btn-block" id="modalCloseBtn"></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
+
+<button class="device-toggle-btn" id="devicePreviewBtn" title="Preview mobile / desktop layout" aria-label="Toggle device preview">
+  <span id="devicePreviewIcon">📱</span>
+</button>
+<div class="device-frame-overlay" id="deviceFrameOverlay">
+  <div class="device-frame-topbar">
+    <span id="deviceFrameLabel">Mobile preview</span>
+    <button id="deviceFrameClose" type="button">Close ✕</button>
+  </div>
+  <div class="device-frame-shell" id="deviceFrameShell">
+    <iframe id="deviceFrameIframe" title="Device preview"></iframe>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+/* ======================================================================
+   HUG YIM PLUS FITNESS — Customer / Trainer / Admin (3 separate systems)
+   Data layer: window.storage (shared=true) acts as the central "database"
+   so all three systems read/write the same records and stay in sync.
+   ====================================================================== */
+
+/* ---------------- i18n ---------------- */
+const i18n = {
+  th:{
+    brand_sub:'ระบบจองคิวฟิตเนส',
+    role_customer:'ลูกค้า', role_trainer:'เทรนเนอร์', role_admin:'ผู้ดูแลระบบ',
+    nav_c_dashboard:'หน้าแรก', nav_c_trainers:'ค้นหาเทรนเนอร์', nav_c_booking:'จองเวลาเทรน', nav_c_mybookings:'การจองของฉัน', nav_c_package:'แพ็กเกจของฉัน', nav_c_notif:'การแจ้งเตือน', nav_c_profile:'โปรไฟล์ของฉัน',
+    nav_t_dashboard:'Dashboard', nav_t_requests:'คำขอนัดหมาย', nav_t_schedule:'ตารางนัดหมาย', nav_t_customers:'ลูกค้าของฉัน', nav_t_profile:'โปรไฟล์ของฉัน', nav_t_notif:'การแจ้งเตือน',
+    nav_a_dashboard:'ภาพรวมระบบ', nav_a_apps:'ตรวจสอบเทรนเนอร์', nav_a_users:'จัดการผู้ใช้งาน', nav_a_packages:'จัดการแพ็กเกจ',
+    logout:'ออกจากระบบ',
+
+    auth_login_heading:'เข้าสู่ระบบ', auth_as:'ระบบ', auth_phone_label:'เบอร์โทรศัพท์', auth_username_label:'ชื่อผู้ใช้', auth_password_label:'รหัสผ่าน',
+    auth_login_btn:'เข้าสู่ระบบ', auth_no_account:'ยังไม่มีบัญชี?', auth_register_link:'สมัครสมาชิกใหม่',
+    auth_no_trainer_account:'ยังไม่ได้เป็นเทรนเนอร์ในระบบ?', auth_apply_link:'สมัครเทรนเนอร์ใหม่',
+    auth_register_heading:'สมัครสมาชิกลูกค้าใหม่', auth_name_label:'ชื่อ-นามสกุล', auth_register_btn:'สมัครสมาชิกและเข้าสู่ระบบ', auth_back_to_login:'กลับไปเข้าสู่ระบบ',
+    auth_apply_heading:'สมัครเป็นเทรนเนอร์ใหม่', auth_apply_note:'เทรนเนอร์จะไม่ปรากฏในระบบทันที ต้องรอผู้ดูแลระบบตรวจสอบและอนุมัติก่อน จึงจะเข้าสู่ระบบด้วยรหัสผ่านที่ตั้งไว้ได้',
+    auth_specialty_label:'ความเชี่ยวชาญ', auth_bio_label:'ประสบการณ์และเกี่ยวกับตัวคุณ', auth_certs_label:'ใบรับรองที่แนบมาพร้อมใบสมัคร (ไม่บังคับ)',
+    auth_apply_submit:'ส่งใบสมัครให้ผู้ดูแลระบบตรวจสอบ',
+    auth_toast_wrong:'ข้อมูลเข้าสู่ระบบไม่ถูกต้อง', auth_toast_suspended:'บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', auth_toast_pending:'ใบสมัครของคุณยังรอการอนุมัติจากผู้ดูแลระบบ',
+    auth_toast_welcome:'ยินดีต้อนรับ {name}', auth_toast_fill:'กรุณากรอกข้อมูลให้ครบถ้วน', auth_toast_phone_used:'เบอร์โทร/ชื่อผู้ใช้นี้มีผู้ใช้งานแล้ว',
+    auth_toast_registered:'สมัครสมาชิกสำเร็จ เข้าสู่ระบบให้อัตโนมัติแล้ว', auth_toast_applied:'ส่งใบสมัครเรียบร้อย รอผู้ดูแลระบบตรวจสอบและอนุมัติก่อนเข้าสู่ระบบได้',
+    auth_toast_logout:'ออกจากระบบแล้ว', auth_signed_in_as:'เข้าสู่ระบบเป็น',
+
+    c_dash_h1:'สวัสดี, {name}', c_dash_p:'ภาพรวมบัญชีของคุณวันนี้',
+    c_dash_remaining:'ครั้งคงเหลือ', c_dash_upcoming:'การจองที่กำลังจะถึง', c_dash_notif:'แจ้งเตือนล่าสุด', c_dash_no_upcoming:'ยังไม่มีการจองที่กำลังจะถึง',
+    ct_eyebrow:'ค้นหา', ct_h1:'ค้นหาเทรนเนอร์', ct_p:'เทรนเนอร์ทุกคนที่แสดงผ่านการอนุมัติจากผู้ดูแลระบบแล้ว',
+    ct_search_ph:'ค้นหาชื่อเทรนเนอร์หรือความเชี่ยวชาญ', ct_search_btn:'ค้นหา', ct_no_results:'ไม่พบเทรนเนอร์ที่ตรงกับคำค้นหา',
+    tr_view_profile:'ดูโปรไฟล์', tr_book:'จองเวลา', tr_ready:'พร้อมรับลูกค้า', tr_full:'ยังไม่เปิดรับ',
+    tr_pin_btn:'ปักหมุดไว้บนสุด', tr_unpin_btn:'เลิกปักหมุด', tr_pinned_badge:'ปักหมุดไว้บนสุด',
+    tr_pin_hint:'เทรนเนอร์ที่ปักหมุดไว้จะแสดงอยู่บนสุดของรายการเสมอ เพื่อให้หาเจอไวขึ้นครั้งต่อไป',
+    tr_pinned_toast:'ปักหมุด {name} ไว้บนสุดแล้ว', tr_unpinned_toast:'เลิกปักหมุด {name} แล้ว',
+    tp_back:'กลับไปหน้ารายชื่อเทรนเนอร์', tp_contact_label:'เบอร์ติดต่อ', tp_about_label:'เกี่ยวกับเทรนเนอร์', tp_certs_label:'ใบรับรองและวุฒิบัตร', tp_no_certs:'เทรนเนอร์ยังไม่ได้แนบใบรับรอง',
+    cb_eyebrow:'จองเวลาเทรน', cb_h1:'จองเวลาเทรน', cb_p:'เลือกเทรนเนอร์ วันและเวลาที่สะดวก ระบบจะส่งคำขอไปยังเทรนเนอร์ทันที — ยังไม่ตัดจำนวนครั้งจนกว่าเทรนเนอร์จะตอบรับและเทรนเสร็จสิ้น',
+    cb_pick_trainer:'เลือกเทรนเนอร์', cb_empty:'กรุณาเลือกเทรนเนอร์ก่อนเริ่มจองเวลา',
+    cb_selected_hint:'เทรนเนอร์ที่เลือก', cb_date_label:'เลือกวันที่', cb_cat_label:'หมวดหมู่เวลา',
+    cb_cat_morning:'รอบเช้า (06:00–12:00)', cb_cat_afternoon:'รอบบ่าย (13:00–16:00)', cb_cat_evening:'รอบเย็น (17:00–20:00)',
+    cb_time_label:'เลือกเวลา', cb_submit_btn:'ส่งคำขอนัดหมาย', cb_no_package:'คุณยังไม่มีแพ็กเกจที่ใช้งานได้ กรุณาซื้อแพ็กเกจก่อนทำการจอง',
+    cb_expired_package:'แพ็กเกจของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้ง กรุณาซื้อแพ็กเกจใหม่ก่อนทำการจอง',
+    cb_summary_title:'สรุปการจอง', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะหลังส่ง', cb_status_after:'รอเทรนเนอร์ยืนยัน',
+    cb_no_time_selected:'กรุณาเลือกเวลาก่อนส่งคำขอ', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
+    modal_title:'ส่งคำขอนัดหมายแล้ว!', modal_body:'กำลังรอการตอบรับจากเทรนเนอร์ คุณจะได้รับแจ้งเตือนทันทีที่มีการตอบกลับ', modal_close:'รับทราบ',
+    mb_eyebrow:'ประวัติการจอง', mb_h1:'การจองของฉัน', mb_p:'ติดตามสถานะการจองทั้งหมดของคุณ', mb_empty:'คุณยังไม่มีรายการจอง',
+    cp_eyebrow:'ภาพรวม', cp_h1:'แพ็กเกจของฉัน', cp_p:'ติดตามจำนวนครั้งคงเหลือและซื้อแพ็กเกจเพิ่มเติม',
+    cp_remaining_title:'จำนวนครั้งคงเหลือ', cp_no_of:'จาก {total} ครั้ง', cp_expiry:'หมดอายุ', cp_status:'สถานะ',
+    cp_no_package:'คุณยังไม่มีแพ็กเกจที่ใช้งานอยู่', cp_buy_title:'แพ็กเกจที่เปิดขาย', cp_buy_btn:'ซื้อแพ็กเกจนี้', cp_toast_bought:'ซื้อแพ็กเกจ "{name}" เรียบร้อย',
+    cp_full_warn:'ครั้งเทรนของคุณหมดแล้ว — ต่อแพ็กเกจเพื่อจองต่อได้',
+    cp_expired_warn:'แพ็กเกจก่อนหน้าของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้งอยู่ กรุณาซื้อแพ็กเกจใหม่เพื่อจองต่อ',
+    notif_h1:'การแจ้งเตือน', notif_eyebrow:'ล่าสุด', notif_p:'ทุกความเคลื่อนไหวเกี่ยวกับการจองของคุณ', notif_empty:'ยังไม่มีการแจ้งเตือน',
+    prof_h1:'โปรไฟล์ของฉัน', prof_eyebrow:'บัญชีของฉัน', prof_p:'ข้อมูลบัญชีของคุณ', prof_name:'ชื่อ-นามสกุล', prof_phone:'เบอร์โทรศัพท์', prof_save:'บันทึกข้อมูล', prof_saved:'บันทึกข้อมูลแล้ว',
+
+    t_dash_h1:'สวัสดี, {name}', t_dash_p:'ภาพรวมงานของคุณวันนี้',
+    tq_eyebrow:'รอดำเนินการ', tq_h1:'คำขอนัดหมาย', tq_p:'ตอบรับเพื่อยืนยันคิว ระบบจะตัดจำนวนครั้งของลูกค้าโดยอัตโนมัติหลังบันทึกว่าเทรนเสร็จสิ้น',
+    tq_new_title:'คำขอใหม่', tq_no_requests:'ไม่มีคำขอใหม่ในตอนนี้', tq_accept:'ตอบรับ', tq_reject:'ปฏิเสธ',
+    tq_summary_title:'สรุปสถานะ', tq_confirmed_label:'คิวที่ยืนยันแล้ว', tq_done_label:'เทรนเสร็จสิ้น', tq_noshow_label:'ลูกค้าไม่มา', tq_pending_label:'รอตอบรับ',
+    tq_toast_accept:'ตอบรับคำขอแล้ว — ยังไม่ตัดจำนวนครั้งจนกว่าจะเทรนเสร็จ', tq_toast_reject:'ปฏิเสธคำขอแล้ว — ไม่มีการตัดจำนวนครั้ง',
+
+    /* ---- ระบบจองคู่ (duo booking) ---- */
+    duo_group_title:'มีลูกค้า {count} คนขอเวลาเดียวกัน',
+    duo_group_hint:'คุณเลือกได้ว่าจะรับทั้งคู่พร้อมกันแบบเทรนคู่ หรือรับแค่คนเดียว (อีกคนจะถูกปฏิเสธอัตโนมัติและต้องจองเวลาใหม่)',
+    duo_accept_both:'รับทั้งคู่ (เทรนคู่)',
+    duo_accept_only:'รับเฉพาะคนนี้',
+    duo_badge:'เทรนคู่',
+    duo_solo_badge:'เทรนเดี่ยว',
+    duo_partner:'เทรนคู่กับ {name}',
+    duo_toast_both:'รับเป็นเทรนคู่แล้ว — ยืนยันคิวให้ลูกค้าทั้ง {count} คนในเวลาเดียวกัน',
+    duo_toast_solo:'รับแบบเทรนเดี่ยวแล้ว — ล็อกเวลานี้ และปฏิเสธคำขออื่นในเวลาเดียวกันอัตโนมัติ',
+    duo_slot_hint:'ช่องเวลาที่มีจุดสีส้มคือมีลูกค้าขอไว้แล้ว 1 คน — คุณจองซ้อนได้ เทรนเนอร์จะเป็นผู้เลือกว่าจะรับเป็นเทรนคู่หรือไม่',
+    duo_slot_pending_one:'มีผู้ขอแล้ว 1 คน · จองซ้อนเพื่อขอเทรนคู่ได้',
+    duo_notice_title:'เวลานี้เป็นการจองคู่',
+    duo_notice_body:'มีลูกค้าอีก 1 คนขอเวลา {time} วันที่ {date} ไว้แล้ว ถ้าคุณกดจองเวลาเดียวกันนี้ จะถือเป็นการ “ขอเทรนคู่” — เทรนเนอร์จะเป็นผู้ตัดสินใจว่าจะรับทั้งคู่พร้อมกัน หรือรับเพียงคนเดียว หากเทรนเนอร์เลือกรับคนเดียว คำขอของอีกคนจะถูกยกเลิกและต้องเลือกเวลาใหม่',
+    duo_submit_btn:'ส่งคำขอเทรนคู่',
+    duo_sum_mode:'รูปแบบ', duo_sum_mode_duo:'ขอเทรนคู่ (มีผู้ขอแล้ว 1 คน)', duo_sum_mode_solo:'เทรนเดี่ยว',
+    cb_slot_locked:'เวลานี้ถูกยืนยันไปแล้ว กรุณาเลือกเวลาอื่น',
+    cb_slot_full_requests:'เวลานี้มีผู้ขอครบ 2 คนแล้ว กรุณาเลือกเวลาอื่น',
+    cb_slot_already_mine:'คุณได้ขอจองเวลานี้ไว้แล้ว',
+    notif_slot_lost:'{trainer} เลือกรับเทรนเดี่ยวในวันที่ {date} เวลา {time} คำขอของคุณจึงถูกยกเลิก กรุณาเลือกเวลาใหม่',
+    notif_accepted_duo:'{trainer} ยืนยันการจองวันที่ {date} เวลา {time} แบบเทรนคู่ร่วมกับ {partner}',
+    ts_eyebrow:'ตารางนัดหมาย', ts_h1:'ตารางนัดหมาย', ts_p:'บันทึกผลการเทรนหลังจบคาบ เพื่ออัปเดตจำนวนครั้งคงเหลือของลูกค้าให้ตรงกันแบบเรียลไทม์',
+    ts_no_schedule:'ไม่มีตารางที่ยืนยันแล้ว', ts_mark_done:'เทรนเสร็จ', ts_mark_noshow:'ไม่มา',
+    ts_toast_done:'บันทึกเทรนเสร็จสิ้น ตัดจำนวนครั้งแล้ว', ts_toast_noshow:'บันทึกไม่มาตามนัด ตัดจำนวนครั้งแล้ว',
+    badge_confirmed:'ยืนยันแล้ว', badge_done:'เสร็จสิ้น', badge_noshow:'ไม่มา', badge_pending:'รอตอบรับ', badge_rejected:'ปฏิเสธ', badge_cancelled:'ยกเลิก',
+    tc_eyebrow:'ลูกค้า', tc_h1:'ลูกค้าของฉัน', tc_p:'ลูกค้าที่เคยจองหรือเทรนกับคุณ', tc_empty:'ยังไม่มีลูกค้า', tc_sessions_done:'เทรนแล้ว {n} ครั้ง',
+    tpz_eyebrow:'บัญชีของฉัน', tpz_h1:'โปรไฟล์เทรนเนอร์', tpz_p:'แก้ไขข้อมูลส่วนตัวและจัดการใบรับรองที่ลูกค้าจะเห็นในโปรไฟล์สาธารณะของคุณ',
+    tpz_personal_title:'ข้อมูลส่วนตัว', tpz_name_label:'ชื่อ-นามสกุล', tpz_specialty_label:'ความเชี่ยวชาญ', tpz_phone_label:'เบอร์โทรศัพท์', tpz_bio_label:'เกี่ยวกับฉัน', tpz_save_btn:'บันทึกข้อมูล',
+    tpz_ready_label:'สถานะพร้อมรับลูกค้าใหม่', tpz_certs_title:'ใบรับรอง / Certificate', tpz_no_certs:'ยังไม่มีใบรับรอง', tpz_add_cert_label:'เพิ่มใบรับรองใหม่',
+    tpz_cert_name_ph:'ชื่อใบรับรอง เช่น NASM-CPT', tpz_cert_issuer_ph:'หน่วยงานที่ออกให้', tpz_cert_year_ph:'ปีที่ได้รับ', tpz_add_cert_btn:'เพิ่มใบรับรอง',
+    tpz_toast_saved:'บันทึกข้อมูลโปรไฟล์แล้ว', tpz_toast_cert_added:'เพิ่มใบรับรองแล้ว ลูกค้าจะเห็นในโปรไฟล์ของคุณ', tpz_toast_cert_removed:'ลบใบรับรองแล้ว', tpz_toast_need_name:'กรุณากรอกชื่อใบรับรองก่อนเพิ่ม',
+
+    ad_eyebrow:'ผู้ดูแลระบบ', ad_h1:'ภาพรวมระบบ', ad_p:'สรุปสถานะผู้ใช้งาน คำขอสมัครเทรนเนอร์ และข้อมูลหลักของระบบทั้งหมด',
+    ad_stat_trainers:'เทรนเนอร์ในระบบ', ad_stat_customers:'ลูกค้าในระบบ', ad_stat_pending:'คำขอสมัครรออนุมัติ', ad_stat_packages:'แพ็กเกจที่เปิดขาย', ad_stat_bookings:'การจองทั้งหมด', ad_stat_active_pkg:'แพ็กเกจที่ลูกค้าถืออยู่',
+    aa_eyebrow:'ตรวจสอบสิทธิ์', aa_h1:'คำขอสมัครเทรนเนอร์', aa_p:'ตรวจสอบข้อมูลและใบรับรองก่อนอนุมัติให้เข้าระบบ เทรนเนอร์จะปรากฏต่อลูกค้าได้ก็ต่อเมื่อผ่านการอนุมัติแล้วเท่านั้น',
+    aa_no_apps:'ไม่มีคำขอสมัครที่รอตรวจสอบ', aa_submitted_on:'ส่งเมื่อ', aa_certs_label:'ใบรับรองที่แนบมา', aa_no_certs:'ไม่มีใบรับรองแนบมา',
+    aa_approve_btn:'อนุมัติเข้าระบบ', aa_reject_btn:'ปฏิเสธ', aa_pending_badge:'รอตรวจสอบ', aa_toast_approve:'อนุมัติเทรนเนอร์แล้ว เข้าระบบและแสดงให้ลูกค้าเห็นทันที', aa_toast_reject:'ปฏิเสธใบสมัครแล้ว',
+    au_eyebrow:'สิทธิ์การใช้งาน', au_h1:'จัดการผู้ใช้งาน', au_p:'ดูรายชื่อผู้ใช้งานทั้งหมดในระบบ ระงับหรือเปิดใช้งานบัญชีได้ตามความเหมาะสม',
+    au_th_name:'ชื่อ', au_th_role:'บทบาท', au_th_phone:'เบอร์ติดต่อ', au_th_status:'สถานะ',
+    au_role_trainer:'เทรนเนอร์', au_role_customer:'ลูกค้า', au_status_active:'ใช้งานได้', au_status_suspended:'ถูกระงับ',
+    au_suspend_btn:'ระงับ', au_activate_btn:'เปิดใช้งาน', au_toast_activate:'เปิดใช้งานบัญชีแล้ว', au_toast_suspend:'ระงับการใช้งานบัญชีแล้ว',
+    apk_eyebrow:'ข้อมูลหลักของระบบ', apk_h1:'จัดการแพ็กเกจ', apk_p:'เพิ่ม แก้ไข หรือปิดการขายแพ็กเกจการฝึกที่เปิดให้ลูกค้าเลือกซื้อ',
+    apk_th_name:'ชื่อแพ็กเกจ', apk_th_sessions:'จำนวนครั้ง', apk_th_price:'ราคา (บาท)', apk_th_status:'สถานะขาย', apk_remove_btn:'ลบ', apk_add_btn:'+ เพิ่มแพ็กเกจใหม่', apk_new_name:'แพ็กเกจใหม่',
+    apk_toast_updated:'อัปเดตข้อมูลแพ็กเกจแล้ว', apk_toast_added:'เพิ่มแพ็กเกจใหม่แล้ว แก้ไขรายละเอียดได้ในตาราง', apk_toast_removed:'ลบแพ็กเกจแล้ว',
+    status_on:'เปิดขาย', status_off:'ปิดขาย',
+
+    notif_submitted:'ส่งคำขอนัดหมายกับ {trainer} วันที่ {date} เวลา {time} เรียบร้อย', notif_accepted:'{trainer} ยืนยันการจองวันที่ {date} เวลา {time} แล้ว', notif_rejected:'{trainer} ปฏิเสธคำขอวันที่ {date} เวลา {time}',
+    notif_new_request:'{customer} ส่งคำขอจองวันที่ {date} เวลา {time}',
+    notif_done:'บันทึกเทรนเสร็จสิ้นกับ {who} — เหลือ {count} ครั้ง', notif_noshow:'{who} ไม่มาตามนัด — เหลือ {count} ครั้ง',
+    notif_full:'แพ็กเกจใช้ครบแล้ว แจ้งเตือนให้ต่อแพ็กเกจ', notif_approved:'ใบสมัครเทรนเนอร์ของคุณได้รับการอนุมัติแล้ว ยินดีต้อนรับสู่ระบบ!', notif_app_rejected:'ใบสมัครเทรนเนอร์ของคุณถูกปฏิเสธ',
+    notif_when_now:'เมื่อสักครู่',
+    quick_login_label:'เข้าสู่ระบบด่วน — แตะรายชื่อเพื่อกรอกและเข้าสู่ระบบทันที',
+    seed_note_admin:'สำหรับผู้ดูแลระบบที่ได้รับสิทธิ์เท่านั้น หากต้องการชื่อผู้ใช้และรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบโดยตรง',
+    footer_note:'ข้อมูลทั้งหมดถูกเก็บไว้ในฐานข้อมูลกลางที่ใช้ร่วมกันทั้ง 3 ระบบ (Customer / Trainer / Admin) และซิงค์กันแบบเรียลไทม์'
+  },
+  en:{
+    brand_sub:'Fitness booking system',
+    role_customer:'Customer', role_trainer:'Trainer', role_admin:'Admin',
+    nav_c_dashboard:'Home', nav_c_trainers:'Find trainers', nav_c_booking:'Book session', nav_c_mybookings:'My bookings', nav_c_package:'My package', nav_c_notif:'Notifications', nav_c_profile:'My profile',
+    nav_t_dashboard:'Dashboard', nav_t_requests:'Booking requests', nav_t_schedule:'Schedule', nav_t_customers:'My customers', nav_t_profile:'My profile', nav_t_notif:'Notifications',
+    nav_a_dashboard:'Dashboard', nav_a_apps:'Trainer approval', nav_a_users:'Manage users', nav_a_packages:'Manage packages',
+    logout:'Log out',
+
+    auth_login_heading:'Sign in', auth_as:'System', auth_phone_label:'Phone number', auth_username_label:'Username', auth_password_label:'Password',
+    auth_login_btn:'Sign in', auth_no_account:"Don't have an account?", auth_register_link:'Create one',
+    auth_no_trainer_account:'Not a registered trainer yet?', auth_apply_link:'Apply as a trainer',
+    auth_register_heading:'Create a customer account', auth_name_label:'Full name', auth_register_btn:'Register & sign in', auth_back_to_login:'Back to sign in',
+    auth_apply_heading:'Apply as a new trainer', auth_apply_note:"New trainers don't appear in the system immediately — an admin must review and approve your application before you can sign in.",
+    auth_specialty_label:'Specialty', auth_bio_label:'Experience & about you', auth_certs_label:'Certificates attached (optional)',
+    auth_apply_submit:'Submit application for review',
+    auth_toast_wrong:'Incorrect login details', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval',
+    auth_toast_welcome:'Welcome, {name}', auth_toast_fill:'Please fill in all fields', auth_toast_phone_used:'This phone/username is already registered',
+    auth_toast_registered:'Account created — signed in automatically', auth_toast_applied:'Application submitted — an admin must approve it before you can sign in',
+    auth_toast_logout:'Logged out', auth_signed_in_as:'Signed in as',
+
+    c_dash_h1:'Hi, {name}', c_dash_p:"Here's your account overview",
+    c_dash_remaining:'Sessions left', c_dash_upcoming:'Upcoming bookings', c_dash_notif:'Recent notifications', c_dash_no_upcoming:'No upcoming bookings yet',
+    ct_eyebrow:'Search', ct_h1:'Find trainers', ct_p:'Every trainer shown here has been approved by an admin.',
+    ct_search_ph:'Search by name or specialty', ct_search_btn:'Search', ct_no_results:'No trainers match your search',
+    tr_view_profile:'View profile', tr_book:'Book', tr_ready:'Accepting clients', tr_full:'Not accepting',
+    tr_pin_btn:'Pin to top', tr_unpin_btn:'Unpin', tr_pinned_badge:'Pinned to top',
+    tr_pin_hint:'Pinned trainers always show at the top of the list, so they are quicker to find next time.',
+    tr_pinned_toast:'Pinned {name} to the top', tr_unpinned_toast:'Unpinned {name}',
+    tp_back:'Back to trainer list', tp_contact_label:'Contact', tp_about_label:'About the trainer', tp_certs_label:'Certificates', tp_no_certs:'No certificates attached yet',
+    cb_eyebrow:'Book session', cb_h1:'Book a session', cb_p:"Pick a trainer, date and time. The request goes to the trainer instantly — no session is deducted until it's accepted and completed.",
+    cb_pick_trainer:'Choose a trainer', cb_empty:'Please choose a trainer to start booking.',
+    cb_selected_hint:'Selected trainer', cb_date_label:'Select date', cb_cat_label:'Time category',
+    cb_cat_morning:'Morning (6:00 AM–12:00 PM)', cb_cat_afternoon:'Afternoon (1:00 PM–4:00 PM)', cb_cat_evening:'Evening (5:00 PM–8:00 PM)',
+    cb_time_label:'Select time', cb_submit_btn:'Send booking request', cb_no_package:'You have no usable package. Please buy a package before booking.',
+    cb_expired_package:'Your package has expired. Even with sessions remaining, please buy a new package before booking.',
+    cb_summary_title:'Booking summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status after sending', cb_status_after:'Waiting for trainer',
+    cb_no_time_selected:'Please select a time before sending', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
+    modal_title:'Booking request sent!', modal_body:"Waiting for the trainer's response. You'll be notified as soon as they reply.", modal_close:'Got it',
+    mb_eyebrow:'History', mb_h1:'My bookings', mb_p:'Track the status of all your bookings', mb_empty:"You don't have any bookings yet",
+    cp_eyebrow:'Overview', cp_h1:'My package', cp_p:'Track remaining sessions and buy more.',
+    cp_remaining_title:'Sessions remaining', cp_no_of:'of {total} sessions', cp_expiry:'Expires', cp_status:'Status',
+    cp_no_package:"You don't have an active package", cp_buy_title:'Packages on sale', cp_buy_btn:'Buy this package', cp_toast_bought:'Purchased "{name}"',
+    cp_full_warn:"You're out of sessions — renew to keep booking",
+    cp_expired_warn:'Your previous package has expired. Even with sessions remaining, please buy a new package to keep booking.',
+    notif_h1:'Notifications', notif_eyebrow:'Recent', notif_p:'Everything about your bookings, in one place', notif_empty:'No notifications yet',
+    prof_h1:'My profile', prof_eyebrow:'My account', prof_p:'Your account details', prof_name:'Full name', prof_phone:'Phone number', prof_save:'Save changes', prof_saved:'Profile saved',
+
+    t_dash_h1:'Hi, {name}', t_dash_p:"Here's your overview for today",
+    tq_eyebrow:'Action needed', tq_h1:'Booking requests', tq_p:'Accept to confirm the slot. Sessions are deducted automatically once you log the session as complete.',
+    tq_new_title:'New requests', tq_no_requests:'No new requests right now', tq_accept:'Accept', tq_reject:'Decline',
+    tq_summary_title:'Status summary', tq_confirmed_label:'Confirmed', tq_done_label:'Completed', tq_noshow_label:'No-shows', tq_pending_label:'Pending',
+    tq_toast_accept:'Request accepted — no deduction until the session is completed', tq_toast_reject:'Request declined — no session deducted',
+
+    /* ---- duo booking ---- */
+    duo_group_title:'{count} customers requested the same slot',
+    duo_group_hint:'You can take both together as a pair session, or take just one (the other request is declined automatically and they must pick another time).',
+    duo_accept_both:'Accept both (pair session)',
+    duo_accept_only:'Accept only this one',
+    duo_badge:'Pair session',
+    duo_solo_badge:'Solo session',
+    duo_partner:'Pair session with {name}',
+    duo_toast_both:'Accepted as a pair session — {count} customers confirmed for the same slot',
+    duo_toast_solo:'Accepted as a solo session — slot locked and other requests at this time declined automatically',
+    duo_slot_hint:'Slots with an amber dot already have 1 request — you can still book them, and the trainer decides whether to run it as a pair session.',
+    duo_slot_pending_one:'1 request already · book to ask for a pair session',
+    duo_notice_title:'This slot would be a pair session',
+    duo_notice_body:'Another customer has already requested {time} on {date}. Booking the same slot counts as asking for a pair session — the trainer decides whether to take you both together or just one of you. If they pick a solo session, the other request is cancelled and that person has to choose a new time.',
+    duo_submit_btn:'Request a pair session',
+    duo_sum_mode:'Session type', duo_sum_mode_duo:'Pair request (1 person already booked)', duo_sum_mode_solo:'Solo session',
+    cb_slot_locked:'This slot is already confirmed. Please pick another time.',
+    cb_slot_full_requests:'This slot already has 2 requests. Please pick another time.',
+    cb_slot_already_mine:'You have already requested this slot.',
+    notif_slot_lost:'{trainer} chose a solo session on {date} at {time}, so your request was cancelled. Please pick another time.',
+    notif_accepted_duo:'{trainer} confirmed your booking on {date} at {time} as a pair session with {partner}',
+    ts_eyebrow:'Schedule', ts_h1:'Schedule', ts_p:'Log the outcome after each session to keep session counts accurate in real time.',
+    ts_no_schedule:'No confirmed sessions', ts_mark_done:'Mark complete', ts_mark_noshow:'No-show',
+    ts_toast_done:'Session marked complete — 1 session deducted', ts_toast_noshow:'No-show recorded — 1 session deducted',
+    badge_confirmed:'Confirmed', badge_done:'Completed', badge_noshow:'No-show', badge_pending:'Pending', badge_rejected:'Rejected', badge_cancelled:'Cancelled',
+    tc_eyebrow:'Customers', tc_h1:'My customers', tc_p:"Customers who've booked or trained with you", tc_empty:'No customers yet', tc_sessions_done:'{n} session(s) completed',
+    tpz_eyebrow:'My account', tpz_h1:'Trainer profile', tpz_p:'Edit your details and manage certificates customers will see on your public profile.',
+    tpz_personal_title:'Personal info', tpz_name_label:'Full name', tpz_specialty_label:'Specialty', tpz_phone_label:'Phone number', tpz_bio_label:'About me', tpz_save_btn:'Save changes',
+    tpz_ready_label:'Accepting new clients', tpz_certs_title:'Certificates', tpz_no_certs:'No certificates yet', tpz_add_cert_label:'Add a new certificate',
+    tpz_cert_name_ph:'Certificate name, e.g. NASM-CPT', tpz_cert_issuer_ph:'Issuing organization', tpz_cert_year_ph:'Year received', tpz_add_cert_btn:'Add certificate',
+    tpz_toast_saved:'Profile saved', tpz_toast_cert_added:'Certificate added — visible on your public profile', tpz_toast_cert_removed:'Certificate removed', tpz_toast_need_name:'Please enter a certificate name first',
+
+    ad_eyebrow:'Admin', ad_h1:'System overview', ad_p:'A summary of users, trainer applications, and core system data.',
+    ad_stat_trainers:'Trainers', ad_stat_customers:'Customers', ad_stat_pending:'Applications pending', ad_stat_packages:'Packages on sale', ad_stat_bookings:'Total bookings', ad_stat_active_pkg:'Active customer packages',
+    aa_eyebrow:'Verification', aa_h1:'Trainer applications', aa_p:'Review details and certificates before approving. Trainers only appear to customers once approved.',
+    aa_no_apps:'No applications awaiting review', aa_submitted_on:'Submitted', aa_certs_label:'Attached certificates', aa_no_certs:'No certificates attached',
+    aa_approve_btn:'Approve', aa_reject_btn:'Reject', aa_pending_badge:'Pending review', aa_toast_approve:'Trainer approved — now visible to customers', aa_toast_reject:'Application rejected',
+    au_eyebrow:'Access control', au_h1:'Manage users', au_p:'View every account in the system. Suspend or reactivate as needed.',
+    au_th_name:'Name', au_th_role:'Role', au_th_phone:'Contact', au_th_status:'Status',
+    au_role_trainer:'Trainer', au_role_customer:'Customer', au_status_active:'Active', au_status_suspended:'Suspended',
+    au_suspend_btn:'Suspend', au_activate_btn:'Activate', au_toast_activate:'Account activated', au_toast_suspend:'Account suspended',
+    apk_eyebrow:'Core system data', apk_h1:'Manage packages', apk_p:'Add, edit, or unlist the training packages customers can purchase.',
+    apk_th_name:'Package name', apk_th_sessions:'Sessions', apk_th_price:'Price (THB)', apk_th_status:'Sale status', apk_remove_btn:'Remove', apk_add_btn:'+ Add new package', apk_new_name:'New package',
+    apk_toast_updated:'Package updated', apk_toast_added:'New package added — edit details in the table', apk_toast_removed:'Package removed',
+    status_on:'On sale', status_off:'Unlisted',
+
+    notif_submitted:'Booking request sent to {trainer} for {date} at {time}', notif_accepted:'{trainer} confirmed your booking on {date} at {time}', notif_rejected:'{trainer} declined your request on {date} at {time}',
+    notif_new_request:'{customer} requested a booking on {date} at {time}',
+    notif_done:'Session completed with {who} — {count} sessions left', notif_noshow:'{who} did not show up — {count} sessions left',
+    notif_full:'Package fully used — remind the customer to renew', notif_approved:'Your trainer application was approved. Welcome!', notif_app_rejected:'Your trainer application was rejected',
+    notif_when_now:'Just now',
+    quick_login_label:'Quick login — tap a name to auto-fill and sign in instantly',
+    seed_note_admin:'Admin access is restricted. Contact your system administrator directly for the login credentials.',
+    footer_note:'All data lives in one shared database used by all 3 systems (Customer / Trainer / Admin) and stays in sync in real time.'
+  }
+};
+let lang = 'th';
+function t(key){ return (i18n[lang] && i18n[lang][key]) || key; }
+function tt(key, params){ return t(key).replace(/\{(\w+)\}/g, (m,k)=> (params && params[k]!==undefined) ? params[k] : m); }
+
+/* ---------------- Supabase (real shared database) ----------------
+   Fill in SUPABASE_URL and SUPABASE_ANON_KEY with your own project's
+   values (Project Settings → API in the Supabase dashboard) to make
+   all app data persist in a real, shared Postgres database instead of
+   just this one browser. Leave them blank to keep running on the
+   built-in window.storage / localStorage fallback below — the app
+   works either way, this just decides where data actually lives.
+   Setup: run supabase-setup.sql once in your project's SQL Editor
+   before filling these in. See README.md for the full walkthrough. */
+const SUPABASE_URL = '';
+const SUPABASE_ANON_KEY = '';
+const SUPABASE_TABLE = 'kv_store';
+
+let supabaseClient = null;
+if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase && typeof window.supabase.createClient==='function'){
+  try{ supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
+  catch(e){ console.warn('Supabase client init failed:', e && e.message); }
+}
+
+let supabaseBroken = false;
+let supabaseProbePromise = null;
+function supabaseIsAvailable(){
+  if(!supabaseClient) return Promise.resolve(false);
+  if(supabaseBroken) return Promise.resolve(false);
+  if(!supabaseProbePromise){
+    supabaseProbePromise = (async ()=>{
+      try{
+        const { error } = await supabaseClient.from(SUPABASE_TABLE).select('key').limit(1);
+        if(error) throw error;
+        return true;
+      }catch(e){
+        console.warn('Supabase unavailable, falling back to built-in storage:', e && e.message);
+        supabaseBroken = true;
+        return false;
+      }
+    })();
+  }
+  return supabaseProbePromise;
+}
+
+/* ---------------- storage / "database" layer ----------------
+   All app data lives in shared window.storage so the Customer, Trainer
+   and Admin systems (and different browser sessions) read/write the
+   exact same records. */
+/* Storage adapter: use the shared host storage when available,
+   otherwise fall back to localStorage so the Beta demo also works
+   when opened directly or previewed without window.storage. */
+const localDbPrefix = 'hug-yim-plus-fitness:';
+
+/* ---------------- in-memory cache ----------------
+   Every dbGet/dbSet/dbDelete/dbGetAll call in the file keeps the exact
+   same signature and return shape — this cache sits transparently
+   underneath them, so no call site anywhere else needs to change.
+   - keyCache: single-record cache (key -> parsed value)
+   - listCache: resolved-collection cache (prefix -> array of values)
+   Writes/deletes still go through to window.storage/localStorage exactly
+   as before; the cache is just updated/invalidated alongside them so
+   nothing ever goes stale. */
+const keyCache = new Map();
+const listCache = new Map();
+function invalidateListsFor(key){
+  for(const prefix of listCache.keys()){
+    if(key.startsWith(prefix)) listCache.delete(prefix);
+  }
+}
+/* The cache above is only ever safe to reuse WITHIN a single render pass on
+   THIS tab. It has no way to know when a *different* browser tab/session —
+   a customer booking on their phone while a trainer has the requests page
+   open on a laptop, say — writes new data to the shared storage. Left
+   uncleared, a tab that already cached a prefix would keep showing that
+   snapshot forever and never notice new bookings, approvals, etc. from
+   anyone else, no matter how many times the person clicks around.
+   So every render cycle (renderRoot for a full navigation, renderView for
+   everything else, including direct calls after a mutation and purely
+   local UI updates) starts by wiping both caches — guaranteeing each
+   render reflects the current shared data — while calls still made
+   *within* that same pass keep the short-lived speed benefit. */
+function clearRenderCaches(){ keyCache.clear(); listCache.clear(); }
+
+/* If window.storage fails once (e.g. this host's preview returns a response
+   shape the app doesn't recognize), remember that and skip trying it again
+   for the rest of the session — go straight to the fast localStorage path
+   instead of re-attempting (and re-failing) on every single call.
+   A single memoized probe (rather than a plain boolean flag) means that
+   even when several dbGet/dbSet/dbList calls fire in parallel at boot
+   (e.g. inside Promise.all), they all await the *same* one-time check
+   instead of each independently hitting — and separately failing/warning
+   about — the shared storage backend. */
+let sharedStorageBroken = false;
+let storageProbePromise = null;
+function storageIsAvailable(){
+  if(sharedStorageBroken) return Promise.resolve(false);
+  if(!storageProbePromise){
+    storageProbePromise = (async ()=>{
+      if(!(window.storage && typeof window.storage.get==='function' && typeof window.storage.set==='function')) return false;
+      try{
+        await window.storage.set('__hy_probe__', '1', true);
+        return true;
+      }catch(e){
+        sharedStorageBroken = true;
+        return false;
+      }
+    })();
+  }
+  return storageProbePromise;
+}
+
+async function dbGet(key){
+  if(keyCache.has(key)) return keyCache.get(key);
+  let val = null;
+  if(await supabaseIsAvailable()){
+    try{
+      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('value').eq('key', key).maybeSingle();
+      if(error) throw error;
+      val = data ? data.value : null;
+      keyCache.set(key, val);
+      return val;
+    }catch(e){ /* one-off read error — fall through to next backend */ }
+  }
+  if(await storageIsAvailable()){
+    try{
+      const r = await window.storage.get(key, true);
+      val = r ? JSON.parse(r.value) : null;
+      keyCache.set(key, val);
+      return val;
+    }catch(e){ /* key not found or a one-off read error — fall through to localStorage */ }
+  }
+  try{
+    const raw = localStorage.getItem(localDbPrefix + key);
+    val = raw ? JSON.parse(raw) : null;
+  }catch(e){ val = null; }
+  keyCache.set(key, val);
+  return val;
+}
+
+async function dbSet(key, val){
+  keyCache.set(key, val);
+  invalidateListsFor(key);
+  if(await supabaseIsAvailable()){
+    try{
+      const { error } = await supabaseClient.from(SUPABASE_TABLE).upsert({ key, value: val, updated_at: new Date().toISOString() });
+      if(error) throw error;
+      return {ok:true};
+    }catch(e){ /* fall through to next backend */ }
+  }
+  if(await storageIsAvailable()){
+    try{
+      const result = await window.storage.set(key, JSON.stringify(val), true);
+      if(result) return result;
+    }catch(e){ /* fall through to localStorage */ }
+  }
+  try{
+    localStorage.setItem(localDbPrefix + key, JSON.stringify(val));
+    return {ok:true};
+  }catch(e){
+    console.error('localStorage set failed', key, e);
+    return null;
+  }
+}
+
+async function dbDelete(key){
+  keyCache.delete(key);
+  invalidateListsFor(key);
+  if(await supabaseIsAvailable()){
+    try{
+      const { error } = await supabaseClient.from(SUPABASE_TABLE).delete().eq('key', key);
+      if(error) throw error;
+    }catch(e){ /* fall through to next backend */ }
+  }
+  if(await storageIsAvailable()){
+    try{
+      await window.storage.delete(key, true);
+    }catch(e){ /* ignore — already gone or a one-off error */ }
+  }
+  try{ localStorage.removeItem(localDbPrefix + key); }catch(e){}
+}
+
+async function dbList(prefix){
+  if(await supabaseIsAvailable()){
+    try{
+      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('key').like('key', prefix + '%');
+      if(error) throw error;
+      return (data || []).map(r=>r.key);
+    }catch(e){ /* fall through to next backend */ }
+  }
+  if(await storageIsAvailable()){
+    try{
+      const r = await window.storage.list(prefix, true);
+      if(r && Array.isArray(r.keys)) return r.keys;
+    }catch(e){ /* fall through to localStorage */ }
+  }
+  try{
+    const keys = [];
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith(localDbPrefix + prefix)){
+        keys.push(k.slice(localDbPrefix.length));
+      }
+    }
+    return keys;
+  }catch(e){ return []; }
+}
+async function dbGetAll(prefix){
+  if(listCache.has(prefix)) return listCache.get(prefix).slice();
+  const keys = await dbList(prefix);
+  const vals = await Promise.all(keys.map(k=>dbGet(k)));
+  const result = vals.filter(Boolean);
+  listCache.set(prefix, result);
+  return result.slice();
+}
+function newId(prefix){ return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+/* Keeps the admin login out of plain sight in the page source — this is a
+   single static HTML file with no server, so it can't be a real secrets
+   vault, but it stops the credential from showing up to a casual glance
+   or a plain-text search of the file. */
+function _d64(s){ try{ return atob(s); }catch(e){ return s; } }
+
+/* ---------------- seed data (self-healing) ----------------
+   Rather than relying on a single "already seeded" flag (which could get
+   stuck as true even if a write failed partway through), each demo
+   account/record is checked and created individually every time the app
+   boots. This makes seeding safe to re-run and immune to partial failures. */
+async function ensureRecord(key, factory){
+  const existing = await dbGet(key);
+  if(existing) return existing;
+  const val = factory();
+  await dbSet(key, val);
+  return val;
+}
+async function seedIfNeeded(){
+  const trainers = [
+    {id:'t1', username:'0811111111', password:'1234', name:'โค้ชกังวาล ทนันท์', phone:'0811111111',
+      specialty:'เทรนเนอร์ลดน้ำหนักและฟื้นฟูร่างกาย',
+      bio:'ประสบการณ์เทรนมากกว่า 5 ปี เชี่ยวชาญด้านลดไขมันและวางแผนโภชนาการควบคู่การออกกำลังกาย',
+      certs:[{name:'NASM Certified Personal Trainer', issuer:'NASM', year:'2021'}, {name:'ผู้เชี่ยวชาญโภชนาการกีฬา', issuer:'สมาคมโภชนาการไทย', year:'2022'}],
+      status:'active', ready:true, role:'trainer'},
+    {id:'t2', username:'0822222222', password:'1234', name:'โค้ชชยุต เงินอิน', phone:'0822222222',
+      specialty:'เทรนเนอร์เพิ่มกล้ามเนื้อ',
+      bio:'อดีตนักกีฬายกน้ำหนักทีมชาติ เน้นโปรแกรมสร้างกล้ามเนื้อและความแข็งแรง',
+      certs:[{name:'ACE Certified Personal Trainer', issuer:'ACE', year:'2020'}],
+      status:'active', ready:true, role:'trainer'},
+    {id:'t3', username:'0833333333', password:'1234', name:'โค้ชเต้', phone:'0833333333',
+      specialty:'เทรนเนอร์ฟังก์ชันนัลเทรนนิ่ง',
+      bio:'เชี่ยวชาญด้าน functional training และการปรับท่าทางเพื่อป้องกันการบาดเจ็บ',
+      certs:[{name:'Functional Movement Specialist', issuer:'FMS', year:'2022'}],
+      status:'active', ready:true, role:'trainer'},
+    {id:'t4', username:'0844444444', password:'1234', name:'โค้ชแนน', phone:'0844444444',
+      specialty:'เทรนเนอร์โยคะและความยืดหยุ่น',
+      bio:'ครูสอนโยคะและพิลาทิสมากว่า 4 ปี เน้นความยืดหยุ่นและการฟื้นฟูร่างกาย',
+      certs:[{name:'RYT 500 Yoga Teacher', issuer:'Yoga Alliance', year:'2021'}],
+      status:'active', ready:true, role:'trainer'},
+    {id:'t5', username:'0855555555', password:'1234', name:'โค้ชบอล', phone:'0855555555',
+      specialty:'เทรนเนอร์เตรียมความพร้อมนักกีฬา',
+      bio:'อดีตผู้ช่วยโค้ชฟิตเนสทีมกีฬามหาวิทยาลัย เน้นความแข็งแรงและความเร็ว',
+      certs:[{name:'CSCS Strength & Conditioning Specialist', issuer:'NSCA', year:'2023'}],
+      status:'active', ready:true, role:'trainer'}
+  ];
+  const customers = [
+    {id:'c1', username:'0911111111', password:'1234', name:'เป้', phone:'0911111111', status:'active', role:'customer', interestFilter:[]},
+    {id:'c2', username:'0922222222', password:'1234', name:'ฟ้า', phone:'0922222222', status:'active', role:'customer', interestFilter:[]},
+    {id:'c3', username:'0933333333', password:'1234', name:'ดล', phone:'0933333333', status:'active', role:'customer', interestFilter:[]}
+  ];
+  const packages = [
+    {id:'pkg1', name:'แพ็กเกจ 10 ครั้ง', sessions:10, price:3500, expirationDays:90, status:'active'},
+    {id:'pkg2', name:'แพ็กเกจ 20 ครั้ง', sessions:20, price:6500, expirationDays:120, status:'active'},
+    {id:'pkg3', name:'แพ็กเกจ 5 ครั้ง (ทดลอง)', sessions:5, price:1900, expirationDays:60, status:'active'}
+  ];
+  await Promise.all([
+    ensureRecord('admin:admin', ()=>({username:_d64('Y29icmEtMzY4MQ=='), password:_d64('TERzJUE3R1RwM2FRXlheOU1T'), name:'ผู้ดูแลระบบ / System Admin', role:'admin'})),
+    ...trainers.map(tr=>ensureRecord('trainer:'+tr.id, ()=>tr)),
+    ensureRecord('trainerApp:app1', ()=>({id:'app1', username:'0866666666', password:'1234', name:'โค้ชปวีณา สุขใจ', phone:'0866666666',
+      specialty:'โยคะและฟื้นฟูร่างกาย', bio:'ครูสอนโยคะและพิลาทิสมากว่า 3 ปี เน้นการฟื้นฟูอาการบาดเจ็บและความยืดหยุ่น',
+      certs:[{name:'RYT 200 Yoga Teacher', issuer:'Yoga Alliance', year:'2023'}],
+      submittedAt: new Date().toISOString(), status:'pending'})),
+    ...customers.map(c=>ensureRecord('customer:'+c.id, ()=>c)),
+    ...packages.map(p=>ensureRecord('package:'+p.id, ()=>p)),
+    ensureRecord('custpkg:cp1', ()=>({id:'cp1', customerId:'c1', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
+      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'})),
+    ensureRecord('custpkg:cp2', ()=>({id:'cp2', customerId:'c2', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
+      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'})),
+    ensureRecord('custpkg:cp3', ()=>({id:'cp3', customerId:'c3', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
+      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'}))
+  ]);
+}
+function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+
+/* ---------------- session (in-memory; log in required per browser session) ---------------- */
+let session = null; // {id, role, name, ...}
+let route = 'dashboard';
+let routeParams = {};
+
+/* ---------------- generic helpers ---------------- */
+function toast(msg){
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  el.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function initials(name){ return (name||'?').trim().split(/\s+/).slice(-1)[0].slice(0,1).toUpperCase(); }
+function fmtDate(iso){
+  if(!iso) return '—';
+  const d = new Date(iso+'T00:00:00');
+  const days_th=['อา','จ','อ','พ','พฤ','ศ','ส'], months_th=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  if(lang==='th') return days_th[d.getDay()]+'. '+d.getDate()+' '+months_th[d.getMonth()];
+  return d.toLocaleDateString('en-US',{weekday:'short', day:'numeric', month:'short'});
+}
+function fmtTime(time){
+  if(!time) return '—';
+  if(lang==='th') return time+' น.';
+  let [h,m] = time.split(':').map(Number);
+  const period = h<12?'AM':'PM'; let h12=h%12; if(h12===0)h12=12;
+  return h12+':'+String(m).padStart(2,'0')+' '+period;
+}
+function badgeFor(status){
+  const map = {pending:'badge-pending', confirmed:'badge-confirmed', completed:'badge-done', no_show:'badge-noshow', rejected:'badge-rejected', cancelled:'badge-cancelled'};
+  const label = {pending:t('badge_pending'), confirmed:t('badge_confirmed'), completed:t('badge_done'), no_show:t('badge_noshow'), rejected:t('badge_rejected'), cancelled:t('badge_cancelled')};
+  return `<span class="badge ${map[status]||'badge-role'}">${label[status]||status}</span>`;
+}
+
+/* ---------------- notifications ---------------- */
+async function pushNotification(userId, titleKey, bodyKey, params, bookingId){
+  const n = {id:newId('notif'), userId, title:t(titleKey), message:tt(bodyKey, params), isRead:false, createdAt:new Date().toISOString(), bookingId: bookingId||null};
+  await dbSet('notif:'+n.id, n);
+}
+async function getNotifications(userId){
+  const all = await dbGetAll('notif:');
+  return all.filter(n=>n.userId===userId).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+}
+async function unreadCount(userId){
+  const all = await getNotifications(userId);
+  return all.filter(n=>!n.isRead).length;
+}
+async function markAllRead(userId){
+  const all = await getNotifications(userId);
+  for(const n of all){ if(!n.isRead){ n.isRead = true; await dbSet('notif:'+n.id, n); } }
+}
+
+/* ---------------- render root ---------------- */
+async function renderRoot(){
+  clearRenderCaches();
+  document.getElementById('brandSub').textContent = t('brand_sub');
+  document.querySelectorAll('#langToggle button').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  const chip = document.getElementById('userChip');
+  const nav = document.getElementById('mainNav');
+  const profileBtn = document.getElementById('profileIconBtn');
+  const notifBtn = document.getElementById('notifIconBtn');
+  const notifBadge = document.getElementById('notifBadge');
+  if(!session){
+    chip.classList.remove('show'); chip.innerHTML='';
+    profileBtn.style.display = 'none';
+    notifBtn.style.display = 'none';
+    nav.style.display = 'none';
+    // Clear the nav markup too — otherwise the previous user's menu buttons
+    // (and their click handlers) stay in the DOM after logout, where screen
+    // readers and automated tooling can still reach them.
+    nav.innerHTML = '';
+    notifBadge.style.display = 'none';
+    await renderAuth();
+    return;
+  }
+  chip.classList.add('show');
+  chip.innerHTML = `<span class="signed-label">${t('auth_signed_in_as')}</span> <b>${esc(session.name)}</b> <span class="role-pill">${t('role_'+session.role)}</span> <button id="logoutBtn">${t('logout')}</button>`;
+  document.getElementById('logoutBtn').onclick = doLogout;
+  const profileRoute = session.role==='admin' ? null : 'profile';
+  if(profileRoute){
+    profileBtn.style.display = 'flex';
+    profileBtn.title = t('nav_c_profile');
+    profileBtn.textContent = initials(session.name);
+    profileBtn.onclick = ()=> go('profile');
+  } else {
+    profileBtn.style.display = 'none';
+  }
+  const notifRoute = session.role==='admin' ? null : 'notif';
+  if(notifRoute){
+    const unread = await unreadCount(session.id);
+    notifBtn.style.display = 'flex';
+    notifBtn.title = t('nav_c_notif');
+    notifBtn.onclick = ()=> go('notif');
+    if(unread>0){ notifBadge.style.display='flex'; notifBadge.textContent = unread>9 ? '9+' : String(unread); }
+    else{ notifBadge.style.display='none'; }
+  } else {
+    notifBtn.style.display = 'none';
+  }
+  nav.style.display = 'flex';
+  await renderNav();
+  await renderView();
+}
+
+function doLogout(){
+  session = null; route = 'dashboard'; routeParams = {};
+  toast(t('auth_toast_logout'));
+  renderRoot();
+}
+document.getElementById('brandHome').addEventListener('click', ()=>{ if(session){ route='dashboard'; renderRoot(); } });
+document.querySelectorAll('#langToggle button').forEach(b=>b.addEventListener('click', ()=>{ lang=b.dataset.lang; renderRoot(); }));
+
+function go(r, params){ route = r; routeParams = params||{}; renderRoot(); }
+
+/* ================= NAV ================= */
+async function renderNav(){
+  const nav = document.getElementById('mainNav');
+  let items = [];
+  if(session.role==='customer'){
+    items = [
+      ['dashboard', t('nav_c_dashboard')], ['trainers', t('nav_c_trainers')], ['booking', t('nav_c_booking')],
+      ['mybookings', t('nav_c_mybookings')]
+    ];
+  } else if(session.role==='trainer'){
+    items = [
+      ['dashboard', t('nav_t_dashboard')], ['requests', t('nav_t_requests')], ['schedule', t('nav_t_schedule')],
+      ['customers', t('nav_t_customers')]
+    ];
+  } else if(session.role==='admin'){
+    items = [
+      ['dashboard', t('nav_a_dashboard')], ['apps', t('nav_a_apps')], ['users', t('nav_a_users')], ['packages', t('nav_a_packages')]
+    ];
+  }
+  let badgeCount = 0;
+  if(session.role==='trainer'){
+    const bookings = await dbGetAll('booking:');
+    badgeCount = bookings.filter(b=>b.trainerId===session.id && b.status==='pending').length;
+  }
+  if(session.role==='admin'){
+    const apps = await dbGetAll('trainerApp:');
+    badgeCount = apps.filter(a=>a.status==='pending').length;
+  }
+  nav.innerHTML = items.map(([key,label])=>{
+    let extra = '';
+    if(session.role==='trainer' && key==='requests' && badgeCount>0) extra = `<span class="count">${badgeCount}</span>`;
+    if(session.role==='admin' && key==='apps' && badgeCount>0) extra = `<span class="count">${badgeCount}</span>`;
+    return `<button data-r="${key}" class="${route===key?'active':''}"><span class="dot"></span>${esc(label)}${extra}</button>`;
+  }).join('');
+  nav.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=> go(b.dataset.r)));
+}
+
+/* ================= VIEW ROUTER ================= */
+async function renderView(){
+  clearRenderCaches();
+  const app = document.getElementById('app');
+  app.innerHTML = `<div class="loading-shell">…</div>`;
+  let html = '';
+  try{
+    if(session.role==='customer') html = await renderCustomerView();
+    else if(session.role==='trainer') html = await renderTrainerView();
+    else if(session.role==='admin') html = await renderAdminView();
+  }catch(e){
+    console.error(e);
+    html = `<div class="empty">Something went wrong loading this page.</div>`;
+  }
+  app.innerHTML = `<div class="view anim-in">${html}</div>`;
+  wireView();
+}
+
+/* ======================================================================
+   CUSTOMER SYSTEM
+   ====================================================================== */
+async function getActivePackage(customerId){
+  const pkgs = await dbGetAll('custpkg:');
+  const today = new Date().toISOString().slice(0,10);
+  // A package must still be within its expiry window to actually be usable —
+  // remainingSessions>0 alone isn't enough, otherwise a customer could keep
+  // booking indefinitely on a package that expired months ago.
+  const mine = pkgs.filter(p=>p.customerId===customerId && p.status==='active' && p.remainingSessions>0 && p.expiryDate>=today);
+  mine.sort((a,b)=> new Date(a.expiryDate)-new Date(b.expiryDate));
+  return mine[0] || null;
+}
+/* True when the customer has at least one package that ran out purely
+   because its expiry date passed — used to show a specific "expired,
+   please renew" message instead of the generic "no package" one. */
+async function hasExpiredUnusedPackage(customerId){
+  const pkgs = await dbGetAll('custpkg:');
+  const today = new Date().toISOString().slice(0,10);
+  return pkgs.some(p=>p.customerId===customerId && p.status==='active' && p.remainingSessions>0 && p.expiryDate<today);
+}
+async function getAllMyPackages(customerId){
+  const pkgs = await dbGetAll('custpkg:');
+  return pkgs.filter(p=>p.customerId===customerId).sort((a,b)=> new Date(b.startDate)-new Date(a.startDate));
+}
+async function getApprovedTrainers(){
+  const all = await dbGetAll('trainer:');
+  return all.filter(x=>x.status==='active');
+}
+async function getPinnedTrainerIds(){
+  const c = await dbGet('customer:'+session.id);
+  return (c && c.pinnedTrainerIds) || [];
+}
+/* Pinned trainers float to the top, most-recently-pinned first; everyone
+   else keeps whatever order they were already in. This is per-customer
+   (stored on the customer record) so it never affects what other
+   customers or the trainer/admin systems see. */
+function sortTrainersByPin(trainers, pinnedIds){
+  if(!pinnedIds || !pinnedIds.length) return trainers;
+  const rank = new Map(pinnedIds.map((id,i)=>[id,i]));
+  return [...trainers].sort((a,b)=>{
+    const ra = rank.has(a.id) ? rank.get(a.id) : Infinity;
+    const rb = rank.has(b.id) ? rank.get(b.id) : Infinity;
+    return ra - rb;
+  });
+}
+async function togglePinTrainer(id){
+  const c = await dbGet('customer:'+session.id);
+  if(!c) return;
+  c.pinnedTrainerIds = c.pinnedTrainerIds || [];
+  const trainer = await dbGet('trainer:'+id);
+  const idx = c.pinnedTrainerIds.indexOf(id);
+  if(idx >= 0){
+    c.pinnedTrainerIds.splice(idx,1);
+    toast(tt('tr_unpinned_toast',{name: trainer?trainer.name:''}));
+  } else {
+    c.pinnedTrainerIds.unshift(id);
+    toast(tt('tr_pinned_toast',{name: trainer?trainer.name:''}));
+  }
+  await dbSet('customer:'+c.id, c);
+  renderView();
+}
+
+async function renderCustomerView(){
+  if(route==='dashboard') return renderCDashboard();
+  if(route==='trainers') return renderCTrainers();
+  if(route==='trainerProfile') return renderCTrainerProfile();
+  if(route==='booking') return renderCBooking();
+  if(route==='mybookings') return renderCMyBookings();
+  if(route==='package') return renderCPackage();
+  if(route==='notif') return renderNotifPage();
+  if(route==='profile') return renderCProfile();
+  return renderCDashboard();
+}
+
+async function renderCDashboard(){
+  const pkg = await getActivePackage(session.id);
+  const bookings = await dbGetAll('booking:');
+  const mine = bookings.filter(b=>b.customerId===session.id);
+  const upcoming = mine.filter(b=>b.status==='confirmed' || b.status==='pending')
+    .sort((a,b)=> (a.bookingDate+a.bookingTime).localeCompare(b.bookingDate+b.bookingTime));
+  const notifs = (await getNotifications(session.id)).slice(0,4);
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('cp_eyebrow')}</div><h1>${tt('c_dash_h1',{name:esc(session.name)})}</h1><p>${t('c_dash_p')}</p></div></div>
+    <div class="grid-2">
+      <div class="card c-dash-pkg">
+        <div class="card-head"><h3>${t('c_dash_remaining')}</h3></div>
+        ${pkg ? ringHtml(pkg) : `<div class="empty">${t('cp_no_package')}</div>`}
+        <button class="btn btn-block" style="margin-top:14px" data-goto="package">${t('nav_c_package')}</button>
+      </div>
+      <div class="c-dash-main">
+        <div class="card">
+          <div class="card-head"><h3>${t('c_dash_upcoming')}</h3></div>
+          ${upcoming.length ? upcoming.slice(0,5).map(b=>`
+            <div class="sched-row"><div class="time">${esc(b.bookingTime)}</div><div class="who">${esc(b.trainerName)} · ${fmtDate(b.bookingDate)}</div>${badgeFor(b.status)}</div>
+          `).join('') : `<div class="empty">${t('c_dash_no_upcoming')}</div>`}
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>${t('c_dash_notif')}</h3></div>
+          ${notifs.length ? notifs.map(n=>notifRow(n)).join('') : `<div class="empty">${t('notif_empty')}</div>`}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function ringHtml(pkg){
+  const pct = pkg.totalSessions>0 ? pkg.remainingSessions/pkg.totalSessions : 1;
+  const circumference = 452;
+  const offset = Math.round(circumference * (1-pct));
+  return `
+    <div class="ring-wrap">
+      <div class="ring">
+        <svg viewBox="0 0 168 168">
+          <circle cx="84" cy="84" r="72" stroke="var(--surface-3)" stroke-width="12" fill="none"/>
+          <circle cx="84" cy="84" r="72" stroke="var(--red)" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="ring-label"><div class="num">${pkg.remainingSessions}</div><div class="of">${tt('cp_no_of',{total:pkg.totalSessions})}</div></div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--text-faint)">${esc(pkg.packageName)} · ${t('cp_expiry')} ${fmtDate(pkg.expiryDate)}</div>
+      ${pkg.remainingSessions<=0 ? `<div class="auth-error" style="margin-top:12px">${t('cp_full_warn')}</div>` : ''}
+    </div>`;
+}
+
+function notifRow(n){
+  return `<div class="notif-item ${n.isRead?'':'unread'}"><div class="notif-ico">🔔</div><div class="body"><div>${esc(n.message)}</div><div class="when">${n.isRead? fmtDateTime(n.createdAt) : t('notif_when_now')}</div></div></div>`;
+}
+function fmtDateTime(iso){ try{ const d=new Date(iso); return d.toLocaleString(lang==='th'?'th-TH':'en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';} }
+
+async function renderNotifPage(){
+  const notifs = await getNotifications(session.id);
+  await markAllRead(session.id);
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('notif_eyebrow')}</div><h1>${t('notif_h1')}</h1><p>${t('notif_p')}</p></div></div>
+    <div class="card">${notifs.length ? notifs.map(n=>notifRow(n)).join('') : `<div class="empty">${t('notif_empty')}</div>`}</div>
+  `;
+}
+
+async function renderCTrainers(){
+  const q = (routeParams.q||'').toLowerCase();
+  let trainers = await getApprovedTrainers();
+  const pinnedIds = await getPinnedTrainerIds();
+  trainers = sortTrainersByPin(trainers, pinnedIds);
+  if(q) trainers = trainers.filter(x=> x.name.toLowerCase().includes(q) || (x.specialty||'').toLowerCase().includes(q));
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('ct_eyebrow')}</div><h1>${t('ct_h1')}</h1><p>${t('ct_p')}</p></div></div>
+    <div class="card">
+      <div class="search-row"><input type="text" id="trainerSearch" placeholder="${t('ct_search_ph')}" value="${esc(routeParams.q||'')}"><button class="btn btn-primary" id="trainerSearchBtn">${t('ct_search_btn')}</button></div>
+      ${pinnedIds.length ? `<div class="slot-hint" style="margin-top:-6px">${t('tr_pin_hint')}</div>` : ''}
+      <div id="trainerList">
+        ${trainers.length ? trainers.map(tr=>{
+          const pinned = pinnedIds.includes(tr.id);
+          return `
+          <div class="trainer-row ${pinned?'pinned':''}">
+            <button class="pin-btn ${pinned?'pinned':''}" data-pin-trainer="${tr.id}" title="${pinned?t('tr_unpin_btn'):t('tr_pin_btn')}" aria-label="${pinned?t('tr_unpin_btn'):t('tr_pin_btn')}">★</button>
+            <div class="avatar">${initials(tr.name)}</div>
+            <div class="meta"><div class="n">${esc(tr.name)}</div><div class="s">${esc(tr.specialty||'')}</div>
+              <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">
+                <span class="badge ${tr.ready?'badge-active':'badge-role'}">${tr.ready?t('tr_ready'):t('tr_full')}</span>
+                ${pinned?`<span class="badge badge-pinned">${t('tr_pinned_badge')}</span>`:''}
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-sm" data-view-trainer="${tr.id}">${t('tr_view_profile')}</button>
+              <button class="btn btn-sm btn-primary" data-book-trainer="${tr.id}">${t('tr_book')}</button>
+            </div>
+          </div>
+        `;}).join('') : `<div class="empty">${t('ct_no_results')}</div>`}
+      </div>
+    </div>
+  `;
+}
+
+async function renderCTrainerProfile(){
+  const tr = await dbGet('trainer:'+routeParams.id);
+  if(!tr) return `<div class="empty">Not found</div>`;
+  const pinnedIds = await getPinnedTrainerIds();
+  const pinned = pinnedIds.includes(tr.id);
+  return `
+    <div class="back-link" data-goto="trainers">← ${t('tp_back')}</div>
+    <div class="card">
+      <div class="profile-header">
+        <div class="avatar">${initials(tr.name)}</div>
+        <div style="flex:1"><div class="n">${esc(tr.name)}</div><div class="s">${esc(tr.specialty||'')}</div></div>
+        <button class="pin-btn ${pinned?'pinned':''}" data-pin-trainer="${tr.id}" title="${pinned?t('tr_unpin_btn'):t('tr_pin_btn')}" aria-label="${pinned?t('tr_unpin_btn'):t('tr_pin_btn')}">★</button>
+      </div>
+      ${pinned ? `<div class="badge badge-pinned" style="margin-bottom:14px">${t('tr_pinned_badge')}</div>` : ''}
+      <div class="summary-row"><span class="k">${t('tp_contact_label')}</span><span class="v">${esc(tr.phone||'')}</span></div>
+      <div class="card" style="background:transparent;border:none;padding:16px 0 0">
+        <div class="card-head"><h3>${t('tp_about_label')}</h3></div>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.7">${esc(tr.bio||'—')}</p>
+      </div>
+      <div class="card" style="background:transparent;border:none;padding:16px 0 0">
+        <div class="card-head"><h3>${t('tp_certs_label')}</h3></div>
+        ${(tr.certs&&tr.certs.length) ? `<div class="cert-badge-row">${tr.certs.map(c=>`<span class="cert-badge">${esc(c.name)} · ${esc(c.issuer||'')} ${esc(c.year||'')}</span>`).join('')}</div>` : `<div class="empty">${t('tp_no_certs')}</div>`}
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top:10px" data-book-trainer="${tr.id}">${t('tr_book')}</button>
+    </div>
+  `;
+}
+
+const DAYS = (()=>{ const arr=[]; const start=new Date(); for(let i=0;i<7;i++){ const d=new Date(start); d.setDate(start.getDate()+i); arr.push(d.toISOString().slice(0,10)); } return arr; })();
+const TIMES = { morning:['06:00','07:00','08:00','09:00','10:00','11:00'], afternoon:['13:00','14:00','15:00','16:00'], evening:['17:00','18:00','19:00','20:00'] };
+let bookingState = { trainerId:null, day:DAYS[0], cat:'morning', time:null };
+
+/* ======================================================================
+   DUO BOOKING (ระบบจองคู่)
+   A slot can hold up to DUO_CAPACITY (2) customers, but only while the
+   requests are still pending. The trainer is the one who decides:
+     - accept both  -> pair session (sessionMode 'duo'), slot now full
+     - accept one   -> solo session, slot LOCKED and every other pending
+                       request at that exact slot is auto-declined so the
+                       other customer is bounced out to pick a new time
+   Therefore, for new bookings a slot is:
+     - locked   : any confirmed booking exists there (solo lock or duo full)
+     - full     : already has DUO_CAPACITY pending requests
+     - duo-open : exactly 1 pending request — still bookable as a pair ask
+   ====================================================================== */
+const DUO_CAPACITY = 2;
+const ACTIVE_BOOKING_STATUSES = ['pending','confirmed'];
+
+function bookingsAtSlot(all, trainerId, date, time){
+  return all.filter(b=> b.trainerId===trainerId && b.bookingDate===date && b.bookingTime===time && ACTIVE_BOOKING_STATUSES.includes(b.status));
+}
+/* Returns why (if at all) a customer cannot book this slot. */
+function slotAvailability(all, trainerId, date, time, customerId){
+  const at = bookingsAtSlot(all, trainerId, date, time);
+  const confirmed = at.filter(b=>b.status==='confirmed');
+  const pending = at.filter(b=>b.status==='pending');
+  if(customerId && at.some(b=>b.customerId===customerId)) return {ok:false, reason:'already_mine', pending:pending.length};
+  if(confirmed.length) return {ok:false, reason:'locked', pending:pending.length};
+  if(pending.length >= DUO_CAPACITY) return {ok:false, reason:'full', pending:pending.length};
+  return {ok:true, reason:null, pending:pending.length};
+}
+
+async function renderCBooking(){
+  if(routeParams.trainerId) bookingState.trainerId = routeParams.trainerId;
+  let trainers = await getApprovedTrainers();
+  const pinnedIds = await getPinnedTrainerIds();
+  trainers = sortTrainersByPin(trainers, pinnedIds);
+  const trainer = bookingState.trainerId ? await dbGet('trainer:'+bookingState.trainerId) : null;
+  const pkg = await getActivePackage(session.id);
+  const expiredUnused = !pkg && await hasExpiredUnusedPackage(session.id);
+  const allBookings = await dbGetAll('booking:');
+
+  const dayPills = DAYS.map(d=>{
+    const dt = new Date(d+'T00:00:00');
+    const dayShort = lang==='th' ? ['อา','จ','อ','พ','พฤ','ศ','ส'][dt.getDay()] : dt.toLocaleDateString('en-US',{weekday:'short'});
+    return `<div class="day-pill ${bookingState.day===d?'sel':''}" data-day="${d}"><div class="d">${dayShort}</div><div class="n">${dt.getDate()}</div></div>`;
+  }).join('');
+
+  let anyDuoOpen = false;
+  let selectedIsDuo = false;
+  const timeGrid = (TIMES[bookingState.cat]||[]).map(tm=>{
+    if(!trainer) return `<div class="time-slot" data-time="${tm}">${fmtTime(tm)}</div>`;
+    const av = slotAvailability(allBookings, trainer.id, bookingState.day, tm, session.id);
+    const duoOpen = av.ok && av.pending === 1;
+    if(duoOpen) anyDuoOpen = true;
+    if(duoOpen && bookingState.time === tm) selectedIsDuo = true;
+    const title = duoOpen ? t('duo_slot_pending_one') : '';
+    return `<div class="time-slot ${bookingState.time===tm?'sel':''} ${av.ok?'':'taken'} ${duoOpen?'duo-open':''}" data-time="${tm}" title="${esc(title)}">${fmtTime(tm)}</div>`;
+  }).join('');
+
+  // When the customer actually picks an amber slot, spell out in full what
+  // booking it means, instead of relying on the colour alone.
+  const duoNotice = selectedIsDuo ? `
+    <div class="duo-notice">
+      <div class="dn-icon">👥</div>
+      <div class="dn-body">
+        <div class="dn-title">${t('duo_notice_title')}</div>
+        <p>${tt('duo_notice_body',{time:fmtTime(bookingState.time), date:fmtDate(bookingState.day)})}</p>
+      </div>
+    </div>` : '';
+
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('cb_eyebrow')}</div><h1>${t('cb_h1')}</h1><p>${t('cb_p')}</p></div></div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="field">
+          <label>${t('cb_pick_trainer')}</label>
+          <select id="bookTrainerSelect">
+            <option value="">—</option>
+            ${trainers.map(x=>`<option value="${x.id}" ${trainer&&trainer.id===x.id?'selected':''}>${pinnedIds.includes(x.id)?'★ ':''}${esc(x.name)} — ${esc(x.specialty||'')}</option>`).join('')}
+          </select>
+        </div>
+        ${!trainer ? `<div class="empty">${t('cb_empty')}</div>` : `
+          ${!pkg ? `<div class="auth-error">${expiredUnused ? t('cb_expired_package') : t('cb_no_package')}</div>` : ''}
+          <label>${t('cb_date_label')}</label>
+          <div class="day-strip" id="dayStrip">${dayPills}</div>
+          <label>${t('cb_cat_label')}</label>
+          <div class="cat-row">
+            <button type="button" class="cat-pill ${bookingState.cat==='morning'?'sel':''}" data-cat="morning">${t('cb_cat_morning')}</button>
+            <button type="button" class="cat-pill ${bookingState.cat==='afternoon'?'sel':''}" data-cat="afternoon">${t('cb_cat_afternoon')}</button>
+            <button type="button" class="cat-pill ${bookingState.cat==='evening'?'sel':''}" data-cat="evening">${t('cb_cat_evening')}</button>
+          </div>
+          <label>${t('cb_time_label')}</label>
+          <div class="time-grid" id="timeGrid">${timeGrid}</div>
+          ${anyDuoOpen && !selectedIsDuo ? `<div class="slot-hint">${t('duo_slot_hint')}</div>` : ''}
+          ${duoNotice}
+          <button class="btn btn-primary btn-block ${selectedIsDuo?'btn-duo':''}" id="submitBookingBtn" ${!pkg?'disabled':''}>${selectedIsDuo ? t('duo_submit_btn') : t('cb_submit_btn')}</button>
+        `}
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>${t('cb_summary_title')}</h3></div>
+        <div class="summary-row"><span class="k">${t('cb_sum_trainer')}</span><span class="v">${trainer?esc(trainer.name):'—'}</span></div>
+        <div class="summary-row"><span class="k">${t('cb_sum_date')}</span><span class="v">${fmtDate(bookingState.day)}</span></div>
+        <div class="summary-row"><span class="k">${t('cb_sum_time')}</span><span class="v">${bookingState.time?fmtTime(bookingState.time):'—'}</span></div>
+        ${bookingState.time ? `<div class="summary-row"><span class="k">${t('duo_sum_mode')}</span><span class="v">${selectedIsDuo?`<span class="badge badge-duo">${t('duo_sum_mode_duo')}</span>`:t('duo_sum_mode_solo')}</span></div>` : ''}
+        <div class="summary-row"><span class="k">${t('cb_sum_sessions')}</span><span class="v">${pkg? (pkg.remainingSessions+' / '+pkg.totalSessions) : '0 / 0'}</span></div>
+        <div class="summary-row"><span class="k">${t('cb_sum_status')}</span><span class="v">${t('cb_status_after')}</span></div>
+      </div>
+    </div>
+  `;
+}
+
+async function submitBooking(){
+  const trainer = await dbGet('trainer:'+bookingState.trainerId);
+  const pkg = await getActivePackage(session.id);
+  if(!trainer || !pkg || !bookingState.time){ toast(t('cb_no_time_selected')); return; }
+  // Re-check against fresh data so two customers racing for the same slot
+  // can still both get in (duo), but never past the capacity rules.
+  const freshBookings = await dbGetAll('booking:');
+  const av = slotAvailability(freshBookings, trainer.id, bookingState.day, bookingState.time, session.id);
+  if(!av.ok){
+    toast(av.reason==='already_mine' ? t('cb_slot_already_mine') : av.reason==='full' ? t('cb_slot_full_requests') : t('cb_slot_locked'));
+    bookingState.time = null;
+    renderView();
+    return;
+  }
+  const booking = {
+    id:newId('bk'), customerId:session.id, customerName:session.name, trainerId:trainer.id, trainerName:trainer.name,
+    packageInstanceId: pkg.id, bookingDate: bookingState.day, bookingTime: bookingState.time,
+    status:'pending', sessionMode:null, partnerNames:[], createdAt:new Date().toISOString(), completedAt:null
+  };
+  await dbSet('booking:'+booking.id, booking);
+  await pushNotification(trainer.id, 'nav_t_requests', 'notif_new_request', {customer:session.name, date:fmtDate(booking.bookingDate), time:fmtTime(booking.bookingTime)}, booking.id);
+  bookingState.time = null;
+  document.getElementById('modalTitle').textContent = t('modal_title');
+  document.getElementById('modalBody').textContent = t('modal_body');
+  document.getElementById('modalCloseBtn').textContent = t('modal_close');
+  document.getElementById('bookingModal').classList.add('show');
+}
+
+async function renderCMyBookings(){
+  const all = await dbGetAll('booking:');
+  const mine = all.filter(b=>b.customerId===session.id).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('mb_eyebrow')}</div><h1>${t('mb_h1')}</h1><p>${t('mb_p')}</p></div></div>
+    <div class="card">
+      ${mine.length ? mine.map(b=>`
+        <div class="req-card">
+          <div class="req-top">
+            <div>
+              <div class="n">${esc(b.trainerName)}</div>
+              <div class="t">${fmtDate(b.bookingDate)} · ${fmtTime(b.bookingTime)}</div>
+              ${b.sessionMode==='duo' && (b.partnerNames||[]).length ? `<div class="t" style="color:#f0ab3c">${tt('duo_partner',{name:esc(b.partnerNames.join(', '))})}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+              ${b.sessionMode==='duo' ? `<span class="badge badge-duo">${t('duo_badge')}</span>` : ''}
+              ${badgeFor(b.status)}
+            </div>
+          </div>
+        </div>
+      `).join('') : `<div class="empty">${t('mb_empty')}</div>`}
+    </div>
+  `;
+}
+
+async function renderCPackage(){
+  const active = await getActivePackage(session.id);
+  const expiredUnused = !active && await hasExpiredUnusedPackage(session.id);
+  const notifs = (await getNotifications(session.id)).slice(0,5);
+  const catalog = (await dbGetAll('package:')).filter(p=>p.status==='active');
+  return `
+    <div class="back-link" data-goto="dashboard">← ${t('nav_c_dashboard')}</div>
+    <div class="page-head"><div><div class="eyebrow">${t('cp_eyebrow')}</div><h1>${t('cp_h1')}</h1><p>${t('cp_p')}</p></div></div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><h3>${t('cp_remaining_title')}</h3></div>
+        ${active ? ringHtml(active) : expiredUnused ? `<div class="auth-error">${t('cp_expired_warn')}</div>` : `<div class="empty">${t('cp_no_package')}</div>`}
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>${t('notif_h1')}</h3></div>
+        ${notifs.length ? notifs.map(n=>notifRow(n)).join('') : `<div class="empty">${t('notif_empty')}</div>`}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>${t('cp_buy_title')}</h3></div>
+      ${catalog.map(p=>`
+        <div class="pkg-buy-row">
+          <div class="info"><div class="n">${esc(p.name)}</div><div class="s">${p.sessions} ${lang==='th'?'ครั้ง':'sessions'} · ฿${Number(p.price).toLocaleString()}</div></div>
+          <button class="btn btn-primary btn-sm" data-buy-pkg="${p.id}">${t('cp_buy_btn')}</button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+async function buyPackage(pkgId){
+  const p = await dbGet('package:'+pkgId);
+  if(!p) return;
+  const inst = {id:newId('cp'), customerId:session.id, packageId:p.id, packageName:p.name, totalSessions:p.sessions,
+    usedSessions:0, remainingSessions:p.sessions, startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(p.expirationDays||90), status:'active'};
+  await dbSet('custpkg:'+inst.id, inst);
+  toast(tt('cp_toast_bought',{name:p.name}));
+  renderView();
+}
+
+/* Bookings store a snapshot of the customer's and trainer's names so each
+   list can render without extra lookups. When someone renames themselves
+   those snapshots would go stale and the other side would keep seeing the
+   old name forever — so push the new name through every affected booking
+   (and through any pair-session partner lists that mention it). */
+async function propagateNameChange(role, id, newName){
+  const bookings = await dbGetAll('booking:');
+  let touchedCustomer = false;
+  for(const b of bookings){
+    let changed = false;
+    if(role==='customer' && b.customerId===id && b.customerName!==newName){ b.customerName = newName; changed = true; touchedCustomer = true; }
+    if(role==='trainer'  && b.trainerId===id  && b.trainerName!==newName){ b.trainerName  = newName; changed = true; }
+    if(changed) await dbSet('booking:'+b.id, b);
+  }
+  if(touchedCustomer){
+    const fresh = await dbGetAll('booking:');
+    for(const b of fresh){
+      if(b.sessionMode !== 'duo') continue;
+      const names = fresh
+        .filter(x=> x.id!==b.id && x.trainerId===b.trainerId && x.bookingDate===b.bookingDate && x.bookingTime===b.bookingTime && x.sessionMode==='duo')
+        .map(x=> x.customerName);
+      if(JSON.stringify(names) !== JSON.stringify(b.partnerNames||[])){
+        b.partnerNames = names;
+        await dbSet('booking:'+b.id, b);
+      }
+    }
+  }
+}
+
+async function renderCProfile(){
+  const c = await dbGet('customer:'+session.id);
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('prof_eyebrow')}</div><h1>${t('prof_h1')}</h1><p>${t('prof_p')}</p></div></div>
+    <div class="card" style="max-width:480px">
+      <div class="field"><label>${t('prof_name')}</label><input type="text" id="cProfName" value="${esc(c.name)}"></div>
+      <div class="field"><label>${t('prof_phone')}</label><input type="text" id="cProfPhone" value="${esc(c.phone)}"></div>
+      <button class="btn btn-primary btn-block" id="cProfSave">${t('prof_save')}</button>
+    </div>
+  `;
+}
+async function saveCProfile(){
+  const c = await dbGet('customer:'+session.id);
+  const newName = document.getElementById('cProfName').value.trim() || c.name;
+  const newPhone = document.getElementById('cProfPhone').value.trim() || c.phone;
+  // A phone number is a login ID here, so it has to stay unique — otherwise
+  // two accounts answer to the same credentials and login becomes ambiguous.
+  if(newPhone !== c.phone){
+    const others = (await dbGetAll('customer:')).filter(x=> x.id !== c.id);
+    if(others.some(x=> x.phone===newPhone || x.username===newPhone)){
+      toast(t('auth_toast_phone_used'));
+      return;
+    }
+  }
+  c.name = newName;
+  c.phone = newPhone;
+  c.username = newPhone;
+  await dbSet('customer:'+c.id, c);
+  await propagateNameChange('customer', c.id, c.name);
+  session.name = c.name;
+  toast(t('prof_saved'));
+  renderRoot();
+}
+
+/* ======================================================================
+   TRAINER SYSTEM
+   ====================================================================== */
+async function renderTrainerView(){
+  if(route==='dashboard') return renderTDashboard();
+  if(route==='requests') return renderTRequests();
+  if(route==='schedule') return renderTSchedule();
+  if(route==='customers') return renderTCustomers();
+  if(route==='notif') return renderNotifPage();
+  if(route==='profile') return renderTProfile();
+  return renderTDashboard();
+}
+
+async function trainerBookings(){
+  const all = await dbGetAll('booking:');
+  return all.filter(b=>b.trainerId===session.id);
+}
+
+async function renderTDashboard(){
+  const bookings = await trainerBookings();
+  const pending = bookings.filter(b=>b.status==='pending').length;
+  const confirmed = bookings.filter(b=>b.status==='confirmed').length;
+  const done = bookings.filter(b=>b.status==='completed').length;
+  const noshow = bookings.filter(b=>b.status==='no_show').length;
+  const notifs = (await getNotifications(session.id)).slice(0,4);
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('tq_eyebrow')}</div><h1>${tt('t_dash_h1',{name:esc(session.name)})}</h1><p>${t('t_dash_p')}</p></div></div>
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card"><div class="lbl">${t('tq_pending_label')}</div><div class="val accent">${pending}</div></div>
+      <div class="stat-card"><div class="lbl">${t('tq_confirmed_label')}</div><div class="val">${confirmed}</div></div>
+      <div class="stat-card"><div class="lbl">${t('tq_done_label')}</div><div class="val">${done}</div></div>
+      <div class="stat-card"><div class="lbl">${t('tq_noshow_label')}</div><div class="val">${noshow}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>${t('c_dash_notif')}</h3></div>
+      ${notifs.length ? notifs.map(n=>notifRow(n)).join('') : `<div class="empty">${t('notif_empty')}</div>`}
+    </div>
+  `;
+}
+
+async function renderTRequests(){
+  const bookings = (await trainerBookings()).filter(b=>b.status==='pending').sort((a,b)=> new Date(a.createdAt)-new Date(b.createdAt));
+  // Group pending requests that target the exact same date+time, so the
+  // trainer can decide between a pair session and a solo lock.
+  const groups = [];
+  const bySlot = {};
+  bookings.forEach(b=>{
+    const key = b.bookingDate+'|'+b.bookingTime;
+    if(!bySlot[key]){ bySlot[key] = {key, date:b.bookingDate, time:b.bookingTime, items:[]}; groups.push(bySlot[key]); }
+    bySlot[key].items.push(b);
+  });
+
+  const body = groups.map(g=>{
+    if(g.items.length < 2){
+      const b = g.items[0];
+      return `
+        <div class="req-card">
+          <div class="req-top"><div><div class="n">${esc(b.customerName)}</div><div class="t">${fmtDate(b.bookingDate)} · ${fmtTime(b.bookingTime)}</div></div>${badgeFor(b.status)}</div>
+          <div class="req-actions">
+            <button class="btn btn-primary" data-accept-booking="${b.id}">${t('tq_accept')}</button>
+            <button class="btn btn-danger-outline" data-reject-booking="${b.id}">${t('tq_reject')}</button>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="duo-group">
+        <div class="duo-head">
+          <div><div class="n">${tt('duo_group_title',{count:g.items.length})}</div><div class="t">${fmtDate(g.date)} · ${fmtTime(g.time)}</div></div>
+          <span class="badge badge-duo">${t('duo_badge')}</span>
+        </div>
+        <div class="duo-hint">${t('duo_group_hint')}</div>
+        ${g.items.map(b=>`
+          <div class="duo-person">
+            <div class="pn">${esc(b.customerName)}</div>
+            <div class="acts">
+              <button class="btn btn-sm btn-ghost" data-accept-booking="${b.id}">${t('duo_accept_only')}</button>
+              <button class="btn btn-sm btn-danger-outline" data-reject-booking="${b.id}">${t('tq_reject')}</button>
+            </div>
+          </div>
+        `).join('')}
+        <button class="btn btn-primary btn-block" data-accept-duo="${esc(g.key)}">${t('duo_accept_both')}</button>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('tq_eyebrow')}</div><h1>${t('tq_h1')}</h1><p>${t('tq_p')}</p></div></div>
+    <div class="card">
+      <div class="card-head"><h3>${t('tq_new_title')}</h3><span class="hint">${bookings.length}</span></div>
+      ${bookings.length ? body : `<div class="empty">${t('tq_no_requests')}</div>`}
+    </div>
+  `;
+}
+
+/* Accept a single request as a SOLO session: the slot is locked and every
+   other pending request at that exact slot is bounced out automatically. */
+async function respondBooking(id, accept){
+  const b = await dbGet('booking:'+id);
+  if(!b || b.status!=='pending') return;
+  b.status = accept ? 'confirmed' : 'rejected';
+  if(accept){ b.sessionMode = 'solo'; b.partnerNames = []; }
+  await dbSet('booking:'+id, b);
+  if(accept){
+    await pushNotification(b.customerId, 'nav_c_mybookings', 'notif_accepted', {trainer:b.trainerName, date:fmtDate(b.bookingDate), time:fmtTime(b.bookingTime)}, b.id);
+    // bounce out the other pending requests competing for this slot
+    const all = await dbGetAll('booking:');
+    const losers = all.filter(x=> x.id!==b.id && x.trainerId===b.trainerId && x.bookingDate===b.bookingDate && x.bookingTime===b.bookingTime && x.status==='pending');
+    for(const l of losers){
+      l.status = 'rejected';
+      await dbSet('booking:'+l.id, l);
+      await pushNotification(l.customerId, 'nav_c_booking', 'notif_slot_lost', {trainer:b.trainerName, date:fmtDate(b.bookingDate), time:fmtTime(b.bookingTime)}, l.id);
+    }
+    toast(losers.length ? t('duo_toast_solo') : t('tq_toast_accept'));
+  } else {
+    await pushNotification(b.customerId, 'nav_c_mybookings', 'notif_rejected', {trainer:b.trainerName, date:fmtDate(b.bookingDate), time:fmtTime(b.bookingTime)}, b.id);
+    toast(t('tq_toast_reject'));
+  }
+  renderView(); renderNav();
+}
+
+/* Accept every pending request at a slot together as a PAIR session. */
+async function acceptDuo(slotKey){
+  const [date, time] = slotKey.split('|');
+  const all = await dbGetAll('booking:');
+  const pending = all
+    .filter(b=> b.trainerId===session.id && b.bookingDate===date && b.bookingTime===time && b.status==='pending')
+    .sort((a,b)=> new Date(a.createdAt)-new Date(b.createdAt));
+  if(!pending.length) return;
+
+  const accepted = pending.slice(0, DUO_CAPACITY);
+  const overflow = pending.slice(DUO_CAPACITY); // more than the pair can hold
+  const names = accepted.map(b=>b.customerName);
+
+  for(const b of accepted){
+    b.status = 'confirmed';
+    b.sessionMode = accepted.length > 1 ? 'duo' : 'solo';
+    b.partnerNames = names.filter(n=> n!==b.customerName);
+    await dbSet('booking:'+b.id, b);
+    if(b.sessionMode === 'duo'){
+      await pushNotification(b.customerId, 'nav_c_mybookings', 'notif_accepted_duo', {trainer:b.trainerName, date:fmtDate(date), time:fmtTime(time), partner:b.partnerNames.join(', ')}, b.id);
+    } else {
+      await pushNotification(b.customerId, 'nav_c_mybookings', 'notif_accepted', {trainer:b.trainerName, date:fmtDate(date), time:fmtTime(time)}, b.id);
+    }
+  }
+  for(const l of overflow){
+    l.status = 'rejected';
+    await dbSet('booking:'+l.id, l);
+    await pushNotification(l.customerId, 'nav_c_booking', 'notif_slot_lost', {trainer:l.trainerName, date:fmtDate(date), time:fmtTime(time)}, l.id);
+  }
+  toast(tt('duo_toast_both',{count:accepted.length}));
+  renderView(); renderNav();
+}
+
+async function renderTSchedule(){
+  const bookings = (await trainerBookings()).filter(b=>b.status==='confirmed').sort((a,b)=> (a.bookingDate+a.bookingTime).localeCompare(b.bookingDate+b.bookingTime));
+  // Pair sessions share one slot, so show them grouped under a single header
+  // while still letting the trainer record each customer's result separately.
+  const groups = [];
+  const bySlot = {};
+  bookings.forEach(b=>{
+    const key = b.bookingDate+'|'+b.bookingTime;
+    if(!bySlot[key]){ bySlot[key] = {key, date:b.bookingDate, time:b.bookingTime, items:[]}; groups.push(bySlot[key]); }
+    bySlot[key].items.push(b);
+  });
+
+  const body = groups.map(g=>{
+    const acts = b=>`
+      <div class="acts">
+        <button class="btn btn-sm btn-primary" data-complete-booking="${b.id}">${t('ts_mark_done')}</button>
+        <button class="btn btn-sm btn-danger-outline" data-noshow-booking="${b.id}">${t('ts_mark_noshow')}</button>
+      </div>`;
+    if(g.items.length < 2){
+      const b = g.items[0];
+      return `
+        <div class="sched-row">
+          <div class="time">${fmtTime(b.bookingTime)}</div>
+          <div class="who">${esc(b.customerName)} · ${fmtDate(b.bookingDate)}</div>
+          ${acts(b)}
+        </div>`;
+    }
+    return `
+      <div class="duo-group">
+        <div class="duo-head">
+          <div><div class="n">${fmtTime(g.time)} · ${fmtDate(g.date)}</div><div class="t">${g.items.map(x=>esc(x.customerName)).join(' + ')}</div></div>
+          <span class="badge badge-duo">${t('duo_badge')}</span>
+        </div>
+        ${g.items.map(b=>`
+          <div class="duo-person">
+            <div class="pn">${esc(b.customerName)}</div>
+            ${acts(b)}
+          </div>
+        `).join('')}
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('ts_eyebrow')}</div><h1>${t('ts_h1')}</h1><p>${t('ts_p')}</p></div></div>
+    <div class="card">
+      ${bookings.length ? body : `<div class="empty">${t('ts_no_schedule')}</div>`}
+    </div>
+  `;
+}
+async function finishBooking(id, noShow){
+  const b = await dbGet('booking:'+id);
+  if(!b || b.status!=='confirmed') return; // guard against double-deduction
+  b.status = noShow ? 'no_show' : 'completed';
+  b.completedAt = new Date().toISOString();
+  await dbSet('booking:'+id, b);
+
+  // deduct exactly one session from the linked package instance
+  if(b.packageInstanceId){
+    const pkg = await dbGet('custpkg:'+b.packageInstanceId);
+    if(pkg && pkg.remainingSessions>0){
+      pkg.usedSessions += 1;
+      pkg.remainingSessions -= 1;
+      if(pkg.remainingSessions<=0) pkg.status = 'used_up';
+      await dbSet('custpkg:'+pkg.id, pkg);
+      await pushNotification(b.customerId, 'nav_c_package', noShow?'notif_noshow':'notif_done', {who:b.trainerName, count:pkg.remainingSessions}, b.id);
+      if(pkg.remainingSessions<=0) await pushNotification(b.customerId, 'nav_c_package', 'notif_full', {}, b.id);
+    }
+  }
+  toast(noShow? t('ts_toast_noshow') : t('ts_toast_done'));
+  renderView();
+}
+
+async function renderTCustomers(){
+  const bookings = await trainerBookings();
+  const doneBookings = bookings.filter(b=>b.status==='completed');
+  const custIds = [...new Set(bookings.map(b=>b.customerId))];
+  const rows = custIds.map(cid=>{
+    const b = bookings.find(x=>x.customerId===cid);
+    const doneCount = doneBookings.filter(x=>x.customerId===cid).length;
+    return {name:b.customerName, id:cid, doneCount};
+  });
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('tc_eyebrow')}</div><h1>${t('tc_h1')}</h1><p>${t('tc_p')}</p></div></div>
+    <div class="card">
+      ${rows.length ? rows.map(r=>`
+        <div class="trainer-row"><div class="avatar">${initials(r.name)}</div><div class="meta"><div class="n">${esc(r.name)}</div><div class="s">${tt('tc_sessions_done',{n:r.doneCount})}</div></div></div>
+      `).join('') : `<div class="empty">${t('tc_empty')}</div>`}
+    </div>
+  `;
+}
+
+async function renderTProfile(){
+  const tr = await dbGet('trainer:'+session.id);
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('tpz_eyebrow')}</div><h1>${t('tpz_h1')}</h1><p>${t('tpz_p')}</p></div></div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><h3>${t('tpz_personal_title')}</h3></div>
+        <div class="field"><label>${t('tpz_name_label')}</label><input type="text" id="pfName" value="${esc(tr.name)}"></div>
+        <div class="field-row">
+          <div class="field"><label>${t('tpz_specialty_label')}</label><input type="text" id="pfSpecialty" value="${esc(tr.specialty||'')}"></div>
+          <div class="field"><label>${t('tpz_phone_label')}</label><input type="text" id="pfPhone" value="${esc(tr.phone||'')}"></div>
+        </div>
+        <div class="field"><label>${t('tpz_bio_label')}</label><textarea id="pfBio" rows="3">${esc(tr.bio||'')}</textarea></div>
+        <div class="field" style="display:flex;align-items:center;gap:10px">
+          <input type="checkbox" id="pfReady" ${tr.ready?'checked':''} style="width:auto">
+          <label style="margin:0" for="pfReady">${t('tpz_ready_label')}</label>
+        </div>
+        <button class="btn btn-primary btn-block" id="pfSaveBtn">${t('tpz_save_btn')}</button>
+      </div>
+      <div class="card" id="certsCard">${certsCardInner(tr)}</div>
+    </div>
+  `;
+}
+function certsCardInner(tr){
+  return `
+    <div class="card-head"><h3>${t('tpz_certs_title')}</h3><span class="hint">${(tr.certs||[]).length}</span></div>
+    ${(tr.certs&&tr.certs.length) ? tr.certs.map((c,i)=>`
+      <div class="cert-chip"><div class="ic">🎓</div><div class="info"><div class="n">${esc(c.name)}</div><div class="s">${esc(c.issuer||'')} · ${esc(c.year||'')}</div></div><button class="btn btn-sm btn-ghost" data-remove-cert="${i}">✕</button></div>
+    `).join('') : `<div class="empty">${t('tpz_no_certs')}</div>`}
+    <div class="field" style="margin-top:14px"><label>${t('tpz_add_cert_label')}</label><input type="text" id="newCertName" placeholder="${t('tpz_cert_name_ph')}"></div>
+    <div class="field-row">
+      <div class="field"><input type="text" id="newCertIssuer" placeholder="${t('tpz_cert_issuer_ph')}"></div>
+      <div class="field"><input type="text" id="newCertYear" placeholder="${t('tpz_cert_year_ph')}"></div>
+    </div>
+    <button class="btn btn-block" id="addCertBtn">${t('tpz_add_cert_btn')}</button>
+  `;
+}
+function wireCertsCard(){
+  const addCertBtn = document.getElementById('addCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', addCert);
+  document.querySelectorAll('[data-remove-cert]').forEach(el=>el.addEventListener('click', ()=> removeCert(Number(el.dataset.removeCert))));
+}
+async function refreshCertsCard(){
+  const card = document.getElementById('certsCard');
+  if(!card) return;
+  const tr = await dbGet('trainer:'+session.id);
+  card.innerHTML = certsCardInner(tr);
+  wireCertsCard();
+}
+async function saveTrainerProfile(){
+  const tr = await dbGet('trainer:'+session.id);
+  const newName = document.getElementById('pfName').value.trim() || tr.name;
+  const newPhone = document.getElementById('pfPhone').value.trim();
+  // Same uniqueness rule as customers: the phone doubles as the login ID,
+  // and a pending application must not be able to squat an existing one.
+  if(newPhone && newPhone !== tr.phone){
+    const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
+    const clash = trainers.some(x=> x.id!==tr.id && (x.phone===newPhone || x.username===newPhone))
+               || apps.some(x=> x.username===newPhone || x.phone===newPhone);
+    if(clash){ toast(t('auth_toast_phone_used')); return; }
+  }
+  tr.name = newName;
+  tr.specialty = document.getElementById('pfSpecialty').value.trim();
+  if(newPhone){ tr.phone = newPhone; tr.username = newPhone; }
+  tr.bio = document.getElementById('pfBio').value.trim();
+  tr.ready = document.getElementById('pfReady').checked;
+  await dbSet('trainer:'+tr.id, tr);
+  await propagateNameChange('trainer', tr.id, tr.name);
+  session.name = tr.name;
+  toast(t('tpz_toast_saved'));
+  renderRoot();
+}
+async function addCert(){
+  const name = document.getElementById('newCertName').value.trim();
+  if(!name){ toast(t('tpz_toast_need_name')); return; }
+  const issuer = document.getElementById('newCertIssuer').value.trim();
+  const year = document.getElementById('newCertYear').value.trim();
+  const tr = await dbGet('trainer:'+session.id);
+  tr.certs = tr.certs || [];
+  tr.certs.push({name, issuer, year});
+  await dbSet('trainer:'+tr.id, tr);
+  toast(t('tpz_toast_cert_added'));
+  // Refresh only the certificates card — a full renderView() would rebuild
+  // the personal-info fields from the database and discard any unsaved
+  // edits the trainer made to name/specialty/phone/bio before saving.
+  await refreshCertsCard();
+}
+async function removeCert(idx){
+  const tr = await dbGet('trainer:'+session.id);
+  tr.certs.splice(idx,1);
+  await dbSet('trainer:'+tr.id, tr);
+  toast(t('tpz_toast_cert_removed'));
+  await refreshCertsCard();
+}
+
+/* ======================================================================
+   ADMIN SYSTEM
+   ====================================================================== */
+async function renderAdminView(){
+  if(route==='dashboard') return renderADashboard();
+  if(route==='apps') return renderAApps();
+  if(route==='users') return renderAUsers();
+  if(route==='packages') return renderAPackages();
+  return renderADashboard();
+}
+
+async function renderADashboard(){
+  const [trainers, customers, apps, packages, bookings, custPkgs] = await Promise.all([
+    dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
+    dbGetAll('package:'), dbGetAll('booking:'), dbGetAll('custpkg:')
+  ]);
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('ad_eyebrow')}</div><h1>${t('ad_h1')}</h1><p>${t('ad_p')}</p></div></div>
+    <div class="grid-4">
+      <div class="stat-card"><div class="lbl">${t('ad_stat_trainers')}</div><div class="val">${trainers.length}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_customers')}</div><div class="val">${customers.length}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_pending')}</div><div class="val accent">${apps.filter(a=>a.status==='pending').length}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_packages')}</div><div class="val">${packages.filter(p=>p.status==='active').length}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_bookings')}</div><div class="val">${bookings.length}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${custPkgs.filter(p=>p.status==='active').length}</div></div>
+    </div>
+  `;
+}
+
+async function renderAApps(){
+  const apps = (await dbGetAll('trainerApp:')).filter(a=>a.status==='pending').sort((a,b)=> new Date(a.submittedAt)-new Date(b.submittedAt));
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('aa_eyebrow')}</div><h1>${t('aa_h1')}</h1><p>${t('aa_p')}</p></div></div>
+    <div class="card">
+      ${apps.length ? apps.map(a=>`
+        <div class="req-card">
+          <div class="req-top">
+            <div><div class="n">${esc(a.name)}</div><div class="t">${esc(a.specialty||'')} · ${esc(a.phone||'')}</div><div class="t">${t('aa_submitted_on')} ${fmtDateTime(a.submittedAt)}</div></div>
+            <span class="badge badge-pending">${t('aa_pending_badge')}</span>
+          </div>
+          <p style="font-size:13px;color:var(--text-dim);margin-bottom:10px;line-height:1.6">${esc(a.bio||'')}</p>
+          <div style="margin-bottom:12px">
+            <div class="hint" style="font-size:11px;color:var(--text-faint);margin-bottom:6px">${t('aa_certs_label')}</div>
+            ${(a.certs&&a.certs.length) ? `<div class="cert-badge-row">${a.certs.map(c=>`<span class="cert-badge">${esc(c.name)} · ${esc(c.issuer||'')} ${esc(c.year||'')}</span>`).join('')}</div>` : `<div style="font-size:12px;color:var(--text-faint)">${t('aa_no_certs')}</div>`}
+          </div>
+          <div class="req-actions">
+            <button class="btn btn-primary" data-approve-app="${a.id}">${t('aa_approve_btn')}</button>
+            <button class="btn btn-danger-outline" data-reject-app="${a.id}">${t('aa_reject_btn')}</button>
+          </div>
+        </div>
+      `).join('') : `<div class="empty">${t('aa_no_apps')}</div>`}
+    </div>
+  `;
+}
+async function approveApp(id, approve){
+  const app = await dbGet('trainerApp:'+id);
+  if(!app) return;
+  if(approve){
+    const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
+      specialty:app.specialty, bio:app.bio, certs:app.certs||[], status:'active', ready:true, role:'trainer'};
+    await dbSet('trainer:'+tr.id, tr);
+    await dbDelete('trainerApp:'+id);
+    await pushNotification(tr.id, 'nav_t_dashboard', 'notif_approved', {}, null);
+    toast(t('aa_toast_approve'));
+  } else {
+    await dbDelete('trainerApp:'+id);
+    toast(t('aa_toast_reject'));
+  }
+  renderView(); renderNav();
+}
+
+async function renderAUsers(){
+  const [trainers, customers] = await Promise.all([dbGetAll('trainer:'), dbGetAll('customer:')]);
+  const rows = [
+    ...trainers.map(x=>({...x, roleLabel:t('au_role_trainer')})),
+    ...customers.map(x=>({...x, roleLabel:t('au_role_customer')}))
+  ];
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('au_eyebrow')}</div><h1>${t('au_h1')}</h1><p>${t('au_p')}</p></div></div>
+    <div class="card table-wrap">
+      <table class="table">
+        <thead><tr><th>${t('au_th_name')}</th><th>${t('au_th_role')}</th><th>${t('au_th_phone')}</th><th>${t('au_th_status')}</th><th></th></tr></thead>
+        <tbody>
+          ${rows.map(u=>`
+            <tr>
+              <td data-label="${t('au_th_name')}">${esc(u.name)}</td>
+              <td data-label="${t('au_th_role')}"><span class="badge badge-role">${u.roleLabel}</span></td>
+              <td data-label="${t('au_th_phone')}">${esc(u.phone||u.username||'')}</td>
+              <td data-label="${t('au_th_status')}"><span class="badge ${u.status==='active'?'badge-active':'badge-suspended'}">${u.status==='active'?t('au_status_active'):t('au_status_suspended')}</span></td>
+              <td class="td-actions">${u.status==='active'
+                ? `<button class="btn btn-sm btn-danger-outline" data-suspend-user="${u.role}:${u.id}">${t('au_suspend_btn')}</button>`
+                : `<button class="btn btn-sm btn-primary" data-activate-user="${u.role}:${u.id}">${t('au_activate_btn')}</button>`}
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+async function setUserStatus(roleAndId, status){
+  const [role, id] = roleAndId.split(':');
+  const key = (role==='trainer'?'trainer:':'customer:')+id;
+  const u = await dbGet(key);
+  if(!u) return;
+  u.status = status;
+  await dbSet(key, u);
+  toast(status==='active'? t('au_toast_activate') : t('au_toast_suspend'));
+  renderView();
+}
+
+async function renderAPackages(){
+  const packages = (await dbGetAll('package:')).sort((a,b)=> a.name.localeCompare(b.name));
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('apk_eyebrow')}</div><h1>${t('apk_h1')}</h1><p>${t('apk_p')}</p></div></div>
+    <div class="card table-wrap">
+      <table class="table">
+        <thead><tr><th>${t('apk_th_name')}</th><th>${t('apk_th_sessions')}</th><th>${t('apk_th_price')}</th><th>${t('apk_th_status')}</th><th></th></tr></thead>
+        <tbody>
+          ${packages.map(p=>`
+            <tr>
+              <td data-label="${t('apk_th_name')}"><input type="text" data-pkg-field="name" data-pkg-id="${p.id}" value="${esc(p.name)}"></td>
+              <td data-label="${t('apk_th_sessions')}"><input type="number" data-pkg-field="sessions" data-pkg-id="${p.id}" value="${p.sessions}" class="inp-num"></td>
+              <td data-label="${t('apk_th_price')}"><input type="number" data-pkg-field="price" data-pkg-id="${p.id}" value="${p.price}" class="inp-num"></td>
+              <td data-label="${t('apk_th_status')}">
+                <select data-pkg-field="status" data-pkg-id="${p.id}">
+                  <option value="active" ${p.status==='active'?'selected':''}>${t('status_on')}</option>
+                  <option value="inactive" ${p.status==='inactive'?'selected':''}>${t('status_off')}</option>
+                </select>
+              </td>
+              <td class="td-actions"><button class="btn btn-sm btn-danger-outline" data-remove-pkg="${p.id}">${t('apk_remove_btn')}</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <button class="btn btn-block" style="margin-top:14px" id="addPkgBtn">${t('apk_add_btn')}</button>
+    </div>
+  `;
+}
+async function savePackageField(id, field, value){
+  const p = await dbGet('package:'+id);
+  if(!p) return;
+  if(field==='sessions' || field==='price') value = Number(value)||0;
+  p[field] = value;
+  await dbSet('package:'+id, p);
+  toast(t('apk_toast_updated'));
+}
+async function addPackage(){
+  const p = {id:newId('pkg'), name:t('apk_new_name'), sessions:10, price:3000, expirationDays:90, status:'active'};
+  await dbSet('package:'+p.id, p);
+  toast(t('apk_toast_added'));
+  renderView();
+}
+async function removePackage(id){
+  await dbDelete('package:'+id);
+  toast(t('apk_toast_removed'));
+  renderView();
+}
+
+/* ======================================================================
+   AUTH (Customer / Trainer / Admin — each logs into their own system)
+   ====================================================================== */
+let authRole = 'customer';
+let authMode = 'login';
+let authError = '';
+let pendingApplicationCerts = [];
+// Draft state for the register/apply forms so that if the screen has to
+// re-render (e.g. to show a validation error) whatever the person already
+// typed is preserved instead of being wiped out.
+let regDraft = {name:'', phone:'', pw:''};
+let applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
+
+async function renderAuth(){
+  const app = document.getElementById('app');
+  const icon = authRole==='customer' ? '👤' : authRole==='trainer' ? '🏋' : '🛠';
+  let inner = '';
+
+  if(authMode==='login'){
+    const idLabel = authRole==='admin' ? t('auth_username_label') : t('auth_phone_label');
+    const idPh = authRole==='admin' ? '' : '090-xxx-xxxx';
+    inner += `
+      <div style="text-align:center;margin-bottom:22px">
+        <div class="auth-mark">${icon}</div>
+        <h2 style="font-family:var(--font-display);font-size:22px">${t('auth_login_heading')}</h2>
+        <p style="font-size:12px;color:var(--text-faint);margin-top:6px">${t('auth_as')}: ${t('role_'+authRole)}</p>
+      </div>
+      ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
+      <div class="field"><label>${idLabel}</label><input type="text" id="authId" placeholder="${idPh}"></div>
+      <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="authPw"></div>
+      <button class="btn btn-primary btn-block" id="loginBtn">${t('auth_login_btn')}</button>
+    `;
+    if(authRole==='admin'){
+      inner += `<div class="auth-hint">${t('seed_note_admin')}</div>`;
+    } else {
+      const list = authRole==='trainer' ? await dbGetAll('trainer:') : await dbGetAll('customer:');
+      list.sort((a,b)=> a.id.localeCompare(b.id));
+      inner += `
+        <div class="quick-login-label">${t('quick_login_label')}</div>
+        <div class="quick-login-list">
+          ${list.map(u=>`
+            <button type="button" class="quick-login-row" data-qid="${esc(u.username||u.phone)}" data-qpw="${esc(u.password)}">
+              <span class="avatar" style="width:28px;height:28px;font-size:11px">${esc((u.name||'').replace('โค้ช','').charAt(0))}</span>
+              <span class="qn">${esc(u.name)}</span>
+              <span class="qc">${esc(u.username||u.phone)} / ${esc(u.password)}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+    if(authRole==='customer') inner += `<div class="auth-switch">${t('auth_no_account')} <a id="toRegister">${t('auth_register_link')}</a></div>`;
+    if(authRole==='trainer') inner += `<div class="auth-switch">${t('auth_no_trainer_account')} <a id="toApply">${t('auth_apply_link')}</a></div>`;
+  } else if(authMode==='register'){
+    inner += `
+      <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">👤</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_register_heading')}</h2></div>
+      ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
+      <div class="field"><label>${t('auth_name_label')}</label><input type="text" id="regName" value="${esc(regDraft.name)}"></div>
+      <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="regPhone" value="${esc(regDraft.phone)}"></div>
+      <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="regPw" value="${esc(regDraft.pw)}"></div>
+      <button class="btn btn-primary btn-block" id="registerBtn">${t('auth_register_btn')}</button>
+      <a class="auth-back" id="backToLogin">← ${t('auth_back_to_login')}</a>
+    `;
+  } else if(authMode==='apply'){
+    inner += `
+      <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">🏋</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_apply_heading')}</h2></div>
+      ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
+      <div class="auth-hint" style="margin-bottom:16px">${t('auth_apply_note')}</div>
+      <div class="field"><label>${t('auth_name_label')}</label><input type="text" id="apName" value="${esc(applyDraft.name)}"></div>
+      <div class="field-row">
+        <div class="field"><label>${t('auth_specialty_label')}</label><input type="text" id="apSpecialty" value="${esc(applyDraft.specialty)}"></div>
+        <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="apPhone" value="${esc(applyDraft.phone)}"></div>
+      </div>
+      <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="apPw" value="${esc(applyDraft.pw)}"></div>
+      <div class="field"><label>${t('auth_bio_label')}</label><textarea id="apBio" rows="2">${esc(applyDraft.bio)}</textarea></div>
+      <div class="field">
+        <label>${t('auth_certs_label')}</label>
+        <div class="field-row">
+          <input type="text" id="apCertName" placeholder="${t('tpz_cert_name_ph')}">
+          <input type="text" id="apCertIssuer" placeholder="${t('tpz_cert_issuer_ph')}">
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input type="text" id="apCertYear" placeholder="${t('tpz_cert_year_ph')}">
+          <button type="button" class="btn btn-sm" id="apAddCertBtn">${t('tpz_add_cert_btn')}</button>
+        </div>
+        <div id="apCertList" style="margin-top:10px">${pendingApplicationCerts.map((c,i)=>`<span class="cert-badge" style="margin-right:6px">${esc(c.name)}</span>`).join('')}</div>
+      </div>
+      <button class="btn btn-primary btn-block" id="applyBtn">${t('auth_apply_submit')}</button>
+      <a class="auth-back" id="backToLogin2">← ${t('auth_back_to_login')}</a>
+    `;
+  }
+
+  app.innerHTML = `
+    <div class="view">
+      <div class="role-tab" id="authRoleTab">
+        <button data-role="customer" class="${authRole==='customer'?'active':''}">${t('role_customer')}</button>
+        <button data-role="trainer" class="${authRole==='trainer'?'active':''}">${t('role_trainer')}</button>
+        <button data-role="admin" class="${authRole==='admin'?'active':''}">${t('role_admin')}</button>
+      </div>
+      <div class="auth-wrap" style="min-height:auto;padding-top:0"><div class="auth-box card">${inner}</div></div>
+      <div class="footer-note">${t('footer_note')}</div>
+    </div>
+  `;
+
+  document.querySelectorAll('#authRoleTab button').forEach(b=>b.addEventListener('click', ()=>{
+    authRole = b.dataset.role; authMode='login'; authError=''; renderAuth();
+  }));
+  const toReg = document.getElementById('toRegister'); if(toReg) toReg.addEventListener('click', ()=>{ authMode='register'; authError=''; regDraft={name:'',phone:'',pw:''}; renderAuth(); });
+  const toApp = document.getElementById('toApply'); if(toApp) toApp.addEventListener('click', ()=>{ authMode='apply'; authError=''; pendingApplicationCerts=[]; applyDraft={name:'',specialty:'',phone:'',pw:'',bio:''}; renderAuth(); });
+  const back1 = document.getElementById('backToLogin'); if(back1) back1.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
+  const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
+  const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
+  document.querySelectorAll('.quick-login-row').forEach(row=>row.addEventListener('click', ()=>{
+    const idEl = document.getElementById('authId'), pwEl = document.getElementById('authPw');
+    if(idEl) idEl.value = row.dataset.qid;
+    if(pwEl) pwEl.value = row.dataset.qpw;
+    doLogin();
+  }));
+  const regBtn = document.getElementById('registerBtn'); if(regBtn) regBtn.addEventListener('click', doRegister);
+  const applyBtn = document.getElementById('applyBtn'); if(applyBtn) applyBtn.addEventListener('click', doApply);
+  const regName = document.getElementById('regName'); if(regName) regName.addEventListener('input', ()=> regDraft.name = regName.value);
+  const regPhone = document.getElementById('regPhone'); if(regPhone) regPhone.addEventListener('input', ()=> regDraft.phone = regPhone.value);
+  const regPw = document.getElementById('regPw'); if(regPw) regPw.addEventListener('input', ()=> regDraft.pw = regPw.value);
+  const apNameEl = document.getElementById('apName'); if(apNameEl) apNameEl.addEventListener('input', ()=> applyDraft.name = apNameEl.value);
+  const apSpecialtyEl = document.getElementById('apSpecialty'); if(apSpecialtyEl) apSpecialtyEl.addEventListener('input', ()=> applyDraft.specialty = apSpecialtyEl.value);
+  const apPhoneEl = document.getElementById('apPhone'); if(apPhoneEl) apPhoneEl.addEventListener('input', ()=> applyDraft.phone = apPhoneEl.value);
+  const apPwEl = document.getElementById('apPw'); if(apPwEl) apPwEl.addEventListener('input', ()=> applyDraft.pw = apPwEl.value);
+  const apBioEl = document.getElementById('apBio'); if(apBioEl) apBioEl.addEventListener('input', ()=> applyDraft.bio = apBioEl.value);
+  const addCertBtn = document.getElementById('apAddCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', ()=>{
+    const nameEl = document.getElementById('apCertName');
+    const issuerEl = document.getElementById('apCertIssuer');
+    const yearEl = document.getElementById('apCertYear');
+    const name = nameEl.value.trim();
+    if(!name) return;
+    pendingApplicationCerts.push({name, issuer:issuerEl.value.trim(), year:yearEl.value.trim()});
+    // Update only the cert list in place (not a full renderAuth) so the rest of
+    // the application form the applicant already filled in — name, specialty,
+    // phone, password, bio — is never wiped out.
+    nameEl.value=''; issuerEl.value=''; yearEl.value='';
+    const listEl = document.getElementById('apCertList');
+    if(listEl) listEl.innerHTML = pendingApplicationCerts.map(c=>`<span class="cert-badge" style="margin-right:6px">${esc(c.name)}</span>`).join('');
+  });
+}
+
+async function doLogin(){
+  const id = (document.getElementById('authId').value||'').trim();
+  const pw = (document.getElementById('authPw').value||'').trim();
+  if(!id || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+
+  /* Demo credentials are intentionally kept as a fallback for the
+     trainer/customer quick-login buttons only, so a missing/empty storage
+     layer never incorrectly reports those valid demo logins as invalid.
+     Admin is deliberately NOT included here: its username and password are
+     private, live only in the admin:admin record, and must never be
+     hardcoded anywhere reachable from the client. */
+  const demoAccounts = {
+    trainer: {id:'0833333333', pw:'1234', role:'trainer', name:'โค้ชเต้', accountId:'t3'},
+    customer:{id:'0911111111', pw:'1234', role:'customer', name:'เป้', accountId:'c1'}
+  };
+  const demo = demoAccounts[authRole];
+  const normalizedId = id.replace(/\s+/g,'');
+  if(demo && normalizedId === demo.id && pw === demo.pw){
+    session = {
+      id: demo.accountId || 'admin',
+      role: demo.role,
+      name: demo.name
+    };
+    authError='';
+    route='dashboard';
+    renderRoot();
+    return;
+  }
+
+  if(authRole==='admin'){
+    const admin = await dbGet('admin:admin');
+    if(admin && admin.username===id && admin.password===pw){
+      session = {id:'admin', role:'admin', name:admin.name};
+      authError=''; route='dashboard'; renderRoot(); return;
+    }
+    authError = t('auth_toast_wrong'); renderAuth(); return;
+  }
+
+  if(authRole==='trainer'){
+    const trainers = await dbGetAll('trainer:');
+    const tr = trainers.find(x=> (x.username===id || x.phone===id) && x.password===pw);
+    if(tr){
+      if(tr.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
+      session = {id:tr.id, role:'trainer', name:tr.name};
+      authError=''; route='dashboard'; renderRoot(); return;
+    }
+    const apps = await dbGetAll('trainerApp:');
+    const pendingApp = apps.find(x=> x.username===id && x.password===pw);
+    if(pendingApp){ authError = t('auth_toast_pending'); renderAuth(); return; }
+    authError = t('auth_toast_wrong'); renderAuth(); return;
+  }
+
+  // customer
+  const customers = await dbGetAll('customer:');
+  const c = customers.find(x=> (x.username===id || x.phone===id) && x.password===pw);
+  if(c){
+    if(c.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
+    session = {id:c.id, role:'customer', name:c.name};
+    authError=''; route='dashboard'; renderRoot(); return;
+  }
+  authError = t('auth_toast_wrong'); renderAuth();
+}
+
+async function doRegister(){
+  const name = (document.getElementById('regName').value||'').trim();
+  const phone = (document.getElementById('regPhone').value||'').trim();
+  const pw = (document.getElementById('regPw').value||'').trim();
+  if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+  const customers = await dbGetAll('customer:');
+  if(customers.some(x=>x.phone===phone || x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
+  const c = {id:newId('c'), username:phone, password:pw, name, phone, status:'active', role:'customer'};
+  await dbSet('customer:'+c.id, c);
+  session = {id:c.id, role:'customer', name:c.name};
+  regDraft = {name:'', phone:'', pw:''};
+  toast(t('auth_toast_registered'));
+  authError=''; route='dashboard'; renderRoot();
+}
+
+async function doApply(){
+  const name = (document.getElementById('apName').value||'').trim();
+  const specialty = (document.getElementById('apSpecialty').value||'').trim();
+  const phone = (document.getElementById('apPhone').value||'').trim();
+  const pw = (document.getElementById('apPw').value||'').trim();
+  const bio = (document.getElementById('apBio').value||'').trim();
+  if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+  const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
+  if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
+  const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:pendingApplicationCerts, submittedAt:new Date().toISOString(), status:'pending'};
+  await dbSet('trainerApp:'+app.id, app);
+  pendingApplicationCerts = [];
+  applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
+  toast(t('auth_toast_applied'));
+  authMode='login'; authError=''; renderAuth();
+}
+
+/* ======================================================================
+   WIRE EVENTS for the currently rendered view (delegated via re-query)
+   ====================================================================== */
+function wireView(){
+  document.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click', ()=> go(el.dataset.goto)));
+  document.querySelectorAll('[data-view-trainer]').forEach(el=>el.addEventListener('click', ()=> go('trainerProfile', {id:el.dataset.viewTrainer})));
+  document.querySelectorAll('[data-book-trainer]').forEach(el=>el.addEventListener('click', ()=> go('booking', {trainerId:el.dataset.bookTrainer})));
+  document.querySelectorAll('[data-pin-trainer]').forEach(el=>el.addEventListener('click', (e)=>{ e.stopPropagation(); togglePinTrainer(el.dataset.pinTrainer); }));
+
+  const searchBtn = document.getElementById('trainerSearchBtn');
+  if(searchBtn) searchBtn.addEventListener('click', ()=> go('trainers', {q:document.getElementById('trainerSearch').value}));
+  const searchInput = document.getElementById('trainerSearch');
+  if(searchInput) searchInput.addEventListener('keydown', e=>{ if(e.key==='Enter') go('trainers', {q:searchInput.value}); });
+
+  const trainerSelect = document.getElementById('bookTrainerSelect');
+  if(trainerSelect) trainerSelect.addEventListener('change', ()=>{ bookingState.trainerId = trainerSelect.value || null; bookingState.time=null; renderView(); });
+  document.querySelectorAll('#dayStrip .day-pill').forEach(el=>el.addEventListener('click', ()=>{ bookingState.day = el.dataset.day; bookingState.time=null; renderView(); }));
+  document.querySelectorAll('.cat-pill[data-cat]').forEach(el=>el.addEventListener('click', ()=>{ bookingState.cat = el.dataset.cat; bookingState.time=null; renderView(); }));
+  document.querySelectorAll('.time-slot[data-time]').forEach(el=>el.addEventListener('click', ()=>{ if(el.classList.contains('taken'))return; bookingState.time = el.dataset.time; renderView(); }));
+  const submitBookingBtn = document.getElementById('submitBookingBtn');
+  if(submitBookingBtn) submitBookingBtn.addEventListener('click', submitBooking);
+
+  document.querySelectorAll('[data-buy-pkg]').forEach(el=>el.addEventListener('click', ()=> buyPackage(el.dataset.buyPkg)));
+
+  const cProfSave = document.getElementById('cProfSave'); if(cProfSave) cProfSave.addEventListener('click', saveCProfile);
+
+  document.querySelectorAll('[data-accept-booking]').forEach(el=>el.addEventListener('click', ()=> respondBooking(el.dataset.acceptBooking, true)));
+  document.querySelectorAll('[data-accept-duo]').forEach(el=>el.addEventListener('click', ()=> acceptDuo(el.dataset.acceptDuo)));
+  document.querySelectorAll('[data-reject-booking]').forEach(el=>el.addEventListener('click', ()=> respondBooking(el.dataset.rejectBooking, false)));
+  document.querySelectorAll('[data-complete-booking]').forEach(el=>el.addEventListener('click', ()=> finishBooking(el.dataset.completeBooking, false)));
+  document.querySelectorAll('[data-noshow-booking]').forEach(el=>el.addEventListener('click', ()=> finishBooking(el.dataset.noshowBooking, true)));
+
+  const pfSaveBtn = document.getElementById('pfSaveBtn'); if(pfSaveBtn) pfSaveBtn.addEventListener('click', saveTrainerProfile);
+  const addCertBtn = document.getElementById('addCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', addCert);
+  document.querySelectorAll('[data-remove-cert]').forEach(el=>el.addEventListener('click', ()=> removeCert(Number(el.dataset.removeCert))));
+
+  document.querySelectorAll('[data-approve-app]').forEach(el=>el.addEventListener('click', ()=> approveApp(el.dataset.approveApp, true)));
+  document.querySelectorAll('[data-reject-app]').forEach(el=>el.addEventListener('click', ()=> approveApp(el.dataset.rejectApp, false)));
+
+  document.querySelectorAll('[data-suspend-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.suspendUser, 'suspended')));
+  document.querySelectorAll('[data-activate-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.activateUser, 'active')));
+
+  document.querySelectorAll('[data-pkg-field]').forEach(el=>{
+    const evt = el.tagName==='SELECT' ? 'change' : 'blur';
+    el.addEventListener(evt, ()=> savePackageField(el.dataset.pkgId, el.dataset.pkgField, el.value));
+  });
+  const addPkgBtn = document.getElementById('addPkgBtn'); if(addPkgBtn) addPkgBtn.addEventListener('click', addPackage);
+  document.querySelectorAll('[data-remove-pkg]').forEach(el=>el.addEventListener('click', ()=> removePackage(el.dataset.removePkg)));
+}
+
+document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
+  document.getElementById('bookingModal').classList.remove('show');
+  renderView();
+});
+
+/* ---------------- device preview toggle ----------------
+   Opens the current page inside a phone- or desktop-sized frame
+   so mobile and desktop layouts can both be checked from one
+   window, without touching or resetting the live app above. */
+(function initDevicePreview(){
+  const btn = document.getElementById('devicePreviewBtn');
+  const icon = document.getElementById('devicePreviewIcon');
+  const overlay = document.getElementById('deviceFrameOverlay');
+  const label = document.getElementById('deviceFrameLabel');
+  const closeBtn = document.getElementById('deviceFrameClose');
+  const shell = document.getElementById('deviceFrameShell');
+  const iframe = document.getElementById('deviceFrameIframe');
+  if(!btn || !overlay) return;
+
+  // Inside the preview iframe itself, hide the toggle so the phone/
+  // desktop frame can't be opened recursively from within its own copy.
+  if(window.frameElement){ btn.style.display = 'none'; return; }
+
+  function isNarrow(){ return window.innerWidth <= 820; }
+  function syncIcon(){ icon.textContent = isNarrow() ? '🖥️' : '📱'; }
+  syncIcon();
+  window.addEventListener('resize', syncIcon);
+
+  function openPreview(){
+    const mobile = !isNarrow();
+    if(mobile){
+      shell.style.width = '390px';
+      shell.style.height = '780px';
+      label.textContent = 'Mobile preview (390px)';
+    }else{
+      shell.style.width = '1180px';
+      shell.style.height = '760px';
+      label.textContent = 'Desktop preview (1180px)';
+    }
+    iframe.srcdoc = '<!DOCTYPE html>' + document.documentElement.outerHTML;
+    overlay.classList.add('show');
+  }
+  function closePreview(){
+    overlay.classList.remove('show');
+    iframe.srcdoc = 'about:blank';
+  }
+  btn.addEventListener('click', openPreview);
+  closeBtn.addEventListener('click', closePreview);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closePreview(); });
+})();
+
+/* ---------------- auto-refresh ----------------
+   Data can now change from a completely different device (a customer
+   booking on their phone while a trainer has this app open on theirs),
+   and nothing here was pushing that change onto an already-open screen —
+   the person had to manually reload to see it. This polls quietly in
+   the background and re-renders the current screen when the tab is
+   visible, so new requests/approvals/bookings show up on their own.
+   It skips a tick whenever an input/textarea/select is focused, so it
+   never wipes out something the person is in the middle of typing. */
+function shouldSkipAutoRefresh(){
+  const tag = document.activeElement && document.activeElement.tagName;
+  return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+}
+function softRefresh(){
+  if(!session) return;
+  if(document.hidden) return;
+  if(shouldSkipAutoRefresh()) return;
+  renderView();
+}
+setInterval(softRefresh, 6000);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) softRefresh(); });
+window.addEventListener('focus', softRefresh);
+
+/* ---------------- service worker ---------------- */
+if('serviceWorker' in navigator && !window.frameElement){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+
+/* ---------------- boot ---------------- */
+(async function boot(){
+  document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
+  await seedIfNeeded();
+  await renderRoot();
+})();
+</script>
+</body>
+</html>
