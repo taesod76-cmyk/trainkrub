@@ -1060,9 +1060,69 @@ async function seedIfNeeded(){
 }
 function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
 
-/* ---------------- session (in-memory; log in required per browser session) ---------------- */
+/* ---------------- session / remembered device login ----------------
+   The app remembers the last account on this browser without storing its
+   password. A normal return to the app can resume that account; an explicit
+   logout cancels auto-resume but keeps the account in the Quick Login list.
+   Quick Login therefore never renders or stores a password in localStorage. */
+const REMEMBERED_ACCOUNT_KEY = 'trainkrub:remembered-account:v1';
+const QUICK_LOGIN_KEY = 'trainkrub:quick-accounts:v1';
+const LOGGED_OUT_KEY = 'trainkrub:explicit-logout:v1';
 let session = null; // {id, role, name, ...}
 let route = 'dashboard';
+
+function readRememberedAccount(){
+  try{ return JSON.parse(localStorage.getItem(REMEMBERED_ACCOUNT_KEY)||'null'); }catch(e){ return null; }
+}
+function writeRememberedAccount(id, role, name){
+  try{
+    localStorage.setItem(REMEMBERED_ACCOUNT_KEY, JSON.stringify({id,role,name,rememberedAt:new Date().toISOString()}));
+    localStorage.removeItem(LOGGED_OUT_KEY);
+  }catch(e){}
+}
+function rememberQuickAccount(id, role, name){
+  try{
+    const old = JSON.parse(localStorage.getItem(QUICK_LOGIN_KEY)||'[]');
+    const next = [{id,role,name,usedAt:new Date().toISOString()}, ...old.filter(x=>!(x.id===id && x.role===role))].slice(0,6);
+    localStorage.setItem(QUICK_LOGIN_KEY, JSON.stringify(next));
+  }catch(e){}
+}
+function readQuickAccounts(){
+  try{
+    const a=JSON.parse(localStorage.getItem(QUICK_LOGIN_KEY)||'[]');
+    return Array.isArray(a) ? a : [];
+  }catch(e){ return []; }
+}
+function markExplicitLogout(){
+  try{ localStorage.setItem(LOGGED_OUT_KEY,'1'); }catch(e){}
+}
+function wasExplicitlyLoggedOut(){
+  try{ return localStorage.getItem(LOGGED_OUT_KEY)==='1'; }catch(e){ return false; }
+}
+function clearExplicitLogout(){
+  try{ localStorage.removeItem(LOGGED_OUT_KEY); }catch(e){}
+}
+async function resumeRememberedAccount(){
+  if(wasExplicitlyLoggedOut()) return false;
+  const a=readRememberedAccount();
+  if(!a || !a.id || !a.role || !['customer','trainer'].includes(a.role)) return false;
+  const rec=await dbGet(a.role+':'+a.id);
+  if(!rec || rec.status!=='active') return false;
+  session={id:rec.id,role:a.role,name:rec.name||rec.name};
+  route='dashboard'; authError='';
+  return true;
+}
+async function quickLoginAccount(id, role){
+  if(!id || !['customer','trainer'].includes(role)) return false;
+  const rec=await dbGet(role+':'+id);
+  if(!rec || rec.status!=='active') return false;
+  clearExplicitLogout();
+  writeRememberedAccount(rec.id,role,rec.name);
+  session={id:rec.id,role,name:rec.name};
+  route='dashboard'; authError='';
+  await renderRoot();
+  return true;
+}
 let routeParams = {};
 
 /* ---------------- generic helpers ---------------- */
@@ -1168,6 +1228,9 @@ async function doLogout(){
   if(supabaseClient){
     try{ const { data } = await supabaseClient.auth.getSession(); if(data?.session) await supabaseClient.auth.signOut(); }catch(e){ console.warn('Supabase sign-out failed:',e); }
   }
+  // Explicit logout means: do not auto-resume on the next app launch.
+  // The remembered account remains available as a one-tap Quick Login choice.
+  markExplicitLogout();
   session = null; route = 'dashboard'; routeParams = {};
   clearRenderCaches();
   toast(t('auth_toast_logout'));
@@ -2346,6 +2409,11 @@ async function renderAuth(){
        (A "quick login" list used to be rendered here, showing every real
        account's name and letting a tap sign in as that person with no
        password check — a full account-takeover hole. Removed entirely.) */
+    const quick = readQuickAccounts().filter(x=>x.role===authRole);
+    if(quick.length && (authRole==='customer' || authRole==='trainer')){
+      inner += `<div class="auth-divider"><span>${t('quick_login_label')}</span></div>
+        <div class="quick-login-list">${quick.map(x=>`<button type="button" class="quick-login-row" data-quick-id="${esc(x.id)}" data-quick-role="${esc(x.role)}"><span class="qn">${esc(x.name||'Account')}</span><span class="qc">${esc(x.role==='trainer'?t('role_trainer'):t('role_customer'))}</span><span>→</span></button>`).join('')}</div>`;
+    }
     if(authRole==='customer') inner += `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-danger-outline btn-block" id="toRegister">👤+ ${t('auth_register_link')}</button>`;
     if(authRole==='trainer') inner += `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-danger-outline btn-block" id="toApply">🏋+ ${t('auth_apply_link')}</button>`;
   } else if(authMode==='register'){
@@ -2408,6 +2476,10 @@ async function renderAuth(){
   const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
   const googleLoginBtn = document.getElementById('googleLoginBtn'); if(googleLoginBtn) googleLoginBtn.addEventListener('click', signInWithGoogle);
+  document.querySelectorAll('[data-quick-id]').forEach(b=>b.addEventListener('click', async ()=>{
+    const ok = await quickLoginAccount(b.dataset.quickId,b.dataset.quickRole);
+    if(!ok){ authError=t('auth_toast_wrong'); renderAuth(); }
+  }));
 
   const regBtn = document.getElementById('registerBtn'); if(regBtn) regBtn.addEventListener('click', doRegister);
   const applyBtn = document.getElementById('applyBtn'); if(applyBtn) applyBtn.addEventListener('click', doApply);
@@ -2492,6 +2564,7 @@ async function doLogin(){
     if(tr){
       if(tr.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
       session = {id:tr.id, role:'trainer', name:tr.name};
+      writeRememberedAccount(tr.id,'trainer',tr.name); rememberQuickAccount(tr.id,'trainer',tr.name);
       authError=''; route='dashboard'; renderRoot(); return;
     }
     const apps = await dbGetAll('trainerApp:');
@@ -2506,6 +2579,7 @@ async function doLogin(){
   if(c){
     if(c.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
     session = {id:c.id, role:'customer', name:c.name};
+    writeRememberedAccount(c.id,'customer',c.name); rememberQuickAccount(c.id,'customer',c.name);
     authError=''; route='dashboard'; renderRoot(); return;
   }
   authError = t('auth_toast_wrong'); renderAuth();
@@ -2523,6 +2597,7 @@ async function doRegister(){
   const c = {id:newId('c'), username:phone, password:pw, name, phone, status:'active', role:'customer'};
   await dbSet('customer:'+c.id, c);
   session = {id:c.id, role:'customer', name:c.name};
+  writeRememberedAccount(c.id,'customer',c.name); rememberQuickAccount(c.id,'customer',c.name);
   regDraft = {name:'', phone:'', pw:''};
   toast(t('auth_toast_registered'));
   authError=''; route='dashboard'; renderRoot();
@@ -2686,6 +2761,14 @@ if('serviceWorker' in navigator && !window.frameElement){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
   if(await finishGoogleSession()) return;
   await seedIfNeeded();
+  // Returning to the app resumes the last active customer/trainer on this
+  // browser. Explicit logout sets a separate flag, so it instead shows
+  // Quick Login choices on the next launch.
+  if(await resumeRememberedAccount()){
+    cleanupOldData().catch(e=>console.warn('Automatic cleanup skipped:', e));
+    await renderRoot();
+    return;
+  }
   // Maintenance is deliberately non-blocking: a slow cleanup must never
   // prevent the login screen or dashboard from opening.
   cleanupOldData().catch(e=>console.warn('Automatic cleanup skipped:', e));
