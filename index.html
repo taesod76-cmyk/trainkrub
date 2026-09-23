@@ -2135,6 +2135,8 @@ async function renderAuth(){
   const back1 = document.getElementById('backToLogin'); if(back1) back1.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
+  const authIdEl = document.getElementById('authId'); if(authIdEl) authIdEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  const authPwEl = document.getElementById('authPw'); if(authPwEl) authPwEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   document.querySelectorAll('.quick-login-row').forEach(row=>row.addEventListener('click', ()=>{
     const idEl = document.getElementById('authId'), pwEl = document.getElementById('authPw');
     if(idEl) idEl.value = row.dataset.qid;
@@ -2143,6 +2145,8 @@ async function renderAuth(){
   }));
   const regBtn = document.getElementById('registerBtn'); if(regBtn) regBtn.addEventListener('click', doRegister);
   const applyBtn = document.getElementById('applyBtn'); if(applyBtn) applyBtn.addEventListener('click', doApply);
+  const regPwEl = document.getElementById('regPw'); if(regPwEl) regPwEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doRegister(); });
+  const apPwEl2 = document.getElementById('apPw'); if(apPwEl2) apPwEl2.addEventListener('keydown', e=>{ if(e.key==='Enter') doApply(); });
   const regName = document.getElementById('regName'); if(regName) regName.addEventListener('input', ()=> regDraft.name = regName.value);
   const regPhone = document.getElementById('regPhone'); if(regPhone) regPhone.addEventListener('input', ()=> regDraft.phone = regPhone.value);
   const regPw = document.getElementById('regPw'); if(regPw) regPw.addEventListener('input', ()=> regDraft.pw = regPw.value);
