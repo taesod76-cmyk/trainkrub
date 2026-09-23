@@ -2227,6 +2227,11 @@ async function renderADashboard(){
       <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${custPkgs.filter(p=>p.status==='active').length}</div></div>
     </div>
     <div class="card" style="margin-top:16px">
+      <div class="card-head"><div><h3>คำขอสมัครเทรนเนอร์${apps.filter(a=>a.status==='pending').length ? ' ('+apps.filter(a=>a.status==='pending').length+')' : ''}</h3><p style="margin:4px 0 0;color:var(--text-dim);font-size:13px">${apps.filter(a=>a.status==='pending').length ? 'มีคำขอรอการตรวจสอบจากผู้สมัครเทรนเนอร์' : 'ยังไม่มีคำขอสมัครเทรนเนอร์ที่รอตรวจสอบ'}</p></div><button class="btn btn-primary" id="adminAppsBtn">ดูคำขอทั้งหมด</button></div>
+      ${apps.filter(a=>a.status==='pending').slice(0,3).map(a=>`<div class="req-card" style="margin-bottom:10px"><div class="req-top"><div><div class="n">${esc(a.name)}</div><div class="t">${esc(a.specialty||'')} · ${esc(a.phone||'')}</div><div class="t">${t('aa_submitted_on')} ${fmtDateTime(a.submittedAt)}</div></div><span class="badge badge-pending">${t('aa_pending_badge')}</span></div></div>`).join('')}
+      ${apps.filter(a=>a.status==='pending').length>3 ? '<div class="hint" style="margin-top:8px">มีคำขอเพิ่มเติม กด “ดูคำขอทั้งหมด” เพื่อดูทั้งหมด</div>' : ''}
+    </div>
+    <div class="card" style="margin-top:16px">
       <div class="card-head"><div><h3>${t('test_title')}</h3><p style="margin:4px 0 0;color:var(--text-dim);font-size:13px">${t('test_desc')}</p></div></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-primary" id="runSystemTestBtn">${t('test_run')}</button>
@@ -2673,6 +2678,7 @@ function wireView(){
   document.querySelectorAll('[data-remove-pkg]').forEach(el=>el.addEventListener('click', ()=> removePackage(el.dataset.removePkg)));
   const testBtn = document.getElementById('runSystemTestBtn'); if(testBtn) testBtn.addEventListener('click', runSystemTests);
   const cleanupBtn = document.getElementById('runCleanupBtn'); if(cleanupBtn) cleanupBtn.addEventListener('click', runManualCleanup);
+  const adminAppsBtn = document.getElementById('adminAppsBtn'); if(adminAppsBtn) adminAppsBtn.addEventListener('click', ()=> go('apps'));
 }
 
 document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
