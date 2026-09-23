@@ -698,8 +698,8 @@ function tt(key, params){ return t(key).replace(/\{(\w+)\}/g, (m,k)=> (params &&
    works either way, this just decides where data actually lives.
    Setup: run supabase-setup.sql once in your project's SQL Editor
    before filling these in. See README.md for the full walkthrough. */
-const SUPABASE_URL = 'https://eauzvihirpfcjkwyqgel.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_TYxnhvbPvCHCycPFWioahA_k16FmgnQ';
+const SUPABASE_URL = 'https://msmzhjtrznkxurdzrfvy.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_aJXCvY6r4iwi49zcQPBpRw_Nz83zz1I';
 const SUPABASE_TABLE = 'kv_store';
 
 let supabaseClient = null;
@@ -2183,23 +2183,10 @@ async function renderAuth(){
     } else {
       inner += `<div class="auth-hint">${t('auth_new_user_note')}</div>`;
     }
-    /* Customer and trainer accounts are never pre-created. They must register. */
-    if(authRole==='trainer' || authRole==='customer'){
-      const list = authRole==='trainer' ? await dbGetAll('trainer:') : await dbGetAll('customer:');
-      list.sort((a,b)=> a.id.localeCompare(b.id));
-      inner += `
-        <div class="quick-login-label">${t('quick_login_label')}</div>
-        <div class="quick-login-list">
-          ${list.map(u=>`
-            <button type="button" class="quick-login-row" data-qid="${esc(u.username||u.phone)}">
-              <span class="avatar" style="width:28px;height:28px;font-size:11px">${esc((u.name||'').replace('โค้ช','').charAt(0))}</span>
-              <span class="qn">${esc(u.name)}</span>
-              <span class="qc">${esc(u.username||u.phone)} · ${t('quick_login_use')}</span>
-            </button>
-          `).join('')}
-        </div>
-      `;
-    }
+    /* Customer and trainer accounts are never pre-created. They must register.
+       (A "quick login" list used to be rendered here, showing every real
+       account's name and letting a tap sign in as that person with no
+       password check — a full account-takeover hole. Removed entirely.) */
     if(authRole==='customer') inner += `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-danger-outline btn-block" id="toRegister">👤+ ${t('auth_register_link')}</button>`;
     if(authRole==='trainer') inner += `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-danger-outline btn-block" id="toApply">🏋+ ${t('auth_apply_link')}</button>`;
   } else if(authMode==='register'){
@@ -2262,17 +2249,7 @@ async function renderAuth(){
   const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
   const googleLoginBtn = document.getElementById('googleLoginBtn'); if(googleLoginBtn) googleLoginBtn.addEventListener('click', signInWithGoogle);
-  document.querySelectorAll('.quick-login-row').forEach(row=>row.addEventListener('click', async ()=>{
-    const idEl = document.getElementById('authId'), pwEl = document.getElementById('authPw');
-    const qid = row.dataset.qid || '';
-    const prefix = authRole==='trainer' ? 'trainer:' : 'customer:';
-    const list = await dbGetAll(prefix);
-    const account = list.find(u=> (u.username||u.phone)===qid || u.phone===qid);
-    if(!account){ authError=t('auth_toast_wrong'); renderAuth(); return; }
-    if(idEl) idEl.value = account.username || account.phone || '';
-    if(pwEl) pwEl.value = account.password || '';
-    doLogin();
-  }));
+
   const regBtn = document.getElementById('registerBtn'); if(regBtn) regBtn.addEventListener('click', doRegister);
   const applyBtn = document.getElementById('applyBtn'); if(applyBtn) applyBtn.addEventListener('click', doApply);
   const regName = document.getElementById('regName'); if(regName) regName.addEventListener('input', ()=> regDraft.name = regName.value);
