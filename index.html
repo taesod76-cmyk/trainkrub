@@ -553,6 +553,13 @@ const i18n = {
 
     ad_eyebrow:'ผู้ดูแลระบบ', ad_h1:'ภาพรวมระบบ', ad_p:'สรุปสถานะผู้ใช้งาน คำขอสมัครเทรนเนอร์ และข้อมูลหลักของระบบทั้งหมด',
     ad_stat_trainers:'เทรนเนอร์ในระบบ', ad_stat_customers:'ลูกค้าในระบบ', ad_stat_pending:'คำขอสมัครรออนุมัติ', ad_stat_packages:'แพ็กเกจที่เปิดขาย', ad_stat_bookings:'การจองทั้งหมด', ad_stat_active_pkg:'แพ็กเกจที่ลูกค้าถืออยู่',
+    test_title:'ทดสอบระบบและบำรุงรักษา', test_desc:'ตรวจสอบฐานข้อมูล PWA และ CRUD ก่อนใช้งานจริง พร้อมล้างข้อมูลที่หมดความจำเป็นเกิน 40 วัน',
+    test_run:'ทดสอบระบบ', test_db:'การเชื่อมต่อฐานข้อมูล', test_supabase_ready:'Supabase พร้อมใช้งาน', test_fallback:'ใช้โหมดสำรองของเครื่อง',
+    test_crud:'ทดสอบเพิ่ม/อ่าน/ลบข้อมูล', test_crud_detail:'สร้างข้อมูลทดสอบ อ่านกลับ และลบทิ้งแล้ว', test_reads:'ทดสอบการอ่านข้อมูลหลัก',
+    test_manifest:'Manifest ของ PWA', test_manifest_ok:'โหลดได้ปกติ', test_pwa:'Service Worker / PWA', test_pwa_ok:'ลงทะเบียนแล้ว', test_pwa_waiting:'กำลังรอลงทะเบียน', test_pwa_unsupported:'เบราว์เซอร์ไม่รองรับ',
+    test_summary:'ผ่าน {passed}/{total} รายการ', test_all_ok:'การทดสอบระบบผ่านทั้งหมด', test_has_error:'พบรายการที่ต้องตรวจสอบ',
+    cleanup_run:'ล้างข้อมูลเก่า > 40 วัน', cleanup_running:'กำลังล้างข้อมูลเก่าที่ไม่จำเป็น…', cleanup_done:'ล้างข้อมูลเก่าเรียบร้อยแล้ว', cleanup_failed:'ล้างข้อมูลเก่าไม่สำเร็จ',
+    cleanup_deleted:'ลบทั้งหมด', cleanup_bookings:'ประวัติการจอง', cleanup_notifications:'การแจ้งเตือน', cleanup_packages:'แพ็กเกจลูกค้าที่หมดอายุ', cleanup_apps:'ใบสมัครเก่า',
     aa_eyebrow:'ตรวจสอบสิทธิ์', aa_h1:'คำขอสมัครเทรนเนอร์', aa_p:'ตรวจสอบข้อมูลและใบรับรองก่อนอนุมัติให้เข้าระบบ เทรนเนอร์จะปรากฏต่อลูกค้าได้ก็ต่อเมื่อผ่านการอนุมัติแล้วเท่านั้น',
     aa_no_apps:'ไม่มีคำขอสมัครที่รอตรวจสอบ', aa_submitted_on:'ส่งเมื่อ', aa_certs_label:'ใบรับรองที่แนบมา', aa_no_certs:'ไม่มีใบรับรองแนบมา',
     aa_approve_btn:'อนุมัติเข้าระบบ', aa_reject_btn:'ปฏิเสธ', aa_pending_badge:'รอตรวจสอบ', aa_toast_approve:'อนุมัติเทรนเนอร์แล้ว เข้าระบบและแสดงให้ลูกค้าเห็นทันที', aa_toast_reject:'ปฏิเสธใบสมัครแล้ว',
@@ -663,6 +670,13 @@ const i18n = {
 
     ad_eyebrow:'Admin', ad_h1:'System overview', ad_p:'A summary of users, trainer applications, and core system data.',
     ad_stat_trainers:'Trainers', ad_stat_customers:'Customers', ad_stat_pending:'Applications pending', ad_stat_packages:'Packages on sale', ad_stat_bookings:'Total bookings', ad_stat_active_pkg:'Active customer packages',
+    test_title:'System test & maintenance', test_desc:'Check the database, PWA and CRUD before use, and remove non-essential data older than 40 days.',
+    test_run:'Run system test', test_db:'Database connection', test_supabase_ready:'Supabase is ready', test_fallback:'Local fallback mode',
+    test_crud:'Create/read/delete test', test_crud_detail:'Temporary test data was created, read back and deleted', test_reads:'Core data reads',
+    test_manifest:'PWA manifest', test_manifest_ok:'Loaded successfully', test_pwa:'Service Worker / PWA', test_pwa_ok:'Registered', test_pwa_waiting:'Waiting for registration', test_pwa_unsupported:'Not supported',
+    test_summary:'Passed {passed}/{total} checks', test_all_ok:'All system checks passed', test_has_error:'Some checks need attention',
+    cleanup_run:'Delete old data > 40 days', cleanup_running:'Removing non-essential old data…', cleanup_done:'Old data cleanup completed', cleanup_failed:'Old data cleanup failed',
+    cleanup_deleted:'Deleted', cleanup_bookings:'booking history', cleanup_notifications:'notifications', cleanup_packages:'expired customer packages', cleanup_apps:'old applications',
     aa_eyebrow:'Verification', aa_h1:'Trainer applications', aa_p:'Review details and certificates before approving. Trainers only appear to customers once approved.',
     aa_no_apps:'No applications awaiting review', aa_submitted_on:'Submitted', aa_certs_label:'Attached certificates', aa_no_certs:'No certificates attached',
     aa_approve_btn:'Approve', aa_reject_btn:'Reject', aa_pending_badge:'Pending review', aa_toast_approve:'Trainer approved — now visible to customers', aa_toast_reject:'Application rejected',
@@ -893,6 +907,32 @@ async function dbList(prefix){
 }
 async function dbGetAll(prefix){
   if(listCache.has(prefix)) return listCache.get(prefix).slice();
+
+  // Supabase can return key + value in one request. The previous
+  // implementation did 1 request for keys and then 1 request per record,
+  // which becomes slow as the database grows. Keep the same return shape
+  // but collapse the normal Supabase path into a single query.
+  if(await supabaseIsAvailable()){
+    try{
+      const pageSize = 1000;
+      const rows = [];
+      for(let from=0;;from+=pageSize){
+        const { data, error } = await supabaseClient
+          .from(SUPABASE_TABLE)
+          .select('key,value')
+          .like('key', prefix + '%')
+          .range(from, from + pageSize - 1);
+        if(error) throw error;
+        rows.push(...(data || []));
+        if(!data || data.length < pageSize) break;
+      }
+      const result = rows.map(r=>r.value).filter(Boolean);
+      listCache.set(prefix, result);
+      for(const row of rows) keyCache.set(row.key, row.value);
+      return result.slice();
+    }catch(e){ /* fall through to the local/shared storage path */ }
+  }
+
   const keys = await dbList(prefix);
   const vals = await Promise.all(keys.map(k=>dbGet(k)));
   const result = vals.filter(Boolean);
@@ -900,6 +940,94 @@ async function dbGetAll(prefix){
   return result.slice();
 }
 function newId(prefix){ return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+const DATA_RETENTION_DAYS = 40;
+const CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1000;
+let cleanupPromise = null;
+
+function cleanupDate(value){
+  if(!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+function bookingDateTime(b){
+  if(!b || !b.bookingDate) return cleanupDate(b && b.createdAt);
+  const time = b.bookingTime || '23:59:59';
+  return cleanupDate(b.bookingDate + 'T' + time);
+}
+async function deleteKeysFast(keys){
+  if(!keys.length) return 0;
+  if(await supabaseIsAvailable()){
+    try{
+      const { error } = await supabaseClient.from(SUPABASE_TABLE).delete().in('key', keys);
+      if(error) throw error;
+      for(const key of keys){ keyCache.delete(key); invalidateListsFor(key); }
+      return keys.length;
+    }catch(e){ /* fall through to safe per-key deletion */ }
+  }
+  await Promise.all(keys.map(key=>dbDelete(key)));
+  return keys.length;
+}
+
+/* Automatic retention policy:
+   - NEVER removes customer/trainer/admin accounts.
+   - NEVER removes package catalog records.
+   - NEVER removes pending trainer applications.
+   - Only removes terminal booking history older than 40 days.
+   - Removes notifications older than 40 days.
+   - Removes expired customer packages once they have been expired for 40 days.
+   - Removes non-pending trainer applications older than 40 days.
+   The cleanup runs at most once per 24 hours per shared database and can
+   also be started manually from the Admin dashboard. */
+async function cleanupOldData(force=false){
+  if(cleanupPromise && !force) return cleanupPromise;
+  cleanupPromise = (async ()=>{
+    const now = new Date();
+    const cutoff = new Date(now.getTime() - DATA_RETENTION_DAYS * 24 * 60 * 60 * 1000);
+    const marker = force ? null : await dbGet('system:maintenance:cleanup');
+    if(!force && marker && cleanupDate(marker.lastRunAt) && (now - cleanupDate(marker.lastRunAt)) < CLEANUP_INTERVAL_MS){
+      return {skipped:true,deleted:0,details:{}};
+    }
+
+    const [bookings, notifications, packages, applications] = await Promise.all([
+      dbGetAll('booking:'), dbGetAll('notif:'), dbGetAll('custpkg:'), dbGetAll('trainerApp:')
+    ]);
+    const terminal = new Set(['completed','no_show','rejected','cancelled']);
+    const bookingKeys = bookings
+      .filter(b=>terminal.has(b.status) && bookingDateTime(b) && bookingDateTime(b) < cutoff)
+      .map(b=>'booking:'+b.id);
+    const notificationKeys = notifications
+      .filter(n=>cleanupDate(n.createdAt) && cleanupDate(n.createdAt) < cutoff)
+      .map(n=>'notif:'+n.id);
+    const packageKeys = packages
+      .filter(p=>cleanupDate(p.expiryDate) && cleanupDate(p.expiryDate) < cutoff)
+      .map(p=>'custpkg:'+p.id);
+    const applicationKeys = applications
+      .filter(a=>a.status!=='pending' && cleanupDate(a.submittedAt) && cleanupDate(a.submittedAt) < cutoff)
+      .map(a=>'trainerApp:'+a.id);
+    const allKeys = [...new Set([...bookingKeys,...notificationKeys,...packageKeys,...applicationKeys])];
+    const deleted = await deleteKeysFast(allKeys);
+    await dbSet('system:maintenance:cleanup', {
+      lastRunAt: now.toISOString(),
+      retentionDays: DATA_RETENTION_DAYS,
+      deleted,
+      details:{
+        bookings:bookingKeys.length,
+        notifications:notificationKeys.length,
+        customerPackages:packageKeys.length,
+        trainerApplications:applicationKeys.length
+      }
+    });
+    return {skipped:false,deleted,details:{
+      bookings:bookingKeys.length,
+      notifications:notificationKeys.length,
+      customerPackages:packageKeys.length,
+      trainerApplications:applicationKeys.length
+    }};
+  })();
+  try{ return await cleanupPromise; }
+  finally{ cleanupPromise = null; }
+}
 /* Keeps the admin login out of plain sight in the page source — this is a
    single static HTML file with no server, so it can't be a real secrets
    vault, but it stops the credential from showing up to a casual glance
@@ -919,58 +1047,15 @@ async function ensureRecord(key, factory){
   return val;
 }
 async function seedIfNeeded(){
-  const trainers = [
-    {id:'t1', username:'0811111111', password:'1234', name:'โค้ชกังวาล ทนันท์', phone:'0811111111',
-      specialty:'เทรนเนอร์ลดน้ำหนักและฟื้นฟูร่างกาย',
-      bio:'ประสบการณ์เทรนมากกว่า 5 ปี เชี่ยวชาญด้านลดไขมันและวางแผนโภชนาการควบคู่การออกกำลังกาย',
-      certs:[{name:'NASM Certified Personal Trainer', issuer:'NASM', year:'2021'}, {name:'ผู้เชี่ยวชาญโภชนาการกีฬา', issuer:'สมาคมโภชนาการไทย', year:'2022'}],
-      status:'active', ready:true, role:'trainer'},
-    {id:'t2', username:'0822222222', password:'1234', name:'โค้ชชยุต เงินอิน', phone:'0822222222',
-      specialty:'เทรนเนอร์เพิ่มกล้ามเนื้อ',
-      bio:'อดีตนักกีฬายกน้ำหนักทีมชาติ เน้นโปรแกรมสร้างกล้ามเนื้อและความแข็งแรง',
-      certs:[{name:'ACE Certified Personal Trainer', issuer:'ACE', year:'2020'}],
-      status:'active', ready:true, role:'trainer'},
-    {id:'t3', username:'0833333333', password:'1234', name:'โค้ชเต้', phone:'0833333333',
-      specialty:'เทรนเนอร์ฟังก์ชันนัลเทรนนิ่ง',
-      bio:'เชี่ยวชาญด้าน functional training และการปรับท่าทางเพื่อป้องกันการบาดเจ็บ',
-      certs:[{name:'Functional Movement Specialist', issuer:'FMS', year:'2022'}],
-      status:'active', ready:true, role:'trainer'},
-    {id:'t4', username:'0844444444', password:'1234', name:'โค้ชแนน', phone:'0844444444',
-      specialty:'เทรนเนอร์โยคะและความยืดหยุ่น',
-      bio:'ครูสอนโยคะและพิลาทิสมากว่า 4 ปี เน้นความยืดหยุ่นและการฟื้นฟูร่างกาย',
-      certs:[{name:'RYT 500 Yoga Teacher', issuer:'Yoga Alliance', year:'2021'}],
-      status:'active', ready:true, role:'trainer'},
-    {id:'t5', username:'0855555555', password:'1234', name:'โค้ชบอล', phone:'0855555555',
-      specialty:'เทรนเนอร์เตรียมความพร้อมนักกีฬา',
-      bio:'อดีตผู้ช่วยโค้ชฟิตเนสทีมกีฬามหาวิทยาลัย เน้นความแข็งแรงและความเร็ว',
-      certs:[{name:'CSCS Strength & Conditioning Specialist', issuer:'NSCA', year:'2023'}],
-      status:'active', ready:true, role:'trainer'}
-  ];
-  const customers = [
-    {id:'c1', username:'0911111111', password:'1234', name:'เป้', phone:'0911111111', status:'active', role:'customer', interestFilter:[]},
-    {id:'c2', username:'0922222222', password:'1234', name:'ฟ้า', phone:'0922222222', status:'active', role:'customer', interestFilter:[]},
-    {id:'c3', username:'0933333333', password:'1234', name:'ดล', phone:'0933333333', status:'active', role:'customer', interestFilter:[]}
-  ];
-  const packages = [
-    {id:'pkg1', name:'แพ็กเกจ 10 ครั้ง', sessions:10, price:3500, expirationDays:90, status:'active'},
-    {id:'pkg2', name:'แพ็กเกจ 20 ครั้ง', sessions:20, price:6500, expirationDays:120, status:'active'},
-    {id:'pkg3', name:'แพ็กเกจ 5 ครั้ง (ทดลอง)', sessions:5, price:1900, expirationDays:60, status:'active'}
-  ];
+  // Only seed data that is genuinely required for a fresh installation.
+  // Customer/trainer/demo accounts and demo packages are no longer created
+  // on every boot, which removes unnecessary database writes and prevents
+  // old demo identities from briefly reappearing before cleanup.
   await Promise.all([
     ensureRecord('admin:admin', ()=>({username:_d64('Y29icmEtMzY4MQ=='), password:_d64('TERzJUE3R1RwM2FRXlheOU1T'), name:'ผู้ดูแลระบบ / System Admin', role:'admin'})),
-    ...trainers.map(tr=>ensureRecord('trainer:'+tr.id, ()=>tr)),
-    ensureRecord('trainerApp:app1', ()=>({id:'app1', username:'0866666666', password:'1234', name:'โค้ชปวีณา สุขใจ', phone:'0866666666',
-      specialty:'โยคะและฟื้นฟูร่างกาย', bio:'ครูสอนโยคะและพิลาทิสมากว่า 3 ปี เน้นการฟื้นฟูอาการบาดเจ็บและความยืดหยุ่น',
-      certs:[{name:'RYT 200 Yoga Teacher', issuer:'Yoga Alliance', year:'2023'}],
-      submittedAt: new Date().toISOString(), status:'pending'})),
-    ...customers.map(c=>ensureRecord('customer:'+c.id, ()=>c)),
-    ...packages.map(p=>ensureRecord('package:'+p.id, ()=>p)),
-    ensureRecord('custpkg:cp1', ()=>({id:'cp1', customerId:'c1', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
-      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'})),
-    ensureRecord('custpkg:cp2', ()=>({id:'cp2', customerId:'c2', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
-      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'})),
-    ensureRecord('custpkg:cp3', ()=>({id:'cp3', customerId:'c3', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
-      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'}))
+    ensureRecord('package:pkg1', ()=>({id:'pkg1', name:'แพ็กเกจ 10 ครั้ง', sessions:10, price:3500, expirationDays:90, status:'active'})),
+    ensureRecord('package:pkg2', ()=>({id:'pkg2', name:'แพ็กเกจ 20 ครั้ง', sessions:20, price:6500, expirationDays:120, status:'active'})),
+    ensureRecord('package:pkg3', ()=>({id:'pkg3', name:'แพ็กเกจ 5 ครั้ง (ทดลอง)', sessions:5, price:1900, expirationDays:60, status:'active'}))
   ]);
 }
 function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
@@ -1997,6 +2082,72 @@ async function renderAdminView(){
   return renderADashboard();
 }
 
+async function runSystemTests(){
+  const results = [];
+  const add = (name, ok, detail='') => results.push({name,ok,detail});
+  try{
+    add(t('test_db'), await supabaseIsAvailable(), supabaseClient ? t('test_supabase_ready') : t('test_fallback'));
+  }catch(e){ add(t('test_db'), false, e.message || 'DB unavailable'); }
+
+  const testKey = 'system:test:' + newId('t');
+  try{
+    const payload = {createdAt:new Date().toISOString(), probe:true};
+    await dbSet(testKey, payload);
+    const readBack = await dbGet(testKey);
+    add(t('test_crud'), !!readBack && readBack.probe===true, t('test_crud_detail'));
+  }catch(e){ add(t('test_crud'), false, e.message || 'CRUD failed'); }
+  finally{
+    try{ await dbDelete(testKey); }catch(e){}
+  }
+
+  try{
+    const [trainers,customers,apps,packages,bookings,custPkgs,notifications] = await Promise.all([
+      dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
+      dbGetAll('package:'), dbGetAll('booking:'), dbGetAll('custpkg:'), dbGetAll('notif:')
+    ]);
+    add(t('test_reads'), true, [trainers.length,customers.length,apps.length,packages.length,bookings.length,custPkgs.length,notifications.length].join(' / '));
+  }catch(e){ add(t('test_reads'), false, e.message || 'Read failed'); }
+
+  try{
+    const response = await fetch('./manifest.webmanifest',{cache:'no-store'});
+    const manifest = response.ok ? await response.json() : null;
+    add(t('test_manifest'), !!manifest, response.ok ? t('test_manifest_ok') : String(response.status));
+  }catch(e){ add(t('test_manifest'), false, e.message || 'Manifest failed'); }
+
+  try{
+    const supported = 'serviceWorker' in navigator;
+    const registration = supported ? await navigator.serviceWorker.getRegistration() : null;
+    add(t('test_pwa'), supported && !!registration, supported ? (registration ? t('test_pwa_ok') : t('test_pwa_waiting')) : t('test_pwa_unsupported'));
+  }catch(e){ add(t('test_pwa'), false, e.message || 'PWA check failed'); }
+
+  const passed = results.filter(x=>x.ok).length;
+  const resultEl = document.getElementById('systemTestResult');
+  if(resultEl){
+    resultEl.innerHTML = results.map(x=>`<div style="display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)">
+      <span>${esc(x.name)}</span><span class="badge ${x.ok?'badge-active':'badge-suspended'}">${x.ok?'PASS':'FAIL'} · ${esc(x.detail)}</span>
+    </div>`).join('') + `<div style="margin-top:10px;font-weight:700">${tt('test_summary',{passed,total:results.length})}</div>`;
+  }
+  toast(passed===results.length ? t('test_all_ok') : t('test_has_error'));
+  return results;
+}
+
+async function runManualCleanup(){
+  const resultEl = document.getElementById('systemTestResult');
+  if(resultEl) resultEl.innerHTML = `<div class="loading-shell">${t('cleanup_running')}</div>`;
+  try{
+    const result = await cleanupOldData(true);
+    const d = result.details || {};
+    const detail = `${t('cleanup_deleted')}: ${result.deleted} · ${t('cleanup_bookings')}: ${d.bookings||0} · ${t('cleanup_notifications')}: ${d.notifications||0} · ${t('cleanup_packages')}: ${d.customerPackages||0} · ${t('cleanup_apps')}: ${d.trainerApplications||0}`;
+    if(resultEl) resultEl.innerHTML = `<div class="badge badge-active">${esc(detail)}</div>`;
+    toast(t('cleanup_done'));
+    clearRenderCaches();
+    await renderView();
+  }catch(e){
+    if(resultEl) resultEl.innerHTML = `<div class="badge badge-suspended">${esc(e.message||'Cleanup failed')}</div>`;
+    toast(t('cleanup_failed'));
+  }
+}
+
 async function renderADashboard(){
   const [trainers, customers, apps, packages, bookings, custPkgs] = await Promise.all([
     dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
@@ -2011,6 +2162,14 @@ async function renderADashboard(){
       <div class="stat-card"><div class="lbl">${t('ad_stat_packages')}</div><div class="val">${packages.filter(p=>p.status==='active').length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_bookings')}</div><div class="val">${bookings.length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${custPkgs.filter(p=>p.status==='active').length}</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-head"><div><h3>${t('test_title')}</h3><p style="margin:4px 0 0;color:var(--text-dim);font-size:13px">${t('test_desc')}</p></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="runSystemTestBtn">${t('test_run')}</button>
+        <button class="btn btn-danger-outline" id="runCleanupBtn">${t('cleanup_run')}</button>
+      </div>
+      <div id="systemTestResult" style="margin-top:12px;font-size:13px;color:var(--text-dim)"></div>
     </div>
   `;
 }
@@ -2437,6 +2596,8 @@ function wireView(){
   });
   const addPkgBtn = document.getElementById('addPkgBtn'); if(addPkgBtn) addPkgBtn.addEventListener('click', addPackage);
   document.querySelectorAll('[data-remove-pkg]').forEach(el=>el.addEventListener('click', ()=> removePackage(el.dataset.removePkg)));
+  const testBtn = document.getElementById('runSystemTestBtn'); if(testBtn) testBtn.addEventListener('click', runSystemTests);
+  const cleanupBtn = document.getElementById('runCleanupBtn'); if(cleanupBtn) cleanupBtn.addEventListener('click', runManualCleanup);
 }
 
 document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
@@ -2525,10 +2686,9 @@ if('serviceWorker' in navigator && !window.frameElement){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
   if(await finishGoogleSession()) return;
   await seedIfNeeded();
-  await Promise.all(['t1','t2','t3','t4','t5'].map(id=>dbDelete('trainer:'+id)));
-  await Promise.all(['c1','c2','c3'].map(id=>dbDelete('customer:'+id)));
-  await dbDelete('trainerApp:app1');
-  await Promise.all(['cp1','cp2','cp3'].map(id=>dbDelete('custpkg:'+id)));
+  // Maintenance is deliberately non-blocking: a slow cleanup must never
+  // prevent the login screen or dashboard from opening.
+  cleanupOldData().catch(e=>console.warn('Automatic cleanup skipped:', e));
   await renderRoot();
 })();
 </script>
