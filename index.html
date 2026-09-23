@@ -596,7 +596,7 @@ const i18n = {
     auth_apply_heading:'Apply as a new trainer', auth_apply_note:"New trainers don't appear in the system immediately — an admin must review and approve your application before you can sign in.",
     auth_specialty_label:'Specialty', auth_bio_label:'Experience & about you', auth_certs_label:'Certificates attached (optional)',
     auth_apply_submit:'Submit application for review',
-    auth_toast_wrong:'Incorrect login details', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval',
+    auth_toast_wrong:'Incorrect login details', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval', auth_new_user_note:'New customers and trainers must register before signing in.',
     auth_toast_welcome:'Welcome, {name}', auth_toast_fill:'Please fill in all fields', auth_toast_phone_used:'This phone/username is already registered',
     auth_toast_registered:'Account created — signed in automatically', auth_toast_applied:'Application submitted — an admin must approve it before you can sign in',
     auth_toast_logout:'Logged out', auth_signed_in_as:'Signed in as',
@@ -2558,11 +2558,16 @@ async function finishGoogleSession(){
     const existingCustomer = (await dbGetAll('customer:')).find(x=>x.googleId===u.id || (email && x.email===email));
     if(existingCustomer){
       session={id:existingCustomer.id,role:'customer',name:existingCustomer.name};
+      writeRememberedAccount(existingCustomer.id,'customer',existingCustomer.name);
+      rememberQuickAccount(existingCustomer.id,'customer',existingCustomer.name);
       authError=''; route='dashboard'; renderRoot(); return true;
     }
     const c={id:newId('c'),username:'google:'+u.id,password:'',name:displayName,phone:'',email,googleId:u.id,avatar,status:'active',role:'customer',authProvider:'google'};
-    await dbSet('customer:'+c.id,c);
+    const saved = await dbSet('customer:'+c.id,c);
+    if(!saved || saved.ok===false) throw new Error('Google customer account could not be saved');
     session={id:c.id,role:'customer',name:c.name};
+    writeRememberedAccount(c.id,'customer',c.name);
+    rememberQuickAccount(c.id,'customer',c.name);
     toast(t('auth_toast_registered')); authError=''; route='dashboard'; renderRoot(); return true;
   }catch(e){ console.warn('Google session handling failed:',e); return false; }
 }
