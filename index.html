@@ -562,7 +562,7 @@ const i18n = {
     cleanup_deleted:'ลบทั้งหมด', cleanup_bookings:'ประวัติการจอง', cleanup_notifications:'การแจ้งเตือน', cleanup_packages:'แพ็กเกจลูกค้าที่หมดอายุ', cleanup_apps:'ใบสมัครเก่า',
     aa_eyebrow:'ตรวจสอบสิทธิ์', aa_h1:'คำขอสมัครเทรนเนอร์', aa_p:'ตรวจสอบข้อมูลและใบรับรองก่อนอนุมัติให้เข้าระบบ เทรนเนอร์จะปรากฏต่อลูกค้าได้ก็ต่อเมื่อผ่านการอนุมัติแล้วเท่านั้น',
     aa_no_apps:'ไม่มีคำขอสมัครที่รอตรวจสอบ', aa_submitted_on:'ส่งเมื่อ', aa_certs_label:'ใบรับรองที่แนบมา', aa_no_certs:'ไม่มีใบรับรองแนบมา',
-    aa_approve_btn:'อนุมัติเข้าระบบ', aa_reject_btn:'ปฏิเสธ', aa_pending_badge:'รอตรวจสอบ', aa_toast_approve:'อนุมัติเทรนเนอร์แล้ว เข้าระบบและแสดงให้ลูกค้าเห็นทันที', aa_toast_reject:'ปฏิเสธใบสมัครแล้ว',
+    aa_approve_btn:'อนุมัติเข้าระบบ', aa_reject_btn:'ปฏิเสธ', aa_pending_badge:'รอตรวจสอบ', aa_toast_approve:'อนุมัติเทรนเนอร์แล้ว เข้าระบบและแสดงให้ลูกค้าเห็นทันที', aa_toast_approve_exists:'บัญชีเทรนเนอร์นี้มีอยู่แล้ว ระบบยกเลิกคำขอซ้ำให้แล้ว', aa_toast_approve_failed:'อนุมัติไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', aa_toast_reject:'ปฏิเสธใบสมัครแล้ว',
     au_eyebrow:'สิทธิ์การใช้งาน', au_h1:'จัดการผู้ใช้งาน', au_p:'ดูรายชื่อผู้ใช้งานทั้งหมดในระบบ ระงับหรือเปิดใช้งานบัญชีได้ตามความเหมาะสม',
     au_th_name:'ชื่อ', au_th_role:'บทบาท', au_th_phone:'เบอร์ติดต่อ', au_th_status:'สถานะ',
     au_role_trainer:'เทรนเนอร์', au_role_customer:'ลูกค้า', au_status_active:'ใช้งานได้', au_status_suspended:'ถูกระงับ',
@@ -679,7 +679,7 @@ const i18n = {
     cleanup_deleted:'Deleted', cleanup_bookings:'booking history', cleanup_notifications:'notifications', cleanup_packages:'expired customer packages', cleanup_apps:'old applications',
     aa_eyebrow:'Verification', aa_h1:'Trainer applications', aa_p:'Review details and certificates before approving. Trainers only appear to customers once approved.',
     aa_no_apps:'No applications awaiting review', aa_submitted_on:'Submitted', aa_certs_label:'Attached certificates', aa_no_certs:'No certificates attached',
-    aa_approve_btn:'Approve', aa_reject_btn:'Reject', aa_pending_badge:'Pending review', aa_toast_approve:'Trainer approved — now visible to customers', aa_toast_reject:'Application rejected',
+    aa_approve_btn:'Approve', aa_reject_btn:'Reject', aa_pending_badge:'Pending review', aa_toast_approve:'Trainer approved — now visible to customers', aa_toast_approve_exists:'This trainer account already exists. The duplicate application was cleared.', aa_toast_approve_failed:'Approval failed. Please try again.', aa_toast_reject:'Application rejected',
     au_eyebrow:'Access control', au_h1:'Manage users', au_p:'View every account in the system. Suspend or reactivate as needed.',
     au_th_name:'Name', au_th_role:'Role', au_th_phone:'Contact', au_th_status:'Status',
     au_role_trainer:'Trainer', au_role_customer:'Customer', au_status_active:'Active', au_status_suspended:'Suspended',
@@ -2268,20 +2268,39 @@ async function renderAApps(){
   `;
 }
 async function approveApp(id, approve){
+  clearRenderCaches();
   const app = await dbGet('trainerApp:'+id);
-  if(!app) return;
-  if(approve){
-    const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
-      specialty:app.specialty, bio:app.bio, certs:app.certs||[], status:'active', ready:true, role:'trainer'};
-    await dbSet('trainer:'+tr.id, tr);
-    await dbDelete('trainerApp:'+id);
-    await pushNotification(tr.id, 'nav_t_dashboard', 'notif_approved', {}, null);
-    toast(t('aa_toast_approve'));
-  } else {
-    await dbDelete('trainerApp:'+id);
-    toast(t('aa_toast_reject'));
+  if(!app){ toast(t('aa_toast_approve_failed')); await renderRoot(); return; }
+  try{
+    if(approve){
+      // A phone number is the trainer's login ID. Never create a second
+      // trainer account for the same phone; this caused duplicate approvals
+      // to look like the button had done nothing because login could resolve
+      // to the older trainer record.
+      const trainers = await dbGetAll('trainer:');
+      const existing = trainers.find(x=>x.phone===app.phone || x.username===app.username || x.username===app.phone);
+      if(existing){
+        await dbDelete('trainerApp:'+id);
+        toast(t('aa_toast_approve_exists'));
+      } else {
+        const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
+          specialty:app.specialty, bio:app.bio, certs:app.certs||[], status:'active', ready:true, role:'trainer'};
+        const saved = await dbSet('trainer:'+tr.id, tr);
+        if(!saved || saved.ok===false) throw new Error('Trainer account could not be created');
+        await dbDelete('trainerApp:'+id);
+        await pushNotification(tr.id, 'nav_t_dashboard', 'notif_approved', {}, null);
+        toast(t('aa_toast_approve'));
+      }
+    } else {
+      await dbDelete('trainerApp:'+id);
+      toast(t('aa_toast_reject'));
+    }
+  }catch(e){
+    console.error('Trainer application approval failed:', e);
+    toast(t('aa_toast_approve_failed'));
   }
-  renderView(); renderNav();
+  clearRenderCaches();
+  await renderRoot();
 }
 
 async function renderAUsers(){
@@ -2609,6 +2628,7 @@ async function doRegister(){
 }
 
 async function doApply(){
+  clearRenderCaches();
   const name = (document.getElementById('apName').value||'').trim();
   const specialty = (document.getElementById('apSpecialty').value||'').trim();
   const phone = (document.getElementById('apPhone').value||'').trim();
@@ -2616,14 +2636,25 @@ async function doApply(){
   const bio = (document.getElementById('apBio').value||'').trim();
   if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
   if(pw.length < 6){ authError = t('pw_too_short'); renderAuth(); return; }
-  const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
-  if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
-  const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:pendingApplicationCerts, submittedAt:new Date().toISOString(), status:'pending'};
-  await dbSet('trainerApp:'+app.id, app);
-  pendingApplicationCerts = [];
-  applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
-  toast(t('auth_toast_applied'));
-  authMode='login'; authError=''; renderAuth();
+  try{
+    // Always re-read the shared lists before submitting so an older render
+    // cannot hide an application/trainer that was created elsewhere.
+    const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
+    if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone || x.phone===phone)){
+      authError = t('auth_toast_phone_used'); renderAuth(); return;
+    }
+    const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:[...pendingApplicationCerts], submittedAt:new Date().toISOString(), status:'pending'};
+    const saved = await dbSet('trainerApp:'+app.id, app);
+    if(!saved || saved.ok===false) throw new Error('Application could not be saved');
+    pendingApplicationCerts = [];
+    applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
+    toast(t('auth_toast_applied'));
+    authMode='login'; authError=''; renderAuth();
+  }catch(e){
+    console.error('Trainer application submit failed:', e);
+    authError = t('aa_toast_approve_failed');
+    renderAuth();
+  }
 }
 
 /* ======================================================================
