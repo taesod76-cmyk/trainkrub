@@ -4,15 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>เทรนครับ (TRAINKRUB)</title>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0c0a0a">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
-<link rel="shortcut icon" href="icons/favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="เทรนครับ">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -265,9 +256,6 @@
   .quick-login-row .qc{font-size:11px;color:var(--text-faint);font-family:var(--font-mono);flex-shrink:0}
   .auth-switch{text-align:center;font-size:12px;color:var(--text-dim);margin-top:18px}
   .auth-switch a{color:var(--red);font-weight:600;cursor:pointer}
-  .auth-divider{display:flex;align-items:center;gap:12px;margin:18px 0 12px;color:var(--text-faint);font-size:12px}
-  .auth-divider::before,.auth-divider::after{content:'';height:1px;flex:1;background:var(--border)}
-  .auth-divider span{padding:0 4px}
   .auth-back{text-align:center;font-size:12px;color:var(--text-dim);margin-top:16px;display:block;cursor:pointer}
   .auth-error{background:var(--red-glow);color:#f0838f;font-size:12px;padding:10px 12px;border-radius:9px;margin-bottom:14px}
 
@@ -454,7 +442,6 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 /* ======================================================================
    HUG YIM PLUS FITNESS — Customer / Trainer / Admin (3 separate systems)
@@ -473,7 +460,7 @@ const i18n = {
     logout:'ออกจากระบบ',
 
     auth_login_heading:'เข้าสู่ระบบ', auth_as:'ระบบ', auth_phone_label:'เบอร์โทรศัพท์', auth_username_label:'ชื่อผู้ใช้', auth_password_label:'รหัสผ่าน',
-    auth_login_btn:'เข้าสู่ระบบ', auth_new_user_note:'สำหรับลูกค้าและเทรนเนอร์ใหม่ ต้องสมัครสมาชิกก่อนจึงจะเข้าสู่ระบบได้', auth_no_account:'ยังไม่มีบัญชี?', auth_register_link:'สมัครสมาชิกใหม่',
+    auth_login_btn:'เข้าสู่ระบบ', auth_no_account:'ยังไม่มีบัญชี?', auth_register_link:'สมัครสมาชิกใหม่',
     auth_no_trainer_account:'ยังไม่ได้เป็นเทรนเนอร์ในระบบ?', auth_apply_link:'สมัครเทรนเนอร์ใหม่',
     auth_register_heading:'สมัครสมาชิกลูกค้าใหม่', auth_name_label:'ชื่อ-นามสกุล', auth_register_btn:'สมัครสมาชิกและเข้าสู่ระบบ', auth_back_to_login:'กลับไปเข้าสู่ระบบ',
     auth_apply_heading:'สมัครเป็นเทรนเนอร์ใหม่', auth_apply_note:'เทรนเนอร์จะไม่ปรากฏในระบบทันที ต้องรอผู้ดูแลระบบตรวจสอบและอนุมัติก่อน จึงจะเข้าสู่ระบบด้วยรหัสผ่านที่ตั้งไว้ได้',
@@ -500,18 +487,16 @@ const i18n = {
     cb_time_label:'เลือกเวลา', cb_submit_btn:'ส่งคำขอนัดหมาย', cb_no_package:'คุณยังไม่มีแพ็กเกจที่ใช้งานได้ กรุณาซื้อแพ็กเกจก่อนทำการจอง',
     cb_expired_package:'แพ็กเกจของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้ง กรุณาซื้อแพ็กเกจใหม่ก่อนทำการจอง',
     cb_summary_title:'สรุปการจอง', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะหลังส่ง', cb_status_after:'รอเทรนเนอร์ยืนยัน',
-    cb_no_time_selected:'กรุณาเลือกเวลาก่อนส่งคำขอ', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น', cb_slot_past:'เวลานี้ผ่านไปแล้ว กรุณาเลือกเวลาในอนาคต', cb_save_failed:'บันทึกคำขอจองไม่สำเร็จ กรุณาลองใหม่',
+    cb_no_time_selected:'กรุณาเลือกเวลาก่อนส่งคำขอ', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
     modal_title:'ส่งคำขอนัดหมายแล้ว!', modal_body:'กำลังรอการตอบรับจากเทรนเนอร์ คุณจะได้รับแจ้งเตือนทันทีที่มีการตอบกลับ', modal_close:'รับทราบ',
     mb_eyebrow:'ประวัติการจอง', mb_h1:'การจองของฉัน', mb_p:'ติดตามสถานะการจองทั้งหมดของคุณ', mb_empty:'คุณยังไม่มีรายการจอง',
     cp_eyebrow:'ภาพรวม', cp_h1:'แพ็กเกจของฉัน', cp_p:'ติดตามจำนวนครั้งคงเหลือและซื้อแพ็กเกจเพิ่มเติม',
     cp_remaining_title:'จำนวนครั้งคงเหลือ', cp_no_of:'จาก {total} ครั้ง', cp_expiry:'หมดอายุ', cp_status:'สถานะ',
     cp_no_package:'คุณยังไม่มีแพ็กเกจที่ใช้งานอยู่', cp_buy_title:'แพ็กเกจที่เปิดขาย', cp_buy_btn:'ซื้อแพ็กเกจนี้', cp_toast_bought:'ซื้อแพ็กเกจ "{name}" เรียบร้อย',
-    cp_full_warn:'ครั้งเทรนของคุณหมดแล้ว — ต่อแพ็กเกจเพื่อจองต่อได้', cp_save_failed:'บันทึกการซื้อแพ็กเกจไม่สำเร็จ กรุณาลองใหม่',
+    cp_full_warn:'ครั้งเทรนของคุณหมดแล้ว — ต่อแพ็กเกจเพื่อจองต่อได้',
     cp_expired_warn:'แพ็กเกจก่อนหน้าของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้งอยู่ กรุณาซื้อแพ็กเกจใหม่เพื่อจองต่อ',
     notif_h1:'การแจ้งเตือน', notif_eyebrow:'ล่าสุด', notif_p:'ทุกความเคลื่อนไหวเกี่ยวกับการจองของคุณ', notif_empty:'ยังไม่มีการแจ้งเตือน',
-    prof_h1:'โปรไฟล์ของฉัน', prof_eyebrow:'บัญชีของฉัน', prof_p:'ข้อมูลบัญชีของคุณ', prof_name:'ชื่อ-นามสกุล', prof_phone:'เบอร์โทรศัพท์', prof_save:'บันทึกข้อมูล', prof_saved:'บันทึกข้อมูลแล้ว', prof_save_failed:'บันทึกโปรไฟล์ไม่สำเร็จ กรุณาลองใหม่',
-    pw_title:'เปลี่ยนรหัสผ่าน', pw_current:'รหัสผ่านปัจจุบัน', pw_new:'รหัสผ่านใหม่', pw_confirm:'ยืนยันรหัสผ่านใหม่', pw_save:'บันทึกรหัสผ่าน', pw_save_failed:'บันทึกรหัสผ่านไม่สำเร็จ กรุณาลองใหม่', pw_fill:'กรุณากรอกข้อมูลให้ครบ', pw_current_wrong:'รหัสผ่านปัจจุบันไม่ถูกต้อง', pw_too_short:'รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร', pw_mismatch:'รหัสผ่านใหม่ไม่ตรงกัน', pw_changed:'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว',
-    google_login:'เข้าสู่ระบบด้วย Google', google_setup_needed:'การเข้าสู่ระบบด้วย Google ยังไม่ได้เปิดใช้งาน กรุณาตั้งค่า Supabase/Google ก่อน', google_failed:'ไม่สามารถเข้าสู่ระบบด้วย Google ได้ กรุณาลองใหม่', google_password_note:'บัญชีนี้เข้าสู่ระบบผ่าน Google การเปลี่ยนรหัสผ่านให้จัดการจากบัญชี Google ของคุณ',
+    prof_h1:'โปรไฟล์ของฉัน', prof_eyebrow:'บัญชีของฉัน', prof_p:'ข้อมูลบัญชีของคุณ', prof_name:'ชื่อ-นามสกุล', prof_phone:'เบอร์โทรศัพท์', prof_save:'บันทึกข้อมูล', prof_saved:'บันทึกข้อมูลแล้ว',
 
     t_dash_h1:'สวัสดี, {name}', t_dash_p:'ภาพรวมงานของคุณวันนี้',
     tq_eyebrow:'รอดำเนินการ', tq_h1:'คำขอนัดหมาย', tq_p:'ตอบรับเพื่อยืนยันคิว ระบบจะตัดจำนวนครั้งของลูกค้าโดยอัตโนมัติหลังบันทึกว่าเทรนเสร็จสิ้น',
@@ -553,23 +538,16 @@ const i18n = {
 
     ad_eyebrow:'ผู้ดูแลระบบ', ad_h1:'ภาพรวมระบบ', ad_p:'สรุปสถานะผู้ใช้งาน คำขอสมัครเทรนเนอร์ และข้อมูลหลักของระบบทั้งหมด',
     ad_stat_trainers:'เทรนเนอร์ในระบบ', ad_stat_customers:'ลูกค้าในระบบ', ad_stat_pending:'คำขอสมัครรออนุมัติ', ad_stat_packages:'แพ็กเกจที่เปิดขาย', ad_stat_bookings:'การจองทั้งหมด', ad_stat_active_pkg:'แพ็กเกจที่ลูกค้าถืออยู่',
-    test_title:'ทดสอบระบบและบำรุงรักษา', test_desc:'ตรวจสอบฐานข้อมูล PWA และ CRUD ก่อนใช้งานจริง พร้อมล้างข้อมูลที่หมดความจำเป็นเกิน 40 วัน',
-    test_run:'ทดสอบระบบ', test_db:'การเชื่อมต่อฐานข้อมูล', test_supabase_ready:'Supabase พร้อมใช้งาน', test_fallback:'ใช้โหมดสำรองของเครื่อง',
-    test_crud:'ทดสอบเพิ่ม/อ่าน/ลบข้อมูล', test_crud_detail:'สร้างข้อมูลทดสอบ อ่านกลับ และลบทิ้งแล้ว', test_reads:'ทดสอบการอ่านข้อมูลหลัก',
-    test_manifest:'Manifest ของ PWA', test_manifest_ok:'โหลดได้ปกติ', test_pwa:'Service Worker / PWA', test_pwa_ok:'ลงทะเบียนแล้ว', test_pwa_waiting:'กำลังรอลงทะเบียน', test_pwa_unsupported:'เบราว์เซอร์ไม่รองรับ',
-    test_summary:'ผ่าน {passed}/{total} รายการ', test_all_ok:'การทดสอบระบบผ่านทั้งหมด', test_has_error:'พบรายการที่ต้องตรวจสอบ',
-    cleanup_run:'ล้างข้อมูลเก่า > 40 วัน', cleanup_running:'กำลังล้างข้อมูลเก่าที่ไม่จำเป็น…', cleanup_done:'ล้างข้อมูลเก่าเรียบร้อยแล้ว', cleanup_failed:'ล้างข้อมูลเก่าไม่สำเร็จ',
-    cleanup_deleted:'ลบทั้งหมด', cleanup_bookings:'ประวัติการจอง', cleanup_notifications:'การแจ้งเตือน', cleanup_packages:'แพ็กเกจลูกค้าที่หมดอายุ', cleanup_apps:'ใบสมัครเก่า',
     aa_eyebrow:'ตรวจสอบสิทธิ์', aa_h1:'คำขอสมัครเทรนเนอร์', aa_p:'ตรวจสอบข้อมูลและใบรับรองก่อนอนุมัติให้เข้าระบบ เทรนเนอร์จะปรากฏต่อลูกค้าได้ก็ต่อเมื่อผ่านการอนุมัติแล้วเท่านั้น',
     aa_no_apps:'ไม่มีคำขอสมัครที่รอตรวจสอบ', aa_submitted_on:'ส่งเมื่อ', aa_certs_label:'ใบรับรองที่แนบมา', aa_no_certs:'ไม่มีใบรับรองแนบมา',
-    aa_approve_btn:'อนุมัติเข้าระบบ', aa_reject_btn:'ปฏิเสธ', aa_pending_badge:'รอตรวจสอบ', aa_toast_approve:'อนุมัติเทรนเนอร์แล้ว เข้าระบบและแสดงให้ลูกค้าเห็นทันที', aa_toast_approve_exists:'บัญชีเทรนเนอร์นี้มีอยู่แล้ว ระบบยกเลิกคำขอซ้ำให้แล้ว', aa_toast_approve_failed:'อนุมัติไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', aa_toast_reject:'ปฏิเสธใบสมัครแล้ว',
+    aa_approve_btn:'อนุมัติเข้าระบบ', aa_reject_btn:'ปฏิเสธ', aa_pending_badge:'รอตรวจสอบ', aa_toast_approve:'อนุมัติเทรนเนอร์แล้ว เข้าระบบและแสดงให้ลูกค้าเห็นทันที', aa_toast_reject:'ปฏิเสธใบสมัครแล้ว',
     au_eyebrow:'สิทธิ์การใช้งาน', au_h1:'จัดการผู้ใช้งาน', au_p:'ดูรายชื่อผู้ใช้งานทั้งหมดในระบบ ระงับหรือเปิดใช้งานบัญชีได้ตามความเหมาะสม',
     au_th_name:'ชื่อ', au_th_role:'บทบาท', au_th_phone:'เบอร์ติดต่อ', au_th_status:'สถานะ',
     au_role_trainer:'เทรนเนอร์', au_role_customer:'ลูกค้า', au_status_active:'ใช้งานได้', au_status_suspended:'ถูกระงับ',
     au_suspend_btn:'ระงับ', au_activate_btn:'เปิดใช้งาน', au_toast_activate:'เปิดใช้งานบัญชีแล้ว', au_toast_suspend:'ระงับการใช้งานบัญชีแล้ว',
     apk_eyebrow:'ข้อมูลหลักของระบบ', apk_h1:'จัดการแพ็กเกจ', apk_p:'เพิ่ม แก้ไข หรือปิดการขายแพ็กเกจการฝึกที่เปิดให้ลูกค้าเลือกซื้อ',
     apk_th_name:'ชื่อแพ็กเกจ', apk_th_sessions:'จำนวนครั้ง', apk_th_price:'ราคา (บาท)', apk_th_status:'สถานะขาย', apk_remove_btn:'ลบ', apk_add_btn:'+ เพิ่มแพ็กเกจใหม่', apk_new_name:'แพ็กเกจใหม่',
-    apk_toast_updated:'อัปเดตข้อมูลแพ็กเกจแล้ว', apk_toast_added:'เพิ่มแพ็กเกจใหม่แล้ว แก้ไขรายละเอียดได้ในตาราง', apk_toast_removed:'ลบแพ็กเกจแล้ว', apk_invalid_sessions:'จำนวนครั้งต้องเป็นจำนวนเต็มอย่างน้อย 1 ครั้ง', apk_invalid_price:'ราคาต้องเป็นตัวเลขตั้งแต่ 0 บาทขึ้นไป', apk_save_failed:'บันทึกแพ็กเกจไม่สำเร็จ กรุณาลองใหม่',
+    apk_toast_updated:'อัปเดตข้อมูลแพ็กเกจแล้ว', apk_toast_added:'เพิ่มแพ็กเกจใหม่แล้ว แก้ไขรายละเอียดได้ในตาราง', apk_toast_removed:'ลบแพ็กเกจแล้ว',
     status_on:'เปิดขาย', status_off:'ปิดขาย',
 
     notif_submitted:'ส่งคำขอนัดหมายกับ {trainer} วันที่ {date} เวลา {time} เรียบร้อย', notif_accepted:'{trainer} ยืนยันการจองวันที่ {date} เวลา {time} แล้ว', notif_rejected:'{trainer} ปฏิเสธคำขอวันที่ {date} เวลา {time}',
@@ -577,7 +555,7 @@ const i18n = {
     notif_done:'บันทึกเทรนเสร็จสิ้นกับ {who} — เหลือ {count} ครั้ง', notif_noshow:'{who} ไม่มาตามนัด — เหลือ {count} ครั้ง',
     notif_full:'แพ็กเกจใช้ครบแล้ว แจ้งเตือนให้ต่อแพ็กเกจ', notif_approved:'ใบสมัครเทรนเนอร์ของคุณได้รับการอนุมัติแล้ว ยินดีต้อนรับสู่ระบบ!', notif_app_rejected:'ใบสมัครเทรนเนอร์ของคุณถูกปฏิเสธ',
     notif_when_now:'เมื่อสักครู่',
-    quick_login_label:'เข้าสู่ระบบด่วน', quick_login_use:'เข้าสู่ระบบด่วน — แตะรายชื่อเพื่อกรอกและเข้าสู่ระบบทันที',
+    quick_login_label:'เข้าสู่ระบบด่วน — แตะรายชื่อเพื่อกรอกและเข้าสู่ระบบทันที',
     seed_note_admin:'สำหรับผู้ดูแลระบบที่ได้รับสิทธิ์เท่านั้น หากต้องการชื่อผู้ใช้และรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบโดยตรง',
     footer_note:'ข้อมูลทั้งหมดถูกเก็บไว้ในฐานข้อมูลกลางที่ใช้ร่วมกันทั้ง 3 ระบบ (Customer / Trainer / Admin) และซิงค์กันแบบเรียลไทม์'
   },
@@ -596,7 +574,7 @@ const i18n = {
     auth_apply_heading:'Apply as a new trainer', auth_apply_note:"New trainers don't appear in the system immediately — an admin must review and approve your application before you can sign in.",
     auth_specialty_label:'Specialty', auth_bio_label:'Experience & about you', auth_certs_label:'Certificates attached (optional)',
     auth_apply_submit:'Submit application for review',
-    auth_toast_wrong:'Incorrect login details', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval', auth_new_user_note:'New customers and trainers must register before signing in.',
+    auth_toast_wrong:'Incorrect login details', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval',
     auth_toast_welcome:'Welcome, {name}', auth_toast_fill:'Please fill in all fields', auth_toast_phone_used:'This phone/username is already registered',
     auth_toast_registered:'Account created — signed in automatically', auth_toast_applied:'Application submitted — an admin must approve it before you can sign in',
     auth_toast_logout:'Logged out', auth_signed_in_as:'Signed in as',
@@ -617,18 +595,16 @@ const i18n = {
     cb_time_label:'Select time', cb_submit_btn:'Send booking request', cb_no_package:'You have no usable package. Please buy a package before booking.',
     cb_expired_package:'Your package has expired. Even with sessions remaining, please buy a new package before booking.',
     cb_summary_title:'Booking summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status after sending', cb_status_after:'Waiting for trainer',
-    cb_no_time_selected:'Please select a time before sending', cb_slot_taken:'This slot was just booked by someone else — please pick another time', cb_slot_past:'This time has already passed. Please choose a future time.', cb_save_failed:'Could not save the booking request. Please try again.',
+    cb_no_time_selected:'Please select a time before sending', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
     modal_title:'Booking request sent!', modal_body:"Waiting for the trainer's response. You'll be notified as soon as they reply.", modal_close:'Got it',
     mb_eyebrow:'History', mb_h1:'My bookings', mb_p:'Track the status of all your bookings', mb_empty:"You don't have any bookings yet",
     cp_eyebrow:'Overview', cp_h1:'My package', cp_p:'Track remaining sessions and buy more.',
     cp_remaining_title:'Sessions remaining', cp_no_of:'of {total} sessions', cp_expiry:'Expires', cp_status:'Status',
     cp_no_package:"You don't have an active package", cp_buy_title:'Packages on sale', cp_buy_btn:'Buy this package', cp_toast_bought:'Purchased "{name}"',
-    cp_full_warn:"You're out of sessions — renew to keep booking", cp_save_failed:'Could not save the package purchase. Please try again.',
+    cp_full_warn:"You're out of sessions — renew to keep booking",
     cp_expired_warn:'Your previous package has expired. Even with sessions remaining, please buy a new package to keep booking.',
     notif_h1:'Notifications', notif_eyebrow:'Recent', notif_p:'Everything about your bookings, in one place', notif_empty:'No notifications yet',
-    prof_h1:'My profile', prof_eyebrow:'My account', prof_p:'Your account details', prof_name:'Full name', prof_phone:'Phone number', prof_save:'Save changes', prof_saved:'Profile saved', prof_save_failed:'Could not save your profile. Please try again.',
-    pw_title:'Change password', pw_current:'Current password', pw_new:'New password', pw_confirm:'Confirm new password', pw_save:'Save password', pw_save_failed:'Could not save the new password. Please try again.', pw_fill:'Please complete all fields', pw_current_wrong:'Current password is incorrect', pw_too_short:'New password must be at least 6 characters', pw_mismatch:'New passwords do not match', pw_changed:'Password changed successfully',
-    google_login:'Continue with Google', google_setup_needed:'Google sign-in is not enabled yet. Please configure Supabase/Google first.', google_failed:'Google sign-in failed. Please try again.', google_password_note:'This account signs in with Google. Manage its password from your Google account.',
+    prof_h1:'My profile', prof_eyebrow:'My account', prof_p:'Your account details', prof_name:'Full name', prof_phone:'Phone number', prof_save:'Save changes', prof_saved:'Profile saved',
 
     t_dash_h1:'Hi, {name}', t_dash_p:"Here's your overview for today",
     tq_eyebrow:'Action needed', tq_h1:'Booking requests', tq_p:'Accept to confirm the slot. Sessions are deducted automatically once you log the session as complete.',
@@ -659,7 +635,7 @@ const i18n = {
     notif_accepted_duo:'{trainer} confirmed your booking on {date} at {time} as a pair session with {partner}',
     ts_eyebrow:'Schedule', ts_h1:'Schedule', ts_p:'Log the outcome after each session to keep session counts accurate in real time.',
     ts_no_schedule:'No confirmed sessions', ts_mark_done:'Mark complete', ts_mark_noshow:'No-show',
-    ts_toast_done:'Session marked complete — 1 session deducted', ts_toast_noshow:'No-show recorded — 1 session deducted', ts_not_due:'This session is not due yet. You can close it after the scheduled time.',
+    ts_toast_done:'Session marked complete — 1 session deducted', ts_toast_noshow:'No-show recorded — 1 session deducted',
     badge_confirmed:'Confirmed', badge_done:'Completed', badge_noshow:'No-show', badge_pending:'Pending', badge_rejected:'Rejected', badge_cancelled:'Cancelled',
     tc_eyebrow:'Customers', tc_h1:'My customers', tc_p:"Customers who've booked or trained with you", tc_empty:'No customers yet', tc_sessions_done:'{n} session(s) completed',
     tpz_eyebrow:'My account', tpz_h1:'Trainer profile', tpz_p:'Edit your details and manage certificates customers will see on your public profile.',
@@ -670,23 +646,16 @@ const i18n = {
 
     ad_eyebrow:'Admin', ad_h1:'System overview', ad_p:'A summary of users, trainer applications, and core system data.',
     ad_stat_trainers:'Trainers', ad_stat_customers:'Customers', ad_stat_pending:'Applications pending', ad_stat_packages:'Packages on sale', ad_stat_bookings:'Total bookings', ad_stat_active_pkg:'Active customer packages',
-    test_title:'System test & maintenance', test_desc:'Check the database, PWA and CRUD before use, and remove non-essential data older than 40 days.',
-    test_run:'Run system test', test_db:'Database connection', test_supabase_ready:'Supabase is ready', test_fallback:'Local fallback mode',
-    test_crud:'Create/read/delete test', test_crud_detail:'Temporary test data was created, read back and deleted', test_reads:'Core data reads',
-    test_manifest:'PWA manifest', test_manifest_ok:'Loaded successfully', test_pwa:'Service Worker / PWA', test_pwa_ok:'Registered', test_pwa_waiting:'Waiting for registration', test_pwa_unsupported:'Not supported',
-    test_summary:'Passed {passed}/{total} checks', test_all_ok:'All system checks passed', test_has_error:'Some checks need attention',
-    cleanup_run:'Delete old data > 40 days', cleanup_running:'Removing non-essential old data…', cleanup_done:'Old data cleanup completed', cleanup_failed:'Old data cleanup failed',
-    cleanup_deleted:'Deleted', cleanup_bookings:'booking history', cleanup_notifications:'notifications', cleanup_packages:'expired customer packages', cleanup_apps:'old applications',
     aa_eyebrow:'Verification', aa_h1:'Trainer applications', aa_p:'Review details and certificates before approving. Trainers only appear to customers once approved.',
     aa_no_apps:'No applications awaiting review', aa_submitted_on:'Submitted', aa_certs_label:'Attached certificates', aa_no_certs:'No certificates attached',
-    aa_approve_btn:'Approve', aa_reject_btn:'Reject', aa_pending_badge:'Pending review', aa_toast_approve:'Trainer approved — now visible to customers', aa_toast_approve_exists:'This trainer account already exists. The duplicate application was cleared.', aa_toast_approve_failed:'Approval failed. Please try again.', aa_toast_reject:'Application rejected',
+    aa_approve_btn:'Approve', aa_reject_btn:'Reject', aa_pending_badge:'Pending review', aa_toast_approve:'Trainer approved — now visible to customers', aa_toast_reject:'Application rejected',
     au_eyebrow:'Access control', au_h1:'Manage users', au_p:'View every account in the system. Suspend or reactivate as needed.',
     au_th_name:'Name', au_th_role:'Role', au_th_phone:'Contact', au_th_status:'Status',
     au_role_trainer:'Trainer', au_role_customer:'Customer', au_status_active:'Active', au_status_suspended:'Suspended',
     au_suspend_btn:'Suspend', au_activate_btn:'Activate', au_toast_activate:'Account activated', au_toast_suspend:'Account suspended',
     apk_eyebrow:'Core system data', apk_h1:'Manage packages', apk_p:'Add, edit, or unlist the training packages customers can purchase.',
     apk_th_name:'Package name', apk_th_sessions:'Sessions', apk_th_price:'Price (THB)', apk_th_status:'Sale status', apk_remove_btn:'Remove', apk_add_btn:'+ Add new package', apk_new_name:'New package',
-    apk_toast_updated:'Package updated', apk_toast_added:'New package added — edit details in the table', apk_toast_removed:'Package removed', apk_invalid_sessions:'Sessions must be a whole number of at least 1', apk_invalid_price:'Price must be a number greater than or equal to 0', apk_save_failed:'Package save failed. Please try again.',
+    apk_toast_updated:'Package updated', apk_toast_added:'New package added — edit details in the table', apk_toast_removed:'Package removed',
     status_on:'On sale', status_off:'Unlisted',
 
     notif_submitted:'Booking request sent to {trainer} for {date} at {time}', notif_accepted:'{trainer} confirmed your booking on {date} at {time}', notif_rejected:'{trainer} declined your request on {date} at {time}',
@@ -694,7 +663,7 @@ const i18n = {
     notif_done:'Session completed with {who} — {count} sessions left', notif_noshow:'{who} did not show up — {count} sessions left',
     notif_full:'Package fully used — remind the customer to renew', notif_approved:'Your trainer application was approved. Welcome!', notif_app_rejected:'Your trainer application was rejected',
     notif_when_now:'Just now',
-    quick_login_label:'Quick login', quick_login_use:'Quick login — tap a name to auto-fill and sign in instantly',
+    quick_login_label:'Quick login — tap a name to auto-fill and sign in instantly',
     seed_note_admin:'Admin access is restricted. Contact your system administrator directly for the login credentials.',
     footer_note:'All data lives in one shared database used by all 3 systems (Customer / Trainer / Admin) and stays in sync in real time.'
   }
@@ -702,53 +671,6 @@ const i18n = {
 let lang = 'th';
 function t(key){ return (i18n[lang] && i18n[lang][key]) || key; }
 function tt(key, params){ return t(key).replace(/\{(\w+)\}/g, (m,k)=> (params && params[k]!==undefined) ? params[k] : m); }
-
-/* ---------------- Supabase (real shared database) ----------------
-   Fill in SUPABASE_URL and SUPABASE_ANON_KEY with your own project's
-   values (Project Settings → API in the Supabase dashboard) to make
-   all app data persist in a real, shared Postgres database instead of
-   just this one browser. Leave them blank to keep running on the
-   built-in window.storage / localStorage fallback below — the app
-   works either way, this just decides where data actually lives.
-   Setup: run supabase-setup.sql once in your project's SQL Editor
-   before filling these in. See README.md for the full walkthrough. */
-const SUPABASE_URL = 'https://eauzvihirpfcjkwyqgel.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_TYxnhvbPvCHCycPFWioahA_k16FmgnQ';
-const SUPABASE_TABLE = 'kv_store';
-
-let supabaseClient = null;
-if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase && typeof window.supabase.createClient==='function'){
-  try{ supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
-  catch(e){ console.warn('Supabase client init failed:', e && e.message); }
-}
-
-let supabaseBroken = false;
-let supabaseProbePromise = null;
-let supabaseLastProbeAt = 0;
-const SUPABASE_RECHECK_MS = 30000;
-function supabaseIsAvailable(){
-  if(!supabaseClient) return Promise.resolve(false);
-  const now = Date.now();
-  if(supabaseProbePromise && (now - supabaseLastProbeAt) < SUPABASE_RECHECK_MS) return supabaseProbePromise;
-  supabaseLastProbeAt = now;
-  supabaseProbePromise = (async ()=>{
-    try{
-      const { error } = await supabaseClient.from(SUPABASE_TABLE).select('key').limit(1);
-      if(error) throw error;
-      supabaseBroken = false;
-      return true;
-    }catch(e){
-      // In production Supabase is the authoritative shared database. Do not
-      // silently switch to per-device localStorage after a network error,
-      // because that creates two different databases and makes actions appear
-      // to succeed while other users never see the change.
-      supabaseBroken = true;
-      console.warn('Supabase unavailable:', e && e.message);
-      return false;
-    }
-  })();
-  return supabaseProbePromise;
-}
 
 /* ---------------- storage / "database" layer ----------------
    All app data lives in shared window.storage so the Customer, Trainer
@@ -758,20 +680,6 @@ function supabaseIsAvailable(){
    otherwise fall back to localStorage so the Beta demo also works
    when opened directly or previewed without window.storage. */
 const localDbPrefix = 'hug-yim-plus-fitness:';
-function clearLegacyTrainerLocalCache(){
-  try{
-    // Supabase is now authoritative for production. Purge any old trainer or
-    // application records left by earlier localStorage fallback versions on
-    // every boot so they can never reappear in the Admin application list.
-    const keys=[];
-    for(let i=0;i<localStorage.length;i++){
-      const k=localStorage.key(i);
-      if(k && (k.startsWith(localDbPrefix+'trainer:') || k.startsWith(localDbPrefix+'trainerApp:'))) keys.push(k);
-    }
-    keys.forEach(k=>localStorage.removeItem(k));
-    localStorage.removeItem('trainkrub:trainer-local-reset');
-  }catch(e){ console.warn('Legacy trainer local cleanup skipped:',e); }
-}
 
 /* ---------------- in-memory cache ----------------
    Every dbGet/dbSet/dbDelete/dbGetAll call in the file keeps the exact
@@ -834,26 +742,13 @@ function storageIsAvailable(){
 async function dbGet(key){
   if(keyCache.has(key)) return keyCache.get(key);
   let val = null;
-  if(supabaseClient){
-    if(!await supabaseIsAvailable()) return null;
-    try{
-      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('value').eq('key', key).maybeSingle();
-      if(error) throw error;
-      val = data ? data.value : null;
-      keyCache.set(key, val);
-      return val;
-    }catch(e){
-      console.error('Supabase read failed', key, e);
-      return null;
-    }
-  }
   if(await storageIsAvailable()){
     try{
       const r = await window.storage.get(key, true);
       val = r ? JSON.parse(r.value) : null;
       keyCache.set(key, val);
       return val;
-    }catch(e){ }
+    }catch(e){ /* key not found or a one-off read error — fall through to localStorage */ }
   }
   try{
     const raw = localStorage.getItem(localDbPrefix + key);
@@ -864,31 +759,16 @@ async function dbGet(key){
 }
 
 async function dbSet(key, val){
+  keyCache.set(key, val);
   invalidateListsFor(key);
-  if(supabaseClient){
-    if(!await supabaseIsAvailable()) return null;
-    try{
-      const { error } = await supabaseClient.from(SUPABASE_TABLE).upsert({ key, value: val, updated_at: new Date().toISOString() });
-      if(error) throw error;
-      // Only cache after the shared write is confirmed. Caching first made
-      // the admin CRUD test report PASS even when Supabase rejected the write.
-      keyCache.set(key, val);
-      return {ok:true};
-    }catch(e){
-      console.error('Supabase write failed', key, e);
-      keyCache.delete(key);
-      return null;
-    }
-  }
   if(await storageIsAvailable()){
     try{
       const result = await window.storage.set(key, JSON.stringify(val), true);
-      if(result){ keyCache.set(key, val); return result; }
-    }catch(e){ }
+      if(result) return result;
+    }catch(e){ /* fall through to localStorage */ }
   }
   try{
     localStorage.setItem(localDbPrefix + key, JSON.stringify(val));
-    keyCache.set(key, val);
     return {ok:true};
   }catch(e){
     console.error('localStorage set failed', key, e);
@@ -897,35 +777,17 @@ async function dbSet(key, val){
 }
 
 async function dbDelete(key){
-  invalidateListsFor(key);
-  if(supabaseClient){
-    if(!await supabaseIsAvailable()) return null;
-    try{
-      const { error } = await supabaseClient.from(SUPABASE_TABLE).delete().eq('key', key);
-      if(error) throw error;
-      keyCache.delete(key);
-      return {ok:true};
-    }catch(e){
-      console.error('Supabase delete failed', key, e);
-      return null;
-    }
-  }
   keyCache.delete(key);
+  invalidateListsFor(key);
   if(await storageIsAvailable()){
-    try{ await window.storage.delete(key, true); return {ok:true}; }catch(e){ }
+    try{
+      await window.storage.delete(key, true);
+    }catch(e){ /* ignore — already gone or a one-off error */ }
   }
-  try{ localStorage.removeItem(localDbPrefix + key); return {ok:true}; }catch(e){ return null; }
+  try{ localStorage.removeItem(localDbPrefix + key); }catch(e){}
 }
 
 async function dbList(prefix){
-  if(supabaseClient){
-    if(!await supabaseIsAvailable()) return [];
-    try{
-      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('key').like('key', prefix + '%');
-      if(error) throw error;
-      return (data || []).map(r=>r.key);
-    }catch(e){ console.error('Supabase list failed', prefix, e); return []; }
-  }
   if(await storageIsAvailable()){
     try{
       const r = await window.storage.list(prefix, true);
@@ -945,32 +807,6 @@ async function dbList(prefix){
 }
 async function dbGetAll(prefix){
   if(listCache.has(prefix)) return listCache.get(prefix).slice();
-
-  // Supabase is authoritative on the deployed app. Never fall back to a
-  // device-local snapshot after a shared query fails, or different users can
-  // see different data and an admin action can appear to succeed only locally.
-  if(supabaseClient){
-    if(!await supabaseIsAvailable()) return [];
-    try{
-      const pageSize = 1000;
-      const rows = [];
-      for(let from=0;;from+=pageSize){
-        const { data, error } = await supabaseClient
-          .from(SUPABASE_TABLE)
-          .select('key,value')
-          .like('key', prefix + '%')
-          .range(from, from + pageSize - 1);
-        if(error) throw error;
-        rows.push(...(data || []));
-        if(!data || data.length < pageSize) break;
-      }
-      const result = rows.map(r=>r.value).filter(Boolean);
-      listCache.set(prefix, result);
-      for(const row of rows) keyCache.set(row.key, row.value);
-      return result.slice();
-    }catch(e){ console.error('Supabase collection read failed', prefix, e); return []; }
-  }
-
   const keys = await dbList(prefix);
   const vals = await Promise.all(keys.map(k=>dbGet(k)));
   const result = vals.filter(Boolean);
@@ -978,93 +814,6 @@ async function dbGetAll(prefix){
   return result.slice();
 }
 function newId(prefix){ return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-
-const DATA_RETENTION_DAYS = 40;
-const CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1000;
-let cleanupPromise = null;
-
-function cleanupDate(value){
-  if(!value) return null;
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? null : d;
-}
-function bookingDateTime(b){
-  if(!b || !b.bookingDate) return cleanupDate(b && b.createdAt);
-  const time = b.bookingTime || '23:59:59';
-  return cleanupDate(b.bookingDate + 'T' + time);
-}
-async function deleteKeysFast(keys){
-  if(!keys.length) return 0;
-  if(await supabaseIsAvailable()){
-    try{
-      const { error } = await supabaseClient.from(SUPABASE_TABLE).delete().in('key', keys);
-      if(error) throw error;
-      for(const key of keys){ keyCache.delete(key); invalidateListsFor(key); }
-      return keys.length;
-    }catch(e){ /* fall through to safe per-key deletion */ }
-  }
-  return Promise.all(keys.map(key=>dbDelete(key))).then(results=>results.filter(r=>r && r.ok).length);
-}
-
-/* Automatic retention policy:
-   - NEVER removes customer/trainer/admin accounts.
-   - NEVER removes package catalog records.
-   - NEVER removes pending trainer applications.
-   - Only removes terminal booking history older than 40 days.
-   - Removes notifications older than 40 days.
-   - Removes expired customer packages once they have been expired for 40 days.
-   - Removes non-pending trainer applications older than 40 days.
-   The cleanup runs at most once per 24 hours per shared database and can
-   also be started manually from the Admin dashboard. */
-async function cleanupOldData(force=false){
-  if(cleanupPromise && !force) return cleanupPromise;
-  cleanupPromise = (async ()=>{
-    const now = new Date();
-    const cutoff = new Date(now.getTime() - DATA_RETENTION_DAYS * 24 * 60 * 60 * 1000);
-    const marker = force ? null : await dbGet('system:maintenance:cleanup');
-    if(!force && marker && cleanupDate(marker.lastRunAt) && (now - cleanupDate(marker.lastRunAt)) < CLEANUP_INTERVAL_MS){
-      return {skipped:true,deleted:0,details:{}};
-    }
-
-    const [bookings, notifications, packages, applications] = await Promise.all([
-      dbGetAll('booking:'), dbGetAll('notif:'), dbGetAll('custpkg:'), dbGetAll('trainerApp:')
-    ]);
-    const terminal = new Set(['completed','no_show','rejected','cancelled']);
-    const bookingKeys = bookings
-      .filter(b=>terminal.has(b.status) && bookingDateTime(b) && bookingDateTime(b) < cutoff)
-      .map(b=>'booking:'+b.id);
-    const notificationKeys = notifications
-      .filter(n=>cleanupDate(n.createdAt) && cleanupDate(n.createdAt) < cutoff)
-      .map(n=>'notif:'+n.id);
-    const packageKeys = packages
-      .filter(p=>cleanupDate(p.expiryDate) && cleanupDate(p.expiryDate) < cutoff)
-      .map(p=>'custpkg:'+p.id);
-    const applicationKeys = applications
-      .filter(a=>a.status!=='pending' && cleanupDate(a.submittedAt) && cleanupDate(a.submittedAt) < cutoff)
-      .map(a=>'trainerApp:'+a.id);
-    const allKeys = [...new Set([...bookingKeys,...notificationKeys,...packageKeys,...applicationKeys])];
-    const deleted = await deleteKeysFast(allKeys);
-    await dbSet('system:maintenance:cleanup', {
-      lastRunAt: now.toISOString(),
-      retentionDays: DATA_RETENTION_DAYS,
-      deleted,
-      details:{
-        bookings:bookingKeys.length,
-        notifications:notificationKeys.length,
-        customerPackages:packageKeys.length,
-        trainerApplications:applicationKeys.length
-      }
-    });
-    return {skipped:false,deleted,details:{
-      bookings:bookingKeys.length,
-      notifications:notificationKeys.length,
-      customerPackages:packageKeys.length,
-      trainerApplications:applicationKeys.length
-    }};
-  })();
-  try{ return await cleanupPromise; }
-  finally{ cleanupPromise = null; }
-}
 /* Keeps the admin login out of plain sight in the page source — this is a
    single static HTML file with no server, so it can't be a real secrets
    vault, but it stops the credential from showing up to a casual glance
@@ -1084,82 +833,65 @@ async function ensureRecord(key, factory){
   return val;
 }
 async function seedIfNeeded(){
-  // Only seed data that is genuinely required for a fresh installation.
-  // Customer/trainer/demo accounts and demo packages are no longer created
-  // on every boot, which removes unnecessary database writes and prevents
-  // old demo identities from briefly reappearing before cleanup.
+  const trainers = [
+    {id:'t1', username:'0811111111', password:'1234', name:'โค้ชกังวาล ทนันท์', phone:'0811111111',
+      specialty:'เทรนเนอร์ลดน้ำหนักและฟื้นฟูร่างกาย',
+      bio:'ประสบการณ์เทรนมากกว่า 5 ปี เชี่ยวชาญด้านลดไขมันและวางแผนโภชนาการควบคู่การออกกำลังกาย',
+      certs:[{name:'NASM Certified Personal Trainer', issuer:'NASM', year:'2021'}, {name:'ผู้เชี่ยวชาญโภชนาการกีฬา', issuer:'สมาคมโภชนาการไทย', year:'2022'}],
+      status:'active', ready:true, role:'trainer'},
+    {id:'t2', username:'0822222222', password:'1234', name:'โค้ชชยุต เงินอิน', phone:'0822222222',
+      specialty:'เทรนเนอร์เพิ่มกล้ามเนื้อ',
+      bio:'อดีตนักกีฬายกน้ำหนักทีมชาติ เน้นโปรแกรมสร้างกล้ามเนื้อและความแข็งแรง',
+      certs:[{name:'ACE Certified Personal Trainer', issuer:'ACE', year:'2020'}],
+      status:'active', ready:true, role:'trainer'},
+    {id:'t3', username:'0833333333', password:'1234', name:'โค้ชเต้', phone:'0833333333',
+      specialty:'เทรนเนอร์ฟังก์ชันนัลเทรนนิ่ง',
+      bio:'เชี่ยวชาญด้าน functional training และการปรับท่าทางเพื่อป้องกันการบาดเจ็บ',
+      certs:[{name:'Functional Movement Specialist', issuer:'FMS', year:'2022'}],
+      status:'active', ready:true, role:'trainer'},
+    {id:'t4', username:'0844444444', password:'1234', name:'โค้ชแนน', phone:'0844444444',
+      specialty:'เทรนเนอร์โยคะและความยืดหยุ่น',
+      bio:'ครูสอนโยคะและพิลาทิสมากว่า 4 ปี เน้นความยืดหยุ่นและการฟื้นฟูร่างกาย',
+      certs:[{name:'RYT 500 Yoga Teacher', issuer:'Yoga Alliance', year:'2021'}],
+      status:'active', ready:true, role:'trainer'},
+    {id:'t5', username:'0855555555', password:'1234', name:'โค้ชบอล', phone:'0855555555',
+      specialty:'เทรนเนอร์เตรียมความพร้อมนักกีฬา',
+      bio:'อดีตผู้ช่วยโค้ชฟิตเนสทีมกีฬามหาวิทยาลัย เน้นความแข็งแรงและความเร็ว',
+      certs:[{name:'CSCS Strength & Conditioning Specialist', issuer:'NSCA', year:'2023'}],
+      status:'active', ready:true, role:'trainer'}
+  ];
+  const customers = [
+    {id:'c1', username:'0911111111', password:'1234', name:'เป้', phone:'0911111111', status:'active', role:'customer', interestFilter:[]},
+    {id:'c2', username:'0922222222', password:'1234', name:'ฟ้า', phone:'0922222222', status:'active', role:'customer', interestFilter:[]},
+    {id:'c3', username:'0933333333', password:'1234', name:'ดล', phone:'0933333333', status:'active', role:'customer', interestFilter:[]}
+  ];
+  const packages = [
+    {id:'pkg1', name:'แพ็กเกจ 10 ครั้ง', sessions:10, price:3500, expirationDays:90, status:'active'},
+    {id:'pkg2', name:'แพ็กเกจ 20 ครั้ง', sessions:20, price:6500, expirationDays:120, status:'active'},
+    {id:'pkg3', name:'แพ็กเกจ 5 ครั้ง (ทดลอง)', sessions:5, price:1900, expirationDays:60, status:'active'}
+  ];
   await Promise.all([
     ensureRecord('admin:admin', ()=>({username:_d64('Y29icmEtMzY4MQ=='), password:_d64('TERzJUE3R1RwM2FRXlheOU1T'), name:'ผู้ดูแลระบบ / System Admin', role:'admin'})),
-    ensureRecord('package:pkg1', ()=>({id:'pkg1', name:'แพ็กเกจ 10 ครั้ง', sessions:10, price:3500, expirationDays:90, status:'active'})),
-    ensureRecord('package:pkg2', ()=>({id:'pkg2', name:'แพ็กเกจ 20 ครั้ง', sessions:20, price:6500, expirationDays:120, status:'active'})),
-    ensureRecord('package:pkg3', ()=>({id:'pkg3', name:'แพ็กเกจ 5 ครั้ง (ทดลอง)', sessions:5, price:1900, expirationDays:60, status:'active'}))
+    ...trainers.map(tr=>ensureRecord('trainer:'+tr.id, ()=>tr)),
+    ensureRecord('trainerApp:app1', ()=>({id:'app1', username:'0866666666', password:'1234', name:'โค้ชปวีณา สุขใจ', phone:'0866666666',
+      specialty:'โยคะและฟื้นฟูร่างกาย', bio:'ครูสอนโยคะและพิลาทิสมากว่า 3 ปี เน้นการฟื้นฟูอาการบาดเจ็บและความยืดหยุ่น',
+      certs:[{name:'RYT 200 Yoga Teacher', issuer:'Yoga Alliance', year:'2023'}],
+      submittedAt: new Date().toISOString(), status:'pending'})),
+    ...customers.map(c=>ensureRecord('customer:'+c.id, ()=>c)),
+    ...packages.map(p=>ensureRecord('package:'+p.id, ()=>p)),
+    ensureRecord('custpkg:cp1', ()=>({id:'cp1', customerId:'c1', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
+      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'})),
+    ensureRecord('custpkg:cp2', ()=>({id:'cp2', customerId:'c2', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
+      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'})),
+    ensureRecord('custpkg:cp3', ()=>({id:'cp3', customerId:'c3', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
+      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'}))
   ]);
 }
 function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
 
-/* ---------------- session / remembered device login ----------------
-   The app remembers the last account on this browser without storing its
-   password. A normal return to the app can resume that account; an explicit
-   logout cancels auto-resume but keeps the account in the Quick Login list.
-   Quick Login therefore never renders or stores a password in localStorage. */
-const REMEMBERED_ACCOUNT_KEY = 'trainkrub:remembered-account:v1';
-const QUICK_LOGIN_KEY = 'trainkrub:quick-accounts:v1';
-const LOGGED_OUT_KEY = 'trainkrub:explicit-logout:v1';
+/* ---------------- session (in-memory; log in required per browser session) ---------------- */
 let session = null; // {id, role, name, ...}
 let route = 'dashboard';
-
-function readRememberedAccount(){
-  try{ return JSON.parse(localStorage.getItem(REMEMBERED_ACCOUNT_KEY)||'null'); }catch(e){ return null; }
-}
-function writeRememberedAccount(id, role, name){
-  try{
-    localStorage.setItem(REMEMBERED_ACCOUNT_KEY, JSON.stringify({id,role,name,rememberedAt:new Date().toISOString()}));
-    localStorage.removeItem(LOGGED_OUT_KEY);
-  }catch(e){}
-}
-function rememberQuickAccount(id, role, name){
-  try{
-    const old = JSON.parse(localStorage.getItem(QUICK_LOGIN_KEY)||'[]');
-    const next = [{id,role,name,usedAt:new Date().toISOString()}, ...old.filter(x=>!(x.id===id && x.role===role))].slice(0,6);
-    localStorage.setItem(QUICK_LOGIN_KEY, JSON.stringify(next));
-  }catch(e){}
-}
-function readQuickAccounts(){
-  try{
-    const a=JSON.parse(localStorage.getItem(QUICK_LOGIN_KEY)||'[]');
-    return Array.isArray(a) ? a : [];
-  }catch(e){ return []; }
-}
-function markExplicitLogout(){
-  try{ localStorage.setItem(LOGGED_OUT_KEY,'1'); }catch(e){}
-}
-function wasExplicitlyLoggedOut(){
-  try{ return localStorage.getItem(LOGGED_OUT_KEY)==='1'; }catch(e){ return false; }
-}
-function clearExplicitLogout(){
-  try{ localStorage.removeItem(LOGGED_OUT_KEY); }catch(e){}
-}
-async function resumeRememberedAccount(){
-  if(wasExplicitlyLoggedOut()) return false;
-  const a=readRememberedAccount();
-  if(!a || !a.id || !a.role || !['customer','trainer'].includes(a.role)) return false;
-  const rec=await dbGet(a.role+':'+a.id);
-  if(!rec || rec.status!=='active') return false;
-  session={id:rec.id,role:a.role,name:rec.name||rec.name};
-  route='dashboard'; authError='';
-  return true;
-}
-async function quickLoginAccount(id, role){
-  if(!id || !['customer','trainer'].includes(role)) return false;
-  const rec=await dbGet(role+':'+id);
-  if(!rec || rec.status!=='active') return false;
-  clearExplicitLogout();
-  writeRememberedAccount(rec.id,role,rec.name);
-  session={id:rec.id,role,name:rec.name};
-  route='dashboard'; authError='';
-  await renderRoot();
-  return true;
-}
 let routeParams = {};
 
 /* ---------------- generic helpers ---------------- */
@@ -1261,15 +993,8 @@ async function renderRoot(){
   await renderView();
 }
 
-async function doLogout(){
-  if(supabaseClient){
-    try{ const { data } = await supabaseClient.auth.getSession(); if(data?.session) await supabaseClient.auth.signOut(); }catch(e){ console.warn('Supabase sign-out failed:',e); }
-  }
-  // Explicit logout means: do not auto-resume on the next app launch.
-  // The remembered account remains available as a one-tap Quick Login choice.
-  markExplicitLogout();
+function doLogout(){
   session = null; route = 'dashboard'; routeParams = {};
-  clearRenderCaches();
   toast(t('auth_toast_logout'));
   renderRoot();
 }
@@ -1360,11 +1085,7 @@ async function getAllMyPackages(customerId){
 }
 async function getApprovedTrainers(){
   const all = await dbGetAll('trainer:');
-  // Only trainers marked as accepting new clients should be bookable.
-  // `ready` may be missing on older approved records, so treat an omitted
-  // flag as available for backwards compatibility, but an explicit false
-  // must remove the booking action.
-  return all.filter(x=>x.status==='active' && x.ready!==false);
+  return all.filter(x=>x.status==='active');
 }
 async function getPinnedTrainerIds(){
   const c = await dbGet('customer:'+session.id);
@@ -1538,13 +1259,9 @@ async function renderCTrainerProfile(){
   `;
 }
 
-function getBookingDays(){
-  const arr=[]; const start=new Date(); start.setHours(0,0,0,0);
-  for(let i=0;i<7;i++){ const d=new Date(start); d.setDate(start.getDate()+i); arr.push(d.toISOString().slice(0,10)); }
-  return arr;
-}
+const DAYS = (()=>{ const arr=[]; const start=new Date(); for(let i=0;i<7;i++){ const d=new Date(start); d.setDate(start.getDate()+i); arr.push(d.toISOString().slice(0,10)); } return arr; })();
 const TIMES = { morning:['06:00','07:00','08:00','09:00','10:00','11:00'], afternoon:['13:00','14:00','15:00','16:00'], evening:['17:00','18:00','19:00','20:00'] };
-let bookingState = { trainerId:null, day:getBookingDays()[0], cat:'morning', time:null };
+let bookingState = { trainerId:null, day:DAYS[0], cat:'morning', time:null };
 
 /* ======================================================================
    DUO BOOKING (ระบบจองคู่)
@@ -1565,14 +1282,8 @@ const ACTIVE_BOOKING_STATUSES = ['pending','confirmed'];
 function bookingsAtSlot(all, trainerId, date, time){
   return all.filter(b=> b.trainerId===trainerId && b.bookingDate===date && b.bookingTime===time && ACTIVE_BOOKING_STATUSES.includes(b.status));
 }
-function isPastSlot(date, time){
-  if(!date || !time) return false;
-  const slot = new Date(date+'T'+time+':00');
-  return Number.isFinite(slot.getTime()) && slot.getTime() <= Date.now();
-}
 /* Returns why (if at all) a customer cannot book this slot. */
 function slotAvailability(all, trainerId, date, time, customerId){
-  if(isPastSlot(date,time)) return {ok:false, reason:'past', pending:0};
   const at = bookingsAtSlot(all, trainerId, date, time);
   const confirmed = at.filter(b=>b.status==='confirmed');
   const pending = at.filter(b=>b.status==='pending');
@@ -1587,15 +1298,12 @@ async function renderCBooking(){
   let trainers = await getApprovedTrainers();
   const pinnedIds = await getPinnedTrainerIds();
   trainers = sortTrainersByPin(trainers, pinnedIds);
-  const trainerRaw = bookingState.trainerId ? await dbGet('trainer:'+bookingState.trainerId) : null;
-  const trainer = trainerRaw && trainerRaw.status==='active' && trainerRaw.ready!==false ? trainerRaw : null;
+  const trainer = bookingState.trainerId ? await dbGet('trainer:'+bookingState.trainerId) : null;
   const pkg = await getActivePackage(session.id);
   const expiredUnused = !pkg && await hasExpiredUnusedPackage(session.id);
   const allBookings = await dbGetAll('booking:');
 
-  const days = getBookingDays();
-  if(!days.includes(bookingState.day)){ bookingState.day=days[0]; bookingState.time=null; }
-  const dayPills = days.map(d=>{
+  const dayPills = DAYS.map(d=>{
     const dt = new Date(d+'T00:00:00');
     const dayShort = lang==='th' ? ['อา','จ','อ','พ','พฤ','ศ','ส'][dt.getDay()] : dt.toLocaleDateString('en-US',{weekday:'short'});
     return `<div class="day-pill ${bookingState.day===d?'sel':''}" data-day="${d}"><div class="d">${dayShort}</div><div class="n">${dt.getDate()}</div></div>`;
@@ -1609,7 +1317,7 @@ async function renderCBooking(){
     const duoOpen = av.ok && av.pending === 1;
     if(duoOpen) anyDuoOpen = true;
     if(duoOpen && bookingState.time === tm) selectedIsDuo = true;
-    const title = av.reason==='past' ? t('cb_slot_past') : duoOpen ? t('duo_slot_pending_one') : '';
+    const title = duoOpen ? t('duo_slot_pending_one') : '';
     return `<div class="time-slot ${bookingState.time===tm?'sel':''} ${av.ok?'':'taken'} ${duoOpen?'duo-open':''}" data-time="${tm}" title="${esc(title)}">${fmtTime(tm)}</div>`;
   }).join('');
 
@@ -1668,8 +1376,7 @@ async function renderCBooking(){
 async function submitBooking(){
   const trainer = await dbGet('trainer:'+bookingState.trainerId);
   const pkg = await getActivePackage(session.id);
-  if(!trainer || trainer.status!=='active' || trainer.ready===false || !pkg || !bookingState.time){ toast(t('cb_no_time_selected')); return; }
-  if(isPastSlot(bookingState.day, bookingState.time)){ toast(t('cb_slot_past')); bookingState.time=null; renderView(); return; }
+  if(!trainer || !pkg || !bookingState.time){ toast(t('cb_no_time_selected')); return; }
   // Re-check against fresh data so two customers racing for the same slot
   // can still both get in (duo), but never past the capacity rules.
   const freshBookings = await dbGetAll('booking:');
@@ -1685,8 +1392,7 @@ async function submitBooking(){
     packageInstanceId: pkg.id, bookingDate: bookingState.day, bookingTime: bookingState.time,
     status:'pending', sessionMode:null, partnerNames:[], createdAt:new Date().toISOString(), completedAt:null
   };
-  const saved = await dbSet('booking:'+booking.id, booking);
-  if(!saved || saved.ok===false){ toast(t('cb_save_failed')); return; }
+  await dbSet('booking:'+booking.id, booking);
   await pushNotification(trainer.id, 'nav_t_requests', 'notif_new_request', {customer:session.name, date:fmtDate(booking.bookingDate), time:fmtTime(booking.bookingTime)}, booking.id);
   bookingState.time = null;
   document.getElementById('modalTitle').textContent = t('modal_title');
@@ -1751,11 +1457,10 @@ async function renderCPackage(){
 }
 async function buyPackage(pkgId){
   const p = await dbGet('package:'+pkgId);
-  if(!p || p.status!=='active' || !Number.isInteger(Number(p.sessions)) || Number(p.sessions)<1) return;
-  const inst = {id:newId('cp'), customerId:session.id, packageId:p.id, packageName:p.name, totalSessions:Number(p.sessions),
-    usedSessions:0, remainingSessions:Number(p.sessions), startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(Number(p.expirationDays)||90), status:'active'};
-  const saved = await dbSet('custpkg:'+inst.id, inst);
-  if(!saved || saved.ok===false){ toast(t('cp_save_failed')); return; }
+  if(!p) return;
+  const inst = {id:newId('cp'), customerId:session.id, packageId:p.id, packageName:p.name, totalSessions:p.sessions,
+    usedSessions:0, remainingSessions:p.sessions, startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(p.expirationDays||90), status:'active'};
+  await dbSet('custpkg:'+inst.id, inst);
   toast(tt('cp_toast_bought',{name:p.name}));
   renderView();
 }
@@ -1789,24 +1494,6 @@ async function propagateNameChange(role, id, newName){
   }
 }
 
-async function changeOwnPassword(role){
-  const key = role==='trainer' ? 'trainer:'+session.id : 'customer:'+session.id;
-  const rec = await dbGet(key);
-  if(!rec) return;
-  const current = (document.getElementById(role==='trainer'?'trPwCurrent':'cPwCurrent')?.value||'').trim();
-  const next = (document.getElementById(role==='trainer'?'trPwNew':'cPwNew')?.value||'').trim();
-  const confirm = (document.getElementById(role==='trainer'?'trPwConfirm':'cPwConfirm')?.value||'').trim();
-  if(!current || !next || !confirm){ toast(t('pw_fill')); return; }
-  if(rec.password !== current){ toast(t('pw_current_wrong')); return; }
-  if(next.length < 6){ toast(t('pw_too_short')); return; }
-  if(next !== confirm){ toast(t('pw_mismatch')); return; }
-  rec.password = next;
-  const saved = await dbSet(key, rec);
-  if(!saved || saved.ok===false){ toast(t('pw_save_failed')); return; }
-  toast(t('pw_changed'));
-  renderRoot();
-}
-
 async function renderCProfile(){
   const c = await dbGet('customer:'+session.id);
   return `
@@ -1816,13 +1503,6 @@ async function renderCProfile(){
       <div class="field"><label>${t('prof_phone')}</label><input type="text" id="cProfPhone" value="${esc(c.phone)}"></div>
       <button class="btn btn-primary btn-block" id="cProfSave">${t('prof_save')}</button>
     </div>
-    ${c.authProvider==='google' ? `<div class="card" style="max-width:480px;margin-top:16px"><div class="card-head"><h3>🔐 ${t('pw_title')}</h3></div><div class="auth-hint">${t('google_password_note')}</div></div>` : `<div class="card" style="max-width:480px;margin-top:16px">
-      <div class="card-head"><h3>${t('pw_title')}</h3></div>
-      <div class="field"><label>${t('pw_current')}</label><input type="password" id="cPwCurrent" autocomplete="current-password"></div>
-      <div class="field"><label>${t('pw_new')}</label><input type="password" id="cPwNew" autocomplete="new-password"></div>
-      <div class="field"><label>${t('pw_confirm')}</label><input type="password" id="cPwConfirm" autocomplete="new-password"></div>
-      <button class="btn btn-block" id="cPwSave">${t('pw_save')}</button>
-    </div>`}
   `;
 }
 async function saveCProfile(){
@@ -1841,8 +1521,7 @@ async function saveCProfile(){
   c.name = newName;
   c.phone = newPhone;
   c.username = newPhone;
-  const saved = await dbSet('customer:'+c.id, c);
-  if(!saved || saved.ok===false){ toast(t('prof_save_failed')); return; }
+  await dbSet('customer:'+c.id, c);
   await propagateNameChange('customer', c.id, c.name);
   session.name = c.name;
   toast(t('prof_saved'));
@@ -1979,12 +1658,12 @@ async function acceptDuo(slotKey){
 
   const accepted = pending.slice(0, DUO_CAPACITY);
   const overflow = pending.slice(DUO_CAPACITY); // more than the pair can hold
-  // Match partners by booking id, not by name, so two customers with the same name are still handled correctly.
+  const names = accepted.map(b=>b.customerName);
 
   for(const b of accepted){
     b.status = 'confirmed';
     b.sessionMode = accepted.length > 1 ? 'duo' : 'solo';
-    b.partnerNames = accepted.filter(x=>x.id!==b.id).map(x=>x.customerName);
+    b.partnerNames = names.filter(n=> n!==b.customerName);
     await dbSet('booking:'+b.id, b);
     if(b.sessionMode === 'duo'){
       await pushNotification(b.customerId, 'nav_c_mybookings', 'notif_accepted_duo', {trainer:b.trainerName, date:fmtDate(date), time:fmtTime(time), partner:b.partnerNames.join(', ')}, b.id);
@@ -2053,12 +1732,6 @@ async function renderTSchedule(){
 async function finishBooking(id, noShow){
   const b = await dbGet('booking:'+id);
   if(!b || b.status!=='confirmed') return; // guard against double-deduction
-  // A trainer can only close a session once its scheduled date/time has arrived.
-  const scheduledAt = new Date(b.bookingDate+'T'+(b.bookingTime||'23:59')+':00');
-  if(Number.isFinite(scheduledAt.getTime()) && scheduledAt.getTime() > Date.now()){
-    toast(t('ts_not_due'));
-    return;
-  }
   b.status = noShow ? 'no_show' : 'completed';
   b.completedAt = new Date().toISOString();
   await dbSet('booking:'+id, b);
@@ -2117,13 +1790,6 @@ async function renderTProfile(){
         </div>
         <button class="btn btn-primary btn-block" id="pfSaveBtn">${t('tpz_save_btn')}</button>
       </div>
-      <div class="card" style="margin-top:16px">
-        <div class="card-head"><h3>${t('pw_title')}</h3></div>
-        <div class="field"><label>${t('pw_current')}</label><input type="password" id="trPwCurrent" autocomplete="current-password"></div>
-        <div class="field"><label>${t('pw_new')}</label><input type="password" id="trPwNew" autocomplete="new-password"></div>
-        <div class="field"><label>${t('pw_confirm')}</label><input type="password" id="trPwConfirm" autocomplete="new-password"></div>
-        <button class="btn btn-block" id="trPwSave">${t('pw_save')}</button>
-      </div>
       <div class="card" id="certsCard">${certsCardInner(tr)}</div>
     </div>
   `;
@@ -2170,8 +1836,7 @@ async function saveTrainerProfile(){
   if(newPhone){ tr.phone = newPhone; tr.username = newPhone; }
   tr.bio = document.getElementById('pfBio').value.trim();
   tr.ready = document.getElementById('pfReady').checked;
-  const saved = await dbSet('trainer:'+tr.id, tr);
-  if(!saved || saved.ok===false){ toast(t('prof_save_failed')); return; }
+  await dbSet('trainer:'+tr.id, tr);
   await propagateNameChange('trainer', tr.id, tr.name);
   session.name = tr.name;
   toast(t('tpz_toast_saved'));
@@ -2211,72 +1876,6 @@ async function renderAdminView(){
   return renderADashboard();
 }
 
-async function runSystemTests(){
-  const results = [];
-  const add = (name, ok, detail='') => results.push({name,ok,detail});
-  try{
-    add(t('test_db'), await supabaseIsAvailable(), supabaseClient ? t('test_supabase_ready') : t('test_fallback'));
-  }catch(e){ add(t('test_db'), false, e.message || 'DB unavailable'); }
-
-  const testKey = 'system:test:' + newId('t');
-  try{
-    const payload = {createdAt:new Date().toISOString(), probe:true};
-    await dbSet(testKey, payload);
-    const readBack = await dbGet(testKey);
-    add(t('test_crud'), !!readBack && readBack.probe===true, t('test_crud_detail'));
-  }catch(e){ add(t('test_crud'), false, e.message || 'CRUD failed'); }
-  finally{
-    try{ await dbDelete(testKey); }catch(e){}
-  }
-
-  try{
-    const [trainers,customers,apps,packages,bookings,custPkgs,notifications] = await Promise.all([
-      dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
-      dbGetAll('package:'), dbGetAll('booking:'), dbGetAll('custpkg:'), dbGetAll('notif:')
-    ]);
-    add(t('test_reads'), true, [trainers.length,customers.length,apps.length,packages.length,bookings.length,custPkgs.length,notifications.length].join(' / '));
-  }catch(e){ add(t('test_reads'), false, e.message || 'Read failed'); }
-
-  try{
-    const response = await fetch('./manifest.webmanifest',{cache:'no-store'});
-    const manifest = response.ok ? await response.json() : null;
-    add(t('test_manifest'), !!manifest, response.ok ? t('test_manifest_ok') : String(response.status));
-  }catch(e){ add(t('test_manifest'), false, e.message || 'Manifest failed'); }
-
-  try{
-    const supported = 'serviceWorker' in navigator;
-    const registration = supported ? await navigator.serviceWorker.getRegistration() : null;
-    add(t('test_pwa'), supported && !!registration, supported ? (registration ? t('test_pwa_ok') : t('test_pwa_waiting')) : t('test_pwa_unsupported'));
-  }catch(e){ add(t('test_pwa'), false, e.message || 'PWA check failed'); }
-
-  const passed = results.filter(x=>x.ok).length;
-  const resultEl = document.getElementById('systemTestResult');
-  if(resultEl){
-    resultEl.innerHTML = results.map(x=>`<div style="display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)">
-      <span>${esc(x.name)}</span><span class="badge ${x.ok?'badge-active':'badge-suspended'}">${x.ok?'PASS':'FAIL'} · ${esc(x.detail)}</span>
-    </div>`).join('') + `<div style="margin-top:10px;font-weight:700">${tt('test_summary',{passed,total:results.length})}</div>`;
-  }
-  toast(passed===results.length ? t('test_all_ok') : t('test_has_error'));
-  return results;
-}
-
-async function runManualCleanup(){
-  const resultEl = document.getElementById('systemTestResult');
-  if(resultEl) resultEl.innerHTML = `<div class="loading-shell">${t('cleanup_running')}</div>`;
-  try{
-    const result = await cleanupOldData(true);
-    const d = result.details || {};
-    const detail = `${t('cleanup_deleted')}: ${result.deleted} · ${t('cleanup_bookings')}: ${d.bookings||0} · ${t('cleanup_notifications')}: ${d.notifications||0} · ${t('cleanup_packages')}: ${d.customerPackages||0} · ${t('cleanup_apps')}: ${d.trainerApplications||0}`;
-    if(resultEl) resultEl.innerHTML = `<div class="badge badge-active">${esc(detail)}</div>`;
-    toast(t('cleanup_done'));
-    clearRenderCaches();
-    await renderView();
-  }catch(e){
-    if(resultEl) resultEl.innerHTML = `<div class="badge badge-suspended">${esc(e.message||'Cleanup failed')}</div>`;
-    toast(t('cleanup_failed'));
-  }
-}
-
 async function renderADashboard(){
   const [trainers, customers, apps, packages, bookings, custPkgs] = await Promise.all([
     dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
@@ -2291,19 +1890,6 @@ async function renderADashboard(){
       <div class="stat-card"><div class="lbl">${t('ad_stat_packages')}</div><div class="val">${packages.filter(p=>p.status==='active').length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_bookings')}</div><div class="val">${bookings.length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${custPkgs.filter(p=>p.status==='active').length}</div></div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <div class="card-head"><div><h3>คำขอสมัครเทรนเนอร์${apps.filter(a=>a.status==='pending').length ? ' ('+apps.filter(a=>a.status==='pending').length+')' : ''}</h3><p style="margin:4px 0 0;color:var(--text-dim);font-size:13px">${apps.filter(a=>a.status==='pending').length ? 'มีคำขอรอการตรวจสอบจากผู้สมัครเทรนเนอร์' : 'ยังไม่มีคำขอสมัครเทรนเนอร์ที่รอตรวจสอบ'}</p></div><button class="btn btn-primary" id="adminAppsBtn">ดูคำขอทั้งหมด</button></div>
-      ${apps.filter(a=>a.status==='pending').slice(0,3).map(a=>`<div class="req-card" style="margin-bottom:10px"><div class="req-top"><div><div class="n">${esc(a.name)}</div><div class="t">${esc(a.specialty||'')} · ${esc(a.phone||'')}</div><div class="t">${t('aa_submitted_on')} ${fmtDateTime(a.submittedAt)}</div></div><span class="badge badge-pending">${t('aa_pending_badge')}</span></div></div>`).join('')}
-      ${apps.filter(a=>a.status==='pending').length>3 ? '<div class="hint" style="margin-top:8px">มีคำขอเพิ่มเติม กด “ดูคำขอทั้งหมด” เพื่อดูทั้งหมด</div>' : ''}
-    </div>
-    <div class="card" style="margin-top:16px">
-      <div class="card-head"><div><h3>${t('test_title')}</h3><p style="margin:4px 0 0;color:var(--text-dim);font-size:13px">${t('test_desc')}</p></div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-primary" id="runSystemTestBtn">${t('test_run')}</button>
-        <button class="btn btn-danger-outline" id="runCleanupBtn">${t('cleanup_run')}</button>
-      </div>
-      <div id="systemTestResult" style="margin-top:12px;font-size:13px;color:var(--text-dim)"></div>
     </div>
   `;
 }
@@ -2334,41 +1920,20 @@ async function renderAApps(){
   `;
 }
 async function approveApp(id, approve){
-  clearRenderCaches();
   const app = await dbGet('trainerApp:'+id);
-  if(!app){ toast(t('aa_toast_approve_failed')); await renderRoot(); return; }
-  try{
-    if(approve){
-      // A phone number is the trainer's login ID. Never create a second
-      // trainer account for the same phone; this caused duplicate approvals
-      // to look like the button had done nothing because login could resolve
-      // to the older trainer record.
-      const trainers = await dbGetAll('trainer:');
-      const existing = trainers.find(x=>x.phone===app.phone || x.username===app.username || x.username===app.phone);
-      if(existing){
-        const removed = await dbDelete('trainerApp:'+id);
-        if(!removed || removed.ok===false) throw new Error('Duplicate application cleanup failed');
-        toast(t('aa_toast_approve_exists'));
-      } else {
-        const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
-          specialty:app.specialty, bio:app.bio, certs:app.certs||[], status:'active', ready:true, role:'trainer'};
-        const saved = await dbSet('trainer:'+tr.id, tr);
-        if(!saved || saved.ok===false) throw new Error('Trainer account could not be created');
-        const removed = await dbDelete('trainerApp:'+id);
-        if(!removed || removed.ok===false) throw new Error('Application cleanup failed');
-        await pushNotification(tr.id, 'nav_t_dashboard', 'notif_approved', {}, null);
-        toast(t('aa_toast_approve'));
-      }
-    } else {
-      await dbDelete('trainerApp:'+id);
-      toast(t('aa_toast_reject'));
-    }
-  }catch(e){
-    console.error('Trainer application approval failed:', e);
-    toast(t('aa_toast_approve_failed'));
+  if(!app) return;
+  if(approve){
+    const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
+      specialty:app.specialty, bio:app.bio, certs:app.certs||[], status:'active', ready:true, role:'trainer'};
+    await dbSet('trainer:'+tr.id, tr);
+    await dbDelete('trainerApp:'+id);
+    await pushNotification(tr.id, 'nav_t_dashboard', 'notif_approved', {}, null);
+    toast(t('aa_toast_approve'));
+  } else {
+    await dbDelete('trainerApp:'+id);
+    toast(t('aa_toast_reject'));
   }
-  clearRenderCaches();
-  await renderRoot();
+  renderView(); renderNav();
 }
 
 async function renderAUsers(){
@@ -2442,18 +2007,9 @@ async function renderAPackages(){
 async function savePackageField(id, field, value){
   const p = await dbGet('package:'+id);
   if(!p) return;
-  if(field==='sessions'){
-    value = Number(value);
-    if(!Number.isInteger(value) || value < 1){ toast(t('apk_invalid_sessions')); renderView(); return; }
-  }
-  if(field==='price'){
-    value = Number(value);
-    if(!Number.isFinite(value) || value < 0){ toast(t('apk_invalid_price')); renderView(); return; }
-  }
-  if(field==='status' && !['active','inactive'].includes(value)) return;
+  if(field==='sessions' || field==='price') value = Number(value)||0;
   p[field] = value;
-  const saved = await dbSet('package:'+id, p);
-  if(!saved || saved.ok===false){ toast(t('apk_save_failed')); return; }
+  await dbSet('package:'+id, p);
   toast(t('apk_toast_updated'));
 }
 async function addPackage(){
@@ -2499,24 +2055,27 @@ async function renderAuth(){
       <div class="field"><label>${idLabel}</label><input type="text" id="authId" placeholder="${idPh}"></div>
       <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="authPw"></div>
       <button class="btn btn-primary btn-block" id="loginBtn">${t('auth_login_btn')}</button>
-      ${authRole==='customer' ? `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-block" id="googleLoginBtn" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#222;border:1px solid #ddd">G&nbsp; ${t('google_login')}</button>` : ''}
     `;
     if(authRole==='admin'){
       inner += `<div class="auth-hint">${t('seed_note_admin')}</div>`;
     } else {
-      inner += `<div class="auth-hint">${t('auth_new_user_note')}</div>`;
+      const list = authRole==='trainer' ? await dbGetAll('trainer:') : await dbGetAll('customer:');
+      list.sort((a,b)=> a.id.localeCompare(b.id));
+      inner += `
+        <div class="quick-login-label">${t('quick_login_label')}</div>
+        <div class="quick-login-list">
+          ${list.map(u=>`
+            <button type="button" class="quick-login-row" data-qid="${esc(u.username||u.phone)}" data-qpw="${esc(u.password)}">
+              <span class="avatar" style="width:28px;height:28px;font-size:11px">${esc((u.name||'').replace('โค้ช','').charAt(0))}</span>
+              <span class="qn">${esc(u.name)}</span>
+              <span class="qc">${esc(u.username||u.phone)} / ${esc(u.password)}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
     }
-    /* Customer and trainer accounts are never pre-created. They must register.
-       (A "quick login" list used to be rendered here, showing every real
-       account's name and letting a tap sign in as that person with no
-       password check — a full account-takeover hole. Removed entirely.) */
-    const quick = readQuickAccounts().filter(x=>x.role===authRole);
-    if(quick.length && (authRole==='customer' || authRole==='trainer')){
-      inner += `<div class="auth-divider"><span>${t('quick_login_label')}</span></div>
-        <div class="quick-login-list">${quick.map(x=>`<button type="button" class="quick-login-row" data-quick-id="${esc(x.id)}" data-quick-role="${esc(x.role)}"><span class="qn">${esc(x.name||'Account')}</span><span class="qc">${esc(x.role==='trainer'?t('role_trainer'):t('role_customer'))}</span><span>→</span></button>`).join('')}</div>`;
-    }
-    if(authRole==='customer') inner += `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-danger-outline btn-block" id="toRegister">👤+ ${t('auth_register_link')}</button>`;
-    if(authRole==='trainer') inner += `<div class="auth-divider"><span>หรือ</span></div><button class="btn btn-danger-outline btn-block" id="toApply">🏋+ ${t('auth_apply_link')}</button>`;
+    if(authRole==='customer') inner += `<div class="auth-switch">${t('auth_no_account')} <a id="toRegister">${t('auth_register_link')}</a></div>`;
+    if(authRole==='trainer') inner += `<div class="auth-switch">${t('auth_no_trainer_account')} <a id="toApply">${t('auth_apply_link')}</a></div>`;
   } else if(authMode==='register'){
     inner += `
       <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">👤</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_register_heading')}</h2></div>
@@ -2576,12 +2135,12 @@ async function renderAuth(){
   const back1 = document.getElementById('backToLogin'); if(back1) back1.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
-  const googleLoginBtn = document.getElementById('googleLoginBtn'); if(googleLoginBtn) googleLoginBtn.addEventListener('click', signInWithGoogle);
-  document.querySelectorAll('[data-quick-id]').forEach(b=>b.addEventListener('click', async ()=>{
-    const ok = await quickLoginAccount(b.dataset.quickId,b.dataset.quickRole);
-    if(!ok){ authError=t('auth_toast_wrong'); renderAuth(); }
+  document.querySelectorAll('.quick-login-row').forEach(row=>row.addEventListener('click', ()=>{
+    const idEl = document.getElementById('authId'), pwEl = document.getElementById('authPw');
+    if(idEl) idEl.value = row.dataset.qid;
+    if(pwEl) pwEl.value = row.dataset.qpw;
+    doLogin();
   }));
-
   const regBtn = document.getElementById('registerBtn'); if(regBtn) regBtn.addEventListener('click', doRegister);
   const applyBtn = document.getElementById('applyBtn'); if(applyBtn) applyBtn.addEventListener('click', doApply);
   const regName = document.getElementById('regName'); if(regName) regName.addEventListener('input', ()=> regDraft.name = regName.value);
@@ -2608,52 +2167,34 @@ async function renderAuth(){
   });
 }
 
-async function signInWithGoogle(){
-  if(!supabaseClient){ toast(t('google_setup_needed')); return; }
-  try{
-    const redirectTo = 'https://taesod76-cmyk.github.io/trainkrub/';
-    const { error } = await supabaseClient.auth.signInWithOAuth({
-      provider:'google',
-      options:{ redirectTo }
-    });
-    if(error) throw error;
-  }catch(e){
-    console.warn('Google sign-in failed:', e);
-    toast(t('google_failed'));
-  }
-}
-
-async function finishGoogleSession(){
-  if(!supabaseClient) return false;
-  try{
-    const { data, error } = await supabaseClient.auth.getSession();
-    if(error || !data?.session?.user) return false;
-    const u = data.session.user;
-    const email = u.email || '';
-    const displayName = u.user_metadata?.full_name || u.user_metadata?.name || email.split('@')[0] || 'Google User';
-    const avatar = u.user_metadata?.avatar_url || '';
-    const existingCustomer = (await dbGetAll('customer:')).find(x=>x.googleId===u.id || (email && x.email===email));
-    if(existingCustomer){
-      session={id:existingCustomer.id,role:'customer',name:existingCustomer.name};
-      writeRememberedAccount(existingCustomer.id,'customer',existingCustomer.name);
-      rememberQuickAccount(existingCustomer.id,'customer',existingCustomer.name);
-      authError=''; route='dashboard'; renderRoot(); return true;
-    }
-    const c={id:newId('c'),username:'google:'+u.id,password:'',name:displayName,phone:'',email,googleId:u.id,avatar,status:'active',role:'customer',authProvider:'google'};
-    const saved = await dbSet('customer:'+c.id,c);
-    if(!saved || saved.ok===false) throw new Error('Google customer account could not be saved');
-    session={id:c.id,role:'customer',name:c.name};
-    writeRememberedAccount(c.id,'customer',c.name);
-    rememberQuickAccount(c.id,'customer',c.name);
-    toast(t('auth_toast_registered')); authError=''; route='dashboard'; renderRoot(); return true;
-  }catch(e){ console.warn('Google session handling failed:',e); return false; }
-}
-
 async function doLogin(){
-  clearRenderCaches();
   const id = (document.getElementById('authId').value||'').trim();
   const pw = (document.getElementById('authPw').value||'').trim();
   if(!id || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+
+  /* Demo credentials are intentionally kept as a fallback for the
+     trainer/customer quick-login buttons only, so a missing/empty storage
+     layer never incorrectly reports those valid demo logins as invalid.
+     Admin is deliberately NOT included here: its username and password are
+     private, live only in the admin:admin record, and must never be
+     hardcoded anywhere reachable from the client. */
+  const demoAccounts = {
+    trainer: {id:'0833333333', pw:'1234', role:'trainer', name:'โค้ชเต้', accountId:'t3'},
+    customer:{id:'0911111111', pw:'1234', role:'customer', name:'เป้', accountId:'c1'}
+  };
+  const demo = demoAccounts[authRole];
+  const normalizedId = id.replace(/\s+/g,'');
+  if(demo && normalizedId === demo.id && pw === demo.pw){
+    session = {
+      id: demo.accountId || 'admin',
+      role: demo.role,
+      name: demo.name
+    };
+    authError='';
+    route='dashboard';
+    renderRoot();
+    return;
+  }
 
   if(authRole==='admin'){
     const admin = await dbGet('admin:admin');
@@ -2670,7 +2211,6 @@ async function doLogin(){
     if(tr){
       if(tr.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
       session = {id:tr.id, role:'trainer', name:tr.name};
-      writeRememberedAccount(tr.id,'trainer',tr.name); rememberQuickAccount(tr.id,'trainer',tr.name);
       authError=''; route='dashboard'; renderRoot(); return;
     }
     const apps = await dbGetAll('trainerApp:');
@@ -2685,58 +2225,41 @@ async function doLogin(){
   if(c){
     if(c.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
     session = {id:c.id, role:'customer', name:c.name};
-    writeRememberedAccount(c.id,'customer',c.name); rememberQuickAccount(c.id,'customer',c.name);
     authError=''; route='dashboard'; renderRoot(); return;
   }
   authError = t('auth_toast_wrong'); renderAuth();
 }
 
 async function doRegister(){
-  clearRenderCaches();
   const name = (document.getElementById('regName').value||'').trim();
   const phone = (document.getElementById('regPhone').value||'').trim();
   const pw = (document.getElementById('regPw').value||'').trim();
   if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
-  if(pw.length < 6){ authError = t('pw_too_short'); renderAuth(); return; }
   const customers = await dbGetAll('customer:');
   if(customers.some(x=>x.phone===phone || x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
   const c = {id:newId('c'), username:phone, password:pw, name, phone, status:'active', role:'customer'};
   await dbSet('customer:'+c.id, c);
   session = {id:c.id, role:'customer', name:c.name};
-  writeRememberedAccount(c.id,'customer',c.name); rememberQuickAccount(c.id,'customer',c.name);
   regDraft = {name:'', phone:'', pw:''};
   toast(t('auth_toast_registered'));
   authError=''; route='dashboard'; renderRoot();
 }
 
 async function doApply(){
-  clearRenderCaches();
   const name = (document.getElementById('apName').value||'').trim();
   const specialty = (document.getElementById('apSpecialty').value||'').trim();
   const phone = (document.getElementById('apPhone').value||'').trim();
   const pw = (document.getElementById('apPw').value||'').trim();
   const bio = (document.getElementById('apBio').value||'').trim();
   if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
-  if(pw.length < 6){ authError = t('pw_too_short'); renderAuth(); return; }
-  try{
-    // Always re-read the shared lists before submitting so an older render
-    // cannot hide an application/trainer that was created elsewhere.
-    const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
-    if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone || x.phone===phone)){
-      authError = t('auth_toast_phone_used'); renderAuth(); return;
-    }
-    const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:[...pendingApplicationCerts], submittedAt:new Date().toISOString(), status:'pending'};
-    const saved = await dbSet('trainerApp:'+app.id, app);
-    if(!saved || saved.ok===false) throw new Error('Application could not be saved');
-    pendingApplicationCerts = [];
-    applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
-    toast(t('auth_toast_applied'));
-    authMode='login'; authError=''; renderAuth();
-  }catch(e){
-    console.error('Trainer application submit failed:', e);
-    authError = t('aa_toast_approve_failed');
-    renderAuth();
-  }
+  const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
+  if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
+  const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:pendingApplicationCerts, submittedAt:new Date().toISOString(), status:'pending'};
+  await dbSet('trainerApp:'+app.id, app);
+  pendingApplicationCerts = [];
+  applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
+  toast(t('auth_toast_applied'));
+  authMode='login'; authError=''; renderAuth();
 }
 
 /* ======================================================================
@@ -2764,8 +2287,6 @@ function wireView(){
   document.querySelectorAll('[data-buy-pkg]').forEach(el=>el.addEventListener('click', ()=> buyPackage(el.dataset.buyPkg)));
 
   const cProfSave = document.getElementById('cProfSave'); if(cProfSave) cProfSave.addEventListener('click', saveCProfile);
-  const cPwSave = document.getElementById('cPwSave'); if(cPwSave) cPwSave.addEventListener('click', ()=>changeOwnPassword('customer'));
-  const trPwSave = document.getElementById('trPwSave'); if(trPwSave) trPwSave.addEventListener('click', ()=>changeOwnPassword('trainer'));
 
   document.querySelectorAll('[data-accept-booking]').forEach(el=>el.addEventListener('click', ()=> respondBooking(el.dataset.acceptBooking, true)));
   document.querySelectorAll('[data-accept-duo]').forEach(el=>el.addEventListener('click', ()=> acceptDuo(el.dataset.acceptDuo)));
@@ -2789,9 +2310,6 @@ function wireView(){
   });
   const addPkgBtn = document.getElementById('addPkgBtn'); if(addPkgBtn) addPkgBtn.addEventListener('click', addPackage);
   document.querySelectorAll('[data-remove-pkg]').forEach(el=>el.addEventListener('click', ()=> removePackage(el.dataset.removePkg)));
-  const testBtn = document.getElementById('runSystemTestBtn'); if(testBtn) testBtn.addEventListener('click', runSystemTests);
-  const cleanupBtn = document.getElementById('runCleanupBtn'); if(cleanupBtn) cleanupBtn.addEventListener('click', runManualCleanup);
-  const adminAppsBtn = document.getElementById('adminAppsBtn'); if(adminAppsBtn) adminAppsBtn.addEventListener('click', ()=> go('apps'));
 }
 
 document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
@@ -2845,56 +2363,10 @@ document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
   overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closePreview(); });
 })();
 
-/* ---------------- auto-refresh ----------------
-   Data can now change from a completely different device (a customer
-   booking on their phone while a trainer has this app open on theirs),
-   and nothing here was pushing that change onto an already-open screen —
-   the person had to manually reload to see it. This polls quietly in
-   the background and re-renders the current screen when the tab is
-   visible, so new requests/approvals/bookings show up on their own.
-   It skips a tick whenever an input/textarea/select is focused, so it
-   never wipes out something the person is in the middle of typing. */
-function shouldSkipAutoRefresh(){
-  const tag = document.activeElement && document.activeElement.tagName;
-  return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
-}
-function softRefresh(){
-  if(!session) return;
-  if(document.hidden) return;
-  if(shouldSkipAutoRefresh()) return;
-  renderView();
-}
-setInterval(softRefresh, 6000);
-document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) softRefresh(); });
-window.addEventListener('focus', softRefresh);
-
-/* ---------------- service worker ---------------- */
-if('serviceWorker' in navigator && !window.frameElement){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
-  });
-}
-
 /* ---------------- boot ---------------- */
 (async function boot(){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
-  // Remove stale trainer/trainer-application records that were stored only
-  // in an older browser-local fallback. The live Supabase database is now
-  // authoritative, so these records must not reappear after a cleanup.
-  clearLegacyTrainerLocalCache();
-  if(await finishGoogleSession()) return;
   await seedIfNeeded();
-  // Returning to the app resumes the last active customer/trainer on this
-  // browser. Explicit logout sets a separate flag, so it instead shows
-  // Quick Login choices on the next launch.
-  if(await resumeRememberedAccount()){
-    cleanupOldData().catch(e=>console.warn('Automatic cleanup skipped:', e));
-    await renderRoot();
-    return;
-  }
-  // Maintenance is deliberately non-blocking: a slow cleanup must never
-  // prevent the login screen or dashboard from opening.
-  cleanupOldData().catch(e=>console.warn('Automatic cleanup skipped:', e));
   await renderRoot();
 })();
 </script>
