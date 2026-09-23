@@ -758,6 +758,21 @@ function supabaseIsAvailable(){
    otherwise fall back to localStorage so the Beta demo also works
    when opened directly or previewed without window.storage. */
 const localDbPrefix = 'hug-yim-plus-fitness:';
+const TRAINER_LOCAL_RESET_VERSION = '2026-09-23-trainer-clean-1';
+function clearLegacyTrainerLocalCache(){
+  try{
+    if(localStorage.getItem('trainkrub:trainer-local-reset') === TRAINER_LOCAL_RESET_VERSION) return;
+    const keys=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k && (k.startsWith(localDbPrefix+'trainer:') || k.startsWith(localDbPrefix+'trainerApp:'))) keys.push(k);
+    }
+    keys.forEach(k=>localStorage.removeItem(k));
+    localStorage.setItem('trainkrub:trainer-local-reset',TRAINER_LOCAL_RESET_VERSION);
+    keyCache && keyCache.clear();
+    listCache && listCache.clear();
+  }catch(e){ console.warn('Legacy trainer local cleanup skipped:',e); }
+}
 
 /* ---------------- in-memory cache ----------------
    Every dbGet/dbSet/dbDelete/dbGetAll call in the file keeps the exact
@@ -2864,6 +2879,10 @@ if('serviceWorker' in navigator && !window.frameElement){
 /* ---------------- boot ---------------- */
 (async function boot(){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
+  // Remove stale trainer/trainer-application records that were stored only
+  // in an older browser-local fallback. The live Supabase database is now
+  // authoritative, so these records must not reappear after a cleanup.
+  clearLegacyTrainerLocalCache();
   if(await finishGoogleSession()) return;
   await seedIfNeeded();
   // Returning to the app resumes the last active customer/trainer on this
