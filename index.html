@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>เทรนครับ (TRAINKRUB)</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0c0a0a">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+<link rel="shortcut icon" href="icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="เทรนครับ">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -442,6 +451,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 /* ======================================================================
    HUG YIM PLUS FITNESS — Customer / Trainer / Admin (3 separate systems)
@@ -672,6 +682,46 @@ let lang = 'th';
 function t(key){ return (i18n[lang] && i18n[lang][key]) || key; }
 function tt(key, params){ return t(key).replace(/\{(\w+)\}/g, (m,k)=> (params && params[k]!==undefined) ? params[k] : m); }
 
+/* ---------------- Supabase (real shared database) ----------------
+   Fill in SUPABASE_URL and SUPABASE_ANON_KEY with your own project's
+   values (Project Settings → API in the Supabase dashboard) to make
+   all app data persist in a real, shared Postgres database instead of
+   just this one browser. Leave them blank to keep running on the
+   built-in window.storage / localStorage fallback below — the app
+   works either way, this just decides where data actually lives.
+   Setup: run supabase-setup.sql once in your project's SQL Editor
+   before filling these in. See README.md for the full walkthrough. */
+const SUPABASE_URL = 'https://eauzvihirpfcjkwyqgel.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_TYxnhvbPvCHCycPFWioahA_k16FmgnQ';
+const SUPABASE_TABLE = 'kv_store';
+
+let supabaseClient = null;
+if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase && typeof window.supabase.createClient==='function'){
+  try{ supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
+  catch(e){ console.warn('Supabase client init failed:', e && e.message); }
+}
+
+let supabaseBroken = false;
+let supabaseProbePromise = null;
+function supabaseIsAvailable(){
+  if(!supabaseClient) return Promise.resolve(false);
+  if(supabaseBroken) return Promise.resolve(false);
+  if(!supabaseProbePromise){
+    supabaseProbePromise = (async ()=>{
+      try{
+        const { error } = await supabaseClient.from(SUPABASE_TABLE).select('key').limit(1);
+        if(error) throw error;
+        return true;
+      }catch(e){
+        console.warn('Supabase unavailable, falling back to built-in storage:', e && e.message);
+        supabaseBroken = true;
+        return false;
+      }
+    })();
+  }
+  return supabaseProbePromise;
+}
+
 /* ---------------- storage / "database" layer ----------------
    All app data lives in shared window.storage so the Customer, Trainer
    and Admin systems (and different browser sessions) read/write the
@@ -742,6 +792,15 @@ function storageIsAvailable(){
 async function dbGet(key){
   if(keyCache.has(key)) return keyCache.get(key);
   let val = null;
+  if(await supabaseIsAvailable()){
+    try{
+      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('value').eq('key', key).maybeSingle();
+      if(error) throw error;
+      val = data ? data.value : null;
+      keyCache.set(key, val);
+      return val;
+    }catch(e){ /* one-off read error — fall through to next backend */ }
+  }
   if(await storageIsAvailable()){
     try{
       const r = await window.storage.get(key, true);
@@ -761,6 +820,13 @@ async function dbGet(key){
 async function dbSet(key, val){
   keyCache.set(key, val);
   invalidateListsFor(key);
+  if(await supabaseIsAvailable()){
+    try{
+      const { error } = await supabaseClient.from(SUPABASE_TABLE).upsert({ key, value: val, updated_at: new Date().toISOString() });
+      if(error) throw error;
+      return {ok:true};
+    }catch(e){ /* fall through to next backend */ }
+  }
   if(await storageIsAvailable()){
     try{
       const result = await window.storage.set(key, JSON.stringify(val), true);
@@ -779,6 +845,12 @@ async function dbSet(key, val){
 async function dbDelete(key){
   keyCache.delete(key);
   invalidateListsFor(key);
+  if(await supabaseIsAvailable()){
+    try{
+      const { error } = await supabaseClient.from(SUPABASE_TABLE).delete().eq('key', key);
+      if(error) throw error;
+    }catch(e){ /* fall through to next backend */ }
+  }
   if(await storageIsAvailable()){
     try{
       await window.storage.delete(key, true);
@@ -788,6 +860,13 @@ async function dbDelete(key){
 }
 
 async function dbList(prefix){
+  if(await supabaseIsAvailable()){
+    try{
+      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('key').like('key', prefix + '%');
+      if(error) throw error;
+      return (data || []).map(r=>r.key);
+    }catch(e){ /* fall through to next backend */ }
+  }
   if(await storageIsAvailable()){
     try{
       const r = await window.storage.list(prefix, true);
@@ -807,6 +886,24 @@ async function dbList(prefix){
 }
 async function dbGetAll(prefix){
   if(listCache.has(prefix)) return listCache.get(prefix).slice();
+  // Supabase path: one request returns every matching row's key AND value,
+  // instead of one request per key (the old dbList+dbGet combo below did
+  // N+1 round trips — a screen with 200 bookings meant 201 requests every
+  // single time it rendered). This also warms keyCache so any dbGet(key)
+  // call later in the same render pass for one of these records is free.
+  if(await supabaseIsAvailable()){
+    try{
+      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('key,value').like('key', prefix + '%');
+      if(error) throw error;
+      const result = [];
+      for(const row of (data || [])){
+        keyCache.set(row.key, row.value);
+        if(row.value) result.push(row.value);
+      }
+      listCache.set(prefix, result);
+      return result.slice();
+    }catch(e){ /* fall through to the key-by-key path below */ }
+  }
   const keys = await dbList(prefix);
   const vals = await Promise.all(keys.map(k=>dbGet(k)));
   const result = vals.filter(Boolean);
@@ -814,6 +911,56 @@ async function dbGetAll(prefix){
   return result.slice();
 }
 function newId(prefix){ return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+/* ---------------- data cleanup / archiving ----------------
+   Bookings and notifications otherwise pile up forever. Once a booking
+   is finished (completed/no-show/rejected) or a notification has been
+   read, nothing in the app ever needs it again after a while — it just
+   adds to storage and to the size of every dbGetAll('booking:') /
+   dbGetAll('notif:') fetch (and therefore every render and every
+   auto-refresh poll). This clears that old, settled data out.
+   Runs once per boot at most, throttled to at most once a day via
+   'system:lastCleanup' so it never adds extra requests to a normal
+   session — pass force:true (the admin "clean up now" button) to
+   bypass the throttle. */
+const CLEANUP_BOOKING_DAYS = 90;   // finished bookings older than this get removed
+const CLEANUP_NOTIF_DAYS = 30;     // already-read notifications older than this get removed
+const CLEANUP_MIN_INTERVAL_MS = 24 * 60 * 60 * 1000;
+
+function isOlderThan(iso, days){
+  if(!iso) return false;
+  const ms = new Date(iso).getTime();
+  if(Number.isNaN(ms)) return false;
+  return (Date.now() - ms) > days * 24 * 60 * 60 * 1000;
+}
+
+async function cleanupOldData(force){
+  if(!force){
+    const last = await dbGet('system:lastCleanup');
+    if(last && (Date.now() - new Date(last).getTime()) < CLEANUP_MIN_INTERVAL_MS){
+      return {skipped:true, removedBookings:0, removedNotifs:0};
+    }
+  }
+  let removedBookings = 0, removedNotifs = 0;
+  const finishedStatuses = ['completed','no_show','rejected'];
+  const bookings = await dbGetAll('booking:');
+  for(const b of bookings){
+    if(finishedStatuses.includes(b.status) && isOlderThan(b.completedAt || b.createdAt, CLEANUP_BOOKING_DAYS)){
+      await dbDelete('booking:'+b.id);
+      removedBookings++;
+    }
+  }
+  const notifs = await dbGetAll('notif:');
+  for(const n of notifs){
+    if(n.isRead && isOlderThan(n.createdAt, CLEANUP_NOTIF_DAYS)){
+      await dbDelete('notif:'+n.id);
+      removedNotifs++;
+    }
+  }
+  await dbSet('system:lastCleanup', new Date().toISOString());
+  return {skipped:false, removedBookings, removedNotifs};
+}
+
 /* Keeps the admin login out of plain sight in the page source — this is a
    single static HTML file with no server, so it can't be a real secrets
    vault, but it stops the credential from showing up to a casual glance
@@ -833,59 +980,12 @@ async function ensureRecord(key, factory){
   return val;
 }
 async function seedIfNeeded(){
-  const trainers = [
-    {id:'t1', username:'0811111111', password:'1234', name:'โค้ชกังวาล ทนันท์', phone:'0811111111',
-      specialty:'เทรนเนอร์ลดน้ำหนักและฟื้นฟูร่างกาย',
-      bio:'ประสบการณ์เทรนมากกว่า 5 ปี เชี่ยวชาญด้านลดไขมันและวางแผนโภชนาการควบคู่การออกกำลังกาย',
-      certs:[{name:'NASM Certified Personal Trainer', issuer:'NASM', year:'2021'}, {name:'ผู้เชี่ยวชาญโภชนาการกีฬา', issuer:'สมาคมโภชนาการไทย', year:'2022'}],
-      status:'active', ready:true, role:'trainer'},
-    {id:'t2', username:'0822222222', password:'1234', name:'โค้ชชยุต เงินอิน', phone:'0822222222',
-      specialty:'เทรนเนอร์เพิ่มกล้ามเนื้อ',
-      bio:'อดีตนักกีฬายกน้ำหนักทีมชาติ เน้นโปรแกรมสร้างกล้ามเนื้อและความแข็งแรง',
-      certs:[{name:'ACE Certified Personal Trainer', issuer:'ACE', year:'2020'}],
-      status:'active', ready:true, role:'trainer'},
-    {id:'t3', username:'0833333333', password:'1234', name:'โค้ชเต้', phone:'0833333333',
-      specialty:'เทรนเนอร์ฟังก์ชันนัลเทรนนิ่ง',
-      bio:'เชี่ยวชาญด้าน functional training และการปรับท่าทางเพื่อป้องกันการบาดเจ็บ',
-      certs:[{name:'Functional Movement Specialist', issuer:'FMS', year:'2022'}],
-      status:'active', ready:true, role:'trainer'},
-    {id:'t4', username:'0844444444', password:'1234', name:'โค้ชแนน', phone:'0844444444',
-      specialty:'เทรนเนอร์โยคะและความยืดหยุ่น',
-      bio:'ครูสอนโยคะและพิลาทิสมากว่า 4 ปี เน้นความยืดหยุ่นและการฟื้นฟูร่างกาย',
-      certs:[{name:'RYT 500 Yoga Teacher', issuer:'Yoga Alliance', year:'2021'}],
-      status:'active', ready:true, role:'trainer'},
-    {id:'t5', username:'0855555555', password:'1234', name:'โค้ชบอล', phone:'0855555555',
-      specialty:'เทรนเนอร์เตรียมความพร้อมนักกีฬา',
-      bio:'อดีตผู้ช่วยโค้ชฟิตเนสทีมกีฬามหาวิทยาลัย เน้นความแข็งแรงและความเร็ว',
-      certs:[{name:'CSCS Strength & Conditioning Specialist', issuer:'NSCA', year:'2023'}],
-      status:'active', ready:true, role:'trainer'}
-  ];
-  const customers = [
-    {id:'c1', username:'0911111111', password:'1234', name:'เป้', phone:'0911111111', status:'active', role:'customer', interestFilter:[]},
-    {id:'c2', username:'0922222222', password:'1234', name:'ฟ้า', phone:'0922222222', status:'active', role:'customer', interestFilter:[]},
-    {id:'c3', username:'0933333333', password:'1234', name:'ดล', phone:'0933333333', status:'active', role:'customer', interestFilter:[]}
-  ];
-  const packages = [
-    {id:'pkg1', name:'แพ็กเกจ 10 ครั้ง', sessions:10, price:3500, expirationDays:90, status:'active'},
-    {id:'pkg2', name:'แพ็กเกจ 20 ครั้ง', sessions:20, price:6500, expirationDays:120, status:'active'},
-    {id:'pkg3', name:'แพ็กเกจ 5 ครั้ง (ทดลอง)', sessions:5, price:1900, expirationDays:60, status:'active'}
-  ];
-  await Promise.all([
-    ensureRecord('admin:admin', ()=>({username:_d64('Y29icmEtMzY4MQ=='), password:_d64('TERzJUE3R1RwM2FRXlheOU1T'), name:'ผู้ดูแลระบบ / System Admin', role:'admin'})),
-    ...trainers.map(tr=>ensureRecord('trainer:'+tr.id, ()=>tr)),
-    ensureRecord('trainerApp:app1', ()=>({id:'app1', username:'0866666666', password:'1234', name:'โค้ชปวีณา สุขใจ', phone:'0866666666',
-      specialty:'โยคะและฟื้นฟูร่างกาย', bio:'ครูสอนโยคะและพิลาทิสมากว่า 3 ปี เน้นการฟื้นฟูอาการบาดเจ็บและความยืดหยุ่น',
-      certs:[{name:'RYT 200 Yoga Teacher', issuer:'Yoga Alliance', year:'2023'}],
-      submittedAt: new Date().toISOString(), status:'pending'})),
-    ...customers.map(c=>ensureRecord('customer:'+c.id, ()=>c)),
-    ...packages.map(p=>ensureRecord('package:'+p.id, ()=>p)),
-    ensureRecord('custpkg:cp1', ()=>({id:'cp1', customerId:'c1', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
-      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'})),
-    ensureRecord('custpkg:cp2', ()=>({id:'cp2', customerId:'c2', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
-      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'})),
-    ensureRecord('custpkg:cp3', ()=>({id:'cp3', customerId:'c3', packageId:'pkg1', packageName:'แพ็กเกจ 10 ครั้ง', totalSessions:10, usedSessions:0, remainingSessions:10,
-      startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(90), status:'active'}))
-  ]);
+  // Production data starts empty on purpose: only the admin account is
+  // seeded. Trainers get in via "สมัครเป็นเทรนเนอร์" (apply -> admin
+  // approves), customers via "สมัครสมาชิก" (self-registration) — both
+  // flows already exist and don't need any seed data to work. The admin
+  // adds real packages from the admin panel once, after first login.
+  await ensureRecord('admin:admin', ()=>({username:_d64('Y29icmEtMzY4MQ=='), password:_d64('TERzJUE3R1RwM2FRXlheOU1T'), name:'ผู้ดูแลระบบ / System Admin', role:'admin'}));
 }
 function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
 
@@ -1881,8 +1981,29 @@ async function renderADashboard(){
     dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
     dbGetAll('package:'), dbGetAll('booking:'), dbGetAll('custpkg:')
   ]);
+  const lastCleanup = await dbGet('system:lastCleanup');
+  const sbConnected = await supabaseIsAvailable();
+  const diag = {
+    hasUrl: !!SUPABASE_URL,
+    hasKey: !!SUPABASE_ANON_KEY,
+    clientCreated: !!supabaseClient,
+    connected: sbConnected,
+  };
+  const diagOk = diag.hasUrl && diag.hasKey && diag.clientCreated && diag.connected;
   return `
     <div class="page-head"><div><div class="eyebrow">${t('ad_eyebrow')}</div><h1>${t('ad_h1')}</h1><p>${t('ad_p')}</p></div></div>
+    <div class="card" style="margin-bottom:16px;border-color:${diagOk?'var(--green, #2e9e4f)':'var(--red)'}">
+      <div style="font-weight:600;margin-bottom:8px">
+        สถานะการเชื่อมต่อฐานข้อมูล (Supabase): ${diagOk ? '✅ เชื่อมต่อปกติ' : '⚠️ มีปัญหา — ดูรายละเอียดด้านล่าง'}
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);line-height:1.8">
+        ตั้งค่า URL ไว้แล้ว: ${diag.hasUrl ? 'ใช่' : '❌ ไม่ใช่ — ตัวแปร SUPABASE_URL ว่างอยู่ในไฟล์นี้'}<br>
+        ตั้งค่า Key ไว้แล้ว: ${diag.hasKey ? 'ใช่' : '❌ ไม่ใช่ — ตัวแปร SUPABASE_ANON_KEY ว่างอยู่ในไฟล์นี้'}<br>
+        สร้างการเชื่อมต่อสำเร็จ: ${diag.clientCreated ? 'ใช่' : '❌ ไม่ใช่ — ไลบรารี Supabase อาจโหลดไม่สำเร็จ (เช็คเน็ต/ตัวบล็อกโฆษณา)'}<br>
+        ทดสอบอ่านข้อมูลจริงได้: ${diag.connected ? 'ใช่' : '❌ ไม่ได้ — เช็ค RLS policy หรือชื่อตารางในโปรเจกต์ Supabase'}<br>
+        จำนวนคำขอสมัครเทรนเนอร์ที่ดึงเจอ (ทุกสถานะ): <b>${apps.length}</b> รายการ
+      </div>
+    </div>
     <div class="grid-4">
       <div class="stat-card"><div class="lbl">${t('ad_stat_trainers')}</div><div class="val">${trainers.length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_customers')}</div><div class="val">${customers.length}</div></div>
@@ -1890,6 +2011,19 @@ async function renderADashboard(){
       <div class="stat-card"><div class="lbl">${t('ad_stat_packages')}</div><div class="val">${packages.filter(p=>p.status==='active').length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_bookings')}</div><div class="val">${bookings.length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${custPkgs.filter(p=>p.status==='active').length}</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-weight:600">ล้างข้อมูลเก่า</div>
+          <div style="font-size:12px;color:var(--text-dim)">
+            ลบการจองที่จบไปแล้ว (เสร็จสิ้น/ไม่มา/ถูกปฏิเสธ) เก่ากว่า ${CLEANUP_BOOKING_DAYS} วัน
+            และการแจ้งเตือนที่อ่านแล้วเก่ากว่า ${CLEANUP_NOTIF_DAYS} วัน — ช่วยลดพื้นที่และความเร็วในการโหลด
+            ${lastCleanup ? `<br>ล้างล่าสุด: ${fmtDateTime(lastCleanup)}` : ''}
+          </div>
+        </div>
+        <button class="btn btn-danger-outline" id="runCleanupBtn">ล้างข้อมูลเก่าตอนนี้</button>
+      </div>
     </div>
   `;
 }
@@ -2058,21 +2192,6 @@ async function renderAuth(){
     `;
     if(authRole==='admin'){
       inner += `<div class="auth-hint">${t('seed_note_admin')}</div>`;
-    } else {
-      const list = authRole==='trainer' ? await dbGetAll('trainer:') : await dbGetAll('customer:');
-      list.sort((a,b)=> a.id.localeCompare(b.id));
-      inner += `
-        <div class="quick-login-label">${t('quick_login_label')}</div>
-        <div class="quick-login-list">
-          ${list.map(u=>`
-            <button type="button" class="quick-login-row" data-qid="${esc(u.username||u.phone)}" data-qpw="${esc(u.password)}">
-              <span class="avatar" style="width:28px;height:28px;font-size:11px">${esc((u.name||'').replace('โค้ช','').charAt(0))}</span>
-              <span class="qn">${esc(u.name)}</span>
-              <span class="qc">${esc(u.username||u.phone)} / ${esc(u.password)}</span>
-            </button>
-          `).join('')}
-        </div>
-      `;
     }
     if(authRole==='customer') inner += `<div class="auth-switch">${t('auth_no_account')} <a id="toRegister">${t('auth_register_link')}</a></div>`;
     if(authRole==='trainer') inner += `<div class="auth-switch">${t('auth_no_trainer_account')} <a id="toApply">${t('auth_apply_link')}</a></div>`;
@@ -2175,30 +2294,6 @@ async function doLogin(){
   const id = (document.getElementById('authId').value||'').trim();
   const pw = (document.getElementById('authPw').value||'').trim();
   if(!id || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
-
-  /* Demo credentials are intentionally kept as a fallback for the
-     trainer/customer quick-login buttons only, so a missing/empty storage
-     layer never incorrectly reports those valid demo logins as invalid.
-     Admin is deliberately NOT included here: its username and password are
-     private, live only in the admin:admin record, and must never be
-     hardcoded anywhere reachable from the client. */
-  const demoAccounts = {
-    trainer: {id:'0833333333', pw:'1234', role:'trainer', name:'โค้ชเต้', accountId:'t3'},
-    customer:{id:'0911111111', pw:'1234', role:'customer', name:'เป้', accountId:'c1'}
-  };
-  const demo = demoAccounts[authRole];
-  const normalizedId = id.replace(/\s+/g,'');
-  if(demo && normalizedId === demo.id && pw === demo.pw){
-    session = {
-      id: demo.accountId || 'admin',
-      role: demo.role,
-      name: demo.name
-    };
-    authError='';
-    route='dashboard';
-    renderRoot();
-    return;
-  }
 
   if(authRole==='admin'){
     const admin = await dbGet('admin:admin');
@@ -2308,6 +2403,19 @@ function wireView(){
   document.querySelectorAll('[data-suspend-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.suspendUser, 'suspended')));
   document.querySelectorAll('[data-activate-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.activateUser, 'active')));
 
+  const runCleanupBtn = document.getElementById('runCleanupBtn');
+  if(runCleanupBtn) runCleanupBtn.addEventListener('click', async ()=>{
+    runCleanupBtn.disabled = true;
+    runCleanupBtn.textContent = 'กำลังล้างข้อมูล…';
+    try{
+      const r = await cleanupOldData(true);
+      toast(`ลบการจองเก่า ${r.removedBookings} รายการ · แจ้งเตือนเก่า ${r.removedNotifs} รายการ`);
+    }catch(e){
+      toast('ล้างข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง');
+    }
+    renderView();
+  });
+
   document.querySelectorAll('[data-pkg-field]').forEach(el=>{
     const evt = el.tagName==='SELECT' ? 'change' : 'blur';
     el.addEventListener(evt, ()=> savePackageField(el.dataset.pkgId, el.dataset.pkgField, el.value));
@@ -2367,11 +2475,42 @@ document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
   overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closePreview(); });
 })();
 
+/* ---------------- auto-refresh ----------------
+   Data can now change from a completely different device (a customer
+   booking on their phone while a trainer has this app open on theirs),
+   and nothing here was pushing that change onto an already-open screen —
+   the person had to manually reload to see it. This polls quietly in
+   the background and re-renders the current screen when the tab is
+   visible, so new requests/approvals/bookings show up on their own.
+   It skips a tick whenever an input/textarea/select is focused, so it
+   never wipes out something the person is in the middle of typing. */
+function shouldSkipAutoRefresh(){
+  const tag = document.activeElement && document.activeElement.tagName;
+  return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+}
+function softRefresh(){
+  if(!session) return;
+  if(document.hidden) return;
+  if(shouldSkipAutoRefresh()) return;
+  renderView();
+}
+setInterval(softRefresh, 20000);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) softRefresh(); });
+window.addEventListener('focus', softRefresh);
+
+/* ---------------- service worker ---------------- */
+if('serviceWorker' in navigator && !window.frameElement){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+
 /* ---------------- boot ---------------- */
 (async function boot(){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
   await seedIfNeeded();
   await renderRoot();
+  cleanupOldData(false).catch(()=>{});
 })();
 </script>
 </body>
