@@ -989,8 +989,41 @@ async function seedIfNeeded(){
 }
 function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
 
-/* ---------------- session (in-memory; log in required per browser session) ---------------- */
+/* ---------------- session ----------------
+   Facebook-style "stay logged in": once a person logs in (or registers)
+   on a browser, that browser stays on their account across page loads/
+   restarts until they press "ออกจากระบบ" (log out) themselves. We never
+   store a password for this -- only {id, role} -- and on every boot we
+   re-fetch the actual record from the DB and re-check it is still
+   active before trusting it, so a suspended/removed account can't stay
+   "logged in" just because this browser remembers it. */
 let session = null; // {id, role, name, ...}
+const ACTIVE_SESSION_KEY = 'trainkrub:activeSession';
+function rememberActiveSession(id, role){
+  try{ localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify({id, role})); }catch(e){}
+}
+function clearActiveSession(){
+  try{ localStorage.removeItem(ACTIVE_SESSION_KEY); }catch(e){}
+}
+async function resumeActiveSession(){
+  let saved = null;
+  try{ saved = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY) || 'null'); }catch(e){ saved = null; }
+  if(!saved || !saved.id || !saved.role) return false;
+  try{
+    if(saved.role==='admin'){
+      const admin = await dbGet('admin:admin');
+      if(admin){ session = {id:'admin', role:'admin', name:admin.name}; return true; }
+    } else if(saved.role==='trainer'){
+      const tr = await dbGet('trainer:'+saved.id);
+      if(tr && tr.status==='active'){ session = {id:tr.id, role:'trainer', name:tr.name}; return true; }
+    } else if(saved.role==='customer'){
+      const c = await dbGet('customer:'+saved.id);
+      if(c && c.status==='active'){ session = {id:c.id, role:'customer', name:c.name}; return true; }
+    }
+  }catch(e){ console.warn('Resume session check failed:', e); }
+  clearActiveSession();
+  return false;
+}
 let route = 'dashboard';
 let routeParams = {};
 
@@ -1095,6 +1128,7 @@ async function renderRoot(){
 
 function doLogout(){
   session = null; route = 'dashboard'; routeParams = {};
+  clearActiveSession();
   toast(t('auth_toast_logout'));
   renderRoot();
 }
@@ -2299,6 +2333,7 @@ async function doLogin(){
     const admin = await dbGet('admin:admin');
     if(admin && admin.username===id && admin.password===pw){
       session = {id:'admin', role:'admin', name:admin.name};
+      rememberActiveSession('admin','admin');
       authError=''; route='dashboard'; renderRoot(); return;
     }
     authError = t('auth_toast_wrong'); renderAuth(); return;
@@ -2310,6 +2345,7 @@ async function doLogin(){
     if(tr){
       if(tr.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
       session = {id:tr.id, role:'trainer', name:tr.name};
+      rememberActiveSession(tr.id,'trainer');
       authError=''; route='dashboard'; renderRoot(); return;
     }
     const apps = await dbGetAll('trainerApp:');
@@ -2324,6 +2360,7 @@ async function doLogin(){
   if(c){
     if(c.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
     session = {id:c.id, role:'customer', name:c.name};
+    rememberActiveSession(c.id,'customer');
     authError=''; route='dashboard'; renderRoot(); return;
   }
   authError = t('auth_toast_wrong'); renderAuth();
@@ -2339,6 +2376,7 @@ async function doRegister(){
   const c = {id:newId('c'), username:phone, password:pw, name, phone, status:'active', role:'customer'};
   await dbSet('customer:'+c.id, c);
   session = {id:c.id, role:'customer', name:c.name};
+  rememberActiveSession(c.id,'customer');
   regDraft = {name:'', phone:'', pw:''};
   toast(t('auth_toast_registered'));
   authError=''; route='dashboard'; renderRoot();
@@ -2509,6 +2547,7 @@ if('serviceWorker' in navigator && !window.frameElement){
 (async function boot(){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
   await seedIfNeeded();
+  await resumeActiveSession();
   await renderRoot();
   cleanupOldData(false).catch(()=>{});
 })();
