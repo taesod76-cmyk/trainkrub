@@ -2259,6 +2259,11 @@ async function removePackage(id){
 let authRole = 'customer';
 let authMode = 'login';
 let authError = '';
+/* Guards doRegister/doApply against double-submission -- a fast double
+   click (or a slow network reply) could otherwise let two submissions
+   both pass the "is this phone already used" check before either one
+   had finished saving, creating duplicate accounts/applications. */
+let authSubmitting = false;
 let pendingApplicationCerts = [];
 // Draft state for the register/apply forms so that if the screen has to
 // re-render (e.g. to show a validation error) whatever the person already
@@ -2430,38 +2435,46 @@ async function doLogin(){
 }
 
 async function doRegister(){
-  const name = (document.getElementById('regName').value||'').trim();
-  const phone = (document.getElementById('regPhone').value||'').trim();
-  const pw = (document.getElementById('regPw').value||'').trim();
-  if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
-  const customers = await dbGetAll('customer:');
-  if(customers.some(x=>x.phone===phone || x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
-  const c = {id:newId('c'), username:phone, password:pw, name, phone, status:'active', role:'customer'};
-  await dbSet('customer:'+c.id, c);
-  session = {id:c.id, role:'customer', name:c.name};
-  rememberActiveSession(c.id,'customer');
-  regDraft = {name:'', phone:'', pw:''};
-  toast(t('auth_toast_registered'));
-  authError=''; route='dashboard';
-  await applyPendingTrainerCodeIfAny();
-  renderRoot();
+  if(authSubmitting) return;
+  authSubmitting = true;
+  try{
+    const name = (document.getElementById('regName').value||'').trim();
+    const phone = (document.getElementById('regPhone').value||'').trim();
+    const pw = (document.getElementById('regPw').value||'').trim();
+    if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+    const customers = await dbGetAll('customer:');
+    if(customers.some(x=>x.phone===phone || x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
+    const c = {id:newId('c'), username:phone, password:pw, name, phone, status:'active', role:'customer'};
+    await dbSet('customer:'+c.id, c);
+    session = {id:c.id, role:'customer', name:c.name};
+    rememberActiveSession(c.id,'customer');
+    regDraft = {name:'', phone:'', pw:''};
+    toast(t('auth_toast_registered'));
+    authError=''; route='dashboard';
+    await applyPendingTrainerCodeIfAny();
+    renderRoot();
+  } finally { authSubmitting = false; }
 }
 
 async function doApply(){
-  const name = (document.getElementById('apName').value||'').trim();
-  const specialty = (document.getElementById('apSpecialty').value||'').trim();
-  const phone = (document.getElementById('apPhone').value||'').trim();
-  const pw = (document.getElementById('apPw').value||'').trim();
-  const bio = (document.getElementById('apBio').value||'').trim();
-  if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
-  const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
-  if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
-  const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:pendingApplicationCerts, submittedAt:new Date().toISOString(), status:'pending'};
-  await dbSet('trainerApp:'+app.id, app);
-  pendingApplicationCerts = [];
-  applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
-  toast(t('auth_toast_applied'));
-  authMode='login'; authError=''; renderAuth();
+  if(authSubmitting) return;
+  authSubmitting = true;
+  try{
+    const name = (document.getElementById('apName').value||'').trim();
+    const specialty = (document.getElementById('apSpecialty').value||'').trim();
+    const phone = (document.getElementById('apPhone').value||'').trim();
+    const pw = (document.getElementById('apPw').value||'').trim();
+    const bio = (document.getElementById('apBio').value||'').trim();
+    if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+    const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
+    if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
+    const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:pendingApplicationCerts, submittedAt:new Date().toISOString(), status:'pending'};
+    await dbSet('trainerApp:'+app.id, app);
+    pendingApplicationCerts = [];
+    applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
+    toast(t('auth_toast_applied'));
+    authMode='login'; authError=''; renderAuth();
+  } finally { authSubmitting = false; }
 }
 
 /* ======================================================================
