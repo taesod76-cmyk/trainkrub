@@ -2631,6 +2631,21 @@ if('serviceWorker' in navigator && !window.frameElement){
 }
 
 /* ---------------- boot ---------------- */
+(function clearLocalIfRequested(){
+  // One-time maintenance hatch: visiting ?clearlocal=1 wipes this app's
+  // local cache (old/duplicate records stuck in this browser only -- the
+  // real data in Supabase is untouched) then reloads on a clean URL.
+  try{
+    const sp = new URLSearchParams(location.search);
+    if(sp.get('clearlocal')==='1'){
+      Object.keys(localStorage).forEach(k=>{ if(k.indexOf('hug-yim-plus-fitness')===0 || k==='trainkrub:activeSession') localStorage.removeItem(k); });
+      const url = new URL(location.href);
+      url.searchParams.delete('clearlocal');
+      location.replace(url.toString());
+    }
+  }catch(e){}
+})();
+
 (async function boot(){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
   await seedIfNeeded();
