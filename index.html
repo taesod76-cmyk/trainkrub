@@ -2147,9 +2147,13 @@ async function renderAApps(){
     </div>
   `;
 }
+const appActionBusy = new Set();
 async function approveApp(id, approve){
+  if(appActionBusy.has(id)) return; // ignore a second click while the first is still in flight
+  appActionBusy.add(id);
+  try{
   const app = await dbGet('trainerApp:'+id);
-  if(!app) return;
+  if(!app){ return; }
   if(approve){
     const code = await genTrainerCode();
     const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
@@ -2163,6 +2167,7 @@ async function approveApp(id, approve){
     toast(t('aa_toast_reject'));
   }
   renderView(); renderNav();
+  } finally { appActionBusy.delete(id); }
 }
 
 async function renderAUsers(){
@@ -2522,8 +2527,14 @@ function wireView(){
   const addCertBtn = document.getElementById('addCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', addCert);
   document.querySelectorAll('[data-remove-cert]').forEach(el=>el.addEventListener('click', ()=> removeCert(Number(el.dataset.removeCert))));
 
-  document.querySelectorAll('[data-approve-app]').forEach(el=>el.addEventListener('click', ()=> approveApp(el.dataset.approveApp, true)));
-  document.querySelectorAll('[data-reject-app]').forEach(el=>el.addEventListener('click', ()=> approveApp(el.dataset.rejectApp, false)));
+  document.querySelectorAll('[data-approve-app]').forEach(el=>el.addEventListener('click', ()=>{
+    el.closest('.req-actions')?.querySelectorAll('button').forEach(b=>{ b.disabled = true; });
+    approveApp(el.dataset.approveApp, true);
+  }));
+  document.querySelectorAll('[data-reject-app]').forEach(el=>el.addEventListener('click', ()=>{
+    el.closest('.req-actions')?.querySelectorAll('button').forEach(b=>{ b.disabled = true; });
+    approveApp(el.dataset.rejectApp, false);
+  }));
 
   document.querySelectorAll('[data-suspend-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.suspendUser, 'suspended')));
   document.querySelectorAll('[data-activate-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.activateUser, 'active')));
