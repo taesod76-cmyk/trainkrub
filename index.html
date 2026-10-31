@@ -556,6 +556,7 @@ const i18n = {
     au_th_name:'ชื่อ', au_th_role:'บทบาท', au_th_phone:'เบอร์ติดต่อ', au_th_status:'สถานะ',
     au_role_trainer:'เทรนเนอร์', au_role_customer:'ลูกค้า', au_status_active:'ใช้งานได้', au_status_suspended:'ถูกระงับ',
     au_suspend_btn:'ระงับ', au_activate_btn:'เปิดใช้งาน', au_toast_activate:'เปิดใช้งานบัญชีแล้ว', au_toast_suspend:'ระงับการใช้งานบัญชีแล้ว',
+    au_th_password:'รหัสผ่าน', au_reset_btn:'ตั้งรหัสใหม่', au_reset_prompt:'ตั้งรหัสผ่านใหม่สำหรับผู้ใช้นี้', au_toast_reset:'ตั้งรหัสผ่านใหม่แล้ว',
     apk_eyebrow:'ข้อมูลหลักของระบบ', apk_h1:'จัดการแพ็กเกจ', apk_p:'เพิ่ม แก้ไข หรือปิดการขายแพ็กเกจการฝึกที่เปิดให้ลูกค้าเลือกซื้อ',
     apk_th_name:'ชื่อแพ็กเกจ', apk_th_sessions:'จำนวนครั้ง', apk_th_price:'ราคา (บาท)', apk_th_status:'สถานะขาย', apk_remove_btn:'ลบ', apk_add_btn:'+ เพิ่มแพ็กเกจใหม่', apk_new_name:'แพ็กเกจใหม่',
     apk_toast_updated:'อัปเดตข้อมูลแพ็กเกจแล้ว', apk_toast_added:'เพิ่มแพ็กเกจใหม่แล้ว แก้ไขรายละเอียดได้ในตาราง', apk_toast_removed:'ลบแพ็กเกจแล้ว',
@@ -665,6 +666,7 @@ const i18n = {
     au_th_name:'Name', au_th_role:'Role', au_th_phone:'Contact', au_th_status:'Status',
     au_role_trainer:'Trainer', au_role_customer:'Customer', au_status_active:'Active', au_status_suspended:'Suspended',
     au_suspend_btn:'Suspend', au_activate_btn:'Activate', au_toast_activate:'Account activated', au_toast_suspend:'Account suspended',
+    au_th_password:'Password', au_reset_btn:'Reset password', au_reset_prompt:'Set a new password for this user', au_toast_reset:'Password reset',
     apk_eyebrow:'Core system data', apk_h1:'Manage packages', apk_p:'Add, edit, or unlist the training packages customers can purchase.',
     apk_th_name:'Package name', apk_th_sessions:'Sessions', apk_th_price:'Price (THB)', apk_th_status:'Sale status', apk_remove_btn:'Remove', apk_add_btn:'+ Add new package', apk_new_name:'New package',
     apk_toast_updated:'Package updated', apk_toast_added:'New package added — edit details in the table', apk_toast_removed:'Package removed',
@@ -2180,17 +2182,22 @@ async function renderAUsers(){
     <div class="page-head"><div><div class="eyebrow">${t('au_eyebrow')}</div><h1>${t('au_h1')}</h1><p>${t('au_p')}</p></div></div>
     <div class="card table-wrap">
       <table class="table">
-        <thead><tr><th>${t('au_th_name')}</th><th>${t('au_th_role')}</th><th>${t('au_th_phone')}</th><th>${t('au_th_status')}</th><th></th></tr></thead>
+        <thead><tr><th>${t('au_th_name')}</th><th>${t('au_th_role')}</th><th>${t('au_th_phone')}</th><th>${t('au_th_password')}</th><th>${t('au_th_status')}</th><th></th></tr></thead>
         <tbody>
           ${rows.map(u=>`
             <tr>
               <td data-label="${t('au_th_name')}">${esc(u.name)}${u.code?`<div style="font-size:11px;color:var(--text-faint);font-family:var(--font-mono)">#${esc(u.code)}</div>`:''}</td>
               <td data-label="${t('au_th_role')}"><span class="badge badge-role">${u.roleLabel}</span></td>
               <td data-label="${t('au_th_phone')}">${esc(u.phone||u.username||'')}</td>
+              <td data-label="${t('au_th_password')}">
+                <span class="pw-mask" data-pw="${esc(u.password||'')}" data-revealed="0" style="font-family:var(--font-mono)">••••••</span>
+                <button class="btn btn-sm btn-ghost" data-toggle-pw type="button" style="padding:2px 8px">👁</button>
+              </td>
               <td data-label="${t('au_th_status')}"><span class="badge ${u.status==='active'?'badge-active':'badge-suspended'}">${u.status==='active'?t('au_status_active'):t('au_status_suspended')}</span></td>
               <td class="td-actions">${u.status==='active'
                 ? `<button class="btn btn-sm btn-danger-outline" data-suspend-user="${u.role}:${u.id}">${t('au_suspend_btn')}</button>`
                 : `<button class="btn btn-sm btn-primary" data-activate-user="${u.role}:${u.id}">${t('au_activate_btn')}</button>`}
+                <button class="btn btn-sm" data-reset-pw="${u.role}:${u.id}">${t('au_reset_btn')}</button>
               </td>
             </tr>
           `).join('')}
@@ -2207,6 +2214,16 @@ async function setUserStatus(roleAndId, status){
   u.status = status;
   await dbSet(key, u);
   toast(status==='active'? t('au_toast_activate') : t('au_toast_suspend'));
+  renderView();
+}
+async function resetUserPassword(roleAndId, newPw){
+  const [role, id] = roleAndId.split(':');
+  const key = (role==='trainer'?'trainer:':'customer:')+id;
+  const u = await dbGet(key);
+  if(!u) return;
+  u.password = newPw;
+  await dbSet(key, u);
+  toast(t('au_toast_reset'));
   renderView();
 }
 
@@ -2538,6 +2555,20 @@ function wireView(){
 
   document.querySelectorAll('[data-suspend-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.suspendUser, 'suspended')));
   document.querySelectorAll('[data-activate-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.activateUser, 'active')));
+  document.querySelectorAll('[data-toggle-pw]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const span = btn.previousElementSibling;
+      if(!span) return;
+      const revealed = span.dataset.revealed === '1';
+      span.textContent = revealed ? '••••••' : (span.dataset.pw || '');
+      span.dataset.revealed = revealed ? '0' : '1';
+      btn.textContent = revealed ? '👁' : '🙈';
+    });
+  });
+  document.querySelectorAll('[data-reset-pw]').forEach(el=>el.addEventListener('click', ()=>{
+    const pw = prompt(t('au_reset_prompt'));
+    if(pw && pw.trim()) resetUserPassword(el.dataset.resetPw, pw.trim());
+  }));
 
   const runCleanupBtn = document.getElementById('runCleanupBtn');
   if(runCleanupBtn) runCleanupBtn.addEventListener('click', async ()=>{
