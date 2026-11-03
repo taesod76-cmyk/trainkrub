@@ -556,6 +556,30 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   }
+
+  /* ---- payments: QR, slip, order cards ---- */
+  .qr-box{display:flex;justify-content:center;margin:6px 0 12px}
+  .qr-box img{width:100%;max-width:300px;height:auto;border-radius:16px;background:#fff;padding:12px;box-shadow:0 18px 40px -22px rgba(0,0,0,.8)}
+  .pay-amount{display:flex;flex-direction:column;align-items:center;gap:2px;margin:2px 0 14px}
+  .pay-amount .lbl{font-size:13px;color:var(--text-faint)}
+  .pay-amount .amt{font:600 38px/1.15 var(--f-display);letter-spacing:.3px}
+  .slip-prev{width:100%;max-width:220px;max-height:260px;object-fit:contain;border-radius:12px;background:#fff;border:1px solid var(--line-strong);display:block}
+  .slip-row{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+  img[data-zoom]{cursor:zoom-in}
+  .pay-trainer{margin-bottom:18px}
+  .pay-trainer:last-child{margin-bottom:0}
+  .pay-trainer-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .pay-trainer-head .n{font:600 16px/1.35 var(--f-display)}
+  .pay-trainer.focus{padding:14px;border:1px solid var(--red-dim);border-radius:var(--r-md);background:rgba(224,41,63,.05)}
+  .pay-row-acts{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .pay-others{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+  .pay-others .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:13px;color:var(--text-dim)}
+  .pay-alert{border-color:var(--red-dim);background:linear-gradient(180deg,rgba(224,41,63,.10),rgba(224,41,63,.03))}
+  .pay-chips{display:flex;gap:8px;flex-wrap:wrap}
+  .pay-chip{font-size:13px;padding:7px 13px;border-radius:99px;border:1px solid var(--line-strong);color:var(--text-dim)}
+  .pay-chip.ok{border-color:rgba(79,214,138,.45);color:var(--green)}
+  .pay-req .req-actions{flex-wrap:wrap}
+  .pay-req .req-actions .btn{flex:1 1 150px}
 </style>
 </head>
 <body>
@@ -672,7 +696,7 @@ const i18n = {
     cb_pick_trainer:'เลือกเทรนเนอร์', cb_empty:'กรุณาเลือกเทรนเนอร์ก่อนเริ่มจองเวลา',
     cb_selected_hint:'เทรนเนอร์ที่เลือก', cb_date_label:'เลือกวันที่', cb_cat_label:'หมวดหมู่เวลา',
     cb_cat_morning:'รอบเช้า (06:00–12:00)', cb_cat_afternoon:'รอบบ่าย (13:00–16:00)', cb_cat_evening:'รอบเย็น (17:00–20:00)',
-    cb_time_label:'เลือกเวลา', cb_submit_btn:'ส่งคำขอนัดหมาย', cb_no_package:'คุณยังไม่มีแพ็กเกจที่ใช้งานได้ กรุณาซื้อแพ็กเกจก่อนทำการจอง',
+    cb_time_label:'เลือกเวลา', cb_submit_btn:'ส่งคำขอนัดหมาย', cb_no_package:'คุณยังไม่มีแพ็กเกจของเทรนเนอร์คนนี้ กรุณาซื้อแพ็กเกจก่อนทำการจอง',
     cb_expired_package:'แพ็กเกจของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้ง กรุณาซื้อแพ็กเกจใหม่ก่อนทำการจอง',
     cb_summary_title:'สรุปการจอง', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะหลังส่ง', cb_status_after:'รอเทรนเนอร์ยืนยัน',
     cb_no_time_selected:'กรุณาเลือกเวลาก่อนส่งคำขอ', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
@@ -726,7 +750,7 @@ const i18n = {
     tpz_toast_saved:'บันทึกข้อมูลโปรไฟล์แล้ว', tpz_toast_cert_added:'เพิ่มใบรับรองแล้ว ลูกค้าจะเห็นในโปรไฟล์ของคุณ', tpz_toast_cert_removed:'ลบใบรับรองแล้ว', tpz_toast_need_name:'กรุณากรอกชื่อใบรับรองก่อนเพิ่ม',
 
     ad_eyebrow:'ผู้ดูแลระบบ', ad_h1:'ภาพรวมระบบ', ad_p:'สรุปสถานะผู้ใช้งาน คำขอสมัครเทรนเนอร์ และข้อมูลหลักของระบบทั้งหมด',
-    ad_stat_trainers:'เทรนเนอร์ในระบบ', ad_stat_customers:'ลูกค้าในระบบ', ad_stat_pending:'คำขอสมัครรออนุมัติ', ad_stat_packages:'แพ็กเกจที่เปิดขาย', ad_stat_bookings:'การจองทั้งหมด', ad_stat_active_pkg:'แพ็กเกจที่ลูกค้าถืออยู่',
+    ad_stat_trainers:'เทรนเนอร์ในระบบ', ad_stat_customers:'ลูกค้าในระบบ', ad_stat_pending:'คำขอสมัครรออนุมัติ', ad_stat_packages:'แพ็กเกจที่เทรนเนอร์เปิดขาย', ad_stat_bookings:'การจองทั้งหมด', ad_stat_active_pkg:'แพ็กเกจที่ลูกค้าถืออยู่',
     aa_eyebrow:'ตรวจสอบสิทธิ์', aa_h1:'คำขอสมัครเทรนเนอร์', aa_p:'ตรวจสอบข้อมูลและใบรับรองก่อนอนุมัติให้เข้าระบบ เทรนเนอร์จะปรากฏต่อลูกค้าได้ก็ต่อเมื่อผ่านการอนุมัติแล้วเท่านั้น',
     aa_no_apps:'ไม่มีคำขอสมัครที่รอตรวจสอบ', aa_submitted_on:'ส่งเมื่อ', aa_certs_label:'ใบรับรองที่แนบมา', aa_no_certs:'ไม่มีใบรับรองแนบมา',
     aa_approve_btn:'อนุมัติเข้าระบบ', aa_reject_btn:'ปฏิเสธ', aa_pending_badge:'รอตรวจสอบ', aa_toast_approve:'อนุมัติเทรนเนอร์แล้ว เข้าระบบและแสดงให้ลูกค้าเห็นทันที', aa_toast_reject:'ปฏิเสธใบสมัครแล้ว',
@@ -747,6 +771,26 @@ const i18n = {
     notif_when_now:'เมื่อสักครู่',
     quick_login_label:'เข้าสู่ระบบด่วน — แตะรายชื่อเพื่อกรอกและเข้าสู่ระบบทันที',
     seed_note_admin:'สำหรับผู้ดูแลระบบที่ได้รับสิทธิ์เท่านั้น หากต้องการชื่อผู้ใช้และรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบโดยตรง',
+    nav_t_payments:'รับเงินและแพ็กเกจ', tab_t_payments:'รับเงิน',
+    pay_eyebrow:'ซื้อแพ็กเกจ', pay_h1:'ชำระเงิน', pay_p:'สแกน QR โอนให้เทรนเนอร์โดยตรง แล้วแนบสลิปเพื่อให้เทรนเนอร์ตรวจสอบ',
+    pay_back:'กลับไปหน้าแพ็กเกจ',
+    pay_summary_title:'รายการสั่งซื้อ', pay_row_trainer:'เทรนเนอร์', pay_row_pkg:'แพ็กเกจ', pay_row_sessions:'จำนวนครั้ง', pay_row_valid:'ใช้ได้ภายใน', pay_days:'วัน', pay_row_total:'ยอดที่ต้องโอน', pay_unit_sessions:'ครั้ง',
+    pay_qr_title:'สแกนเพื่อจ่าย', pay_qr_hint:'โอน ฿{amount} ให้ {name} โดยตรง กรอกยอดให้ตรงกับรายการนี้', pay_qr_zoom:'แตะรูป QR เพื่อขยาย',
+    pay_no_qr:'เทรนเนอร์ยังไม่ได้อัปโหลด QR รับเงิน กรุณาติดต่อเทรนเนอร์ก่อนสั่งซื้อ',
+    pay_slip_title:'แนบสลิปการโอน', pay_slip_pick:'เลือกรูปสลิป', pay_slip_change:'เปลี่ยนรูปสลิป', pay_slip_hint:'โอนเสร็จแล้วแนบรูปสลิปที่นี่ รูปจะถูกลบออกจากระบบเมื่อเทรนเนอร์ตอบรับหรือปฏิเสธ',
+    pay_submit_btn:'ส่งสลิปให้เทรนเนอร์ตรวจสอบ', pay_need_slip:'กรุณาแนบรูปสลิปก่อนส่ง', pay_toast_sent:'ส่งให้เทรนเนอร์แล้ว รอการตอบรับ', pay_dup:'แพ็กเกจนี้กำลังรอเทรนเนอร์ตรวจสอบอยู่แล้ว',
+    pay_not_found:'ไม่พบแพ็กเกจนี้ หรือเทรนเนอร์ปิดการขายแล้ว',
+    pay_pending_title:'รอเทรนเนอร์ตรวจสอบ', pay_pending_sub:'ส่งสลิปแล้ว เมื่อเทรนเนอร์ตอบรับ ครั้งจะถูกเติมให้ทันที', pay_cancel_btn:'ยกเลิกรายการ', pay_toast_cancelled:'ยกเลิกรายการแล้ว',
+    pay_trainer_pkgs:'แพ็กเกจของ {name}', pay_no_pkgs:'เทรนเนอร์คนนี้ยังไม่ได้ตั้งแพ็กเกจขาย', pay_no_trainers:'เพิ่มเทรนเนอร์ด้วยโค้ดก่อน แล้วจะเห็นแพ็กเกจที่เทรนเนอร์ขาย',
+    cp_any_trainer:'ใช้ได้กับทุกเทรนเนอร์', cp_other_pkgs:'แพ็กเกจอื่นที่ใช้งานอยู่', cp_pkg_with:'กับ {name}',
+    tpay_eyebrow:'การเงิน', tpay_h1:'รับเงินและแพ็กเกจ', tpay_p:'ตั้งราคาแพ็กเกจเอง ฝาก QR ให้ลูกเทรนสแกนจ่าย แล้วตอบรับเมื่อเห็นเงินเข้า',
+    tpay_pending_title:'รอตรวจสอบการชำระเงิน', tpay_pending_empty:'ยังไม่มีรายการรอตรวจสอบ', tpay_check_hint:'ดูยอดเงินเข้าในแอปธนาคารก่อนกดตอบรับ เมื่อกดแล้วระบบจะเติมครั้งให้ลูกเทรนทันที', tpay_view_slip:'ดูสลิป', tpay_approve_btn:'เงินเข้าแล้ว เติม {n} ครั้ง', tpay_reject_btn:'ไม่พบยอดเงิน', tpay_toast_approved:'เติมครั้งให้ {name} เรียบร้อย', tpay_toast_rejected:'ปฏิเสธรายการแล้ว', tpay_already:'รายการนี้ถูกจัดการไปแล้ว', tpay_slip_missing:'ไม่พบรูปสลิป',
+    tpay_history_title:'รายการที่ผ่านมา', tpay_history_empty:'ยังไม่มีประวัติ',
+    pay_st_pending:'รอตรวจสอบ', pay_st_approved:'ตอบรับแล้ว', pay_st_rejected:'ปฏิเสธ', pay_st_cancelled:'ยกเลิก',
+    tpk_title:'แพ็กเกจของฉัน', tpk_hint:'ลูกเทรนที่เพิ่มคุณด้วยโค้ดจะเห็นเฉพาะแพ็กเกจที่เปิดขาย แพ็กเกจใหม่จะซ่อนอยู่จนกว่าคุณจะตั้งราคาและเปิดขาย', tpk_th_name:'ชื่อแพ็กเกจ', tpk_th_sessions:'จำนวนครั้ง', tpk_th_price:'ราคา (บาท)', tpk_th_days:'ใช้ได้ (วัน)', tpk_th_status:'สถานะ', tpk_add_btn:'+ เพิ่มแพ็กเกจ', tpk_remove_btn:'ลบ', tpk_new_name:'แพ็กเกจใหม่', tpk_empty:'ยังไม่มีแพ็กเกจ กดเพิ่มแพ็กเกจแรกแล้วตั้งราคาได้เลย', tpk_toast_added:'เพิ่มแพ็กเกจแล้ว ตั้งชื่อและราคาในตารางได้เลย', tpk_toast_saved:'บันทึกแพ็กเกจแล้ว', tpk_toast_removed:'ลบแพ็กเกจแล้ว', tpk_invalid:'กรอกชื่อ จำนวนครั้ง ราคา และจำนวนวันให้ถูกต้อง',
+    tqr_title:'QR รับเงินของฉัน', tqr_hint:'อัปโหลด QR พร้อมเพย์หรือ QR ธนาคารของคุณ ลูกเทรนจะเห็น QR นี้ตอนซื้อแพ็กเกจ', tqr_none:'ยังไม่มี QR ลูกเทรนจะซื้อแพ็กเกจไม่ได้จนกว่าคุณจะอัปโหลด', tqr_upload:'อัปโหลด QR', tqr_replace:'เปลี่ยน QR', tqr_remove:'ลบ QR', tqr_toast_saved:'บันทึก QR แล้ว', tqr_toast_removed:'ลบ QR แล้ว',
+    tdp_setup_title:'ตั้งค่าการรับเงิน', tdp_setup_body:'อัปโหลด QR รับเงินและตั้งแพ็กเกจ เพื่อให้ลูกเทรนซื้อกับคุณได้', tdp_pending_title:'มีรายการรอตรวจสอบการชำระเงิน', tdp_pending_body:'{n} รายการ ตรวจยอดเงินเข้าแล้วกดตอบรับเพื่อเติมครั้งให้ลูกเทรน', tdp_go:'ไปที่รับเงิน',
+    notif_pay_new:'{customer} ส่งสลิปซื้อ {pkg} (฿{price}) ตรวจยอดเงินเข้าแล้วกดตอบรับ', notif_pay_approved:'{trainer} ยืนยันการชำระเงินแล้ว เติม {n} ครั้งให้คุณเรียบร้อย ({pkg})', notif_pay_rejected:'{trainer} ไม่พบยอดเงินของรายการ {pkg} ถ้าโอนแล้วโปรดติดต่อเทรนเนอร์',
     footer_note:'ข้อมูลทั้งหมดถูกเก็บไว้ในฐานข้อมูลกลางที่ใช้ร่วมกันทั้ง 3 ระบบ (Customer / Trainer / Admin) และซิงค์กันแบบเรียลไทม์'
   },
   en:{
@@ -786,7 +830,7 @@ const i18n = {
     cb_pick_trainer:'Choose a trainer', cb_empty:'Please choose a trainer to start booking.',
     cb_selected_hint:'Selected trainer', cb_date_label:'Select date', cb_cat_label:'Time category',
     cb_cat_morning:'Morning (6:00 AM–12:00 PM)', cb_cat_afternoon:'Afternoon (1:00 PM–4:00 PM)', cb_cat_evening:'Evening (5:00 PM–8:00 PM)',
-    cb_time_label:'Select time', cb_submit_btn:'Send booking request', cb_no_package:'You have no usable package. Please buy a package before booking.',
+    cb_time_label:'Select time', cb_submit_btn:'Send booking request', cb_no_package:'You have no usable package with this trainer. Please buy one before booking.',
     cb_expired_package:'Your package has expired. Even with sessions remaining, please buy a new package before booking.',
     cb_summary_title:'Booking summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status after sending', cb_status_after:'Waiting for trainer',
     cb_no_time_selected:'Please select a time before sending', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
@@ -840,7 +884,7 @@ const i18n = {
     tpz_toast_saved:'Profile saved', tpz_toast_cert_added:'Certificate added — visible on your public profile', tpz_toast_cert_removed:'Certificate removed', tpz_toast_need_name:'Please enter a certificate name first',
 
     ad_eyebrow:'Admin', ad_h1:'System overview', ad_p:'A summary of users, trainer applications, and core system data.',
-    ad_stat_trainers:'Trainers', ad_stat_customers:'Customers', ad_stat_pending:'Applications pending', ad_stat_packages:'Packages on sale', ad_stat_bookings:'Total bookings', ad_stat_active_pkg:'Active customer packages',
+    ad_stat_trainers:'Trainers', ad_stat_customers:'Customers', ad_stat_pending:'Applications pending', ad_stat_packages:'Packages trainers sell', ad_stat_bookings:'Total bookings', ad_stat_active_pkg:'Active customer packages',
     aa_eyebrow:'Verification', aa_h1:'Trainer applications', aa_p:'Review details and certificates before approving. Trainers only appear to customers once approved.',
     aa_no_apps:'No applications awaiting review', aa_submitted_on:'Submitted', aa_certs_label:'Attached certificates', aa_no_certs:'No certificates attached',
     aa_approve_btn:'Approve', aa_reject_btn:'Reject', aa_pending_badge:'Pending review', aa_toast_approve:'Trainer approved — now visible to customers', aa_toast_reject:'Application rejected',
@@ -861,6 +905,26 @@ const i18n = {
     notif_when_now:'Just now',
     quick_login_label:'Quick login — tap a name to auto-fill and sign in instantly',
     seed_note_admin:'Admin access is restricted. Contact your system administrator directly for the login credentials.',
+    nav_t_payments:'Payments and packages', tab_t_payments:'Payments',
+    pay_eyebrow:'Buy a package', pay_h1:'Payment', pay_p:'Scan the QR to pay your trainer directly, then attach the transfer slip for them to check.',
+    pay_back:'Back to packages',
+    pay_summary_title:'Order', pay_row_trainer:'Trainer', pay_row_pkg:'Package', pay_row_sessions:'Sessions', pay_row_valid:'Valid for', pay_days:'days', pay_row_total:'Amount to transfer', pay_unit_sessions:'sessions',
+    pay_qr_title:'Scan to pay', pay_qr_hint:'Transfer THB {amount} to {name} directly. Enter exactly this amount.', pay_qr_zoom:'Tap the QR to enlarge',
+    pay_no_qr:'This trainer has not uploaded a payment QR yet. Please contact them before ordering.',
+    pay_slip_title:'Attach transfer slip', pay_slip_pick:'Choose slip photo', pay_slip_change:'Change slip photo', pay_slip_hint:'After transferring, attach the slip photo here. It is deleted from the system once the trainer accepts or declines.',
+    pay_submit_btn:'Send slip to trainer', pay_need_slip:'Please attach the slip photo first', pay_toast_sent:'Sent to your trainer, waiting for their confirmation', pay_dup:'This package is already waiting for your trainer to check',
+    pay_not_found:'This package was not found, or the trainer has stopped selling it',
+    pay_pending_title:'Waiting for trainer', pay_pending_sub:'Slip sent. Sessions are added the moment your trainer accepts.', pay_cancel_btn:'Cancel order', pay_toast_cancelled:'Order cancelled',
+    pay_trainer_pkgs:'Packages from {name}', pay_no_pkgs:'This trainer has not set up any packages yet', pay_no_trainers:'Add a trainer with their code first to see the packages they sell',
+    cp_any_trainer:'Valid with any trainer', cp_other_pkgs:'Other active packages', cp_pkg_with:'with {name}',
+    tpay_eyebrow:'Money', tpay_h1:'Payments and packages', tpay_p:'Set your own package prices, leave a QR for customers to scan, and accept once the money arrives.',
+    tpay_pending_title:'Payments to check', tpay_pending_empty:'Nothing waiting to be checked', tpay_check_hint:'Check the money in your banking app before accepting. Accepting adds the sessions to the customer immediately.', tpay_view_slip:'View slip', tpay_approve_btn:'Money received, add {n} sessions', tpay_reject_btn:'No payment found', tpay_toast_approved:'Sessions added for {name}', tpay_toast_rejected:'Order declined', tpay_already:'This order has already been handled', tpay_slip_missing:'Slip photo not found',
+    tpay_history_title:'Recent orders', tpay_history_empty:'No history yet',
+    pay_st_pending:'Waiting', pay_st_approved:'Accepted', pay_st_rejected:'Declined', pay_st_cancelled:'Cancelled',
+    tpk_title:'My packages', tpk_hint:'Customers who added you with your code only see packages that are on sale. A new package stays hidden until you set a price and put it on sale.', tpk_th_name:'Package name', tpk_th_sessions:'Sessions', tpk_th_price:'Price (THB)', tpk_th_days:'Valid (days)', tpk_th_status:'Status', tpk_add_btn:'+ Add package', tpk_remove_btn:'Remove', tpk_new_name:'New package', tpk_empty:'No packages yet. Add your first one and set the price.', tpk_toast_added:'Package added. Set its name and price in the table.', tpk_toast_saved:'Package saved', tpk_toast_removed:'Package removed', tpk_invalid:'Enter a valid name, sessions, price and number of days',
+    tqr_title:'My payment QR', tqr_hint:'Upload your PromptPay or bank QR. Customers see it when they buy a package.', tqr_none:'No QR yet. Customers cannot buy a package until you upload one.', tqr_upload:'Upload QR', tqr_replace:'Replace QR', tqr_remove:'Remove QR', tqr_toast_saved:'QR saved', tqr_toast_removed:'QR removed',
+    tdp_setup_title:'Set up payments', tdp_setup_body:'Upload your payment QR and add packages so customers can buy from you.', tdp_pending_title:'Payments waiting to be checked', tdp_pending_body:'{n} waiting. Check the money arrived, then accept to add sessions.', tdp_go:'Open payments',
+    notif_pay_new:'{customer} sent a slip for {pkg} (THB {price}). Check the money, then accept.', notif_pay_approved:'{trainer} confirmed your payment. {n} sessions added ({pkg}).', notif_pay_rejected:'{trainer} could not find a payment for {pkg}. If you already paid, please contact the trainer.',
     footer_note:'All data lives in one shared database used by all 3 systems (Customer / Trainer / Admin) and stays in sync in real time.'
   }
 };
@@ -892,7 +956,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-03.3';
+const APP_BUILD = '2026-11-03.4';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -906,6 +970,7 @@ const NAV_ICON = {
   apps:'<rect x="5" y="4.5" width="14" height="16" rx="3"/><path d="M9 4.5h6v2.5H9z"/><path d="m9 14 2.2 2.2L15.5 12"/>',
   users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.2 19c.6-3.2 3-5 5.8-5s5.2 1.8 5.8 5"/><circle cx="17.5" cy="9" r="2.4"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/>',
   packages:'<path d="M12 3.5 20 7.5v9L12 20.5 4 16.5v-9z"/><path d="M4 7.5 12 11.5l8-4M12 11.5v9"/>',
+  payments:'<rect x="3.5" y="6" width="17" height="13" rx="3"/><path d="M3.5 10.5h17"/><path d="M7 15.5h3.5"/>',
   user:'<circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.8 3.7-6 7-6s6.2 2.2 7 6"/>',
   dumbbell:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>',
   shield:'<path d="M12 3.5 19 6v5.5c0 4.3-3 7.4-7 9-4-1.6-7-4.7-7-9V6z"/><path d="m9.2 12 2 2 3.6-3.8"/>',
@@ -1391,6 +1456,16 @@ async function cleanupOldData(force){
       removedNotifs++;
     }
   }
+  // Orders nobody answered for a month are cancelled and their slip photo removed; old decided orders are dropped.
+  const orders = await dbGetAll('order:');
+  for(const o of orders){
+    if(o.status==='pending' && isOlderThan(o.createdAt, 30)){
+      o.status = 'cancelled'; o.decidedAt = new Date().toISOString();
+      await dbSet('order:'+o.id, o); await dbDelete('slip:'+o.id);
+    } else if(o.status!=='pending' && isOlderThan(o.decidedAt || o.createdAt, CLEANUP_BOOKING_DAYS)){
+      await dbDelete('order:'+o.id); await dbDelete('slip:'+o.id);
+    }
+  }
   await dbSet('system:lastCleanup', new Date().toISOString());
   return {skipped:false, removedBookings, removedNotifs};
 }
@@ -1489,6 +1564,8 @@ function avatarHtml(name, photo, extra){
 }
 const PHOTO_OPTS = {max:160, square:true, quality:0.8, maxChars:32000};
 const CERT_OPTS  = {max:1280, square:false, quality:0.8, maxChars:480000};
+const QR_OPTS    = {max:1280, square:false, quality:0.85, maxChars:420000};
+const SLIP_OPTS  = {max:1100, square:false, quality:0.75, maxChars:260000};
 /* Reads a picked image, shrinks it on a canvas and returns a JPEG data URL. */
 function readImageFile(file, o){
   return new Promise((resolve, reject)=>{
@@ -1629,6 +1706,11 @@ document.addEventListener('change', async (e)=>{
       showCertPreview('newCertPreview', await readImageFile(file, CERT_OPTS));
     } else if(el.id==='apCertFile'){
       showCertPreview('apCertPreview', await readImageFile(file, CERT_OPTS));
+    } else if(el.id==='slipFile'){
+      payDraft.slip = await readImageFile(file, SLIP_OPTS);
+      payFormSync();
+    } else if(el.id==='qrFile'){
+      await saveTrainerQr(await readImageFile(file, QR_OPTS));
     }
   }catch(err){
     if(!(err instanceof DbError) && err && err.message!=='bad_image' && err.message!=='too_big') console.error(err);
@@ -1640,6 +1722,8 @@ document.addEventListener('click', async (e)=>{
   if(!tg || !tg.closest) return;
   const view = tg.closest('[data-view-certimg]');
   if(view){ openCertImage(view.dataset.viewCertimg); return; }
+  const zoom = tg.closest('img[data-zoom]');
+  if(zoom){ openImageLightbox(zoom.getAttribute('src')); return; }
   if(tg.id==='photoRemoveBtn' || tg.closest('#photoRemoveBtn')){
     try{ await setMyPhoto(''); toast(t('photo_removed')); }catch(err){ toast(photoErrMsg(err)); }
     return;
@@ -1802,15 +1886,16 @@ async function renderNav(){
   } else if(session.role==='trainer'){
     items = [
       ['dashboard', t('nav_t_dashboard'), t('tab_t_dashboard')], ['requests', t('nav_t_requests'), t('tab_t_requests')], ['schedule', t('nav_t_schedule'), t('tab_t_schedule')],
-      ['customers', t('nav_t_customers'), t('tab_t_customers')]
+      ['customers', t('nav_t_customers'), t('tab_t_customers')], ['payments', t('nav_t_payments'), t('tab_t_payments')]
     ];
   } else if(session.role==='admin'){
     items = [
-      ['dashboard', t('nav_a_dashboard'), t('tab_a_dashboard')], ['apps', t('nav_a_apps'), t('tab_a_apps')], ['users', t('nav_a_users'), t('tab_a_users')], ['packages', t('nav_a_packages'), t('tab_a_packages')]
+      ['dashboard', t('nav_a_dashboard'), t('tab_a_dashboard')], ['apps', t('nav_a_apps'), t('tab_a_apps')], ['users', t('nav_a_users'), t('tab_a_users')]
     ];
   }
-  let badgeCount = 0;
+  let badgeCount = 0, payCount = 0;
   if(session.role==='trainer'){
+    payCount = (await getPendingOrders(session.id)).length;
     const bookings = await dbGetAll('booking:');
     badgeCount = bookings.filter(b=>b.trainerId===session.id && b.status==='pending').length;
   }
@@ -1822,6 +1907,7 @@ async function renderNav(){
     let extra = '';
     if(session.role==='trainer' && key==='requests' && badgeCount>0) extra = `<span class="count">${badgeCount}</span>`;
     if(session.role==='admin' && key==='apps' && badgeCount>0) extra = `<span class="count">${badgeCount}</span>`;
+    if(session.role==='trainer' && key==='payments' && payCount>0) extra = `<span class="count">${payCount}</span>`;
     return `<button data-r="${key}" class="${route===key?'active':''}" aria-label="${esc(label)}"${route===key?' aria-current="page"':''}><span class="ico">${navIcon(key)}</span><span class="lbl lbl-full">${esc(label)}</span><span class="lbl lbl-short">${esc(short||label)}</span>${extra}</button>`;
   }).join('');
   nav.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=> go(b.dataset.r)));
@@ -1891,28 +1977,181 @@ async function renderView(silent, ld){
 /* ======================================================================
    CUSTOMER SYSTEM
    ====================================================================== */
-async function getActivePackage(customerId){
+function pkgUsable(p, today, trainerId){
+  return p.status==='active' && p.remainingSessions>0 && p.expiryDate>=today && (!trainerId || !p.trainerId || p.trainerId===trainerId);
+}
+/* A package bought from a trainer only works with that trainer. Packages from the
+   former admin catalogue (no trainerId) keep working with everyone, as before. */
+async function getActivePackages(customerId, trainerId){
   const pkgs = await dbGetAll('custpkg:');
   const today = localDateStr();
   // A package must still be within its expiry window to actually be usable —
   // remainingSessions>0 alone isn't enough, otherwise a customer could keep
   // booking indefinitely on a package that expired months ago.
-  const mine = pkgs.filter(p=>p.customerId===customerId && p.status==='active' && p.remainingSessions>0 && p.expiryDate>=today);
-  mine.sort((a,b)=> new Date(a.expiryDate)-new Date(b.expiryDate));
-  return mine[0] || null;
+  return pkgs.filter(p=>p.customerId===customerId && pkgUsable(p, today, trainerId))
+             .sort((a,b)=> new Date(a.expiryDate)-new Date(b.expiryDate));
+}
+async function getActivePackage(customerId, trainerId){
+  return (await getActivePackages(customerId, trainerId))[0] || null;
 }
 /* True when the customer has at least one package that ran out purely
    because its expiry date passed — used to show a specific "expired,
    please renew" message instead of the generic "no package" one. */
-async function hasExpiredUnusedPackage(customerId){
+async function hasExpiredUnusedPackage(customerId, trainerId){
   const pkgs = await dbGetAll('custpkg:');
   const today = localDateStr();
-  return pkgs.some(p=>p.customerId===customerId && p.status==='active' && p.remainingSessions>0 && p.expiryDate<today);
+  return pkgs.some(p=>p.customerId===customerId && p.status==='active' && p.remainingSessions>0 && p.expiryDate<today && (!trainerId || !p.trainerId || p.trainerId===trainerId));
 }
 async function getAllMyPackages(customerId){
   const pkgs = await dbGetAll('custpkg:');
   return pkgs.filter(p=>p.customerId===customerId).sort((a,b)=> new Date(b.startDate)-new Date(a.startDate));
 }
+function fmtBaht(n){ return '฿' + Number(n||0).toLocaleString(); }
+
+/* ======================================================================
+   PACKAGES & PAYMENTS
+   Each trainer sells their own packages (tpkg:) and leaves a payment QR
+   (trainerpay:). The customer pays the trainer directly — the app never
+   touches the money — and attaches the slip (slip:). The trainer, after
+   seeing the money arrive, accepts the order (order:), which creates the
+   customer's package (custpkg:) on the spot.
+   ====================================================================== */
+function tpkgsOf(all, trainerId, onlyOnSale){
+  return all.filter(p=>p.trainerId===trainerId && (!onlyOnSale || (p.status==='active' && Number(p.price)>0 && Number(p.sessions)>0)))
+    .sort((a,b)=> (Number(a.sessions)-Number(b.sessions)) || (Number(a.price)-Number(b.price)) || String(a.name).localeCompare(String(b.name)));
+}
+async function getTrainerPackages(trainerId, onlyOnSale){ return tpkgsOf(await dbGetAll('tpkg:'), trainerId, onlyOnSale); }
+function tpkgMeta(p){ return `${p.sessions} ${t('pay_unit_sessions')} · ${t('pay_row_valid')} ${p.expirationDays||90} ${t('pay_days')} · ${fmtBaht(p.price)}`; }
+async function getPendingOrders(trainerId){
+  const all = await dbGetAll('order:');
+  return all.filter(o=>o.status==='pending' && o.trainerId===trainerId).sort((a,b)=> new Date(a.createdAt)-new Date(b.createdAt));
+}
+
+/* ---- customer: pay and attach the slip ---- */
+let payDraft = {pkgId:null, slip:''};
+function payFormSync(){
+  const prev = document.getElementById('slipPreview');
+  const btn = document.getElementById('paySubmitBtn');
+  const txt = document.getElementById('slipPickTxt');
+  if(prev) prev.innerHTML = payDraft.slip ? `<img class="slip-prev" data-zoom="1" src="${payDraft.slip}" alt="">` : '';
+  if(btn && !btn.__busy) btn.disabled = !payDraft.slip || btn.dataset.canSend!=='1';
+  if(txt) txt.textContent = '📷 ' + t(payDraft.slip ? 'pay_slip_change' : 'pay_slip_pick');
+}
+async function submitOrder(){
+  const p = payDraft.pkgId ? await dbGet('tpkg:'+payDraft.pkgId) : null;
+  const trainer = p ? await dbGet('trainer:'+p.trainerId) : null;
+  if(!p || p.status!=='active' || !(Number(p.price)>0) || !trainer || trainer.status!=='active'){ toast(t('pay_not_found')); return; }
+  if(!payDraft.slip){ toast(t('pay_need_slip')); return; }
+  const orders = await dbGetAll('order:');
+  if(orders.some(o=>o.customerId===session.id && o.tpkgId===p.id && o.status==='pending')){ toast(t('pay_dup')); return; }
+  const id = newId('ord');
+  const order = {id, customerId:session.id, customerName:session.name, trainerId:trainer.id, trainerName:trainer.name,
+    tpkgId:p.id, packageName:p.name, sessions:Number(p.sessions), price:Number(p.price), expirationDays:Number(p.expirationDays)||90,
+    status:'pending', createdAt:new Date().toISOString()};
+  // The slip image lives under its own key so lists of orders stay small.
+  await dbSet('slip:'+id, {orderId:id, image:payDraft.slip, createdAt:order.createdAt});
+  try{ await dbSet('order:'+id, order); }
+  catch(e){ try{ await dbDelete('slip:'+id); }catch(_){} throw e; }
+  await pushNotification(trainer.id, 'nav_t_payments', 'notif_pay_new', {customer:session.name, pkg:p.name, price:Number(p.price).toLocaleString()}, null);
+  payDraft = {pkgId:null, slip:''};
+  toast(t('pay_toast_sent'));
+  go('package');
+}
+async function cancelOrder(id){
+  const o = await dbGet('order:'+id);
+  if(!o || o.customerId!==session.id || o.status!=='pending'){ renderView(); return; }
+  o.status = 'cancelled'; o.decidedAt = new Date().toISOString();
+  await dbSet('order:'+id, o);
+  try{ await dbDelete('slip:'+id); }catch(_){}
+  toast(t('pay_toast_cancelled'));
+  renderView(); renderNav();
+}
+
+/* ---- trainer: accept (money seen) or decline an order ---- */
+async function respondOrder(id, accept){
+  const o = await dbGet('order:'+id);
+  if(!o || o.trainerId!==session.id){ renderView(); return; }
+  if(o.status!=='pending'){ toast(t('tpay_already')); renderView(); renderNav(); return; }
+  const now = new Date().toISOString();
+  if(accept){
+    const cpId = 'co_'+o.id;                      // one package per order, even if the button is pressed twice
+    if(!(await dbGet('custpkg:'+cpId))){
+      await dbSet('custpkg:'+cpId, {id:cpId, customerId:o.customerId, trainerId:o.trainerId, trainerName:o.trainerName, orderId:o.id,
+        packageId:o.tpkgId, packageName:o.packageName, totalSessions:o.sessions, usedSessions:0, remainingSessions:o.sessions,
+        pricePaid:o.price, startDate:localDateStr(), expiryDate:addDays(o.expirationDays||90), status:'active'});
+    }
+    o.status = 'approved'; o.decidedAt = now; o.custpkgId = cpId;
+    await dbSet('order:'+id, o);
+    await pushNotification(o.customerId, 'nav_c_package', 'notif_pay_approved', {trainer:o.trainerName, n:o.sessions, pkg:o.packageName}, null);
+    toast(tt('tpay_toast_approved', {name:o.customerName}));
+  } else {
+    o.status = 'rejected'; o.decidedAt = now;
+    await dbSet('order:'+id, o);
+    await pushNotification(o.customerId, 'nav_c_package', 'notif_pay_rejected', {trainer:o.trainerName, pkg:o.packageName}, null);
+    toast(t('tpay_toast_rejected'));
+  }
+  try{ await dbDelete('slip:'+id); }catch(_){}      // the slip has done its job
+  renderView(); renderNav();
+}
+async function showImageInLightbox(loader, missingKey){
+  const box = document.getElementById('lightbox'), body = document.getElementById('lbBody');
+  if(!box || !body) return;
+  body.innerHTML = `<div class="lb-msg">${esc(t('cert_img_loading'))}</div>`;
+  box.classList.add('show');
+  try{
+    const p = safePhoto(await loader());
+    body.innerHTML = p ? `<img src="${p}" alt="">` : `<div class="lb-msg">${esc(t(missingKey))}</div>`;
+  }catch(e){ body.innerHTML = `<div class="lb-msg">${esc(t(missingKey))}</div>`; }
+}
+function openSlip(id){ return showImageInLightbox(async ()=>{ const r = await dbGet('slip:'+id); return r && r.image; }, 'tpay_slip_missing'); }
+function openImageLightbox(src){ return showImageInLightbox(async ()=> src, 'tpay_slip_missing'); }
+
+/* ---- trainer: own packages and payment QR ---- */
+async function saveTrainerPackageField(id, field, raw){
+  const p = await dbGet('tpkg:'+id);
+  if(!p || p.trainerId!==session.id) return;
+  const bad = ()=>{ toast(t('tpk_invalid')); renderView(); };
+  let v;
+  if(field==='name'){ v = String(raw||'').trim().slice(0,40); if(!v) return bad(); }
+  else if(field==='sessions' || field==='expirationDays'){
+    v = Math.floor(Number(raw)); const max = field==='sessions' ? 200 : 730;
+    if(!(v>=1 && v<=max)) return bad();
+  }
+  else if(field==='price'){ v = Math.round(Number(raw)*100)/100; if(!(v>=0 && v<=1000000)) return bad(); }
+  else if(field==='status'){ if(raw!=='active' && raw!=='hidden') return; v = raw; if(v==='active' && !(Number(p.price)>0)) return bad(); }
+  else return;
+  if(p[field]===v) return;
+  p[field] = v;
+  let rerender = false;
+  if(field==='price' && !(v>0) && p.status==='active'){ p.status = 'hidden'; rerender = true; }   // no price, nothing to sell
+  await dbSet('tpkg:'+id, p);
+  toast(t('tpk_toast_saved'));
+  if(rerender) renderView();
+}
+async function addTrainerPackage(){
+  const p = {id:newId('tp'), trainerId:session.id, name:t('tpk_new_name'), sessions:10, price:0, expirationDays:90, status:'hidden', createdAt:new Date().toISOString()};
+  await dbSet('tpkg:'+p.id, p);
+  toast(t('tpk_toast_added'));
+  renderView();
+}
+async function removeTrainerPackage(id){
+  const p = await dbGet('tpkg:'+id);
+  if(!p || p.trainerId!==session.id) return;
+  await dbDelete('tpkg:'+id);
+  toast(t('tpk_toast_removed'));
+  renderView();
+}
+async function saveTrainerQr(data){
+  await dbSet('trainerpay:'+session.id, {trainerId:session.id, qr:data, updatedAt:new Date().toISOString()});
+  toast(t('tqr_toast_saved'));
+  renderView();
+}
+async function removeTrainerQr(){
+  await dbDelete('trainerpay:'+session.id);
+  toast(t('tqr_toast_removed'));
+  renderView();
+}
+
 async function getApprovedTrainers(){
   const all = await dbGetAll('trainer:');
   return all.filter(x=>x.status==='active');
@@ -2042,6 +2281,7 @@ async function renderCustomerView(){
   if(route==='booking') return renderCBooking();
   if(route==='mybookings') return renderCMyBookings();
   if(route==='package') return renderCPackage();
+  if(route==='pay') return renderCPay();
   if(route==='notif') return renderNotifPage();
   if(route==='profile') return renderCProfile();
   return renderCDashboard();
@@ -2093,7 +2333,7 @@ function ringHtml(pkg){
         </svg>
         <div class="ring-label"><div class="num">${pkg.remainingSessions}</div><div class="of">${tt('cp_no_of',{total:pkg.totalSessions})}</div></div>
       </div>
-      <div style="margin-top:14px;font-size:12px;color:var(--text-faint)">${esc(pkg.packageName)} · ${t('cp_expiry')} ${fmtDate(pkg.expiryDate)}</div>
+      <div style="margin-top:14px;font-size:12px;color:var(--text-faint)">${esc(pkg.packageName)}${pkg.trainerName ? ' · ' + esc(pkg.trainerName) : ''} · ${t('cp_expiry')} ${fmtDate(pkg.expiryDate)}</div>
       ${pkg.remainingSessions<=0 ? `<div class="auth-error" style="margin-top:12px">${t('cp_full_warn')}</div>` : ''}
     </div>`;
 }
@@ -2158,6 +2398,7 @@ async function renderCTrainerProfile(){
   }
   const pinnedIds = await getPinnedTrainerIds();
   const pinned = pinnedIds.includes(tr.id);
+  const tps = await getTrainerPackages(tr.id, true);
   return `
     <div class="back-link" data-goto="trainers">← ${t('tp_back')}</div>
     <div class="card">
@@ -2176,6 +2417,14 @@ async function renderCTrainerProfile(){
       <div class="card" style="background:transparent;border:none;padding:16px 0 0">
         <div class="card-head"><h3>${t('tp_certs_label')}</h3></div>
         ${(tr.certs&&tr.certs.length) ? certChipsHtml(tr.certs) : `<div class="empty">${t('tp_no_certs')}</div>`}
+      </div>
+      <div class="card" style="background:transparent;border:none;padding:16px 0 0">
+        <div class="card-head"><h3>${t('cp_buy_title')}</h3></div>
+        ${tps.length ? tps.map(p=>`
+          <div class="pkg-buy-row">
+            <div class="info"><div class="n">${esc(p.name)}</div><div class="s">${esc(tpkgMeta(p))}</div></div>
+            <button class="btn btn-primary btn-sm" data-pay-pkg="${p.id}">${t('cp_buy_btn')}</button>
+          </div>`).join('') : `<div class="empty">${t('pay_no_pkgs')}</div>`}
       </div>
       <button class="btn btn-primary btn-block" style="margin-top:10px" data-book-trainer="${tr.id}">${t('tr_book')}</button>
     </div>
@@ -2224,8 +2473,8 @@ async function renderCBooking(){
   const trainers = await getMyTrainers();      // only trainers the customer added with a code
   const pinnedIds = await getPinnedTrainerIds();
   const trainer = (bookingState.trainerId && trainers.some(x=>x.id===bookingState.trainerId)) ? await dbGet('trainer:'+bookingState.trainerId) : null;
-  const pkg = await getActivePackage(session.id);
-  const expiredUnused = !pkg && await hasExpiredUnusedPackage(session.id);
+  const pkg = await getActivePackage(session.id, trainer ? trainer.id : null);
+  const expiredUnused = !pkg && await hasExpiredUnusedPackage(session.id, trainer ? trainer.id : null);
   const allBookings = await dbGetAll('booking:');
 
   const dayPills = DAYS.map(d=>{
@@ -2269,7 +2518,7 @@ async function renderCBooking(){
           </select>
         </div>
         ${!trainer ? `<div class="empty">${trainers.length ? t('cb_empty') : t('cb_no_mine')}</div>${trainers.length ? '' : `<button class="btn btn-primary btn-block" style="margin-top:12px" data-goto="trainers">${t('cb_enter_code_btn')}</button>`}` : `
-          ${!pkg ? `<div class="auth-error">${expiredUnused ? t('cb_expired_package') : t('cb_no_package')}</div><button class="btn btn-sm btn-primary" style="margin:-6px 0 14px" data-goto="package">${t('cb_buy_first_btn')}</button>` : ''}
+          ${!pkg ? `<div class="auth-error">${expiredUnused ? t('cb_expired_package') : t('cb_no_package')}</div><button class="btn btn-sm btn-primary" style="margin:-6px 0 14px" data-buy-from="${trainer.id}">${t('cb_buy_first_btn')}</button>` : ''}
           <label>${t('cb_date_label')}</label>
           <div class="day-strip" id="dayStrip">${dayPills}</div>
           <label>${t('cb_cat_label')}</label>
@@ -2300,7 +2549,7 @@ async function renderCBooking(){
 
 async function submitBooking(){
   const trainer = await dbGet('trainer:'+bookingState.trainerId);
-  const pkg = await getActivePackage(session.id);
+  const pkg = trainer ? await getActivePackage(session.id, trainer.id) : null;
   if(!trainer || !pkg || !bookingState.time){ toast(t('cb_no_time_selected')); return; }
   // Re-check against fresh data so two customers racing for the same slot
   // can still both get in (duo), but never past the capacity rules.
@@ -2364,10 +2613,29 @@ async function renderCMyBookings(){
 }
 
 async function renderCPackage(){
-  const active = await getActivePackage(session.id);
+  const actives = await getActivePackages(session.id);
+  const active = actives[0] || null;
   const expiredUnused = !active && await hasExpiredUnusedPackage(session.id);
   const notifs = (await getNotifications(session.id)).slice(0,5);
-  const catalog = (await dbGetAll('package:')).filter(p=>p.status==='active');
+  const trainers = await getMyTrainers();
+  const focus = routeParams.trainerId || null;
+  const ordered = trainers.slice().sort((a,b)=> (b.id===focus ? 1 : 0) - (a.id===focus ? 1 : 0));
+  const allTp = await dbGetAll('tpkg:');
+  const pending = (await dbGetAll('order:')).filter(o=>o.customerId===session.id && o.status==='pending').sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+  const pendingIds = new Set(pending.map(o=>o.tpkgId));
+  const buyHtml = ordered.length ? ordered.map(tr=>{
+    const list = tpkgsOf(allTp, tr.id, true);
+    return `
+      <div class="pay-trainer ${tr.id===focus?'focus':''}">
+        <div class="pay-trainer-head">${avatarHtml(tr.name, tr.photo)}<div class="n">${tt('pay_trainer_pkgs',{name:esc(tr.name)})}</div></div>
+        ${list.length ? list.map(p=>`
+          <div class="pkg-buy-row">
+            <div class="info"><div class="n">${esc(p.name)}</div><div class="s">${esc(tpkgMeta(p))}</div></div>
+            ${pendingIds.has(p.id) ? `<span class="badge badge-pending">${t('pay_st_pending')}</span>` : `<button class="btn btn-primary btn-sm" data-pay-pkg="${p.id}">${t('cp_buy_btn')}</button>`}
+          </div>`).join('') : `<div class="empty">${t('pay_no_pkgs')}</div>`}
+      </div>`;
+  }).join('') : `<div class="empty">${t('pay_no_trainers')}</div>`;
+  const others = actives.slice(1);
   return `
     <div class="back-link" data-goto="dashboard">← ${t('nav_c_dashboard')}</div>
     <div class="page-head"><div><div class="eyebrow">${t('cp_eyebrow')}</div><h1>${t('cp_h1')}</h1><p>${t('cp_p')}</p></div></div>
@@ -2375,33 +2643,75 @@ async function renderCPackage(){
       <div class="card">
         <div class="card-head"><h3>${t('cp_remaining_title')}</h3></div>
         ${active ? ringHtml(active) : expiredUnused ? `<div class="auth-error">${t('cp_expired_warn')}</div>` : `<div class="empty">${t('cp_no_package')}</div>`}
+        ${others.length ? `<div class="pay-others"><div class="slot-hint" style="margin:0 0 4px">${t('cp_other_pkgs')}</div>${others.map(p=>`<div class="row"><span>${esc(p.packageName)} · ${p.trainerName ? tt('cp_pkg_with',{name:esc(p.trainerName)}) : t('cp_any_trainer')}</span><span>${p.remainingSessions} / ${p.totalSessions}</span></div>`).join('')}</div>` : ''}
       </div>
       <div class="card">
         <div class="card-head"><h3>${t('notif_h1')}</h3></div>
         ${notifs.length ? notifs.map(n=>notifRow(n)).join('') : `<div class="empty">${t('notif_empty')}</div>`}
       </div>
     </div>
+    ${pending.length ? `
+    <div class="card">
+      <div class="card-head"><h3>${t('pay_pending_title')}</h3><span class="hint">${pending.length}</span></div>
+      <p class="slot-hint">${t('pay_pending_sub')}</p>
+      ${pending.map(o=>`
+        <div class="pkg-buy-row">
+          <div class="info"><div class="n">${esc(o.packageName)} · ${esc(o.trainerName)}</div><div class="s">${fmtBaht(o.price)} · ${fmtDateTime(o.createdAt)}</div></div>
+          <div class="pay-row-acts"><span class="badge badge-pending">${t('pay_st_pending')}</span><button class="btn btn-sm btn-danger-outline" data-cancel-order="${o.id}">${t('pay_cancel_btn')}</button></div>
+        </div>`).join('')}
+    </div>` : ''}
     <div class="card">
       <div class="card-head"><h3>${t('cp_buy_title')}</h3></div>
-      ${catalog.map(p=>`
-        <div class="pkg-buy-row">
-          <div class="info"><div class="n">${esc(p.name)}</div><div class="s">${p.sessions} ${lang==='th'?'ครั้ง':'sessions'} · ฿${Number(p.price).toLocaleString()}</div></div>
-          <button class="btn btn-primary btn-sm" data-buy-pkg="${p.id}">${t('cp_buy_btn')}</button>
-        </div>
-      `).join('')}
+      ${buyHtml}
     </div>
   `;
 }
-async function buyPackage(pkgId){
-  const p = await dbGet('package:'+pkgId);
-  if(!p) return;
-  const inst = {id:newId('cp'), customerId:session.id, packageId:p.id, packageName:p.name, totalSessions:p.sessions,
-    usedSessions:0, remainingSessions:p.sessions, startDate:localDateStr(), expiryDate:addDays(p.expirationDays||90), status:'active'};
-  await dbSet('custpkg:'+inst.id, inst);
-  toast(tt('cp_toast_bought',{name:p.name}));
-  const mineNow = await getMyTrainers();
-  if(mineNow.length) go('booking', mineNow.length===1 ? {trainerId:mineNow[0].id} : {});
-  else go('trainers');
+async function renderCPay(){
+  const back = `<div class="back-link" data-goto="package">← ${t('pay_back')}</div>`;
+  const p = routeParams.id ? await dbGet('tpkg:'+routeParams.id) : null;
+  const tr = p ? await dbGet('trainer:'+p.trainerId) : null;
+  const mine = await getMyTrainerIdSet();
+  if(!p || p.status!=='active' || !(Number(p.price)>0) || !tr || tr.status!=='active' || !mine.has(tr.id)){
+    return `${back}<div class="card"><div class="empty">${t('pay_not_found')}</div></div>`;
+  }
+  const payRec = await dbGet('trainerpay:'+tr.id);
+  const qr = payRec ? safePhoto(payRec.qr) : '';
+  const orders = await dbGetAll('order:');
+  const dupe = orders.some(o=>o.customerId===session.id && o.tpkgId===p.id && o.status==='pending');
+  if(payDraft.pkgId !== p.id) payDraft = {pkgId:p.id, slip:''};
+  const canSend = !!qr && !dupe;
+  return `
+    ${back}
+    <div class="page-head"><div><div class="eyebrow">${t('pay_eyebrow')}</div><h1>${t('pay_h1')}</h1><p>${t('pay_p')}</p></div></div>
+    <div class="grid-2">
+      <div class="card pay-qr-card">
+        <div class="card-head"><h3>${t('pay_qr_title')}</h3></div>
+        <div class="pay-amount"><span class="lbl">${t('pay_row_total')}</span><span class="amt">${fmtBaht(p.price)}</span></div>
+        ${qr ? `<div class="qr-box"><img src="${qr}" alt="QR" data-zoom="1"></div>
+        <div class="slot-hint" style="text-align:center">${tt('pay_qr_hint',{amount:Number(p.price).toLocaleString(), name:esc(tr.name)})} ${t('pay_qr_zoom')}</div>` : `<div class="auth-error">${t('pay_no_qr')}</div>`}
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-head"><h3>${t('pay_summary_title')}</h3></div>
+          <div class="summary-row"><span class="k">${t('pay_row_trainer')}</span><span class="v">${esc(tr.name)}</span></div>
+          <div class="summary-row"><span class="k">${t('pay_row_pkg')}</span><span class="v">${esc(p.name)}</span></div>
+          <div class="summary-row"><span class="k">${t('pay_row_sessions')}</span><span class="v">${p.sessions} ${t('pay_unit_sessions')}</span></div>
+          <div class="summary-row"><span class="k">${t('pay_row_valid')}</span><span class="v">${p.expirationDays||90} ${t('pay_days')}</span></div>
+          <div class="summary-row"><span class="k">${t('pay_row_total')}</span><span class="v">${fmtBaht(p.price)}</span></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>${t('pay_slip_title')}</h3></div>
+          ${dupe ? `<div class="auth-error">${t('pay_dup')}</div>` : ''}
+          <div class="slip-row">
+            <label class="btn btn-sm file-btn"><span id="slipPickTxt">📷 ${esc(t(payDraft.slip ? 'pay_slip_change' : 'pay_slip_pick'))}</span><input type="file" accept="image/*" id="slipFile"></label>
+            <div id="slipPreview">${payDraft.slip ? `<img class="slip-prev" data-zoom="1" src="${payDraft.slip}" alt="">` : ''}</div>
+          </div>
+          <p class="slot-hint">${t('pay_slip_hint')}</p>
+          <button class="btn btn-primary btn-block" id="paySubmitBtn" data-can-send="${canSend?'1':'0'}" ${(canSend && payDraft.slip) ? '' : 'disabled'}>${t('pay_submit_btn')}</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 /* Bookings store a snapshot of the customer's and trainer's names so each
@@ -2476,6 +2786,7 @@ async function renderTrainerView(){
   if(route==='requests') return renderTRequests();
   if(route==='schedule') return renderTSchedule();
   if(route==='customers') return renderTCustomers();
+  if(route==='payments') return renderTPayments();
   if(route==='notif') return renderNotifPage();
   if(route==='profile') return renderTProfile();
   return renderTDashboard();
@@ -2484,6 +2795,78 @@ async function renderTrainerView(){
 async function trainerBookings(){
   const all = await dbGetAll('booking:');
   return all.filter(b=>b.trainerId===session.id);
+}
+
+async function renderTPayments(){
+  const me = session.id;
+  const [allOrders, allTp, payRec] = await Promise.all([dbGetAll('order:'), dbGetAll('tpkg:'), dbGet('trainerpay:'+me)]);
+  const orders = allOrders.filter(o=>o.trainerId===me);
+  const pending = orders.filter(o=>o.status==='pending').sort((a,b)=> new Date(a.createdAt)-new Date(b.createdAt));
+  const history = orders.filter(o=>o.status!=='pending').sort((a,b)=> new Date(b.decidedAt||b.createdAt)-new Date(a.decidedAt||a.createdAt)).slice(0,10);
+  const pkgs = tpkgsOf(allTp, me, false);
+  const qr = payRec ? safePhoto(payRec.qr) : '';
+  const stLabel = {approved:t('pay_st_approved'), rejected:t('pay_st_rejected'), cancelled:t('pay_st_cancelled')};
+  const stBadge = {approved:'badge-confirmed', rejected:'badge-rejected', cancelled:'badge-cancelled'};
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('tpay_eyebrow')}</div><h1>${t('tpay_h1')}</h1><p>${t('tpay_p')}</p></div></div>
+    <div class="card">
+      <div class="card-head"><h3>${t('tpay_pending_title')}</h3><span class="hint">${pending.length}</span></div>
+      ${pending.length ? `<p class="slot-hint">${t('tpay_check_hint')}</p>` : ''}
+      ${pending.length ? pending.map(o=>`
+        <div class="req-card pay-req">
+          <div class="req-top">
+            <div><div class="n">${esc(o.customerName)}</div><div class="t">${esc(o.packageName)} · ${o.sessions} ${t('pay_unit_sessions')} · <b>${fmtBaht(o.price)}</b></div><div class="t">${fmtDateTime(o.createdAt)}</div></div>
+            <span class="badge badge-pending">${t('pay_st_pending')}</span>
+          </div>
+          <div class="req-actions">
+            <button class="btn btn-sm" data-view-slip="${o.id}">${t('tpay_view_slip')}</button>
+            <button class="btn btn-primary" data-approve-order="${o.id}">${tt('tpay_approve_btn',{n:o.sessions})}</button>
+            <button class="btn btn-danger-outline" data-reject-order="${o.id}">${t('tpay_reject_btn')}</button>
+          </div>
+        </div>`).join('') : `<div class="empty">${t('tpay_pending_empty')}</div>`}
+    </div>
+    <div class="card table-wrap">
+      <div class="card-head"><h3>${t('tpk_title')}</h3></div>
+      <p class="slot-hint">${t('tpk_hint')}</p>
+      ${pkgs.length ? `
+      <table class="table">
+        <thead><tr><th>${t('tpk_th_name')}</th><th>${t('tpk_th_sessions')}</th><th>${t('tpk_th_price')}</th><th>${t('tpk_th_days')}</th><th>${t('tpk_th_status')}</th><th></th></tr></thead>
+        <tbody>
+          ${pkgs.map(p=>`
+            <tr>
+              <td data-label="${t('tpk_th_name')}"><input type="text" maxlength="40" data-tpkg-field="name" data-tpkg-id="${p.id}" value="${esc(p.name)}"></td>
+              <td data-label="${t('tpk_th_sessions')}"><input type="number" min="1" max="200" step="1" inputmode="numeric" data-tpkg-field="sessions" data-tpkg-id="${p.id}" value="${p.sessions}" class="inp-num"></td>
+              <td data-label="${t('tpk_th_price')}"><input type="number" min="0" step="1" inputmode="decimal" placeholder="0" data-tpkg-field="price" data-tpkg-id="${p.id}" value="${Number(p.price)>0 ? p.price : ''}" class="inp-num"></td>
+              <td data-label="${t('tpk_th_days')}"><input type="number" min="1" max="730" step="1" inputmode="numeric" data-tpkg-field="expirationDays" data-tpkg-id="${p.id}" value="${p.expirationDays||90}" class="inp-num"></td>
+              <td data-label="${t('tpk_th_status')}">
+                <select data-tpkg-field="status" data-tpkg-id="${p.id}">
+                  <option value="active" ${p.status==='active'?'selected':''}>${t('status_on')}</option>
+                  <option value="hidden" ${p.status!=='active'?'selected':''}>${t('status_off')}</option>
+                </select>
+              </td>
+              <td class="td-actions"><button class="btn btn-sm btn-danger-outline" data-remove-tpkg="${p.id}">${t('tpk_remove_btn')}</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>` : `<div class="empty">${t('tpk_empty')}</div>`}
+      <button class="btn btn-block" style="margin-top:14px" id="addTpkgBtn">${t('tpk_add_btn')}</button>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><h3>${t('tqr_title')}</h3></div>
+        <p class="slot-hint">${t('tqr_hint')}</p>
+        ${qr ? `<div class="qr-box"><img src="${qr}" alt="QR" data-zoom="1"></div>` : `<div class="empty">${t('tqr_none')}</div>`}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px">
+          <label class="btn btn-sm btn-primary file-btn">📷 ${esc(t(qr ? 'tqr_replace' : 'tqr_upload'))}<input type="file" accept="image/*" id="qrFile"></label>
+          ${qr ? `<button class="btn btn-sm btn-ghost" data-remove-qr="1">${t('tqr_remove')}</button>` : ''}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>${t('tpay_history_title')}</h3></div>
+        ${history.length ? history.map(o=>`
+          <div class="summary-row"><span class="k">${esc(o.customerName)} · ${esc(o.packageName)} · ${fmtBaht(o.price)}</span><span class="v"><span class="badge ${stBadge[o.status]||'badge-role'}">${stLabel[o.status]||esc(o.status)}</span></span></div>`).join('') : `<div class="empty">${t('tpay_history_empty')}</div>`}
+      </div>
+    </div>
+  `;
 }
 
 async function renderTDashboard(){
@@ -2501,6 +2884,22 @@ async function renderTDashboard(){
       <div class="bib-code"><span class="hash">#</span>${esc(me.code)}</div>
       <div class="bib-foot"><p>${t('td_code_hint')}</p><button class="btn" data-copy-code="${esc(me.code)}">${t('td_code_copy')}</button></div>
     </div>` : '';
+  const pendingPay = await getPendingOrders(session.id);
+  const myQr = await dbGet('trainerpay:'+session.id);
+  const myPk = await getTrainerPackages(session.id, true);
+  const needPaySetup = !(myQr && safePhoto(myQr.qr)) || !myPk.length;
+  const payCard = pendingPay.length ? `
+    <div class="card pay-alert" style="margin-bottom:16px">
+      <div class="card-head"><h3>${t('tdp_pending_title')}</h3></div>
+      <p class="code-hint" style="margin-bottom:12px">${tt('tdp_pending_body',{n:pendingPay.length})}</p>
+      <button class="btn btn-primary btn-block" data-goto="payments">${t('tdp_go')}</button>
+    </div>` : (needPaySetup ? `
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><h3>${t('tdp_setup_title')}</h3></div>
+      <p class="code-hint" style="margin-bottom:12px">${t('tdp_setup_body')}</p>
+      <div class="pay-chips"><span class="pay-chip ${myQr && safePhoto(myQr.qr) ? 'ok' : ''}">${myQr && safePhoto(myQr.qr) ? '✓' : '○'} ${esc(t('tqr_title'))}</span><span class="pay-chip ${myPk.length ? 'ok' : ''}">${myPk.length ? '✓' : '○'} ${esc(t('tpk_title'))}</span></div>
+      <button class="btn btn-primary btn-block" style="margin-top:14px" data-goto="payments">${t('tdp_go')}</button>
+    </div>` : '');
   const completeCard = (pcItems.length && !pcItems.every(i=>i[0])) ? `
     <div class="card" style="margin-bottom:16px">
       <div class="card-head"><h3>${t('prof_complete_title')}</h3></div>
@@ -2511,6 +2910,7 @@ async function renderTDashboard(){
   return `
     <div class="page-head"><div><div class="eyebrow">${t('tq_eyebrow')}</div><h1>${tt('t_dash_h1',{name:esc(session.name)})}</h1><p>${t('t_dash_p')}</p></div></div>
     <div class="t-top">${codeCard}${completeCard}</div>
+    ${payCard}
     <div class="grid-4" style="margin-bottom:20px">
       <div class="stat-card"><div class="lbl">${t('tq_pending_label')}</div><div class="val accent">${pending}</div></div>
       <div class="stat-card"><div class="lbl">${t('tq_confirmed_label')}</div><div class="val">${confirmed}</div></div>
@@ -2852,14 +3252,13 @@ async function renderAdminView(){
   if(route==='dashboard') return renderADashboard();
   if(route==='apps') return renderAApps();
   if(route==='users') return renderAUsers();
-  if(route==='packages') return renderAPackages();
   return renderADashboard();
 }
 
 async function renderADashboard(){
   const [trainers, customers, apps, packages, bookings, custPkgs] = await Promise.all([
     dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
-    dbGetAll('package:'), dbGetAll('booking:'), dbGetAll('custpkg:')
+    dbGetAll('tpkg:'), dbGetAll('booking:'), dbGetAll('custpkg:')
   ]);
   const lastCleanup = await dbGet('system:lastCleanup');
   const sbConnected = (connState==='online');
@@ -2887,7 +3286,7 @@ async function renderADashboard(){
       <div class="stat-card"><div class="lbl">${t('ad_stat_trainers')}</div><div class="val">${trainers.length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_customers')}</div><div class="val">${customers.length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_pending')}</div><div class="val accent">${apps.filter(a=>a.status==='pending').length}</div></div>
-      <div class="stat-card"><div class="lbl">${t('ad_stat_packages')}</div><div class="val">${packages.filter(p=>p.status==='active').length}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_packages')}</div><div class="val">${packages.filter(p=>p.status==='active' && Number(p.price)>0).length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_bookings')}</div><div class="val">${bookings.length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${custPkgs.filter(p=>p.status==='active').length}</div></div>
     </div>
@@ -3009,54 +3408,6 @@ async function resetUserPassword(roleAndId, newPw){
   u.password = newPw;
   await dbSet(key, u);
   toast(t('au_toast_reset'));
-  renderView();
-}
-
-async function renderAPackages(){
-  const packages = (await dbGetAll('package:')).sort((a,b)=> a.name.localeCompare(b.name));
-  return `
-    <div class="page-head"><div><div class="eyebrow">${t('apk_eyebrow')}</div><h1>${t('apk_h1')}</h1><p>${t('apk_p')}</p></div></div>
-    <div class="card table-wrap">
-      <table class="table">
-        <thead><tr><th>${t('apk_th_name')}</th><th>${t('apk_th_sessions')}</th><th>${t('apk_th_price')}</th><th>${t('apk_th_status')}</th><th></th></tr></thead>
-        <tbody>
-          ${packages.map(p=>`
-            <tr>
-              <td data-label="${t('apk_th_name')}"><input type="text" data-pkg-field="name" data-pkg-id="${p.id}" value="${esc(p.name)}"></td>
-              <td data-label="${t('apk_th_sessions')}"><input type="number" data-pkg-field="sessions" data-pkg-id="${p.id}" value="${p.sessions}" class="inp-num"></td>
-              <td data-label="${t('apk_th_price')}"><input type="number" data-pkg-field="price" data-pkg-id="${p.id}" value="${p.price}" class="inp-num"></td>
-              <td data-label="${t('apk_th_status')}">
-                <select data-pkg-field="status" data-pkg-id="${p.id}">
-                  <option value="active" ${p.status==='active'?'selected':''}>${t('status_on')}</option>
-                  <option value="inactive" ${p.status==='inactive'?'selected':''}>${t('status_off')}</option>
-                </select>
-              </td>
-              <td class="td-actions"><button class="btn btn-sm btn-danger-outline" data-remove-pkg="${p.id}">${t('apk_remove_btn')}</button></td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-      <button class="btn btn-block" style="margin-top:14px" id="addPkgBtn">${t('apk_add_btn')}</button>
-    </div>
-  `;
-}
-async function savePackageField(id, field, value){
-  const p = await dbGet('package:'+id);
-  if(!p) return;
-  if(field==='sessions' || field==='price') value = Number(value)||0;
-  p[field] = value;
-  await dbSet('package:'+id, p);
-  toast(t('apk_toast_updated'));
-}
-async function addPackage(){
-  const p = {id:newId('pkg'), name:t('apk_new_name'), sessions:10, price:3000, expirationDays:90, status:'active'};
-  await dbSet('package:'+p.id, p);
-  toast(t('apk_toast_added'));
-  renderView();
-}
-async function removePackage(id){
-  await dbDelete('package:'+id);
-  toast(t('apk_toast_removed'));
   renderView();
 }
 
@@ -3367,7 +3718,13 @@ function wireView(){
   const submitBookingBtn = document.getElementById('submitBookingBtn');
   if(submitBookingBtn) submitBookingBtn.addEventListener('click', ()=> withBusy(submitBookingBtn, submitBooking));
 
-  document.querySelectorAll('[data-buy-pkg]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>buyPackage(el.dataset.buyPkg))));
+  document.querySelectorAll('[data-pay-pkg]').forEach(el=>el.addEventListener('click', ()=> go('pay', {id:el.dataset.payPkg})));
+  document.querySelectorAll('[data-buy-from]').forEach(el=>el.addEventListener('click', ()=> go('package', {trainerId:el.dataset.buyFrom})));
+  const paySubmitBtn = document.getElementById('paySubmitBtn'); if(paySubmitBtn) paySubmitBtn.addEventListener('click', ()=> withBusy(paySubmitBtn, submitOrder));
+  document.querySelectorAll('[data-cancel-order]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>cancelOrder(el.dataset.cancelOrder))));
+  document.querySelectorAll('[data-view-slip]').forEach(el=>el.addEventListener('click', ()=> openSlip(el.dataset.viewSlip)));
+  document.querySelectorAll('[data-approve-order]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>respondOrder(el.dataset.approveOrder, true))));
+  document.querySelectorAll('[data-reject-order]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>respondOrder(el.dataset.rejectOrder, false))));
 
   const cProfSave = document.getElementById('cProfSave'); if(cProfSave) cProfSave.addEventListener('click', ()=> withBusy(cProfSave, saveCProfile));
 
@@ -3429,12 +3786,10 @@ function wireView(){
     renderView();
   });
 
-  document.querySelectorAll('[data-pkg-field]').forEach(el=>{
-    const evt = el.tagName==='SELECT' ? 'change' : 'blur';
-    el.addEventListener(evt, ()=> savePackageField(el.dataset.pkgId, el.dataset.pkgField, el.value));
-  });
-  const addPkgBtn = document.getElementById('addPkgBtn'); if(addPkgBtn) addPkgBtn.addEventListener('click', addPackage);
-  document.querySelectorAll('[data-remove-pkg]').forEach(el=>el.addEventListener('click', ()=> removePackage(el.dataset.removePkg)));
+  document.querySelectorAll('[data-tpkg-field]').forEach(el=>el.addEventListener('change', ()=> saveTrainerPackageField(el.dataset.tpkgId, el.dataset.tpkgField, el.value)));
+  const addTpkgBtn = document.getElementById('addTpkgBtn'); if(addTpkgBtn) addTpkgBtn.addEventListener('click', ()=> withBusy(addTpkgBtn, addTrainerPackage));
+  document.querySelectorAll('[data-remove-tpkg]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>removeTrainerPackage(el.dataset.removeTpkg))));
+  document.querySelectorAll('[data-remove-qr]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, removeTrainerQr)));
 }
 
 document.getElementById('modalCloseBtn').addEventListener('click', ()=> closeBookingModal(true));
