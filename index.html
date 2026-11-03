@@ -216,6 +216,13 @@
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface-3);border:1px solid var(--line-strong);color:var(--text);padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;z-index:50;max-width:90vw}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .toast .dot{width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;margin-right:9px}
+  #connBanner{position:sticky;top:0;z-index:70;display:none;padding:9px 14px;background:#7d1a23;color:#fff;font-size:13px;line-height:1.5;text-align:center}
+  #connBanner.show{display:block}
+  #connBanner button{margin-left:10px;background:#fff;color:#7d1a23;border:0;border-radius:6px;padding:3px 12px;font-weight:600;font-size:12px;cursor:pointer}
+  .offline-gate{text-align:center;padding:56px 20px}
+  .offline-gate h2{font-family:var(--font-display);font-size:22px;margin:10px 0 8px}
+  .offline-gate p{font-size:13px;color:var(--text-dim);margin-bottom:18px;line-height:1.7}
+  .build-tag{margin-top:8px;font-size:10.5px;color:var(--text-faint);opacity:.7;font-family:var(--font-mono);text-align:center}
 
   .stat-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
   .stat-card .lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px}
@@ -402,6 +409,8 @@
 </head>
 <body>
 
+<div id="connBanner" role="status" aria-live="polite"></div>
+
 <div class="shell">
   <div class="topbar">
     <div class="brand" id="brandHome">
@@ -451,7 +460,12 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="vendor/supabase-js-2.118.0.js"></script>
+<script>
+/* supabase-js is served from this site (vendor/) so a blocked/slow CDN can never cut the app off
+   from the shared database. The CDN is only a last-resort backup (same pinned version). */
+if(!window.supabase){ document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"><\/script>'); }
+</script>
 <script>
 /* ======================================================================
    HUG YIM PLUS FITNESS — Customer / Trainer / Admin (3 separate systems)
@@ -476,7 +490,11 @@ const i18n = {
     auth_apply_heading:'สมัครเป็นเทรนเนอร์ใหม่', auth_apply_note:'เทรนเนอร์จะไม่ปรากฏในระบบทันที ต้องรอผู้ดูแลระบบตรวจสอบและอนุมัติก่อน จึงจะเข้าสู่ระบบด้วยรหัสผ่านที่ตั้งไว้ได้',
     auth_specialty_label:'ความเชี่ยวชาญ', auth_bio_label:'ประสบการณ์และเกี่ยวกับตัวคุณ', auth_certs_label:'ใบรับรองที่แนบมาพร้อมใบสมัคร (ไม่บังคับ)',
     auth_apply_submit:'ส่งใบสมัครให้ผู้ดูแลระบบตรวจสอบ',
-    auth_toast_wrong:'ข้อมูลเข้าสู่ระบบไม่ถูกต้อง', auth_toast_suspended:'บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', auth_toast_pending:'ใบสมัครของคุณยังรอการอนุมัติจากผู้ดูแลระบบ',
+    auth_toast_wrong:'ข้อมูลเข้าสู่ระบบไม่ถูกต้อง',
+    conn_offline:'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ — ข้อมูลที่เห็นอาจไม่ใช่ล่าสุด', conn_retry:'ลองใหม่', conn_restored:'เชื่อมต่อกลับมาแล้ว',
+    conn_save_failed:'บันทึกไม่สำเร็จ เพราะเชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง', conn_login_failed:'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ จึงตรวจรหัสผ่านไม่ได้ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่',
+    conn_gate_title:'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้', conn_gate_body:'ตรวจอินเทอร์เน็ตของเครื่องนี้ แล้วกด “ลองใหม่” (ระบบจะลองเองอัตโนมัติด้วย)',
+    db_rejected:'บันทึกไม่สำเร็จ ฐานข้อมูลปฏิเสธคำขอ กรุณาแจ้งผู้ดูแลระบบ', conn_local_only:'โหมดเฉพาะเครื่องนี้ — ยังไม่ได้เชื่อมฐานข้อมูลกลาง ข้อมูลจะไม่ส่งถึงเครื่องอื่น', auth_toast_suspended:'บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', auth_toast_pending:'ใบสมัครของคุณยังรอการอนุมัติจากผู้ดูแลระบบ',
     auth_toast_welcome:'ยินดีต้อนรับ {name}', auth_toast_fill:'กรุณากรอกข้อมูลให้ครบถ้วน', auth_toast_phone_used:'เบอร์โทร/ชื่อผู้ใช้นี้มีผู้ใช้งานแล้ว',
     auth_toast_registered:'สมัครสมาชิกสำเร็จ เข้าสู่ระบบให้อัตโนมัติแล้ว', auth_toast_applied:'ส่งใบสมัครเรียบร้อย รอผู้ดูแลระบบตรวจสอบและอนุมัติก่อนเข้าสู่ระบบได้',
     auth_toast_logout:'ออกจากระบบแล้ว', auth_signed_in_as:'เข้าสู่ระบบเป็น',
@@ -586,7 +604,11 @@ const i18n = {
     auth_apply_heading:'Apply as a new trainer', auth_apply_note:"New trainers don't appear in the system immediately — an admin must review and approve your application before you can sign in.",
     auth_specialty_label:'Specialty', auth_bio_label:'Experience & about you', auth_certs_label:'Certificates attached (optional)',
     auth_apply_submit:'Submit application for review',
-    auth_toast_wrong:'Incorrect login details', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval',
+    auth_toast_wrong:'Incorrect login details',
+    conn_offline:'Can’t reach the server — what you see may be out of date', conn_retry:'Retry', conn_restored:'Back online',
+    conn_save_failed:'Couldn’t save — can’t reach the server. Please try again.', conn_login_failed:'Can’t reach the server, so your login couldn’t be checked. Check your connection and try again.',
+    conn_gate_title:'Can’t reach the server', conn_gate_body:'Check this device’s internet connection, then tap Retry (it also retries automatically).',
+    db_rejected:'Couldn’t save — the database rejected the request. Please contact the admin.', conn_local_only:'This-device-only mode — not connected to the shared database, so data won’t reach other devices', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval',
     auth_toast_welcome:'Welcome, {name}', auth_toast_fill:'Please fill in all fields', auth_toast_phone_used:'This phone/username is already registered',
     auth_toast_registered:'Account created — signed in automatically', auth_toast_applied:'Application submitted — an admin must approve it before you can sign in',
     auth_toast_logout:'Logged out', auth_signed_in_as:'Signed in as',
@@ -699,31 +721,176 @@ const SUPABASE_URL = 'https://eauzvihirpfcjkwyqgel.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TYxnhvbPvCHCycPFWioahA_k16FmgnQ';
 const SUPABASE_TABLE = 'kv_store';
 
-let supabaseClient = null;
-if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase && typeof window.supabase.createClient==='function'){
-  try{ supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
-  catch(e){ console.warn('Supabase client init failed:', e && e.message); }
+/* ---------------- shared-database connection ----------------
+   Rules this file now follows (the old behaviour caused phone <-> computer data mismatches):
+   1. Supabase is the ONLY source of truth. There is no silent fallback to "this device's own
+      storage": a write that cannot reach the server is retried and then FAILS LOUDLY instead of
+      pretending to succeed and leaving the data stranded on a single phone/PC.
+   2. A read that cannot reach the server also throws, so "can't connect" is never mistaken for
+      "wrong password" or "no such account".
+   3. No sticky "broken" flag: every call tries again, so a few seconds of lost signal can't
+      poison the rest of the session.
+   4. A visible banner tells the person when the server can't be reached, and the app keeps
+      retrying by itself. */
+const APP_BUILD = '2026-11-03.1';
+const REMOTE_MODE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+const SB_TIMEOUT_MS = 9000;
+function dbProjectId(){
+  if(!SUPABASE_URL) return 'local';
+  const id = SUPABASE_URL.replace(/^https?:\/\//,'').split('.')[0];
+  return id.slice(0,8) + '…';
+}
+class DbError extends Error{}
+class DbUnavailableError extends DbError{ constructor(m){ super(m||'Database unreachable'); this.name='DbUnavailableError'; } }
+class DbServerError extends DbError{ constructor(m){ super(m||'Database rejected the request'); this.name='DbServerError'; } }
+
+/* Every request gets a hard timeout (a hung mobile connection must not freeze the app) and is
+   marked no-store so no layer between the page and the server can hand back an old answer. */
+function sbFetch(url, opts){
+  opts = opts || {};
+  const ctrl = new AbortController();
+  const outer = opts.signal;
+  if(outer){ if(outer.aborted) ctrl.abort(); else outer.addEventListener('abort', ()=>ctrl.abort(), {once:true}); }
+  const timer = setTimeout(()=>ctrl.abort(), SB_TIMEOUT_MS);
+  return fetch(url, Object.assign({}, opts, {signal: ctrl.signal, cache:'no-store'})).finally(()=>clearTimeout(timer));
 }
 
-let supabaseBroken = false;
-let supabaseProbePromise = null;
-function supabaseIsAvailable(){
-  if(!supabaseClient) return Promise.resolve(false);
-  if(supabaseBroken) return Promise.resolve(false);
-  if(!supabaseProbePromise){
-    supabaseProbePromise = (async ()=>{
-      try{
-        const { error } = await supabaseClient.from(SUPABASE_TABLE).select('key').limit(1);
-        if(error) throw error;
-        return true;
-      }catch(e){
-        console.warn('Supabase unavailable, falling back to built-in storage:', e && e.message);
-        supabaseBroken = true;
-        return false;
-      }
-    })();
+let supabaseClient = null;
+if(REMOTE_MODE && window.supabase && typeof window.supabase.createClient==='function'){
+  try{
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { fetch: sbFetch },
+      auth: { persistSession:false, autoRefreshToken:false, detectSessionInUrl:false }
+    });
+  }catch(e){ console.warn('Supabase client init failed:', e && e.message); }
+}
+
+let connState = 'unknown';   // 'online' | 'offline' | 'unknown'
+let gateActive = false;      // true while the full-screen "can't connect" panel is showing
+let reconnectTimer = null;
+
+function renderConnBanner(){
+  const el = document.getElementById('connBanner');
+  if(!el) return;
+  if(!REMOTE_MODE){
+    el.textContent = '⚠️ ' + t('conn_local_only');
+    el.classList.add('show');
+    return;
   }
-  return supabaseProbePromise;
+  if(connState==='offline'){
+    el.innerHTML = '⚠️ ' + esc(t('conn_offline')) + ' <button type="button" id="connRetryBtn">' + esc(t('conn_retry')) + '</button>';
+    el.classList.add('show');
+    const b = document.getElementById('connRetryBtn');
+    if(b) b.onclick = ()=> probeConnection();
+  } else {
+    el.classList.remove('show');
+    el.innerHTML = '';
+  }
+}
+function setConn(ok){
+  const prev = connState;
+  connState = ok ? 'online' : 'offline';
+  if(prev === connState) return;
+  renderConnBanner();
+  if(ok && prev==='offline'){
+    try{ toast(t('conn_restored')); }catch(e){}
+    setTimeout(()=>{ if(gateActive) runBoot(); else softRefresh(); }, 50);
+  }
+  if(!ok) scheduleReconnect();
+}
+function scheduleReconnect(){
+  if(reconnectTimer || !REMOTE_MODE) return;
+  reconnectTimer = setTimeout(async ()=>{ reconnectTimer = null; await probeConnection(); }, 6000);
+}
+async function probeConnection(){
+  try{ await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).select('key').limit(1), 0); }
+  catch(e){ scheduleReconnect(); }
+}
+window.addEventListener('online', ()=>{ if(REMOTE_MODE && connState!=='online') probeConnection(); });
+
+function sbSleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+/* Runs one Supabase request with retries. Network trouble -> DbUnavailableError (after retrying);
+   the server answering with an error of its own -> DbServerError right away (retrying can't help). */
+async function sbCall(makeReq, retries){
+  if(!supabaseClient){ setConn(false); throw new DbUnavailableError('Supabase client not loaded'); }
+  const max = (retries==null ? 2 : retries);
+  let last = null;
+  for(let i=0;i<=max;i++){
+    try{
+      let q = makeReq();
+      if(q && typeof q.retry==='function') q = q.retry(false);   // we do our own, visible retrying
+      const res = await q;
+      if(res && res.error) throw res.error;
+      setConn(true);
+      return res;
+    }catch(e){
+      last = e;
+      if(e && typeof e.code==='string' && e.code !== ''){      // the server replied with an error
+        setConn(true);
+        throw new DbServerError(e.message);
+      }
+      if(i<max) await sbSleep(i===0 ? 400 : 1200);
+    }
+  }
+  setConn(false);
+  throw new DbUnavailableError(last && last.message);
+}
+/* A save that fails outside a form that handles it itself still tells the person, instead of failing silently. */
+window.addEventListener('unhandledrejection', ev=>{
+  const e = ev && ev.reason;
+  if(e instanceof DbError){
+    ev.preventDefault();
+    try{ toast(e instanceof DbUnavailableError ? t('conn_save_failed') : t('db_rejected')); }catch(_){}
+  }
+});
+
+function offlineGateHtml(){
+  return `<div class="offline-gate"><div style="font-size:42px">📡</div><h2>${esc(t('conn_gate_title'))}</h2><p>${esc(t('conn_gate_body'))}</p><button class="btn btn-primary" id="gateRetry" type="button">${esc(t('conn_retry'))}</button></div>`;
+}
+function bindGate(){ const b = document.getElementById('gateRetry'); if(b) b.onclick = ()=> runBoot(); }
+function showOfflineGate(){
+  gateActive = true;
+  const app = document.getElementById('app');
+  if(app){ app.__lastHtml = null; app.innerHTML = offlineGateHtml(); bindGate(); }
+}
+function buildTagText(){
+  const st = !REMOTE_MODE ? 'local-only' : connState==='online' ? '● online' : connState==='offline' ? '○ offline' : '…';
+  return `v${APP_BUILD} · DB ${dbProjectId()} · ${st}`;
+}
+
+/* Service-worker answers from older builds could hold on to old database replies. Wipe any such
+   entries, and let the current service worker take over before the app starts reading data. */
+async function purgeApiCaches(){
+  try{
+    if(!window.caches) return;
+    const names = await caches.keys();
+    for(const n of names){
+      const c = await caches.open(n);
+      for(const req of await c.keys()){
+        if(req.url.indexOf('/rest/v1/')>=0 || req.url.indexOf('.supabase.co')>=0) await c.delete(req);
+      }
+    }
+  }catch(e){}
+}
+async function ensureFreshServiceWorker(){
+  try{
+    if(!('serviceWorker' in navigator)) return;
+    await purgeApiCaches();
+    if(!navigator.serviceWorker.controller) return;
+    let flag = null;
+    try{ flag = localStorage.getItem('trainkrub:swGen'); }catch(e){}
+    if(flag === APP_BUILD) return;
+    const reg = await navigator.serviceWorker.getRegistration();
+    if(!reg) return;
+    const changed = new Promise(res=>{
+      navigator.serviceWorker.addEventListener('controllerchange', ()=>res(true), {once:true});
+      setTimeout(()=>res(false), 4000);
+    });
+    await reg.update().catch(()=>{});
+    await changed;
+    await purgeApiCaches();
+    try{ localStorage.setItem('trainkrub:swGen', APP_BUILD); }catch(e){}
+  }catch(e){}
 }
 
 /* ---------------- storage / "database" layer ----------------
@@ -763,7 +930,12 @@ function invalidateListsFor(key){
    local UI updates) starts by wiping both caches — guaranteeing each
    render reflects the current shared data — while calls still made
    *within* that same pass keep the short-lived speed benefit. */
-function clearRenderCaches(){ keyCache.clear(); listCache.clear(); }
+let cacheEpoch = Date.now();
+const CACHE_MAX_AGE_MS = 4000;
+function clearRenderCaches(){ keyCache.clear(); listCache.clear(); cacheEpoch = Date.now(); }
+/* Safety net: whatever one screen/action cached is thrown away after a few seconds, so e.g. a login
+   form that stays open while an admin approves the account on another device never checks an old list. */
+function expireStaleCaches(){ if(Date.now() - cacheEpoch > CACHE_MAX_AGE_MS) clearRenderCaches(); }
 
 /* If window.storage fails once (e.g. this host's preview returns a response
    shape the app doesn't recognize), remember that and skip trying it again
@@ -794,24 +966,85 @@ function storageIsAvailable(){
 }
 
 async function dbGet(key){
+  expireStaleCaches();
+  if(REMOTE_MODE){
+    if(keyCache.has(key)) return keyCache.get(key);
+    const { data } = await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).select('value').eq('key', key).maybeSingle());
+    const val = data ? data.value : null;
+    keyCache.set(key, val);
+    return val;
+  }
+  return localGet(key);
+}
+async function dbSet(key, val){
+  if(REMOTE_MODE){
+    await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).upsert({ key, value: val, updated_at: new Date().toISOString() }));
+    keyCache.set(key, val);
+    invalidateListsFor(key);
+    return {ok:true};
+  }
+  return localSet(key, val);
+}
+async function dbDelete(key){
+  if(REMOTE_MODE){
+    await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).delete().eq('key', key));
+    keyCache.delete(key);
+    invalidateListsFor(key);
+    return;
+  }
+  return localDelete(key);
+}
+/* Reads every row under a prefix, page by page (the server caps one response at 1000 rows). */
+async function sbSelectAll(cols, prefix){
+  const out = [];
+  const PAGE = 1000;
+  for(let from=0;;from+=PAGE){
+    const { data } = await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).select(cols).like('key', prefix + '%').order('key').range(from, from+PAGE-1));
+    const rows = data || [];
+    for(const r of rows) out.push(r);
+    if(rows.length < PAGE) break;
+  }
+  return out;
+}
+async function dbList(prefix){
+  if(REMOTE_MODE){
+    const rows = await sbSelectAll('key', prefix);
+    return rows.map(r=>r.key);
+  }
+  return localList(prefix);
+}
+async function dbGetAll(prefix){
+  expireStaleCaches();
+  if(listCache.has(prefix)) return listCache.get(prefix).slice();
+  if(REMOTE_MODE){
+    // One request returns every matching row's key AND value (no N+1 round trips) and warms keyCache.
+    const rows = await sbSelectAll('key,value', prefix);
+    const result = [];
+    for(const row of rows){
+      keyCache.set(row.key, row.value);
+      if(row.value) result.push(row.value);
+    }
+    listCache.set(prefix, result);
+    return result.slice();
+  }
+  const keys = await localList(prefix);
+  const vals = await Promise.all(keys.map(k=>localGet(k)));
+  const result = vals.filter(Boolean);
+  listCache.set(prefix, result);
+  return result.slice();
+}
+
+/* ---- device-only storage: used ONLY when no Supabase project is configured (REMOTE_MODE false) ---- */
+async function localGet(key){
   if(keyCache.has(key)) return keyCache.get(key);
   let val = null;
-  if(await supabaseIsAvailable()){
-    try{
-      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('value').eq('key', key).maybeSingle();
-      if(error) throw error;
-      val = data ? data.value : null;
-      keyCache.set(key, val);
-      return val;
-    }catch(e){ /* one-off read error — fall through to next backend */ }
-  }
   if(await storageIsAvailable()){
     try{
       const r = await window.storage.get(key, true);
       val = r ? JSON.parse(r.value) : null;
       keyCache.set(key, val);
       return val;
-    }catch(e){ /* key not found or a one-off read error — fall through to localStorage */ }
+    }catch(e){ /* not found or a one-off read error — fall through to localStorage */ }
   }
   try{
     const raw = localStorage.getItem(localDbPrefix + key);
@@ -820,17 +1053,9 @@ async function dbGet(key){
   keyCache.set(key, val);
   return val;
 }
-
-async function dbSet(key, val){
+async function localSet(key, val){
   keyCache.set(key, val);
   invalidateListsFor(key);
-  if(await supabaseIsAvailable()){
-    try{
-      const { error } = await supabaseClient.from(SUPABASE_TABLE).upsert({ key, value: val, updated_at: new Date().toISOString() });
-      if(error) throw error;
-      return {ok:true};
-    }catch(e){ /* fall through to next backend */ }
-  }
   if(await storageIsAvailable()){
     try{
       const result = await window.storage.set(key, JSON.stringify(val), true);
@@ -845,32 +1070,15 @@ async function dbSet(key, val){
     return null;
   }
 }
-
-async function dbDelete(key){
+async function localDelete(key){
   keyCache.delete(key);
   invalidateListsFor(key);
-  if(await supabaseIsAvailable()){
-    try{
-      const { error } = await supabaseClient.from(SUPABASE_TABLE).delete().eq('key', key);
-      if(error) throw error;
-    }catch(e){ /* fall through to next backend */ }
-  }
   if(await storageIsAvailable()){
-    try{
-      await window.storage.delete(key, true);
-    }catch(e){ /* ignore — already gone or a one-off error */ }
+    try{ await window.storage.delete(key, true); }catch(e){ /* already gone */ }
   }
   try{ localStorage.removeItem(localDbPrefix + key); }catch(e){}
 }
-
-async function dbList(prefix){
-  if(await supabaseIsAvailable()){
-    try{
-      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('key').like('key', prefix + '%');
-      if(error) throw error;
-      return (data || []).map(r=>r.key);
-    }catch(e){ /* fall through to next backend */ }
-  }
+async function localList(prefix){
   if(await storageIsAvailable()){
     try{
       const r = await window.storage.list(prefix, true);
@@ -881,38 +1089,24 @@ async function dbList(prefix){
     const keys = [];
     for(let i=0;i<localStorage.length;i++){
       const k = localStorage.key(i);
-      if(k && k.startsWith(localDbPrefix + prefix)){
-        keys.push(k.slice(localDbPrefix.length));
-      }
+      if(k && k.startsWith(localDbPrefix + prefix)) keys.push(k.slice(localDbPrefix.length));
     }
     return keys;
   }catch(e){ return []; }
 }
-async function dbGetAll(prefix){
-  if(listCache.has(prefix)) return listCache.get(prefix).slice();
-  // Supabase path: one request returns every matching row's key AND value,
-  // instead of one request per key (the old dbList+dbGet combo below did
-  // N+1 round trips — a screen with 200 bookings meant 201 requests every
-  // single time it rendered). This also warms keyCache so any dbGet(key)
-  // call later in the same render pass for one of these records is free.
-  if(await supabaseIsAvailable()){
-    try{
-      const { data, error } = await supabaseClient.from(SUPABASE_TABLE).select('key,value').like('key', prefix + '%');
-      if(error) throw error;
-      const result = [];
-      for(const row of (data || [])){
-        keyCache.set(row.key, row.value);
-        if(row.value) result.push(row.value);
-      }
-      listCache.set(prefix, result);
-      return result.slice();
-    }catch(e){ /* fall through to the key-by-key path below */ }
-  }
-  const keys = await dbList(prefix);
-  const vals = await Promise.all(keys.map(k=>dbGet(k)));
-  const result = vals.filter(Boolean);
-  listCache.set(prefix, result);
-  return result.slice();
+/* Older builds quietly kept copies of shared data (including passwords) on each device whenever the
+   server could not be reached. Nothing reads those copies any more, so remove them. */
+function purgeLegacyLocalData(){
+  if(!REMOTE_MODE) return;
+  try{
+    const dead = [];
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.indexOf(localDbPrefix)===0) dead.push(k);
+    }
+    dead.forEach(k=>localStorage.removeItem(k));
+    if(dead.length) console.info('Removed', dead.length, 'stale device-only records left by an older version');
+  }catch(e){}
 }
 function newId(prefix){ return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
@@ -1069,7 +1263,7 @@ async function resumeActiveSession(){
       const c = await dbGet('customer:'+saved.id);
       if(c && c.status==='active'){ session = {id:c.id, role:'customer', name:c.name}; return true; }
     }
-  }catch(e){ console.warn('Resume session check failed:', e); }
+  }catch(e){ if(e instanceof DbError) throw e; console.warn('Resume session check failed:', e); }
   clearActiveSession();
   return false;
 }
@@ -1125,7 +1319,7 @@ async function markAllRead(userId){
 }
 
 /* ---------------- render root ---------------- */
-async function renderRoot(){
+async function renderRootInner(silent){
   clearRenderCaches();
   document.getElementById('brandSub').textContent = t('brand_sub');
   document.querySelectorAll('#langToggle button').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
@@ -1172,7 +1366,14 @@ async function renderRoot(){
   }
   nav.style.display = 'flex';
   await renderNav();
-  await renderView();
+  await renderView(silent);
+}
+async function renderRoot(silent){
+  try{ await renderRootInner(silent); }
+  catch(e){
+    if(!(e instanceof DbError)) throw e;
+    if(!silent) showOfflineGate();     // a quiet background refresh just keeps what is on screen
+  }
 }
 
 function doLogout(){
@@ -1224,20 +1425,30 @@ async function renderNav(){
 }
 
 /* ================= VIEW ROUTER ================= */
-async function renderView(){
+async function renderView(silent){
   clearRenderCaches();
   const app = document.getElementById('app');
-  app.innerHTML = `<div class="loading-shell">…</div>`;
+  if(!silent) app.innerHTML = `<div class="loading-shell">…</div>`;
   let html = '';
   try{
     if(session.role==='customer') html = await renderCustomerView();
     else if(session.role==='trainer') html = await renderTrainerView();
     else if(session.role==='admin') html = await renderAdminView();
   }catch(e){
-    console.error(e);
-    html = `<div class="empty">Something went wrong loading this page.</div>`;
+    if(e instanceof DbError){
+      if(silent) return;                 // keep what is already on screen; the banner explains
+      gateActive = true;
+      html = offlineGateHtml();
+    } else {
+      console.error(e);
+      html = `<div class="empty">Something went wrong loading this page.</div>`;
+    }
   }
+  // A background refresh whose result is identical to what is showing changes nothing (no flicker, no lost state).
+  if(silent && app.__lastHtml === html) return;
+  app.__lastHtml = html;
   app.innerHTML = `<div class="view anim-in">${html}</div>`;
+  bindGate();
   wireView();
 }
 
@@ -2078,7 +2289,7 @@ async function renderADashboard(){
     dbGetAll('package:'), dbGetAll('booking:'), dbGetAll('custpkg:')
   ]);
   const lastCleanup = await dbGet('system:lastCleanup');
-  const sbConnected = await supabaseIsAvailable();
+  const sbConnected = (connState==='online');
   const diag = {
     hasUrl: !!SUPABASE_URL,
     hasKey: !!SUPABASE_ANON_KEY,
@@ -2097,7 +2308,8 @@ async function renderADashboard(){
         ตั้งค่า Key ไว้แล้ว: ${diag.hasKey ? 'ใช่' : '❌ ไม่ใช่ — ตัวแปร SUPABASE_ANON_KEY ว่างอยู่ในไฟล์นี้'}<br>
         สร้างการเชื่อมต่อสำเร็จ: ${diag.clientCreated ? 'ใช่' : '❌ ไม่ใช่ — ไลบรารี Supabase อาจโหลดไม่สำเร็จ (เช็คเน็ต/ตัวบล็อกโฆษณา)'}<br>
         ทดสอบอ่านข้อมูลจริงได้: ${diag.connected ? 'ใช่' : '❌ ไม่ได้ — เช็ค RLS policy หรือชื่อตารางในโปรเจกต์ Supabase'}<br>
-        จำนวนคำขอสมัครเทรนเนอร์ที่ดึงเจอ (ทุกสถานะ): <b>${apps.length}</b> รายการ
+        จำนวนคำขอสมัครเทรนเนอร์ที่ดึงเจอ (ทุกสถานะ): <b>${apps.length}</b> รายการ<br>
+        เวอร์ชันเว็บ: <b>${APP_BUILD}</b> · โปรเจกต์ฐานข้อมูล: <b>${dbProjectId()}</b>
       </div>
     </div>
     <div class="grid-4">
@@ -2365,6 +2577,7 @@ async function renderAuth(){
       </div>
       <div class="auth-wrap" style="min-height:auto;padding-top:0"><div class="auth-box card">${inner}</div></div>
       <div class="footer-note">${t('footer_note')}</div>
+      <div class="build-tag">${esc(buildTagText())}</div>
     </div>
   `;
 
@@ -2412,7 +2625,7 @@ async function renderAuth(){
   });
 }
 
-async function doLogin(){
+async function doLoginInner(){
   const id = (document.getElementById('authId').value||'').trim();
   const pw = (document.getElementById('authPw').value||'').trim();
   if(!id || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
@@ -2456,7 +2669,7 @@ async function doLogin(){
   authError = t('auth_toast_wrong'); renderAuth();
 }
 
-async function doRegister(){
+async function doRegisterInner(){
   if(authSubmitting) return;
   authSubmitting = true;
   try{
@@ -2478,7 +2691,7 @@ async function doRegister(){
   } finally { authSubmitting = false; }
 }
 
-async function doApply(){
+async function doApplyInner(){
   if(authSubmitting) return;
   authSubmitting = true;
   try{
@@ -2497,6 +2710,38 @@ async function doApply(){
     toast(t('auth_toast_applied'));
     authMode='login'; authError=''; renderAuth();
   } finally { authSubmitting = false; }
+}
+
+function authDbErrorMsg(e){ return e instanceof DbUnavailableError ? t('conn_login_failed') : t('db_rejected'); }
+async function doLogin(){
+  const idEl = document.getElementById('authId');
+  const idVal = idEl ? idEl.value : '';
+  clearRenderCaches();
+  try{ await doLoginInner(); }
+  catch(e){
+    if(!(e instanceof DbError)) throw e;
+    authError = authDbErrorMsg(e);
+    await renderAuth();
+    const el = document.getElementById('authId'); if(el) el.value = idVal;
+  }
+}
+async function doRegister(){
+  clearRenderCaches();
+  try{ await doRegisterInner(); }
+  catch(e){
+    if(!(e instanceof DbError)) throw e;
+    authError = authDbErrorMsg(e);
+    await renderAuth();
+  }
+}
+async function doApply(){
+  clearRenderCaches();
+  try{ await doApplyInner(); }
+  catch(e){
+    if(!(e instanceof DbError)) throw e;
+    authError = authDbErrorMsg(e);
+    await renderAuth();
+  }
 }
 
 /* ======================================================================
@@ -2655,13 +2900,15 @@ function shouldSkipAutoRefresh(){
   const tag = document.activeElement && document.activeElement.tagName;
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
 }
-function softRefresh(){
-  if(!session) return;
+let refreshBusy = false;
+async function softRefresh(){
+  if(!session || gateActive || refreshBusy || connState==='offline') return;
   if(document.hidden) return;
   if(shouldSkipAutoRefresh()) return;
-  renderView();
+  refreshBusy = true;
+  try{ await renderRoot(true); } finally { refreshBusy = false; }
 }
-setInterval(softRefresh, 20000);
+setInterval(softRefresh, 15000);
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) softRefresh(); });
 window.addEventListener('focus', softRefresh);
 
@@ -2698,13 +2945,30 @@ if('serviceWorker' in navigator && !window.frameElement){
   }catch(e){}
 })();
 
-(async function boot(){
+let bootBusy = false;
+async function bootApp(){
   document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
   await seedIfNeeded();
   await resumeActiveSession();
   await applyPendingTrainerCodeIfAny();
   await renderRoot();
   cleanupOldData(false).catch(()=>{});
+}
+/* Starts (or restarts, from the "Retry" button / when the connection comes back) the app. */
+async function runBoot(){
+  if(bootBusy) return;
+  bootBusy = true; gateActive = false;
+  try{ await bootApp(); }
+  catch(e){
+    if(e instanceof DbError) showOfflineGate();
+    else { console.error(e); throw e; }
+  } finally { bootBusy = false; }
+}
+(async function boot(){
+  purgeLegacyLocalData();
+  renderConnBanner();
+  await ensureFreshServiceWorker();
+  await runBoot();
 })();
 </script>
 </body>
