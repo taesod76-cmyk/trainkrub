@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>เทรนครับ (TRAINKRUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0c0a0a">
+<meta name="theme-color" content="#0b0909">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
 <link rel="shortcut icon" href="icons/favicon.ico">
@@ -13,71 +13,111 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="เทรนครับ">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="vendor/fonts/ibm-plex-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="vendor/fonts/ibm-plex-sans-thai-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="vendor/fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  @font-face{font-family:'Kanit';font-style:normal;font-weight:500;font-display:swap;src:url(vendor/fonts/kanit-thai-500-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+  @font-face{font-family:'Kanit';font-style:normal;font-weight:500;font-display:swap;src:url(vendor/fonts/kanit-latin-500-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Kanit';font-style:normal;font-weight:600;font-display:swap;src:url(vendor/fonts/kanit-thai-600-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+  @font-face{font-family:'Kanit';font-style:normal;font-weight:600;font-display:swap;src:url(vendor/fonts/kanit-latin-600-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Kanit';font-style:normal;font-weight:700;font-display:swap;src:url(vendor/fonts/kanit-thai-700-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+  @font-face{font-family:'Kanit';font-style:normal;font-weight:700;font-display:swap;src:url(vendor/fonts/kanit-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'IBM Plex Sans Thai';font-style:normal;font-weight:400;font-display:swap;src:url(vendor/fonts/ibm-plex-sans-thai-thai-400-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+  @font-face{font-family:'IBM Plex Sans Thai';font-style:normal;font-weight:400;font-display:swap;src:url(vendor/fonts/ibm-plex-sans-thai-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'IBM Plex Sans Thai';font-style:normal;font-weight:500;font-display:swap;src:url(vendor/fonts/ibm-plex-sans-thai-thai-500-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+  @font-face{font-family:'IBM Plex Sans Thai';font-style:normal;font-weight:500;font-display:swap;src:url(vendor/fonts/ibm-plex-sans-thai-latin-500-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'IBM Plex Sans Thai';font-style:normal;font-weight:600;font-display:swap;src:url(vendor/fonts/ibm-plex-sans-thai-thai-600-normal.woff2) format('woff2');unicode-range:U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC}
+  @font-face{font-family:'IBM Plex Sans Thai';font-style:normal;font-weight:600;font-display:swap;src:url(vendor/fonts/ibm-plex-sans-thai-latin-600-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  /* ==========================================================================
+     TRAINKRUB look (build 2026-11-03.3)
+     Brand stays black + red. New: real Thai type (Kanit headings, IBM Plex Sans Thai
+     body, both served from /vendor/fonts), one-row app bar, bottom tab bar on phones,
+     and the trainer code shown as a race-bib ticket.
+     ========================================================================== */
   :root{
-    --bg:#0c0a0a;--surface:#161212;--surface-2:#1f1919;--surface-3:#2a2222;
-    --line:rgba(245,238,232,0.09);--line-strong:rgba(245,238,232,0.16);
-    --red:#e0293f;--red-dim:#7d1a23;--red-glow:rgba(224,41,63,0.18);
-    --text:#f5efe9;--text-dim:#9c9291;--text-faint:#5f5654;
-    --font-display:'Anton', sans-serif;--font-body:'Work Sans', sans-serif;--font-mono:'IBM Plex Mono', monospace;
+    color-scheme:dark;
+    --bg:#0b0909;--surface:#141010;--surface-2:#1b1616;--surface-3:#262020;--surface-4:#322a2a;
+    --line:rgba(255,242,235,.08);--line-strong:rgba(255,242,235,.16);
+    --red:#e0293f;--red-bright:#ff4d62;--red-deep:#b81c30;--red-dim:#7d1a23;--red-glow:rgba(224,41,63,.16);
+    --text:#f7f1ec;--text-dim:#bdb2af;--text-faint:#8c8280;
+    --paper:#f5eee7;--ink:#16100e;
+    --amber:#f0ab3c;--green:#4fd68a;--blue:#5aa9f0;
+    --r-sm:10px;--r-md:14px;--r-lg:20px;
+    --f-display:'Kanit','IBM Plex Sans Thai','Noto Sans Thai',system-ui,sans-serif;
+    --f-body:'IBM Plex Sans Thai','Noto Sans Thai','Kanit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-display:var(--f-display);--font-body:var(--f-body);--font-mono:var(--f-display);
+    --nav-h:66px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{width:100%;overflow-x:hidden}
-  body{background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased;min-height:100vh;width:100%;overflow-x:hidden}
+  html{width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--text);font:400 15px/1.65 var(--f-body);-webkit-font-smoothing:antialiased;min-height:100vh;width:100%;overflow-x:hidden;font-variant-numeric:tabular-nums}
   a{color:inherit;text-decoration:none}
-  button{font-family:var(--font-body);cursor:pointer}
+  button{font-family:var(--f-body);cursor:pointer;-webkit-tap-highlight-color:transparent}
   ::selection{background:var(--red);color:#fff}
-  button,.day-pill,.time-slot,.nav button,.role-tab button,.cat-pill{transition:transform .12s ease,background .15s ease,color .15s ease,border-color .15s ease}
-  button:active,.day-pill:active,.time-slot:active,.nav button:active,.role-tab button:active,.cat-pill:active{transform:scale(0.94)}
+  :focus-visible{outline:2px solid var(--red-bright);outline-offset:2px}
+  input:focus-visible,textarea:focus-visible,select:focus-visible{outline:none}
+  button,.day-pill,.time-slot,.nav button,.role-tab button,.cat-pill{transition:transform .12s ease,background .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease}
+  button:active,.day-pill:active,.time-slot:active,.cat-pill:active,.role-tab button:active{transform:scale(.96)}
 
-  .shell{max-width:1180px;margin:0 auto;padding:0 24px}
-  .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--line);gap:14px;flex-wrap:wrap}
-  .brand{display:flex;align-items:center;gap:12px;cursor:pointer}
-  .brand-mark{width:46px;height:46px;border-radius:11px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;color:#0c0a0a;flex-shrink:0;object-fit:cover;border:1px solid var(--line-strong);box-shadow:0 6px 18px -4px rgba(224,41,63,0.5)}
-  .brand-text{line-height:1.15}
-  .name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .wordmark{background:var(--red);color:#fff;font-size:10px;font-weight:800;letter-spacing:1.2px;padding:3px 8px;border-radius:5px;text-transform:uppercase;font-family:var(--font-body);box-shadow:0 3px 10px -2px rgba(224,41,63,0.6)}
-  .brand-text .name{font-family:var(--font-display);font-size:20px;letter-spacing:0.4px}
-  .brand-text .sub{font-size:11px;color:var(--text-faint);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+  /* ---------- app bar ---------- */
+  .shell{max-width:1160px;margin:0 auto;padding:0 24px}
+  .topbar{position:sticky;top:12px;z-index:60;display:flex;align-items:center;gap:14px;margin-top:14px;padding:9px 12px 9px 12px;background:rgba(20,16,16,.82);-webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);border:1px solid var(--line);border-radius:20px;box-shadow:0 18px 40px -24px #000}
+  .brand{display:flex;align-items:center;gap:11px;cursor:pointer;flex-shrink:0;min-width:0}
+  .brand-mark{width:40px;height:40px;border-radius:12px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;object-fit:cover;border:1px solid var(--line-strong);box-shadow:0 8px 20px -8px rgba(224,41,63,.7)}
+  .brand-text{line-height:1.1;min-width:0}
+  .name-row{display:flex;align-items:baseline;gap:8px}
+  .brand-text .name{order:1;font:600 19px/1.1 var(--f-display);white-space:nowrap}
+  .wordmark{order:2;color:var(--red-bright);font:500 10px/1 var(--f-display);letter-spacing:.16em;background:none;padding:0;box-shadow:none}
+  .brand-text .sub{display:none}
 
-  .top-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .lang-toggle{display:flex;border:1px solid var(--line-strong);border-radius:99px;padding:3px;gap:2px}
-  .lang-toggle button{border:none;background:transparent;color:var(--text-dim);font-size:11px;font-weight:700;padding:7px 12px;border-radius:99px;letter-spacing:0.5px}
-  .lang-toggle button.active{background:var(--surface-3);color:var(--text)}
-
-  .user-chip{display:none;align-items:center;gap:8px;font-size:12px;color:var(--text-dim);border:1px solid var(--line-strong);border-radius:99px;padding:6px 8px 6px 14px}
+  .top-controls{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+  #langToggle{order:1}#notifIconBtn{order:2}#profileIconBtn{order:3}#userChip{order:4}
+  .lang-toggle{display:flex;border:1px solid var(--line-strong);border-radius:99px;padding:3px;gap:2px;background:var(--surface-2)}
+  .lang-toggle button{border:none;background:transparent;color:var(--text-dim);font:500 12px/1 var(--f-display);padding:8px 12px;border-radius:99px;letter-spacing:.04em}
+  .lang-toggle button.active{background:var(--surface-4);color:var(--text)}
+  .icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);display:flex;align-items:center;justify-content:center;position:relative;font:600 15px/1 var(--f-display);flex-shrink:0;padding:0}
+  .icon-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .icon-btn .badge-dot{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font:600 10px/1 var(--f-display);min-width:17px;height:17px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--surface)}
+  .icon-btn.has-photo{padding:0;overflow:hidden}
+  .icon-btn.has-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .user-chip{display:none;align-items:center;gap:8px;font-size:13px;color:var(--text-dim);padding-left:4px}
   .user-chip.show{display:inline-flex}
-  .user-chip b{color:var(--text);font-weight:600}
-  .user-chip .role-pill{background:var(--red-glow);color:var(--red);font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:0.4px}
-  .user-chip button{border:none;background:var(--surface-2);color:var(--text-dim);font-size:11px;font-weight:600;padding:6px 11px;border-radius:99px}
-  .user-chip button:hover{color:var(--text);background:var(--surface-3)}
+  .user-chip b{display:none;color:var(--text);font-weight:500;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .user-chip .signed-label{display:none}
+  .user-chip .role-pill{display:none;background:var(--red-glow);color:var(--red-bright);font:500 11px/1 var(--f-display);padding:5px 9px;border-radius:99px}
+  #profileIconBtn[style*="none"]~#userChip b,#profileIconBtn[style*="none"]~#userChip .role-pill{display:inline-block}
+  .user-chip button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-dim);font:500 12.5px/1 var(--f-body);height:36px;padding:0 13px;border-radius:99px}
+  .user-chip button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  @media(hover:hover){
+    .icon-btn:hover,.user-chip button:hover{background:var(--surface-3);color:var(--text)}
+    .lang-toggle button:hover{color:var(--text)}
+  }
 
-  .nav{display:flex;gap:4px;padding:14px 0;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+  /* ---------- navigation: pills in the bar on desktop, tab bar on phones ---------- */
+  .nav{display:flex;gap:2px;justify-content:center;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
   .nav::-webkit-scrollbar{display:none;height:0}
-  .nav button{border:none;background:transparent;color:var(--text-dim);font-size:13px;font-weight:500;padding:9px 16px;border-radius:8px;white-space:nowrap;position:relative}
-  .nav button:hover{color:var(--text);background:var(--surface-2)}
-  .nav button.active{color:var(--text);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line-strong)}
-  .nav .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--text-faint);margin-right:8px;vertical-align:middle}
-  .nav button.active .dot{background:var(--red)}
-  .nav .count{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;margin-left:7px;border-radius:99px;background:var(--red);color:#fff;font-size:10px;font-weight:700}
+  .nav button{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 14px;border:none;background:transparent;color:var(--text-dim);font:500 14.5px/1 var(--f-body);border-radius:13px;white-space:nowrap;position:relative}
+  .nav .ico{display:inline-flex;width:20px;height:20px;flex-shrink:0}
+  .nav .ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .nav button.active{color:var(--text);background:var(--surface-3);box-shadow:inset 0 0 0 1px var(--line)}
+  .nav button.active .ico{color:var(--red-bright)}
+  .nav .count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--red);color:#fff;font:600 11px/1 var(--f-display)}
+  .nav .lbl-full{display:none}
+  @media(hover:hover){.nav button:hover{color:var(--text);background:var(--surface-2)}.nav button.active:hover{background:var(--surface-3)}}
 
-  .view{padding:36px 0 64px}
+  /* ---------- page ---------- */
+  .view{padding:30px 0 72px}
   .anim-in{animation:fadeSlide .3s ease}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
   @keyframes fadeSlide{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-  .page-head{margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
-  .page-head .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:8px}
-  .page-head h1{font-family:var(--font-display);font-size:32px;font-weight:400;letter-spacing:0.3px}
-  .page-head p{color:var(--text-dim);font-size:14px;margin-top:6px;max-width:560px}
+  .page-head{margin-bottom:22px;display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+  .page-head .eyebrow{display:none}
+  .page-head h1{font:600 30px/1.3 var(--f-display);letter-spacing:0}
+  .page-head p{color:var(--text-dim);font-size:15px;margin-top:6px;max-width:60ch}
 
-  .grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
-  /* Grid/flex children default to min-width:auto, which lets an item with a
-     wide intrinsic minimum (a <select> sizes itself to its longest option,
-     a long unbroken string, a table) push the whole track past the viewport.
-     Pinning them to 0 lets the track actually shrink on small screens. */
+  .grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+  /* grid/flex children default to min-width:auto and can push a track past the viewport */
   .grid-2>*,.grid-3>*,.grid-4>*{min-width:0}
   .card{min-width:0}
   select,input[type=text],input[type=password],input[type=number],input[type=date],textarea{min-width:0;max-width:100%}
@@ -87,204 +127,231 @@
   .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   @media(max-width:980px){.grid-4{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:820px){.grid-2,.grid-3{grid-template-columns:1fr}}
-  @media(max-width:520px){.grid-4{grid-template-columns:1fr}}
+  @media(max-width:520px){.grid-4{grid-template-columns:repeat(2,1fr)}}
 
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px}
+  .card{background:linear-gradient(180deg,rgba(255,242,235,.03),rgba(255,242,235,0) 70px),var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;margin-bottom:18px}
   .card:last-child{margin-bottom:0}
+  .card .card{box-shadow:none}
   .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap}
-  .card-head h3{font-size:15px;font-weight:600}
-  .card-head .hint{font-size:12px;color:var(--text-faint)}
+  .card-head h3{font:600 17px/1.35 var(--f-display)}
+  .card-head .hint{font-size:13px;color:var(--text-faint);background:var(--surface-3);padding:2px 10px;border-radius:99px}
 
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:9px;padding:12px 20px;font-size:13px;font-weight:600;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);letter-spacing:0.2px}
-  .btn:hover{background:var(--surface-3);border-color:var(--text-faint)}
-  .btn:disabled{opacity:0.4;pointer-events:none}
-  .btn-primary{background:var(--red);border-color:var(--red);color:#fff}
-  .btn-primary:hover{background:#f13650;border-color:#f13650}
+  /* ---------- buttons & fields ---------- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:13px;font:500 14.5px/1.2 var(--f-display);border:1px solid var(--line-strong);background:var(--surface-3);color:var(--text)}
+  .btn:disabled{opacity:.4;pointer-events:none}
+  .btn-primary{background:linear-gradient(180deg,#f43b51,#d8233a);border-color:#ff5f72;color:#fff;box-shadow:0 12px 26px -12px rgba(224,41,63,.85),inset 0 1px 0 rgba(255,255,255,.22)}
   .btn-ghost{background:transparent;border-color:transparent;color:var(--text-dim)}
-  .btn-danger-outline{background:transparent;border-color:var(--red-dim);color:#f0838f}
-  .btn-danger-outline:hover{background:rgba(224,41,63,0.1)}
-  .btn-sm{padding:8px 14px;font-size:12px}
+  .btn-danger-outline{background:transparent;border-color:var(--red-dim);color:#f58b97}
+  .btn-sm{min-height:38px;padding:0 15px;font-size:13px;border-radius:11px}
   .btn-block{width:100%}
+  @media(hover:hover){
+    .btn:hover{background:var(--surface-4);border-color:rgba(255,242,235,.3)}
+    .btn-primary:hover{background:linear-gradient(180deg,#ff4d62,#e0293f);border-color:#ff7585}
+    .btn-ghost:hover{color:var(--text);background:var(--surface-3);border-color:transparent}
+    .btn-danger-outline:hover{background:rgba(224,41,63,.12)}
+  }
 
-  label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:6px;font-weight:500}
-  input[type=text],input[type=password],input[type=number],input[type=date],select,textarea{width:100%;background:var(--surface-2);border:1px solid var(--line-strong);color:var(--text);border-radius:9px;padding:12px 14px;font-size:14px;font-family:var(--font-body);outline:none;resize:vertical}
-  input:focus,textarea:focus,select:focus{border-color:var(--red)}
+  label{display:block;font-size:13px;color:var(--text-dim);margin-bottom:7px;font-weight:500}
+  input[type=text],input[type=password],input[type=number],input[type=date],select,textarea{width:100%;min-height:48px;background:var(--surface-2);border:1px solid var(--line-strong);color:var(--text);border-radius:13px;padding:12px 15px;font:400 16px/1.4 var(--f-body);outline:none;resize:vertical}
+  select{appearance:none;-webkit-appearance:none;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23bdb2af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+  input::placeholder,textarea::placeholder{color:var(--text-faint)}
+  input:focus,textarea:focus,select:focus{border-color:var(--red-bright);box-shadow:0 0 0 4px var(--red-glow)}
   .field{margin-bottom:16px}
   .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media(max-width:600px){.field-row{grid-template-columns:1fr}}
 
+  /* ---------- trainers ---------- */
   .search-row{display:flex;gap:10px;margin-bottom:18px}
-  .trainer-row{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--surface-2);flex-wrap:wrap}
-  .trainer-row.pinned{border-color:var(--red-dim);background:rgba(224,41,63,0.06)}
-  .avatar{width:44px;height:44px;border-radius:50%;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--red);flex-shrink:0;border:1px solid var(--line-strong)}
+  .trainer-row{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:var(--r-md);margin-bottom:10px;background:var(--surface-2);flex-wrap:wrap}
+  .trainer-row.pinned{border-color:rgba(224,41,63,.45);background:linear-gradient(90deg,rgba(224,41,63,.09),rgba(224,41,63,0) 70%),var(--surface-2)}
+  .trainer-row .avatar{order:1}.trainer-row .meta{order:2}.trainer-row .pin-btn{order:3}.trainer-row .actions{order:4}
+  .avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(160deg,var(--surface-4),var(--surface-3));display:flex;align-items:center;justify-content:center;font:600 16px/1 var(--f-display);color:var(--red-bright);flex-shrink:0;border:1px solid var(--line-strong);overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .avatar.avatar-xl{width:88px;height:88px;font-size:30px}
   .trainer-row .meta{flex:1;min-width:140px}
-  .trainer-row .meta .n{font-weight:600;font-size:14px}
-  .trainer-row .meta .s{font-size:12px;color:var(--text-faint)}
+  .trainer-row .meta .n{font:500 16px/1.4 var(--f-display)}
+  .trainer-row .meta .s{font-size:13px;color:var(--text-faint)}
   .trainer-row .actions{display:flex;gap:8px;flex-wrap:wrap}
-  .pin-btn{background:transparent;border:1px solid var(--line-strong);color:var(--text-faint);border-radius:9px;width:40px;height:40px;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1}
-  .pin-btn:hover{border-color:var(--text-dim);color:var(--text-dim)}
-  .pin-btn.pinned{background:var(--red-glow);border-color:var(--red);color:var(--red)}
-  .badge-pinned{background:var(--red-glow);color:var(--red)}
+  .pin-btn{background:transparent;border:1px solid var(--line-strong);color:var(--text-faint);border-radius:12px;width:40px;height:40px;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1}
+  .pin-btn.pinned{background:var(--red-glow);border-color:rgba(255,77,98,.6);color:var(--red-bright)}
+  @media(hover:hover){.pin-btn:hover{border-color:var(--text-dim);color:var(--text-dim)}}
+  .badge-pinned{background:var(--red-glow);color:var(--red-bright)}
 
+  /* ---------- booking ---------- */
   .cat-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-  .cat-pill{flex:1 1 140px;text-align:center;padding:12px 8px;border-radius:10px;border:1px solid var(--line-strong);font-size:12px;font-weight:600;background:transparent;color:var(--text-dim);line-height:1.4}
-  .cat-pill.sel{background:var(--red);border-color:var(--red);color:#fff}
+  .cat-pill{flex:1 1 140px;text-align:center;padding:12px 10px;border-radius:13px;border:1px solid var(--line-strong);font:500 13.5px/1.4 var(--f-body);background:var(--surface-2);color:var(--text-dim)}
+  .cat-pill.sel{background:linear-gradient(180deg,#f43b51,#d8233a);border-color:#ff5f72;color:#fff}
 
-  .day-strip{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px}
-  .day-pill{flex-shrink:0;width:64px;text-align:center;padding:10px 0;border-radius:10px;border:1px solid var(--line-strong)}
-  .day-pill .d{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px}
-  .day-pill .n{font-family:var(--font-mono);font-size:14px;font-weight:600;margin-top:3px}
-  .day-pill.sel{background:var(--red);border-color:var(--red)}
-  .day-pill.sel .d,.day-pill.sel .n{color:#fff}
+  .day-strip{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding:2px 2px 6px;scroll-snap-type:x proximity;scrollbar-width:none}
+  .day-strip::-webkit-scrollbar{display:none}
+  .day-pill{flex-shrink:0;width:62px;text-align:center;padding:10px 0 11px;border-radius:15px;border:1px solid var(--line-strong);background:var(--surface-2);scroll-snap-align:start}
+  .day-pill .d{font-size:12px;color:var(--text-faint);line-height:1.3}
+  .day-pill .n{font:600 20px/1.2 var(--f-display);margin-top:2px}
+  .day-pill.sel{background:linear-gradient(180deg,#f43b51,#d8233a);border-color:#ff5f72;box-shadow:0 12px 24px -12px rgba(224,41,63,.9)}
+  .day-pill.sel .d{color:rgba(255,255,255,.85)}.day-pill.sel .n{color:#fff}
 
   .time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
   @media(max-width:480px){.time-grid{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:360px){.time-grid{grid-template-columns:repeat(2,1fr)}}
-  .time-slot{padding:11px 0;text-align:center;border-radius:9px;border:1px solid var(--line-strong);font-size:13px;font-family:var(--font-mono);position:relative}
-  .time-slot.sel{background:var(--red);border-color:var(--red);color:#fff}
-  .time-slot.taken{opacity:0.3;pointer-events:none;text-decoration:line-through}
-  /* one customer has already requested this slot — still bookable, and the
-     trainer decides afterwards whether to run it as a pair session */
-  .time-slot.duo-open{border-color:#f0ab3c;color:#f0ab3c}
-  .time-slot.duo-open.sel{background:var(--red);border-color:var(--red);color:#fff}
-  .time-slot.duo-open::after{content:'';position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:#f0ab3c}
+  .time-slot{display:flex;align-items:center;justify-content:center;min-height:46px;padding:0 4px;text-align:center;border-radius:13px;border:1px solid var(--line-strong);background:var(--surface-2);font:500 14.5px/1 var(--f-display);position:relative;white-space:nowrap}
+  .time-slot.sel{background:linear-gradient(180deg,#f43b51,#d8233a);border-color:#ff5f72;color:#fff}
+  .time-slot.taken{opacity:.3;pointer-events:none;text-decoration:line-through}
+  /* one customer already asked for this slot: still bookable, trainer decides on a pair session */
+  .time-slot.duo-open{border-color:var(--amber);color:var(--amber)}
+  .time-slot.duo-open.sel{background:linear-gradient(180deg,#f43b51,#d8233a);border-color:#ff5f72;color:#fff}
+  .time-slot.duo-open::after{content:'';position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--amber)}
   .time-slot.duo-open.sel::after{background:#fff}
-  .slot-hint{font-size:11px;color:var(--text-faint);line-height:1.6;margin:-4px 0 12px}
-  /* full explanation shown once an amber (pair-open) slot is actually picked */
-  .duo-notice{display:flex;gap:12px;align-items:flex-start;border:1px solid #f0ab3c;border-radius:12px;padding:14px;margin:0 0 14px;background:rgba(240,171,60,0.07)}
+  .slot-hint{font-size:12.5px;color:var(--text-faint);line-height:1.65;margin:-4px 0 12px}
+  .duo-notice{display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(240,171,60,.6);border-radius:var(--r-md);padding:14px;margin:0 0 14px;background:rgba(240,171,60,.07)}
   .duo-notice .dn-icon{font-size:20px;line-height:1.2;flex-shrink:0}
-  .duo-notice .dn-title{font-size:13px;font-weight:700;color:#f0ab3c;margin-bottom:4px}
-  .duo-notice p{font-size:12px;color:var(--text-dim);line-height:1.65}
-  .btn-duo{background:#f0ab3c;border-color:#f0ab3c;color:#2a1c05}
-  .btn-duo:hover{background:#f7bd5c;border-color:#f7bd5c}
-  .badge-duo{background:rgba(240,171,60,0.14);color:#f0ab3c}
-  .duo-group{border:1px solid #f0ab3c;border-radius:12px;padding:16px;margin-bottom:12px;background:rgba(240,171,60,0.05)}
+  .duo-notice .dn-title{font:500 14px/1.4 var(--f-display);color:var(--amber);margin-bottom:4px}
+  .duo-notice p,.duo-notice .dn-body{font-size:13px;color:var(--text-dim);line-height:1.65}
+  .btn-duo{background:var(--amber);border-color:var(--amber);color:#2a1c05}
+  @media(hover:hover){.btn-duo:hover{background:#f7bd5c;border-color:#f7bd5c}}
+  .badge-duo{background:rgba(240,171,60,.14);color:var(--amber)}
+  .duo-group{border:1px solid rgba(240,171,60,.55);border-radius:var(--r-md);padding:16px;margin-bottom:12px;background:rgba(240,171,60,.05)}
   .duo-group .duo-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-  .duo-group .duo-head .n{font-weight:600;font-size:14px}
-  .duo-group .duo-head .t{font-size:12px;color:var(--text-faint);margin-top:2px;font-family:var(--font-mono)}
-  .duo-group .duo-hint{font-size:11px;color:var(--text-faint);line-height:1.6;margin-bottom:12px}
-  .duo-person{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);margin-bottom:8px}
-  .duo-person .pn{font-size:13px;font-weight:600}
+  .duo-group .duo-head .n{font:500 15px/1.4 var(--f-display)}
+  .duo-group .duo-head .t{font-size:13px;color:var(--text-faint);margin-top:2px}
+  .duo-group .duo-hint{font-size:12.5px;color:var(--text-faint);line-height:1.65;margin-bottom:12px}
+  .duo-person{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);margin-bottom:8px}
+  .duo-person .pn{font:500 14px/1.4 var(--f-display)}
   .duo-person .acts{display:flex;gap:6px;flex-wrap:wrap}
 
-  .summary-row{display:flex;justify-content:space-between;padding:9px 0;font-size:13px;border-bottom:1px solid var(--line)}
+  .summary-row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;font-size:14px;border-bottom:1px solid var(--line)}
   .summary-row:last-child{border-bottom:none}
   .summary-row .k{color:var(--text-dim)}
-  .summary-row .v{font-weight:600;font-family:var(--font-mono)}
+  .summary-row .v{font-weight:500;text-align:right}
 
+  /* ---------- progress ring ---------- */
   .ring-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0 4px}
-  .ring{position:relative;width:168px;height:168px}
-  .ring svg{transform:rotate(-90deg)}
-  .ring circle{transition:stroke-dashoffset .5s ease}
+  .ring{position:relative;width:172px;height:172px}
+  .ring svg{transform:rotate(-90deg);filter:drop-shadow(0 0 14px rgba(224,41,63,.35))}
+  .ring circle{transition:stroke-dashoffset .6s ease}
   .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .ring-label .num{font-family:var(--font-display);font-size:40px;line-height:1}
-  .ring-label .of{font-size:11px;color:var(--text-faint);margin-top:4px;letter-spacing:0.5px}
+  .ring-label .num{font:600 50px/1 var(--f-display)}
+  .ring-label .of{font-size:13px;color:var(--text-faint);margin-top:4px}
 
-  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;letter-spacing:0.2px;white-space:nowrap}
-  .badge-pending{background:rgba(240,171,60,0.14);color:#f0ab3c}
-  .badge-confirmed{background:rgba(60,150,240,0.14);color:#5aa9f0}
-  .badge-done{background:rgba(60,200,120,0.14);color:#4fd68a}
-  .badge-noshow{background:var(--red-glow);color:#f0838f}
-  .badge-rejected{background:var(--red-glow);color:#f0838f}
+  /* ---------- status & lists ---------- */
+  .badge{display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--f-body);padding:6px 11px;border-radius:99px;white-space:nowrap}
+  .badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+  .badge-pending{background:rgba(240,171,60,.14);color:var(--amber)}
+  .badge-confirmed{background:rgba(90,169,240,.14);color:var(--blue)}
+  .badge-done{background:rgba(79,214,138,.14);color:var(--green)}
+  .badge-noshow,.badge-rejected,.badge-suspended{background:var(--red-glow);color:#f58b97}
   .badge-cancelled{background:var(--surface-3);color:var(--text-faint)}
-  .badge-active{background:rgba(60,200,120,0.14);color:#4fd68a}
-  .badge-suspended{background:var(--red-glow);color:#f0838f}
+  .badge-active{background:rgba(79,214,138,.14);color:var(--green)}
   .badge-role{background:var(--surface-3);color:var(--text-dim)}
+  .badge-role::before,.badge-pinned::before,.badge-duo::before{display:none}
 
-  .req-card{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--surface-2)}
+  .req-card{border:1px solid var(--line);border-radius:var(--r-md);padding:16px;margin-bottom:12px;background:var(--surface-2)}
   .req-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px;flex-wrap:wrap}
-  .req-top .n{font-weight:600;font-size:14px}
-  .req-top .t{font-size:12px;color:var(--text-faint);margin-top:2px}
+  .req-top .n{font:500 16px/1.4 var(--f-display)}
+  .req-top .t{font-size:13px;color:var(--text-faint);margin-top:2px}
   .req-actions{display:flex;gap:8px}
-  .req-actions .btn{flex:1;padding:9px 0;font-size:12px}
+  .req-actions .btn{flex:1;min-height:42px;padding:0}
 
-  .sched-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .sched-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
   .sched-row:last-child{border-bottom:none}
-  .sched-row .time{font-family:var(--font-mono);font-size:13px;color:var(--text-dim);width:52px;flex-shrink:0}
-  .sched-row .who{flex:1;font-size:13px;font-weight:500;min-width:120px}
+  .sched-row .time{font:500 15px/1.2 var(--f-display);color:var(--text);min-width:74px;white-space:nowrap;flex-shrink:0}
+  .sched-row .who{flex:1;font-size:14.5px;font-weight:500;min-width:120px}
   .sched-row .acts{display:flex;gap:8px}
 
-  .notif-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .notif-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
   .notif-item:last-child{border-bottom:none}
-  .notif-item.unread{background:rgba(224,41,63,0.04)}
-  .notif-ico{width:34px;height:34px;border-radius:9px;background:var(--red-glow);color:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:700}
-  .notif-item .body{font-size:13px;line-height:1.5;flex:1}
-  .notif-item .body .ttl{font-weight:600;margin-bottom:2px}
-  .notif-item .when{font-size:11px;color:var(--text-faint);margin-top:2px}
+  .notif-item.unread .notif-ico{background:var(--red);color:#fff}
+  .notif-ico{width:36px;height:36px;border-radius:12px;background:var(--surface-3);color:var(--red-bright);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+  .notif-item .body{font-size:14.5px;line-height:1.55;flex:1}
+  .notif-item .body .ttl{font-weight:500;margin-bottom:2px}
+  .notif-item .when{font-size:12.5px;color:var(--text-faint);margin-top:2px}
 
-  .empty{text-align:center;padding:40px 10px;color:var(--text-faint);font-size:13px}
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface-3);border:1px solid var(--line-strong);color:var(--text);padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;z-index:50;max-width:90vw}
+  .empty{text-align:center;padding:34px 12px;color:var(--text-faint);font-size:14px;line-height:1.7}
+  .empty::before{content:'';display:block;width:46px;height:46px;margin:0 auto 12px;border-radius:15px;background:var(--surface-3) center/24px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238c8280' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15.5' rx='3'/%3E%3Cpath d='M3.5 10h17M8 3v4M16 3v4'/%3E%3C/svg%3E")}
+  .card-head+.empty,.card>.empty:only-child{padding-top:18px}
+
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface-4);border:1px solid var(--line-strong);color:var(--text);padding:13px 20px;border-radius:14px;font:500 14px/1.5 var(--f-body);opacity:0;transition:all .25s;pointer-events:none;z-index:90;max-width:90vw;box-shadow:0 20px 44px -18px #000}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast .dot{width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;margin-right:9px}
-  #connBanner{position:sticky;top:0;z-index:70;display:none;padding:9px 14px;background:#7d1a23;color:#fff;font-size:13px;line-height:1.5;text-align:center}
+  .toast .dot{width:7px;height:7px;border-radius:50%;background:var(--red-bright);display:inline-block;margin-right:10px}
+  #connBanner{position:sticky;top:0;z-index:70;display:none;padding:10px 14px;background:#7d1a23;color:#fff;font-size:13.5px;line-height:1.5;text-align:center}
   #connBanner.show{display:block}
-  #connBanner button{margin-left:10px;background:#fff;color:#7d1a23;border:0;border-radius:6px;padding:3px 12px;font-weight:600;font-size:12px;cursor:pointer}
+  #connBanner button{margin-left:10px;background:#fff;color:#7d1a23;border:0;border-radius:8px;padding:4px 13px;font-weight:600;font-size:12.5px;cursor:pointer}
   .offline-gate{text-align:center;padding:56px 20px}
-  .offline-gate h2{font-family:var(--font-display);font-size:22px;margin:10px 0 8px}
-  .offline-gate p{font-size:13px;color:var(--text-dim);margin-bottom:18px;line-height:1.7}
-  .build-tag{margin-top:8px;font-size:10.5px;color:var(--text-faint);opacity:.7;font-family:var(--font-mono);text-align:center}
+  .offline-gate h2{font:600 22px/1.3 var(--f-display);margin:10px 0 8px}
+  .offline-gate p{font-size:14px;color:var(--text-dim);margin-bottom:18px;line-height:1.7}
+  .build-tag{margin-top:8px;font-size:11px;color:var(--text-faint);opacity:.75;text-align:center}
 
-  .stat-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
-  .stat-card .lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px}
-  .stat-card .val{font-family:var(--font-display);font-size:30px;margin-top:8px}
-  .stat-card .val.accent{color:var(--red)}
+  .stat-card{background:linear-gradient(180deg,rgba(255,242,235,.03),rgba(255,242,235,0) 60px),var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px}
+  .stat-card .lbl{font-size:13px;color:var(--text-dim)}
+  .stat-card .val{font:600 34px/1.15 var(--f-display);margin-top:6px}
+  .stat-card .val.accent{color:var(--red-bright)}
 
-  .cert-chip{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);margin-bottom:8px}
-  .cert-chip .ic{width:30px;height:30px;border-radius:8px;background:var(--red-glow);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  .cert-chip{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface-2);margin-bottom:8px}
+  .cert-chip .ic{width:34px;height:34px;border-radius:11px;background:var(--red-glow);color:var(--red-bright);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
   .cert-chip .info{flex:1;min-width:0}
-  .cert-chip .info .n{font-size:13px;font-weight:600}
-  .cert-chip .info .s{font-size:11px;color:var(--text-faint)}
+  .cert-chip .info .n{font:500 14.5px/1.4 var(--f-display)}
+  .cert-chip .info .s{font-size:12.5px;color:var(--text-faint)}
+  .cert-chip .btn{flex-shrink:0}
   .cert-badge-row{display:flex;flex-wrap:wrap;gap:8px}
-  .cert-badge{font-size:11px;padding:6px 12px;border-radius:99px;background:var(--surface-3);border:1px solid var(--line-strong);color:var(--text-dim)}
+  .cert-badge{font-size:12.5px;padding:7px 13px;border-radius:99px;background:var(--surface-3);border:1px solid var(--line-strong);color:var(--text-dim)}
+
+  .diag{margin-bottom:16px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);overflow:hidden}
+  .diag summary{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;font:500 14px/1.4 var(--f-body);list-style:none}
+  .diag summary::-webkit-details-marker{display:none}
+  .diag summary::after{content:'';margin-left:auto;width:8px;height:8px;border-right:2px solid var(--text-faint);border-bottom:2px solid var(--text-faint);transform:rotate(45deg);transition:transform .15s}
+  .diag[open] summary::after{transform:rotate(225deg)}
+  .diag-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);flex-shrink:0}
+  .diag.bad{border-color:var(--red)}.diag.bad .diag-dot{background:var(--red);box-shadow:0 0 10px var(--red)}
+  .diag-body{padding:2px 16px 14px;font-size:13px;color:var(--text-dim);line-height:1.9}
 
   .table{width:100%;border-collapse:collapse}
-  .table th{text-align:left;font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.6px;padding:0 10px 10px;border-bottom:1px solid var(--line)}
-  .table td{padding:12px 10px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .table th{text-align:left;font:500 12.5px/1.4 var(--f-body);color:var(--text-faint);padding:0 10px 10px;border-bottom:1px solid var(--line)}
+  .table td{padding:13px 10px;font-size:14px;border-bottom:1px solid var(--line);vertical-align:middle}
   .table tr:last-child td{border-bottom:none}
-  .table input,.table select{padding:8px 10px;font-size:12px}
+  .table input,.table select{min-height:40px;padding:8px 10px;font-size:14px}
   .table-wrap{overflow-x:auto}
 
   .profile-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap}
-  .profile-header .avatar{width:60px;height:60px;font-size:20px}
-  .profile-header .n{font-family:var(--font-display);font-size:20px}
-  .profile-header .s{font-size:12px;color:var(--text-faint)}
-  .back-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim);margin-bottom:14px;cursor:pointer}
-  .back-link:hover{color:var(--text)}
+  .profile-header .avatar{width:64px;height:64px;font-size:22px}
+  .profile-header .n{font:600 21px/1.3 var(--f-display)}
+  .profile-header .s{font-size:13.5px;color:var(--text-faint)}
+  .back-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--text-dim);margin-bottom:14px;cursor:pointer;min-height:36px}
+  @media(hover:hover){.back-link:hover{color:var(--text)}}
 
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+  /* ---------- dialogs ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(5,3,3,.78);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
   .modal-overlay.show{display:flex}
-  .modal-box{background:var(--surface);border:1px solid var(--line-strong);border-radius:18px;padding:42px 32px;text-align:center;max-width:380px;width:100%;animation:popIn .3s ease}
-  @keyframes popIn{from{opacity:0;transform:scale(.9) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .modal-box{background:var(--surface);border:1px solid var(--line-strong);border-radius:24px;padding:40px 30px 30px;text-align:center;max-width:390px;width:100%;animation:popIn .3s ease;box-shadow:0 40px 80px -30px #000}
+  @keyframes popIn{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes sheetUp{from{transform:translateY(40px);opacity:.6}to{transform:translateY(0);opacity:1}}
   @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
-  .modal-icon{width:64px;height:64px;border-radius:50%;background:var(--red-glow);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px;animation:pulse 1.5s ease-in-out infinite}
-  .modal-box h2{font-family:var(--font-display);font-size:26px;margin-bottom:10px;letter-spacing:.3px}
-  .modal-box p{color:var(--text-dim);font-size:14px;margin-bottom:24px;line-height:1.6}
+  .modal-icon{width:64px;height:64px;border-radius:50%;background:var(--red-glow);color:var(--red-bright);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px;animation:pulse 1.5s ease-in-out infinite}
+  .modal-box h2{font:600 24px/1.3 var(--f-display);margin-bottom:10px}
+  .modal-box p{color:var(--text-dim);font-size:15px;margin-bottom:22px;line-height:1.65}
 
-  .auth-wrap{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:30px 10px}
-  .auth-box{max-width:420px;width:100%;animation:fadeSlide .3s ease}
-  .auth-mark{width:52px;height:52px;border-radius:13px;background:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:22px}
-  .auth-hint{font-size:11px;color:var(--text-faint);text-align:center;margin-top:14px;line-height:1.6;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
-  .quick-login-label{font-size:11px;color:var(--text-faint);text-align:center;margin-top:18px;margin-bottom:10px;letter-spacing:0.3px}
+  /* ---------- sign-in ---------- */
+  .auth-wrap{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:30px 4px}
+  .auth-box{max-width:430px;width:100%;animation:fadeSlide .3s ease}
+  .auth-mark svg,.notif-ico svg,.cert-chip .ic svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .auth-mark svg{width:28px;height:28px}
+  .notif-ico svg,.cert-chip .ic svg{width:18px;height:18px}
+  .auth-mark{color:#fff;width:56px;height:56px;border-radius:18px;background:linear-gradient(160deg,#f43b51,#b81c30);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px;box-shadow:0 16px 30px -14px rgba(224,41,63,.9),inset 0 1px 0 rgba(255,255,255,.25)}
+  .auth-hint{font-size:12.5px;color:var(--text-faint);text-align:center;margin-top:14px;line-height:1.65;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .quick-login-label{font-size:12.5px;color:var(--text-faint);text-align:center;margin-top:18px;margin-bottom:10px}
   .quick-login-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto}
-  .quick-login-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);color:var(--text);font-family:var(--font-body)}
-  .quick-login-row:hover{background:var(--surface-3);border-color:var(--red-dim)}
-  .quick-login-row .qn{font-size:13px;font-weight:600;flex:1;min-width:0}
-  .quick-login-row .qc{font-size:11px;color:var(--text-faint);font-family:var(--font-mono);flex-shrink:0}
-  .auth-switch{text-align:center;font-size:12px;color:var(--text-dim);margin-top:18px}
-  .auth-switch a{color:var(--red);font-weight:600;cursor:pointer}
-  .auth-back{text-align:center;font-size:12px;color:var(--text-dim);margin-top:16px;display:block;cursor:pointer}
-  .auth-error{background:var(--red-glow);color:#f0838f;font-size:12px;padding:10px 12px;border-radius:9px;margin-bottom:14px}
+  .quick-login-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 13px;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface-2);color:var(--text);font-family:var(--f-body)}
+  @media(hover:hover){.quick-login-row:hover{background:var(--surface-3);border-color:var(--red-dim)}}
+  .quick-login-row .qn{font-size:14px;font-weight:500;flex:1;min-width:0}
+  .quick-login-row .qc{font-size:12px;color:var(--text-faint);flex-shrink:0}
+  .auth-switch{text-align:center;font-size:14px;color:var(--text-dim);margin-top:18px}
+  .auth-switch a{color:var(--red-bright);font-weight:600;cursor:pointer}
+  .auth-back{text-align:center;font-size:14px;color:var(--text-dim);margin-top:16px;display:block;cursor:pointer}
+  .auth-error{background:var(--red-glow);color:#ff9aa6;font-size:13.5px;padding:11px 13px;border-radius:12px;margin-bottom:14px;line-height:1.55}
+  .role-tab{display:flex;border:1px solid var(--line-strong);border-radius:99px;padding:4px;gap:2px;margin:0 auto 24px;width:fit-content;background:var(--surface-2)}
+  .role-tab button{border:none;background:transparent;color:var(--text-dim);font:500 14px/1 var(--f-display);padding:11px 20px;border-radius:99px;white-space:nowrap}
+  .role-tab button.active{background:linear-gradient(180deg,#f43b51,#d8233a);color:#fff;box-shadow:0 10px 22px -12px rgba(224,41,63,.9)}
+  .loading-shell{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:14px}
 
-  .role-tab{display:flex;border:1px solid var(--line-strong);border-radius:99px;padding:3px;gap:2px;margin:0 auto 24px;width:fit-content}
-  .icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);display:flex;align-items:center;justify-content:center;position:relative;font-size:14px;font-weight:600;flex-shrink:0;padding:0}
-  .icon-btn:hover{background:var(--surface-3)}
-  .icon-btn .badge-dot{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
-  .role-tab button{border:none;background:transparent;color:var(--text-dim);font-size:12px;font-weight:600;padding:8px 16px;border-radius:99px;letter-spacing:0.3px;white-space:nowrap}
-  .role-tab button.active{background:var(--red);color:#fff}
-
-  .loading-shell{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:13px}
-
-  /* ================= UI polish (build 2026-11-03.2) ================= */
+  /* ---------- motion & loading ---------- */
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes shimmer{0%{background-position:-420px 0}100%{background-position:420px 0}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -295,220 +362,200 @@
   @keyframes progressRun{0%{width:0}60%{width:78%}100%{width:92%}}
   @keyframes slideBar{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
 
-  /* thin progress line at the very top while a page loads */
   #topProgress{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;pointer-events:none;opacity:0}
   #topProgress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red-dim),var(--red),#ff6b7d);box-shadow:0 0 10px var(--red);border-radius:0 3px 3px 0}
   #topProgress.run{opacity:1}
   #topProgress.run i{animation:progressRun 2.6s cubic-bezier(.1,.7,.2,1) forwards}
 
-  /* first-load splash */
   .splash{min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center}
-  .splash-ring{position:relative;width:84px;height:84px;display:flex;align-items:center;justify-content:center}
+  .splash-ring{position:relative;width:88px;height:88px;display:flex;align-items:center;justify-content:center}
   .splash-ring::before{content:'';position:absolute;inset:0;border-radius:50%;border:3px solid var(--surface-3);border-top-color:var(--red);animation:spin .9s linear infinite}
   .splash-ring::after{content:'';position:absolute;inset:-12px;border-radius:50%;border:1px solid var(--red-glow);animation:pulse 1.8s ease-in-out infinite}
-  .splash-mark{font-family:var(--font-display);font-size:24px;letter-spacing:.5px;color:var(--text)}
-  .splash-word{font-size:11px;font-weight:800;letter-spacing:3px;color:var(--text-faint);text-transform:uppercase}
+  .splash-mark{font:700 26px/1 var(--f-display);color:var(--text)}
+  .splash-word{font:500 12px/1 var(--f-display);letter-spacing:.3em;color:var(--text-faint)}
   .splash-bar{width:140px;height:3px;border-radius:3px;background:var(--surface-3);overflow:hidden}
   .splash-bar i{display:block;height:100%;width:40%;background:var(--red);border-radius:3px;animation:slideBar 1.2s ease-in-out infinite}
-  .splash-note{font-size:12px;color:var(--text-faint);min-height:16px;max-width:280px;line-height:1.6}
+  .splash-note{font-size:13px;color:var(--text-faint);min-height:18px;max-width:280px;line-height:1.6}
 
-  /* skeleton placeholders shown only when a page is slow to arrive */
-  .skel{display:block;border-radius:8px;background:linear-gradient(90deg,var(--surface-2) 0%,var(--surface-3) 50%,var(--surface-2) 100%);background-size:840px 100%;animation:shimmer 1.3s linear infinite}
-  .skel-head{height:26px;width:46%;margin-bottom:10px}
-  .skel-sub{height:13px;width:68%;margin-bottom:26px}
-  .skel-line{height:12px;margin-bottom:14px}
-  .skel-row{height:58px;margin-bottom:10px;border-radius:12px}
+  .skel{display:block;border-radius:10px;background:linear-gradient(90deg,var(--surface-2) 0%,var(--surface-3) 50%,var(--surface-2) 100%);background-size:840px 100%;animation:shimmer 1.3s linear infinite}
+  .skel-head{height:28px;width:46%;margin-bottom:10px}
+  .skel-sub{height:14px;width:68%;margin-bottom:26px}
+  .skel-line{height:13px;margin-bottom:14px}
+  .skel-row{height:60px;margin-bottom:10px;border-radius:var(--r-md)}
   #app.is-loading{opacity:.55;pointer-events:none;transition:opacity .15s}
 
-  /* page entrance: sections rise in one after another (no lasting transform, so nothing breaks) */
   .view.anim-in{animation:none}
   .view.anim-in>*{animation:fadeUp .42s cubic-bezier(.2,.7,.2,1) backwards}
   .view.anim-in>*:nth-child(2){animation-delay:.05s}
   .view.anim-in>*:nth-child(3){animation-delay:.1s}
   .view.anim-in>*:nth-child(n+4){animation-delay:.14s}
 
-  /* buttons that are working */
   .btn.is-busy{position:relative;color:transparent!important;pointer-events:none}
   .btn.is-busy>*{opacity:0}
-  .btn.is-busy::after{content:'';position:absolute;inset:0;margin:auto;width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+  .btn.is-busy::after{content:'';position:absolute;inset:0;margin:auto;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
 
-  /* photos */
-  .avatar{overflow:hidden}
-  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-  .avatar.avatar-xl{width:88px;height:88px;font-size:30px}
-  .icon-btn.has-photo{padding:0;overflow:hidden}
-  .icon-btn.has-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  /* ---------- photos, certificates, viewer ---------- */
   .photo-edit{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
   .photo-edit .btns{display:flex;gap:8px;flex-wrap:wrap}
   .file-btn{position:relative;overflow:hidden;cursor:pointer}
   .file-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
   .cert-attach{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .cert-prev{width:56px;height:56px;border-radius:8px;object-fit:cover;border:1px solid var(--line-strong);display:block}
-  .cert-view{border:none;background:transparent;color:var(--red);font-size:11px;font-weight:700;padding:0 0 0 6px;text-decoration:underline;cursor:pointer}
-  .cert-chip .btn{flex-shrink:0}
-
-  /* picture viewer */
+  .cert-prev{width:56px;height:56px;border-radius:10px;object-fit:cover;border:1px solid var(--line-strong);display:block}
+  .cert-view{border:none;background:transparent;color:var(--red-bright);font-size:12.5px;font-weight:600;padding:0 0 0 6px;text-decoration:underline;cursor:pointer}
   .lb-box{position:relative;max-width:min(92vw,820px);max-height:90vh;display:flex;align-items:center;justify-content:center;animation:popIn .25s ease}
-  .lb-box img{max-width:100%;max-height:86vh;border-radius:12px;background:#fff;display:block}
-  .lb-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);font-size:14px;z-index:2}
-  .lb-msg{color:var(--text-dim);font-size:14px;padding:30px;text-align:center}
+  .lb-box img{max-width:100%;max-height:86vh;border-radius:14px;background:#fff;display:block}
+  .lb-close{position:absolute;top:-14px;right:-14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface-3);color:var(--text);font-size:14px;z-index:2}
+  .lb-msg{color:var(--text-dim);font-size:15px;padding:30px;text-align:center}
+  #lightbox{align-items:center}
 
-  /* trainer-code entry */
-  .code-hero{border-color:var(--red-dim);background:linear-gradient(180deg,rgba(224,41,63,.08),transparent 75%),var(--surface)}
-  .code-hint{font-size:12px;color:var(--text-dim);line-height:1.7}
-  .code-row{display:flex;gap:10px;align-items:stretch;margin-top:14px}
-  .code-field{flex:1;display:flex;align-items:center;gap:6px;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface-2);padding:0 14px;min-width:0;transition:border-color .15s,box-shadow .15s}
-  .code-field:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
-  .code-field .hash{font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--red)}
-  .code-field input[type=text]{flex:1;min-width:0;border:none;background:transparent;outline:none;box-shadow:none;font-family:var(--font-mono);font-size:22px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--text);padding:14px 0}
-  .code-field input[type=text]::placeholder{color:var(--text-faint);letter-spacing:3px;font-weight:500}
+  /* ---------- trainer code: the bib ---------- */
+  .bib{position:relative;margin-bottom:18px;border-radius:22px;background:linear-gradient(180deg,#f8f2ec,#eee5dc);color:var(--ink);overflow:hidden;box-shadow:0 30px 60px -34px rgba(224,41,63,.7),inset 0 1px 0 #fff}
+  .bib-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 20px;background:linear-gradient(180deg,#ec2f46,#cf2037);color:#fff;font:500 12px/1 var(--f-display)}
+  .bib-head .brand-tag{letter-spacing:.2em}
+  .bib-code{padding:20px 20px 14px;text-align:center;font:700 clamp(44px,13vw,76px)/1.05 var(--f-display);letter-spacing:.14em;text-indent:.14em;color:var(--ink);word-break:break-all}
+  .bib-code .hash{color:var(--red);letter-spacing:0;margin-right:.06em}
+  .bib-foot{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 20px 18px;margin-top:6px;border-top:2px dashed rgba(22,16,14,.24)}
+  .bib-foot::before,.bib-foot::after{content:'';position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--bg)}
+  .bib-foot::before{left:-10px}.bib-foot::after{right:-10px}
+  .bib-foot p{font-size:13.5px;line-height:1.6;color:#5d504b;margin:0;flex:1;min-width:200px}
+  .bib .btn{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  @media(hover:hover){.bib .btn:hover{background:#2b211e;border-color:#2b211e}}
+
+  .t-top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:stretch;margin-bottom:18px}
+  .t-top>*{margin-bottom:0!important}
+  .t-top>.bib:only-child{grid-column:1/-1;max-width:600px}
+  @media(max-width:820px){.t-top{grid-template-columns:1fr;gap:14px}.t-top>.bib:only-child{max-width:none}}
+
+  /* entering a code: a dashed ticket slot */
+  .code-hero{border:1.5px dashed rgba(255,242,235,.26);background:radial-gradient(520px 200px at 50% -40%,rgba(224,41,63,.2),transparent 70%),var(--surface)}
+  .code-hint{font-size:13.5px;color:var(--text-dim);line-height:1.7}
+  .code-row{display:flex;gap:10px;align-items:stretch;margin-top:16px}
+  .code-field{flex:1;display:flex;align-items:center;gap:6px;border:1px solid var(--line-strong);border-radius:15px;background:var(--surface-2);padding:0 16px;min-width:0;transition:border-color .15s,box-shadow .15s}
+  .code-field:focus-within{border-color:var(--red-bright);box-shadow:0 0 0 4px var(--red-glow)}
+  .code-field .hash{font:700 26px/1 var(--f-display);color:var(--red-bright)}
+  .code-field input[type=text]{flex:1;min-width:0;border:none;background:transparent;outline:none;box-shadow:none;font:700 26px/1.2 var(--f-display);letter-spacing:.22em;text-transform:uppercase;color:var(--text);padding:12px 0;min-height:56px}
+  .code-field input[type=text]:focus{box-shadow:none}
+  .code-field input[type=text]::placeholder{color:var(--text-faint);letter-spacing:.06em;font-weight:500;font-size:17px;text-transform:none}
   .code-field.shake{animation:shake .45s ease;border-color:var(--red)}
-  .code-msg{min-height:20px;margin-top:10px;font-size:12px;line-height:1.5}
-  .code-msg.err{color:#ff7a8a}
-  .code-msg.ok{color:#5fd08a}
+  .code-row .btn{min-height:58px;padding:0 24px}
+  .code-msg{min-height:22px;margin-top:10px;font-size:13.5px;line-height:1.55}
+  .code-msg.err{color:#ff8fa0}
+  .code-msg.ok{color:#6fdc9c}
   .code-share-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-  .code-share-row .lbl{font-size:12px;color:var(--text-faint);margin-bottom:4px}
-  .code-big{font-family:var(--font-mono);font-size:30px;font-weight:700;letter-spacing:4px;color:var(--text)}
+  .code-share-row .lbl{font-size:13px;color:var(--text-faint);margin-bottom:4px}
+  .code-big{font:700 32px/1.1 var(--f-display);letter-spacing:.14em;color:var(--text)}
   .pc-row{display:flex;gap:8px;flex-wrap:wrap}
-  .pc-chip{font-size:12px;padding:6px 12px;border-radius:99px;border:1px solid var(--line-strong);color:var(--text-dim)}
-  .pc-chip.ok{border-color:rgba(95,208,138,.4);color:#5fd08a}
+  .pc-chip{font-size:13px;padding:7px 13px;border-radius:99px;border:1px solid var(--line-strong);color:var(--text-dim)}
+  .pc-chip.ok{border-color:rgba(79,214,138,.45);color:var(--green)}
 
   /* booking-sent popup */
-  .modal-check{width:76px;height:76px;margin:0 auto 18px;color:var(--red);animation:ringPop .45s ease}
+  .modal-check{width:80px;height:80px;margin:0 auto 18px;color:var(--red-bright);animation:ringPop .45s ease}
   .modal-check svg{width:100%;height:100%;display:block}
   .modal-check path{stroke-dasharray:40;stroke-dashoffset:40;animation:drawCheck .5s .25s ease forwards}
-  .modal-note{font-size:12px;color:var(--text-faint);margin:-12px 0 14px}
+  .modal-note{font-size:13px;color:var(--text-faint);margin:-10px 0 14px}
   .modal-countdown{height:3px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin:0 0 18px}
   .modal-countdown i{display:block;height:100%;background:var(--red);transform-origin:left;animation:countdown 2.8s linear forwards}
 
-  /* the "preview on phone/desktop" helper floats over the page and is pointless on an actual phone */
-  @media (max-width:820px){ .device-toggle-btn{display:none!important} }
+  .pkg-buy-row{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border:1px solid var(--line);border-radius:var(--r-md);margin-bottom:10px;background:var(--surface-2);flex-wrap:wrap;gap:12px}
+  .pkg-buy-row .info .n{font:500 16px/1.4 var(--f-display)}
+  .pkg-buy-row .info .s{font-size:13px;color:var(--text-faint);margin-top:2px}
+  .footer-note{font-size:12.5px;color:var(--text-faint);text-align:center;margin-top:30px;line-height:1.7}
 
-  @media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  /* ---------- tablet & phone ---------- */
+  @media(max-width:1100px){
+    .user-chip button{padding:0 11px}
+    .nav button{padding:0 11px;font-size:14px}
   }
-  .pkg-buy-row{display:flex;align-items:center;justify-content:space-between;padding:14px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--surface-2);flex-wrap:wrap;gap:10px}
-  .pkg-buy-row .info .n{font-weight:600;font-size:14px}
-  .pkg-buy-row .info .s{font-size:12px;color:var(--text-faint);margin-top:2px}
-  .footer-note{font-size:11px;color:var(--text-faint);text-align:center;margin-top:30px;line-height:1.7}
-
-  /* ---------------- responsive refinements ----------------
-     Desktop keeps the layout above as-is (max-width:1180px shell).
-     These queries progressively tighten spacing, type scale and
-     touch targets down through tablet and phone widths so every
-     view — auth, dashboards, booking, tables, modal — stays usable
-     with one hand on a small screen. */
-  @media(max-width:1024px){
-    .shell{padding:0 18px}
-  }
+  @media(max-width:1024px){.shell{padding:0 18px}}
   @media(max-width:820px){
-    .view{padding:28px 0 56px}
-    .page-head h1{font-size:28px}
-    .ring{width:148px;height:148px}
-    .ring-label .num{font-size:34px}
-  }
-  @media(max-width:600px){
     .shell{padding:0 16px}
-    .user-chip .role-pill{display:none}
-    .topbar{padding:16px 0;gap:10px}
-    .brand-mark{width:38px;height:38px;font-size:18px;border-radius:9px}
-    .brand-text .name{font-size:16px}
-    .wordmark{font-size:9px;padding:2px 6px}
-    .top-controls{gap:8px}
-    .nav{padding:12px 0}
-    .nav button{padding:8px 12px;font-size:12.5px}
-    .view{padding:22px 0 48px}
-    .page-head{margin-bottom:20px}
-    .page-head .eyebrow{font-size:10px}
-    .page-head h1{font-size:24px}
-    .page-head p{font-size:13px}
-    .card{padding:16px;border-radius:12px;margin-bottom:14px}
-    .card-head h3{font-size:14px}
-    .stat-card{padding:14px}
-    .stat-card .val{font-size:24px}
-    .modal-box{padding:30px 20px;border-radius:14px}
-    .modal-icon{width:54px;height:54px;font-size:24px}
-    .modal-box h2{font-size:21px}
-    .auth-wrap{padding:16px 6px;min-height:unset}
-    .auth-mark{width:46px;height:46px;font-size:19px}
-    .profile-header .avatar{width:50px;height:50px;font-size:17px}
-    .day-pill{width:56px}
-    .table th,.table td{padding:10px 8px;font-size:12.5px}
-    .btn{padding:11px 16px}
-  }
-  @media(max-width:380px){
-    .shell{padding:0 12px}
-    .page-head h1{font-size:21px}
-    .lang-toggle button{padding:6px 9px;font-size:10px}
-    .icon-btn{width:36px;height:36px;font-size:13px}
-    .user-chip{padding:5px 6px 5px 11px;font-size:11px}
-    .cat-pill{flex-basis:100%}
-    .day-pill{width:52px}
-  }
-  /* every direct tap target keeps a comfortable minimum hit area
-     on touch devices, regardless of viewport width */
-  @media(hover:none) and (pointer:coarse){
-    .btn,.nav button,.day-pill,.time-slot,.cat-pill,.role-tab button,.lang-toggle button{min-height:40px}
-    .icon-btn{width:40px;height:40px}
-  }
-
-  /* ---------------- phone/tablet tap targets & table reflow ----------------
-     Width-based (not pointer-based) so the sizes hold on touch laptops and
-     in any browser that doesn't report a coarse pointer. */
-  @media(max-width:768px){
-    .btn,.nav button,.day-pill,.time-slot,.cat-pill,.role-tab button{min-height:42px}
-    .user-chip button{min-height:38px;padding:9px 14px}
-    .icon-btn{width:42px;height:42px}
-    .lang-toggle button{min-height:38px;padding:9px 14px}
-    /* trim the chrome so the user chip, language switch and icons fit on
-       one comfortable row instead of stacking into three */
-    .user-chip .signed-label{display:none}
-    .user-chip{padding:5px 6px 5px 12px;gap:7px;min-width:0}
-    .user-chip b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
-    /* keep the two round icon buttons together instead of letting the bell
-       get pushed onto a line of its own */
-    #profileIconBtn{order:1}
-    #notifIconBtn{order:2}
-    #userChip{order:3}
-    #langToggle{order:4}
-    .device-toggle-btn{width:46px;height:46px;font-size:19px;right:14px;bottom:14px}
-    /* inline text links in the auth screen were only ~19px tall to tap */
-    .auth-back,.auth-switch a{display:inline-block;padding:11px 6px;min-height:42px;line-height:20px}
+    /* the bar stretches edge to edge on phones, and navigation moves to the bottom */
+    .topbar{top:0;margin:0 -16px;padding:9px 16px;border-radius:0;border-width:0 0 1px;background:rgba(11,9,9,.97);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;gap:10px}
+    .brand-text .sub,.wordmark{display:none}
+    .brand-text .name{font-size:18px}
+    .top-controls{gap:7px}
+    .lang-toggle{padding:0;border:0;background:none}
+    .lang-toggle button.active{display:none}
+    .lang-toggle button{min-height:40px;min-width:46px;padding:0 12px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text)}
+    .user-chip{padding-left:0}
+    .user-chip button{width:40px;height:40px;padding:0;justify-content:center}
+    .user-chip button .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+    .nav{position:fixed;left:0;right:0;bottom:0;z-index:80;flex:none;justify-content:stretch;gap:2px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));min-height:calc(var(--nav-h) + env(safe-area-inset-bottom));overflow:visible;background:rgba(15,11,11,.95);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--line-strong)}
+    .nav button{flex:1;flex-direction:column;justify-content:center;gap:4px;min-height:54px;padding:6px 2px;font-size:11.5px;font-weight:500;line-height:1.2;border-radius:14px;white-space:normal;text-align:center;min-width:0}
+    .nav button.active{background:transparent;box-shadow:none}
+    .nav button.active::before{content:'';position:absolute;top:-7px;left:50%;width:30px;margin-left:-15px;height:3px;border-radius:0 0 4px 4px;background:var(--red);box-shadow:0 4px 14px rgba(224,41,63,.8)}
+    .nav .ico,.nav .ico svg{width:24px;height:24px}
+    .nav .lbl-short{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .nav .count{position:absolute;top:2px;left:calc(50% + 6px);min-width:17px;height:17px;font-size:10.5px;border:2px solid #0f0b0b;box-sizing:content-box}
+    .view{padding:22px 0 calc(var(--nav-h) + 34px + env(safe-area-inset-bottom))}
+    .page-head{margin-bottom:18px}
+    .page-head h1{font-size:26px}
+    .ring{width:152px;height:152px}
+    .ring-label .num{font-size:44px}
+    .toast{bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom))}
+    /* tap targets and table reflow */
+    .cat-pill,.day-pill,.time-slot,.role-tab button{min-height:46px}
+    .auth-back,.auth-switch a{display:inline-block;padding:11px 6px;min-height:44px;line-height:22px}
     .inp-num{width:100%}
-
-    /* Data tables don't fit a phone, so each row becomes its own card with
-       the column header shown inline as a label. No sideways scrolling. */
     .table-wrap{overflow:visible}
     .table,.table tbody,.table tr,.table td{display:block;width:100%}
     .table thead{display:none}
-    .table tr{border:1px solid var(--line);border-radius:12px;background:var(--surface-2);padding:12px 14px;margin-bottom:10px}
+    .table tr{border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface-2);padding:12px 14px;margin-bottom:10px}
     .table td{border:none;padding:7px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:right}
-    .table td::before{content:attr(data-label);font-size:11px;color:var(--text-faint);font-weight:600;text-align:left;flex-shrink:0;letter-spacing:0.3px}
+    .table td::before{content:attr(data-label);font-size:12.5px;color:var(--text-faint);font-weight:500;text-align:left;flex-shrink:0}
     .table td:not([data-label]){justify-content:stretch}
     .table td.td-actions{padding-top:12px;margin-top:4px;border-top:1px solid var(--line)}
     .table td.td-actions .btn{width:100%}
     .table td input,.table td select{max-width:60%}
   }
+  @media(max-width:600px){
+    .card{padding:18px;border-radius:18px;margin-bottom:14px}
+    .stat-card{padding:15px}
+    .stat-card .val{font-size:28px}
+    .page-head h1{font-size:25px}
+    .page-head p{font-size:14.5px}
+    .trainer-row .actions{flex-basis:100%}
+    .trainer-row .actions .btn{flex:1}
+    .code-row{flex-direction:column}
+    .code-row .btn{min-height:50px}
+    .bib-head,.bib-foot{padding-left:16px;padding-right:16px}
+    .bib-foot .btn{width:100%}
+    .modal-overlay{align-items:flex-end;padding:0}
+    #lightbox{align-items:center;padding:16px}
+    .modal-box{max-width:none;border-radius:26px 26px 0 0;border-width:1px 0 0;padding:34px 22px calc(24px + env(safe-area-inset-bottom));animation:sheetUp .32s cubic-bezier(.2,.8,.2,1)}
+    .modal-box h2{font-size:22px}
+    .auth-wrap{padding:14px 0;min-height:unset}
+    .day-pill{width:58px}
+    .role-tab button{padding:10px 15px;font-size:13.5px}
+  }
   @media(max-width:420px){
     .table td{flex-wrap:wrap;justify-content:flex-start;text-align:left;gap:4px}
     .table td input,.table td select{max-width:100%}
   }
+  @media(max-width:350px){.brand-text{display:none}}
+  @media(max-width:380px){
+    .shell{padding:0 14px}.topbar{margin:0 -14px;padding:9px 14px}
+    .page-head h1{font-size:23px}
+    .brand-text .name{font-size:16px}
+    .day-pill{width:54px}
+    .cat-pill{flex-basis:100%}
+    .nav button{font-size:11px}
+  }
 
-  /* ---------------- device preview toggle ----------------
-     Floating button (bottom-right on every screen) that opens a
-     framed live preview of this same page rendered at a mobile
-     phone width — or, if you're already viewing on a narrow
-     screen, at a desktop width — so the mobile and desktop
-     layouts can be checked without resizing the real window. */
-  .device-toggle-btn{position:fixed;right:20px;bottom:20px;z-index:150;width:52px;height:52px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px -6px rgba(224,41,63,0.65)}
-  .device-toggle-btn:hover{background:#f13650}
-  .device-frame-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:160;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px}
+  /* ---------- developer helper: hidden unless the address has ?dev=1 ---------- */
+  .device-toggle-btn{position:fixed;right:20px;bottom:20px;z-index:150;width:52px;height:52px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:22px;display:none;align-items:center;justify-content:center;box-shadow:0 10px 26px -6px rgba(224,41,63,.65)}
+  html.dev .device-toggle-btn{display:flex}
+  @media(max-width:820px){html.dev .device-toggle-btn{display:none}}
+  .device-frame-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:160;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px}
   .device-frame-overlay.show{display:flex}
-  .device-frame-topbar{display:flex;align-items:center;gap:16px;color:var(--text-dim);font-size:12px;font-weight:600;letter-spacing:0.3px}
-  .device-frame-topbar button{background:var(--surface-2);border:1px solid var(--line-strong);color:var(--text);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600}
-  .device-frame-topbar button:hover{background:var(--surface-3)}
-  .device-frame-shell{border-radius:30px;border:8px solid #131010;background:#000;box-shadow:0 24px 70px rgba(0,0,0,0.6);overflow:hidden;max-width:94vw;max-height:80vh}
+  .device-frame-topbar{display:flex;align-items:center;gap:16px;color:var(--text-dim);font-size:13px;font-weight:500}
+  .device-frame-topbar button{background:var(--surface-2);border:1px solid var(--line-strong);color:var(--text);border-radius:9px;padding:7px 14px;font-size:13px}
+  .device-frame-shell{border-radius:30px;border:8px solid #131010;background:#000;box-shadow:0 24px 70px rgba(0,0,0,.6);overflow:hidden;max-width:94vw;max-height:80vh}
   .device-frame-shell iframe{display:block;width:100%;height:100%;border:none;background:var(--bg)}
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  }
 </style>
 </head>
 <body>
@@ -525,6 +572,7 @@
         <div class="sub" id="brandSub">Fitness booking</div>
       </div>
     </div>
+    <div class="nav" id="mainNav" style="display:none"></div>
     <div class="top-controls">
       <button class="icon-btn" id="profileIconBtn" style="display:none"></button>
       <div class="user-chip" id="userChip"></div>
@@ -532,11 +580,9 @@
         <button class="active" data-lang="th">TH</button>
         <button data-lang="en">EN</button>
       </div>
-      <button class="icon-btn" id="notifIconBtn" style="display:none">🔔<span class="badge-dot" id="notifBadge" style="display:none"></span></button>
+      <button class="icon-btn" id="notifIconBtn" style="display:none" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg><span class="badge-dot" id="notifBadge" style="display:none"></span></button>
     </div>
   </div>
-
-  <div class="nav" id="mainNav" style="display:none"></div>
 
   <div id="app"><div class="splash" role="status"><div class="splash-ring"><span class="splash-mark">TK</span></div><div class="splash-word">TRAINKRUB</div><div class="splash-bar"><i></i></div><div class="splash-note" id="splashNote"></div></div></div>
 </div>
@@ -593,7 +639,7 @@ const i18n = {
     brand_sub:'ระบบจองคิวฟิตเนส',
     role_customer:'ลูกค้า', role_trainer:'เทรนเนอร์', role_admin:'ผู้ดูแลระบบ',
     nav_c_dashboard:'หน้าแรก', nav_c_trainers:'เทรนเนอร์ของฉัน', nav_c_booking:'จองเวลาเทรน', nav_c_mybookings:'การจองของฉัน', nav_c_package:'แพ็กเกจของฉัน', nav_c_notif:'การแจ้งเตือน', nav_c_profile:'โปรไฟล์ของฉัน',
-    nav_t_dashboard:'Dashboard', nav_t_requests:'คำขอนัดหมาย', nav_t_schedule:'ตารางนัดหมาย', nav_t_customers:'ลูกค้าของฉัน', nav_t_profile:'โปรไฟล์ของฉัน', nav_t_notif:'การแจ้งเตือน',
+    nav_t_dashboard:'ภาพรวม', nav_t_requests:'คำขอนัดหมาย', nav_t_schedule:'ตารางนัดหมาย', nav_t_customers:'ลูกค้าของฉัน', nav_t_profile:'โปรไฟล์ของฉัน', nav_t_notif:'การแจ้งเตือน',
     nav_a_dashboard:'ภาพรวมระบบ', nav_a_apps:'ตรวจสอบเทรนเนอร์', nav_a_users:'จัดการผู้ใช้งาน', nav_a_packages:'จัดการแพ็กเกจ',
     logout:'ออกจากระบบ',
 
@@ -630,7 +676,7 @@ const i18n = {
     cb_expired_package:'แพ็กเกจของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้ง กรุณาซื้อแพ็กเกจใหม่ก่อนทำการจอง',
     cb_summary_title:'สรุปการจอง', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะหลังส่ง', cb_status_after:'รอเทรนเนอร์ยืนยัน',
     cb_no_time_selected:'กรุณาเลือกเวลาก่อนส่งคำขอ', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
-    modal_title:'ส่งคำขอนัดหมายแล้ว!', modal_body:'กำลังรอการตอบรับจากเทรนเนอร์ คุณจะได้รับแจ้งเตือนทันทีที่มีการตอบกลับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ — ใส่โค้ดของเทรนเนอร์ก่อนจึงจะจองได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูการจองของฉัน", modal_redirect:"กำลังพาไปหน้า “การจองของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว",
+    modal_title:'ส่งคำขอนัดหมายแล้ว!', modal_body:'กำลังรอการตอบรับจากเทรนเนอร์ คุณจะได้รับแจ้งเตือนทันทีที่มีการตอบกลับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ — ใส่โค้ดของเทรนเนอร์ก่อนจึงจะจองได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูการจองของฉัน", modal_redirect:"กำลังพาไปหน้า “การจองของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว", tab_c_dashboard:"หน้าแรก", tab_c_trainers:"เทรนเนอร์", tab_c_booking:"จองเวลา", tab_c_mybookings:"การจอง", tab_t_dashboard:"ภาพรวม", tab_t_requests:"คำขอ", tab_t_schedule:"ตาราง", tab_t_customers:"ลูกค้า", tab_a_dashboard:"ภาพรวม", tab_a_apps:"ตรวจสอบ", tab_a_users:"ผู้ใช้", tab_a_packages:"แพ็กเกจ",
     mb_eyebrow:'ประวัติการจอง', mb_h1:'การจองของฉัน', mb_p:'ติดตามสถานะการจองทั้งหมดของคุณ', mb_empty:'คุณยังไม่มีรายการจอง',
     cp_eyebrow:'ภาพรวม', cp_h1:'แพ็กเกจของฉัน', cp_p:'ติดตามจำนวนครั้งคงเหลือและซื้อแพ็กเกจเพิ่มเติม',
     cp_remaining_title:'จำนวนครั้งคงเหลือ', cp_no_of:'จาก {total} ครั้ง', cp_expiry:'หมดอายุ', cp_status:'สถานะ',
@@ -744,7 +790,7 @@ const i18n = {
     cb_expired_package:'Your package has expired. Even with sessions remaining, please buy a new package before booking.',
     cb_summary_title:'Booking summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status after sending', cb_status_after:'Waiting for trainer',
     cb_no_time_selected:'Please select a time before sending', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
-    modal_title:'Booking request sent!', modal_body:"Waiting for the trainer's response. You'll be notified as soon as they reply.", modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my bookings", modal_redirect:"Taking you to “My bookings”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied",
+    modal_title:'Booking request sent!', modal_body:"Waiting for the trainer's response. You'll be notified as soon as they reply.", modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my bookings", modal_redirect:"Taking you to “My bookings”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied", tab_c_dashboard:"Home", tab_c_trainers:"Trainers", tab_c_booking:"Book", tab_c_mybookings:"Bookings", tab_t_dashboard:"Overview", tab_t_requests:"Requests", tab_t_schedule:"Schedule", tab_t_customers:"Clients", tab_a_dashboard:"Overview", tab_a_apps:"Approvals", tab_a_users:"Users", tab_a_packages:"Packages",
     mb_eyebrow:'History', mb_h1:'My bookings', mb_p:'Track the status of all your bookings', mb_empty:"You don't have any bookings yet",
     cp_eyebrow:'Overview', cp_h1:'My package', cp_p:'Track remaining sessions and buy more.',
     cp_remaining_title:'Sessions remaining', cp_no_of:'of {total} sessions', cp_expiry:'Expires', cp_status:'Status',
@@ -846,7 +892,28 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-03.2';
+const APP_BUILD = '2026-11-03.3';
+/* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
+try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
+const NAV_ICON = {
+  dashboard:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/>',
+  trainers:'<circle cx="9" cy="8" r="3.2"/><path d="M3.2 19c.6-3.2 3-5 5.8-5s5.2 1.8 5.8 5"/><circle cx="17.5" cy="9" r="2.4"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/>',
+  booking:'<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/>',
+  mybookings:'<rect x="5" y="3.5" width="14" height="17" rx="3"/><path d="M9 8.5h6M9 12h6M9 15.5h3.5"/>',
+  requests:'<path d="M4 13.5 6.5 5.5h11L20 13.5V18a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18z"/><path d="M4 13.5h4.5a3.5 3.5 0 0 0 7 0H20"/>',
+  schedule:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  customers:'<circle cx="9" cy="8" r="3.2"/><path d="M3.2 19c.6-3.2 3-5 5.8-5s5.2 1.8 5.8 5"/><circle cx="17.5" cy="9" r="2.4"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/>',
+  apps:'<rect x="5" y="4.5" width="14" height="16" rx="3"/><path d="M9 4.5h6v2.5H9z"/><path d="m9 14 2.2 2.2L15.5 12"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.2 19c.6-3.2 3-5 5.8-5s5.2 1.8 5.8 5"/><circle cx="17.5" cy="9" r="2.4"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/>',
+  packages:'<path d="M12 3.5 20 7.5v9L12 20.5 4 16.5v-9z"/><path d="M4 7.5 12 11.5l8-4M12 11.5v9"/>',
+  user:'<circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.8 3.7-6 7-6s6.2 2.2 7 6"/>',
+  dumbbell:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>',
+  shield:'<path d="M12 3.5 19 6v5.5c0 4.3-3 7.4-7 9-4-1.6-7-4.7-7-9V6z"/><path d="m9.2 12 2 2 3.6-3.8"/>',
+  bell:'<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+  award:'<circle cx="12" cy="9" r="5.5"/><path d="m9 14-1 6.5 4-2.4 4 2.4-1-6.5"/>',
+  logout:'<path d="M10 4.5H6.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2H10"/><path d="M15 8l4 4-4 4M19 12H9.5"/>'
+};
+function navIcon(k){ return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (NAV_ICON[k] || NAV_ICON.dashboard) + '</svg>'; }
 const REMOTE_MODE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
 const SB_TIMEOUT_MS = 9000;
 function dbProjectId(){
@@ -1403,7 +1470,7 @@ function toast(msg){
   window.__toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
 }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function initials(name){ return (name||'?').trim().split(/\s+/).slice(-1)[0].slice(0,1).toUpperCase(); }
+function initials(name){ const w = (name||'?').trim().split(/\s+/)[0] || '?'; const m = w.match(/[A-Za-z0-9\u0E01-\u0E2E]/); return (m ? m[0] : w.charAt(0)).toUpperCase(); }
 
 /* ---------------- UI helpers (build 2026-11-03.2) ---------------- */
 /* Local calendar date as YYYY-MM-DD. toISOString() is UTC, which in
@@ -1672,7 +1739,7 @@ async function renderRootInner(silent, ld){
     return;
   }
   chip.classList.add('show');
-  chip.innerHTML = `<span class="signed-label">${t('auth_signed_in_as')}</span> <b>${esc(session.name)}</b> <span class="role-pill">${t('role_'+session.role)}</span> <button id="logoutBtn">${t('logout')}</button>`;
+  chip.innerHTML = `<span class="signed-label">${t('auth_signed_in_as')}</span> <b>${esc(session.name)}</b> <span class="role-pill">${t('role_'+session.role)}</span> <button id="logoutBtn" title="${esc(t('logout'))}" aria-label="${esc(t('logout'))}">${navIcon('logout')}<span class="lbl">${t('logout')}</span></button>`;
   document.getElementById('logoutBtn').onclick = doLogout;
   const profileRoute = session.role==='admin' ? null : 'profile';
   if(profileRoute){
@@ -1729,17 +1796,17 @@ async function renderNav(){
   let items = [];
   if(session.role==='customer'){
     items = [
-      ['dashboard', t('nav_c_dashboard')], ['trainers', t('nav_c_trainers')], ['booking', t('nav_c_booking')],
-      ['mybookings', t('nav_c_mybookings')]
+      ['dashboard', t('nav_c_dashboard'), t('tab_c_dashboard')], ['trainers', t('nav_c_trainers'), t('tab_c_trainers')], ['booking', t('nav_c_booking'), t('tab_c_booking')],
+      ['mybookings', t('nav_c_mybookings'), t('tab_c_mybookings')]
     ];
   } else if(session.role==='trainer'){
     items = [
-      ['dashboard', t('nav_t_dashboard')], ['requests', t('nav_t_requests')], ['schedule', t('nav_t_schedule')],
-      ['customers', t('nav_t_customers')]
+      ['dashboard', t('nav_t_dashboard'), t('tab_t_dashboard')], ['requests', t('nav_t_requests'), t('tab_t_requests')], ['schedule', t('nav_t_schedule'), t('tab_t_schedule')],
+      ['customers', t('nav_t_customers'), t('tab_t_customers')]
     ];
   } else if(session.role==='admin'){
     items = [
-      ['dashboard', t('nav_a_dashboard')], ['apps', t('nav_a_apps')], ['users', t('nav_a_users')], ['packages', t('nav_a_packages')]
+      ['dashboard', t('nav_a_dashboard'), t('tab_a_dashboard')], ['apps', t('nav_a_apps'), t('tab_a_apps')], ['users', t('nav_a_users'), t('tab_a_users')], ['packages', t('nav_a_packages'), t('tab_a_packages')]
     ];
   }
   let badgeCount = 0;
@@ -1751,11 +1818,11 @@ async function renderNav(){
     const apps = await dbGetAll('trainerApp:');
     badgeCount = apps.filter(a=>a.status==='pending').length;
   }
-  nav.innerHTML = items.map(([key,label])=>{
+  nav.innerHTML = items.map(([key,label,short])=>{
     let extra = '';
     if(session.role==='trainer' && key==='requests' && badgeCount>0) extra = `<span class="count">${badgeCount}</span>`;
     if(session.role==='admin' && key==='apps' && badgeCount>0) extra = `<span class="count">${badgeCount}</span>`;
-    return `<button data-r="${key}" class="${route===key?'active':''}"><span class="dot"></span>${esc(label)}${extra}</button>`;
+    return `<button data-r="${key}" class="${route===key?'active':''}" aria-label="${esc(label)}"${route===key?' aria-current="page"':''}><span class="ico">${navIcon(key)}</span><span class="lbl lbl-full">${esc(label)}</span><span class="lbl lbl-short">${esc(short||label)}</span>${extra}</button>`;
   }).join('');
   nav.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=> go(b.dataset.r)));
 }
@@ -2032,7 +2099,7 @@ function ringHtml(pkg){
 }
 
 function notifRow(n){
-  return `<div class="notif-item ${n.isRead?'':'unread'}"><div class="notif-ico">🔔</div><div class="body"><div>${esc(n.message)}</div><div class="when">${n.isRead? fmtDateTime(n.createdAt) : t('notif_when_now')}</div></div></div>`;
+  return `<div class="notif-item ${n.isRead?'':'unread'}"><div class="notif-ico">${navIcon('bell')}</div><div class="body"><div>${esc(n.message)}</div><div class="when">${n.isRead? fmtDateTime(n.createdAt) : t('notif_when_now')}</div></div></div>`;
 }
 function fmtDateTime(iso){ try{ const d=new Date(iso); return d.toLocaleString(lang==='th'?'th-TH':'en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';} }
 
@@ -2429,11 +2496,10 @@ async function renderTDashboard(){
   const me = await dbGet('trainer:'+session.id);
   const pcItems = me ? [[!!safePhoto(me.photo), t('pc_photo')], [!!(me.certs && me.certs.length), t('pc_certs')], [!!(me.bio && me.bio.trim()), t('pc_bio')]] : [];
   const codeCard = (me && me.code) ? `
-    <div class="card" style="margin-bottom:16px">
-      <div class="code-share-row">
-        <div><div class="lbl">${t('td_code_title')}</div><div class="code-big">#${esc(me.code)}</div><div class="code-hint" style="margin-top:6px">${t('td_code_hint')}</div></div>
-        <button class="btn" data-copy-code="${esc(me.code)}">${t('td_code_copy')}</button>
-      </div>
+    <div class="bib">
+      <div class="bib-head"><span class="brand-tag">TRAINKRUB</span><span>${t('td_code_title')}</span></div>
+      <div class="bib-code"><span class="hash">#</span>${esc(me.code)}</div>
+      <div class="bib-foot"><p>${t('td_code_hint')}</p><button class="btn" data-copy-code="${esc(me.code)}">${t('td_code_copy')}</button></div>
     </div>` : '';
   const completeCard = (pcItems.length && !pcItems.every(i=>i[0])) ? `
     <div class="card" style="margin-bottom:16px">
@@ -2444,7 +2510,7 @@ async function renderTDashboard(){
     </div>` : '';
   return `
     <div class="page-head"><div><div class="eyebrow">${t('tq_eyebrow')}</div><h1>${tt('t_dash_h1',{name:esc(session.name)})}</h1><p>${t('t_dash_p')}</p></div></div>
-    ${codeCard}${completeCard}
+    <div class="t-top">${codeCard}${completeCard}</div>
     <div class="grid-4" style="margin-bottom:20px">
       <div class="stat-card"><div class="lbl">${t('tq_pending_label')}</div><div class="val accent">${pending}</div></div>
       <div class="stat-card"><div class="lbl">${t('tq_confirmed_label')}</div><div class="val">${confirmed}</div></div>
@@ -2700,7 +2766,7 @@ function certsCardInner(tr){
   return `
     <div class="card-head"><h3>${t('tpz_certs_title')}</h3><span class="hint">${(tr.certs||[]).length}</span></div>
     ${(tr.certs&&tr.certs.length) ? tr.certs.map((c,i)=>`
-      <div class="cert-chip"><div class="ic">🎓</div><div class="info"><div class="n">${esc(c.name)}</div><div class="s">${esc(c.issuer||'')} · ${esc(c.year||'')}</div></div>${c.imgId ? `<button type="button" class="btn btn-sm" data-view-certimg="${esc(c.imgId)}">📎 ${esc(t('cert_img_view'))}</button>` : ''}<button class="btn btn-sm btn-ghost" data-remove-cert="${i}">✕</button></div>
+      <div class="cert-chip"><div class="ic">${navIcon('award')}</div><div class="info"><div class="n">${esc(c.name)}</div><div class="s">${esc(c.issuer||'')} · ${esc(c.year||'')}</div></div>${c.imgId ? `<button type="button" class="btn btn-sm" data-view-certimg="${esc(c.imgId)}">📎 ${esc(t('cert_img_view'))}</button>` : ''}<button class="btn btn-sm btn-ghost" data-remove-cert="${i}">✕</button></div>
     `).join('') : `<div class="empty">${t('tpz_no_certs')}</div>`}
     <div class="field" style="margin-top:14px"><label>${t('tpz_add_cert_label')}</label><input type="text" id="newCertName" placeholder="${t('tpz_cert_name_ph')}"></div>
     <div class="field-row">
@@ -2806,11 +2872,9 @@ async function renderADashboard(){
   const diagOk = diag.hasUrl && diag.hasKey && diag.clientCreated && diag.connected;
   return `
     <div class="page-head"><div><div class="eyebrow">${t('ad_eyebrow')}</div><h1>${t('ad_h1')}</h1><p>${t('ad_p')}</p></div></div>
-    <div class="card" style="margin-bottom:16px;border-color:${diagOk?'var(--green, #2e9e4f)':'var(--red)'}">
-      <div style="font-weight:600;margin-bottom:8px">
-        สถานะการเชื่อมต่อฐานข้อมูล (Supabase): ${diagOk ? '✅ เชื่อมต่อปกติ' : '⚠️ มีปัญหา — ดูรายละเอียดด้านล่าง'}
-      </div>
-      <div style="font-size:12px;color:var(--text-dim);line-height:1.8">
+    <details class="diag ${diagOk?'ok':'bad'}"${diagOk?'':' open'}>
+      <summary><span class="diag-dot"></span>สถานะฐานข้อมูล (Supabase): ${diagOk ? 'เชื่อมต่อปกติ' : 'มีปัญหา — ดูรายละเอียด'}</summary>
+      <div class="diag-body">
         ตั้งค่า URL ไว้แล้ว: ${diag.hasUrl ? 'ใช่' : '❌ ไม่ใช่ — ตัวแปร SUPABASE_URL ว่างอยู่ในไฟล์นี้'}<br>
         ตั้งค่า Key ไว้แล้ว: ${diag.hasKey ? 'ใช่' : '❌ ไม่ใช่ — ตัวแปร SUPABASE_ANON_KEY ว่างอยู่ในไฟล์นี้'}<br>
         สร้างการเชื่อมต่อสำเร็จ: ${diag.clientCreated ? 'ใช่' : '❌ ไม่ใช่ — ไลบรารี Supabase อาจโหลดไม่สำเร็จ (เช็คเน็ต/ตัวบล็อกโฆษณา)'}<br>
@@ -2818,7 +2882,7 @@ async function renderADashboard(){
         จำนวนคำขอสมัครเทรนเนอร์ที่ดึงเจอ (ทุกสถานะ): <b>${apps.length}</b> รายการ<br>
         เวอร์ชันเว็บ: <b>${APP_BUILD}</b> · โปรเจกต์ฐานข้อมูล: <b>${dbProjectId()}</b>
       </div>
-    </div>
+    </details>
     <div class="grid-4">
       <div class="stat-card"><div class="lbl">${t('ad_stat_trainers')}</div><div class="val">${trainers.length}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_customers')}</div><div class="val">${customers.length}</div></div>
@@ -3022,7 +3086,7 @@ async function renderAuth(){
   const app = document.getElementById('app');
   const firstAuthPaint = app.__viewKey !== 'auth';
   app.__viewKey = 'auth'; app.__lastHtml = null;
-  const icon = authRole==='customer' ? '👤' : authRole==='trainer' ? '🏋' : '🛠';
+  const icon = navIcon(authRole==='customer' ? 'user' : authRole==='trainer' ? 'dumbbell' : 'shield');
   let inner = '';
 
   if(authMode==='login'){
@@ -3046,7 +3110,7 @@ async function renderAuth(){
     if(authRole==='trainer') inner += `<div class="auth-switch">${t('auth_no_trainer_account')} <a id="toApply">${t('auth_apply_link')}</a></div>`;
   } else if(authMode==='register'){
     inner += `
-      <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">👤</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_register_heading')}</h2></div>
+      <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">${navIcon('user')}</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_register_heading')}</h2></div>
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
       <div class="field"><label>${t('auth_name_label')}</label><input type="text" id="regName" value="${esc(regDraft.name)}"></div>
       <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="regPhone" value="${esc(regDraft.phone)}"></div>
@@ -3056,7 +3120,7 @@ async function renderAuth(){
     `;
   } else if(authMode==='apply'){
     inner += `
-      <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">🏋</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_apply_heading')}</h2></div>
+      <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">${navIcon('dumbbell')}</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_apply_heading')}</h2></div>
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
       <div class="auth-hint" style="margin-bottom:16px">${t('auth_apply_note')}</div>
       <div class="field"><label>${t('ap_photo_label')}</label>
