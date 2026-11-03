@@ -283,6 +283,110 @@
   .role-tab button.active{background:var(--red);color:#fff}
 
   .loading-shell{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:13px}
+
+  /* ================= UI polish (build 2026-11-03.2) ================= */
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes shimmer{0%{background-position:-420px 0}100%{background-position:420px 0}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes shake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
+  @keyframes drawCheck{to{stroke-dashoffset:0}}
+  @keyframes ringPop{0%{transform:scale(.55);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+  @keyframes countdown{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+  @keyframes progressRun{0%{width:0}60%{width:78%}100%{width:92%}}
+  @keyframes slideBar{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+
+  /* thin progress line at the very top while a page loads */
+  #topProgress{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;pointer-events:none;opacity:0}
+  #topProgress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red-dim),var(--red),#ff6b7d);box-shadow:0 0 10px var(--red);border-radius:0 3px 3px 0}
+  #topProgress.run{opacity:1}
+  #topProgress.run i{animation:progressRun 2.6s cubic-bezier(.1,.7,.2,1) forwards}
+
+  /* first-load splash */
+  .splash{min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center}
+  .splash-ring{position:relative;width:84px;height:84px;display:flex;align-items:center;justify-content:center}
+  .splash-ring::before{content:'';position:absolute;inset:0;border-radius:50%;border:3px solid var(--surface-3);border-top-color:var(--red);animation:spin .9s linear infinite}
+  .splash-ring::after{content:'';position:absolute;inset:-12px;border-radius:50%;border:1px solid var(--red-glow);animation:pulse 1.8s ease-in-out infinite}
+  .splash-mark{font-family:var(--font-display);font-size:24px;letter-spacing:.5px;color:var(--text)}
+  .splash-word{font-size:11px;font-weight:800;letter-spacing:3px;color:var(--text-faint);text-transform:uppercase}
+  .splash-bar{width:140px;height:3px;border-radius:3px;background:var(--surface-3);overflow:hidden}
+  .splash-bar i{display:block;height:100%;width:40%;background:var(--red);border-radius:3px;animation:slideBar 1.2s ease-in-out infinite}
+  .splash-note{font-size:12px;color:var(--text-faint);min-height:16px;max-width:280px;line-height:1.6}
+
+  /* skeleton placeholders shown only when a page is slow to arrive */
+  .skel{display:block;border-radius:8px;background:linear-gradient(90deg,var(--surface-2) 0%,var(--surface-3) 50%,var(--surface-2) 100%);background-size:840px 100%;animation:shimmer 1.3s linear infinite}
+  .skel-head{height:26px;width:46%;margin-bottom:10px}
+  .skel-sub{height:13px;width:68%;margin-bottom:26px}
+  .skel-line{height:12px;margin-bottom:14px}
+  .skel-row{height:58px;margin-bottom:10px;border-radius:12px}
+  #app.is-loading{opacity:.55;pointer-events:none;transition:opacity .15s}
+
+  /* page entrance: sections rise in one after another (no lasting transform, so nothing breaks) */
+  .view.anim-in{animation:none}
+  .view.anim-in>*{animation:fadeUp .42s cubic-bezier(.2,.7,.2,1) backwards}
+  .view.anim-in>*:nth-child(2){animation-delay:.05s}
+  .view.anim-in>*:nth-child(3){animation-delay:.1s}
+  .view.anim-in>*:nth-child(n+4){animation-delay:.14s}
+
+  /* buttons that are working */
+  .btn.is-busy{position:relative;color:transparent!important;pointer-events:none}
+  .btn.is-busy>*{opacity:0}
+  .btn.is-busy::after{content:'';position:absolute;inset:0;margin:auto;width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+
+  /* photos */
+  .avatar{overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .avatar.avatar-xl{width:88px;height:88px;font-size:30px}
+  .icon-btn.has-photo{padding:0;overflow:hidden}
+  .icon-btn.has-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .photo-edit{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .photo-edit .btns{display:flex;gap:8px;flex-wrap:wrap}
+  .file-btn{position:relative;overflow:hidden;cursor:pointer}
+  .file-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
+  .cert-attach{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .cert-prev{width:56px;height:56px;border-radius:8px;object-fit:cover;border:1px solid var(--line-strong);display:block}
+  .cert-view{border:none;background:transparent;color:var(--red);font-size:11px;font-weight:700;padding:0 0 0 6px;text-decoration:underline;cursor:pointer}
+  .cert-chip .btn{flex-shrink:0}
+
+  /* picture viewer */
+  .lb-box{position:relative;max-width:min(92vw,820px);max-height:90vh;display:flex;align-items:center;justify-content:center;animation:popIn .25s ease}
+  .lb-box img{max-width:100%;max-height:86vh;border-radius:12px;background:#fff;display:block}
+  .lb-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);font-size:14px;z-index:2}
+  .lb-msg{color:var(--text-dim);font-size:14px;padding:30px;text-align:center}
+
+  /* trainer-code entry */
+  .code-hero{border-color:var(--red-dim);background:linear-gradient(180deg,rgba(224,41,63,.08),transparent 75%),var(--surface)}
+  .code-hint{font-size:12px;color:var(--text-dim);line-height:1.7}
+  .code-row{display:flex;gap:10px;align-items:stretch;margin-top:14px}
+  .code-field{flex:1;display:flex;align-items:center;gap:6px;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface-2);padding:0 14px;min-width:0;transition:border-color .15s,box-shadow .15s}
+  .code-field:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
+  .code-field .hash{font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--red)}
+  .code-field input[type=text]{flex:1;min-width:0;border:none;background:transparent;outline:none;box-shadow:none;font-family:var(--font-mono);font-size:22px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--text);padding:14px 0}
+  .code-field input[type=text]::placeholder{color:var(--text-faint);letter-spacing:3px;font-weight:500}
+  .code-field.shake{animation:shake .45s ease;border-color:var(--red)}
+  .code-msg{min-height:20px;margin-top:10px;font-size:12px;line-height:1.5}
+  .code-msg.err{color:#ff7a8a}
+  .code-msg.ok{color:#5fd08a}
+  .code-share-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .code-share-row .lbl{font-size:12px;color:var(--text-faint);margin-bottom:4px}
+  .code-big{font-family:var(--font-mono);font-size:30px;font-weight:700;letter-spacing:4px;color:var(--text)}
+  .pc-row{display:flex;gap:8px;flex-wrap:wrap}
+  .pc-chip{font-size:12px;padding:6px 12px;border-radius:99px;border:1px solid var(--line-strong);color:var(--text-dim)}
+  .pc-chip.ok{border-color:rgba(95,208,138,.4);color:#5fd08a}
+
+  /* booking-sent popup */
+  .modal-check{width:76px;height:76px;margin:0 auto 18px;color:var(--red);animation:ringPop .45s ease}
+  .modal-check svg{width:100%;height:100%;display:block}
+  .modal-check path{stroke-dasharray:40;stroke-dashoffset:40;animation:drawCheck .5s .25s ease forwards}
+  .modal-note{font-size:12px;color:var(--text-faint);margin:-12px 0 14px}
+  .modal-countdown{height:3px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin:0 0 18px}
+  .modal-countdown i{display:block;height:100%;background:var(--red);transform-origin:left;animation:countdown 2.8s linear forwards}
+
+  /* the "preview on phone/desktop" helper floats over the page and is pointless on an actual phone */
+  @media (max-width:820px){ .device-toggle-btn{display:none!important} }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  }
   .pkg-buy-row{display:flex;align-items:center;justify-content:space-between;padding:14px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--surface-2);flex-wrap:wrap;gap:10px}
   .pkg-buy-row .info .n{font-weight:600;font-size:14px}
   .pkg-buy-row .info .s{font-size:12px;color:var(--text-faint);margin-top:2px}
@@ -410,6 +514,7 @@
 <body>
 
 <div id="connBanner" role="status" aria-live="polite"></div>
+<div id="topProgress" aria-hidden="true"><i></i></div>
 
 <div class="shell">
   <div class="topbar">
@@ -433,15 +538,24 @@
 
   <div class="nav" id="mainNav" style="display:none"></div>
 
-  <div id="app"></div>
+  <div id="app"><div class="splash" role="status"><div class="splash-ring"><span class="splash-mark">TK</span></div><div class="splash-word">TRAINKRUB</div><div class="splash-bar"><i></i></div><div class="splash-note" id="splashNote"></div></div></div>
 </div>
 
 <div class="modal-overlay" id="bookingModal">
   <div class="modal-box">
-    <div class="modal-icon">✓</div>
+    <div class="modal-check"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".35"/><path d="M15 27l8 8 15-17" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <h2 id="modalTitle"></h2>
     <p id="modalBody"></p>
+    <p class="modal-note" id="modalNote"></p>
+    <div class="modal-countdown"><i></i></div>
     <button class="btn btn-primary btn-block" id="modalCloseBtn"></button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="lightbox">
+  <div class="lb-box">
+    <button type="button" class="lb-close" id="lbClose" aria-label="Close">✕</button>
+    <div id="lbBody"></div>
   </div>
 </div>
 
@@ -478,7 +592,7 @@ const i18n = {
   th:{
     brand_sub:'ระบบจองคิวฟิตเนส',
     role_customer:'ลูกค้า', role_trainer:'เทรนเนอร์', role_admin:'ผู้ดูแลระบบ',
-    nav_c_dashboard:'หน้าแรก', nav_c_trainers:'ค้นหาเทรนเนอร์', nav_c_booking:'จองเวลาเทรน', nav_c_mybookings:'การจองของฉัน', nav_c_package:'แพ็กเกจของฉัน', nav_c_notif:'การแจ้งเตือน', nav_c_profile:'โปรไฟล์ของฉัน',
+    nav_c_dashboard:'หน้าแรก', nav_c_trainers:'เทรนเนอร์ของฉัน', nav_c_booking:'จองเวลาเทรน', nav_c_mybookings:'การจองของฉัน', nav_c_package:'แพ็กเกจของฉัน', nav_c_notif:'การแจ้งเตือน', nav_c_profile:'โปรไฟล์ของฉัน',
     nav_t_dashboard:'Dashboard', nav_t_requests:'คำขอนัดหมาย', nav_t_schedule:'ตารางนัดหมาย', nav_t_customers:'ลูกค้าของฉัน', nav_t_profile:'โปรไฟล์ของฉัน', nav_t_notif:'การแจ้งเตือน',
     nav_a_dashboard:'ภาพรวมระบบ', nav_a_apps:'ตรวจสอบเทรนเนอร์', nav_a_users:'จัดการผู้ใช้งาน', nav_a_packages:'จัดการแพ็กเกจ',
     logout:'ออกจากระบบ',
@@ -501,8 +615,8 @@ const i18n = {
 
     c_dash_h1:'สวัสดี, {name}', c_dash_p:'ภาพรวมบัญชีของคุณวันนี้',
     c_dash_remaining:'ครั้งคงเหลือ', c_dash_upcoming:'การจองที่กำลังจะถึง', c_dash_notif:'แจ้งเตือนล่าสุด', c_dash_no_upcoming:'ยังไม่มีการจองที่กำลังจะถึง',
-    ct_eyebrow:'ค้นหา', ct_h1:'ค้นหาเทรนเนอร์', ct_p:'เทรนเนอร์ทุกคนที่แสดงผ่านการอนุมัติจากผู้ดูแลระบบแล้ว',
-    ct_search_ph:'ค้นหาชื่อ ความเชี่ยวชาญ หรือโค้ดเทรนเนอร์ (เช่น K3F9)', ct_search_btn:'ค้นหา', ct_no_results:'ไม่พบเทรนเนอร์ที่ตรงกับคำค้นหา', ct_code_badge:'โค้ด',
+    ct_eyebrow:'เทรนเนอร์', ct_h1:'เทรนเนอร์ของฉัน', ct_p:'เพิ่มเทรนเนอร์ด้วยโค้ดเฉพาะตัวที่เขาให้คุณ — ไม่มีรายชื่อให้เปิดดูเอง',
+    ct_search_ph:'เช่น AB7K', ct_search_btn:'เพิ่ม', ct_no_results:'ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ดด้านบนเพื่อเริ่มต้น', ct_code_badge:'โค้ด',
     tr_view_profile:'ดูโปรไฟล์', tr_book:'จองเวลา', tr_ready:'พร้อมรับลูกค้า', tr_full:'ยังไม่เปิดรับ',
     tr_pin_btn:'ปักหมุดไว้บนสุด', tr_unpin_btn:'เลิกปักหมุด', tr_pinned_badge:'ปักหมุดไว้บนสุด',
     tr_pin_hint:'เทรนเนอร์ที่ปักหมุดไว้จะแสดงอยู่บนสุดของรายการเสมอ เพื่อให้หาเจอไวขึ้นครั้งต่อไป',
@@ -516,7 +630,7 @@ const i18n = {
     cb_expired_package:'แพ็กเกจของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้ง กรุณาซื้อแพ็กเกจใหม่ก่อนทำการจอง',
     cb_summary_title:'สรุปการจอง', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะหลังส่ง', cb_status_after:'รอเทรนเนอร์ยืนยัน',
     cb_no_time_selected:'กรุณาเลือกเวลาก่อนส่งคำขอ', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
-    modal_title:'ส่งคำขอนัดหมายแล้ว!', modal_body:'กำลังรอการตอบรับจากเทรนเนอร์ คุณจะได้รับแจ้งเตือนทันทีที่มีการตอบกลับ', modal_close:'รับทราบ',
+    modal_title:'ส่งคำขอนัดหมายแล้ว!', modal_body:'กำลังรอการตอบรับจากเทรนเนอร์ คุณจะได้รับแจ้งเตือนทันทีที่มีการตอบกลับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ — ใส่โค้ดของเทรนเนอร์ก่อนจึงจะจองได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูการจองของฉัน", modal_redirect:"กำลังพาไปหน้า “การจองของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว",
     mb_eyebrow:'ประวัติการจอง', mb_h1:'การจองของฉัน', mb_p:'ติดตามสถานะการจองทั้งหมดของคุณ', mb_empty:'คุณยังไม่มีรายการจอง',
     cp_eyebrow:'ภาพรวม', cp_h1:'แพ็กเกจของฉัน', cp_p:'ติดตามจำนวนครั้งคงเหลือและซื้อแพ็กเกจเพิ่มเติม',
     cp_remaining_title:'จำนวนครั้งคงเหลือ', cp_no_of:'จาก {total} ครั้ง', cp_expiry:'หมดอายุ', cp_status:'สถานะ',
@@ -561,7 +675,7 @@ const i18n = {
     tpz_eyebrow:'บัญชีของฉัน', tpz_h1:'โปรไฟล์เทรนเนอร์', tpz_p:'แก้ไขข้อมูลส่วนตัวและจัดการใบรับรองที่ลูกค้าจะเห็นในโปรไฟล์สาธารณะของคุณ',
     tpz_personal_title:'ข้อมูลส่วนตัว', tpz_name_label:'ชื่อ-นามสกุล', tpz_specialty_label:'ความเชี่ยวชาญ', tpz_phone_label:'เบอร์โทรศัพท์', tpz_bio_label:'เกี่ยวกับฉัน', tpz_save_btn:'บันทึกข้อมูล',
     tpz_ready_label:'สถานะพร้อมรับลูกค้าใหม่', tpz_certs_title:'ใบรับรอง / Certificate', tpz_no_certs:'ยังไม่มีใบรับรอง', tpz_add_cert_label:'เพิ่มใบรับรองใหม่',
-    tpz_code_title:'โค้ดและ QR ของคุณ', tpz_code_hint:'ให้ลูกค้าพิมพ์โค้ดนี้ในช่องค้นหา หรือสแกน QR เพื่อเข้าไปจองกับคุณโดยตรง', tpz_code_copy_btn:'คัดลอกลิงก์', tpz_code_copied:'คัดลอกลิงก์แล้ว',
+    tpz_code_title:'โค้ดและ QR ของคุณ', tpz_code_hint:'ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” หรือสแกน QR เพื่อเพิ่มคุณและจองกับคุณโดยตรง', tpz_code_copy_btn:'คัดลอกลิงก์', tpz_code_copied:'คัดลอกลิงก์แล้ว',
     tpz_cert_name_ph:'ชื่อใบรับรอง เช่น NASM-CPT', tpz_cert_issuer_ph:'หน่วยงานที่ออกให้', tpz_cert_year_ph:'ปีที่ได้รับ', tpz_add_cert_btn:'เพิ่มใบรับรอง',
     tpz_toast_saved:'บันทึกข้อมูลโปรไฟล์แล้ว', tpz_toast_cert_added:'เพิ่มใบรับรองแล้ว ลูกค้าจะเห็นในโปรไฟล์ของคุณ', tpz_toast_cert_removed:'ลบใบรับรองแล้ว', tpz_toast_need_name:'กรุณากรอกชื่อใบรับรองก่อนเพิ่ม',
 
@@ -592,7 +706,7 @@ const i18n = {
   en:{
     brand_sub:'Fitness booking system',
     role_customer:'Customer', role_trainer:'Trainer', role_admin:'Admin',
-    nav_c_dashboard:'Home', nav_c_trainers:'Find trainers', nav_c_booking:'Book session', nav_c_mybookings:'My bookings', nav_c_package:'My package', nav_c_notif:'Notifications', nav_c_profile:'My profile',
+    nav_c_dashboard:'Home', nav_c_trainers:'My trainers', nav_c_booking:'Book session', nav_c_mybookings:'My bookings', nav_c_package:'My package', nav_c_notif:'Notifications', nav_c_profile:'My profile',
     nav_t_dashboard:'Dashboard', nav_t_requests:'Booking requests', nav_t_schedule:'Schedule', nav_t_customers:'My customers', nav_t_profile:'My profile', nav_t_notif:'Notifications',
     nav_a_dashboard:'Dashboard', nav_a_apps:'Trainer approval', nav_a_users:'Manage users', nav_a_packages:'Manage packages',
     logout:'Log out',
@@ -615,8 +729,8 @@ const i18n = {
 
     c_dash_h1:'Hi, {name}', c_dash_p:"Here's your account overview",
     c_dash_remaining:'Sessions left', c_dash_upcoming:'Upcoming bookings', c_dash_notif:'Recent notifications', c_dash_no_upcoming:'No upcoming bookings yet',
-    ct_eyebrow:'Search', ct_h1:'Find trainers', ct_p:'Every trainer shown here has been approved by an admin.',
-    ct_search_ph:'Search by name, specialty, or trainer code (e.g. K3F9)', ct_search_btn:'Search', ct_no_results:'No trainers match your search', ct_code_badge:'Code',
+    ct_eyebrow:'Trainers', ct_h1:'My trainers', ct_p:'Add a trainer with the personal code they gave you — there is no public list to browse.',
+    ct_search_ph:'e.g. AB7K', ct_search_btn:'Add', ct_no_results:'No trainers in your list yet. Enter a code above to get started.', ct_code_badge:'Code',
     tr_view_profile:'View profile', tr_book:'Book', tr_ready:'Accepting clients', tr_full:'Not accepting',
     tr_pin_btn:'Pin to top', tr_unpin_btn:'Unpin', tr_pinned_badge:'Pinned to top',
     tr_pin_hint:'Pinned trainers always show at the top of the list, so they are quicker to find next time.',
@@ -630,7 +744,7 @@ const i18n = {
     cb_expired_package:'Your package has expired. Even with sessions remaining, please buy a new package before booking.',
     cb_summary_title:'Booking summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status after sending', cb_status_after:'Waiting for trainer',
     cb_no_time_selected:'Please select a time before sending', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
-    modal_title:'Booking request sent!', modal_body:"Waiting for the trainer's response. You'll be notified as soon as they reply.", modal_close:'Got it',
+    modal_title:'Booking request sent!', modal_body:"Waiting for the trainer's response. You'll be notified as soon as they reply.", modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my bookings", modal_redirect:"Taking you to “My bookings”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied",
     mb_eyebrow:'History', mb_h1:'My bookings', mb_p:'Track the status of all your bookings', mb_empty:"You don't have any bookings yet",
     cp_eyebrow:'Overview', cp_h1:'My package', cp_p:'Track remaining sessions and buy more.',
     cp_remaining_title:'Sessions remaining', cp_no_of:'of {total} sessions', cp_expiry:'Expires', cp_status:'Status',
@@ -675,7 +789,7 @@ const i18n = {
     tpz_eyebrow:'My account', tpz_h1:'Trainer profile', tpz_p:'Edit your details and manage certificates customers will see on your public profile.',
     tpz_personal_title:'Personal info', tpz_name_label:'Full name', tpz_specialty_label:'Specialty', tpz_phone_label:'Phone number', tpz_bio_label:'About me', tpz_save_btn:'Save changes',
     tpz_ready_label:'Accepting new clients', tpz_certs_title:'Certificates', tpz_no_certs:'No certificates yet', tpz_add_cert_label:'Add a new certificate',
-    tpz_code_title:'Your code & QR', tpz_code_hint:'Customers can type this code in the search box, or scan the QR to book with you directly', tpz_code_copy_btn:'Copy link', tpz_code_copied:'Link copied',
+    tpz_code_title:'Your code & QR', tpz_code_hint:'Customers type this code in “Enter trainer code”, or scan the QR, to add you and book with you directly', tpz_code_copy_btn:'Copy link', tpz_code_copied:'Link copied',
     tpz_cert_name_ph:'Certificate name, e.g. NASM-CPT', tpz_cert_issuer_ph:'Issuing organization', tpz_cert_year_ph:'Year received', tpz_add_cert_btn:'Add certificate',
     tpz_toast_saved:'Profile saved', tpz_toast_cert_added:'Certificate added — visible on your public profile', tpz_toast_cert_removed:'Certificate removed', tpz_toast_need_name:'Please enter a certificate name first',
 
@@ -732,7 +846,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-03.1';
+const APP_BUILD = '2026-11-03.2';
 const REMOTE_MODE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
 const SB_TIMEOUT_MS = 9000;
 function dbProjectId(){
@@ -1149,10 +1263,20 @@ let pendingTrainerCode = null;
 async function applyPendingTrainerCodeIfAny(){
   if(!pendingTrainerCode || !session || session.role!=='customer') return;
   const code = pendingTrainerCode;
-  pendingTrainerCode = null; // only ever try once
-  const trainers = await dbGetAll('trainer:');
-  const tr = trainers.find(x=> (x.code||'').toUpperCase()===code && x.status==='active');
-  if(tr){ route='booking'; routeParams={trainerId:tr.id}; }
+  try{
+    clearRenderCaches();
+    const trainers = await dbGetAll('trainer:');
+    const tr = trainers.find(x=> (x.code||'').toUpperCase()===code && x.status==='active');
+    if(tr){
+      await addTrainerToMine(tr);
+      route='booking'; routeParams={trainerId:tr.id};
+      toast(tt('ct_code_added',{name:tr.name}));
+    } else {
+      route='trainers'; routeParams={};
+      toast(t('ct_code_notfound'));
+    }
+    pendingTrainerCode = null; // only ever succeeds once; kept if the database could not be reached so a retry still works
+  }catch(e){ throw e; }
 }
 
 /* ---------------- data cleanup / archiving ----------------
@@ -1230,7 +1354,7 @@ async function seedIfNeeded(){
   // adds real packages from the admin panel once, after first login.
   await ensureRecord('admin:admin', ()=>({username:_d64('Y29icmEtMzY4MQ=='), password:_d64('TERzJUE3R1RwM2FRXlheOU1T'), name:'ผู้ดูแลระบบ / System Admin', role:'admin'}));
 }
-function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return localDateStr(d); }
 
 /* ---------------- session ----------------
    Facebook-style "stay logged in": once a person logs in (or registers)
@@ -1280,6 +1404,212 @@ function toast(msg){
 }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function initials(name){ return (name||'?').trim().split(/\s+/).slice(-1)[0].slice(0,1).toUpperCase(); }
+
+/* ---------------- UI helpers (build 2026-11-03.2) ---------------- */
+/* Local calendar date as YYYY-MM-DD. toISOString() is UTC, which in
+   Thailand (UTC+7) is still "yesterday" between midnight and 07:00. */
+function localDateStr(d){
+  d = d || new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+/* Photos are stored as small JPEG data URLs; never trust whatever string the database hands back. */
+function safePhoto(p){
+  return (typeof p==='string' && p.length < 600000 && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(p)) ? p : '';
+}
+function avatarHtml(name, photo, extra){
+  const p = safePhoto(photo);
+  return `<div class="avatar ${p?'has-photo':''} ${extra||''}">${p ? `<img src="${p}" alt="" decoding="async">` : esc(initials(name))}</div>`;
+}
+const PHOTO_OPTS = {max:160, square:true, quality:0.8, maxChars:32000};
+const CERT_OPTS  = {max:1280, square:false, quality:0.8, maxChars:480000};
+/* Reads a picked image, shrinks it on a canvas and returns a JPEG data URL. */
+function readImageFile(file, o){
+  return new Promise((resolve, reject)=>{
+    if(!file || !/^image\//.test(file.type||'')) return reject(new Error('bad_image'));
+    if(file.size > 20*1024*1024) return reject(new Error('too_big'));
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{
+      try{
+        let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight, w, h;
+        if(!sw || !sh) throw new Error('bad_image');
+        if(o.square){ const s = Math.min(sw, sh); sx = (sw-s)/2; sy = (sh-s)/2; sw = s; sh = s; w = h = Math.min(o.max, s); }
+        else { const k = Math.min(1, o.max/Math.max(sw, sh)); w = Math.max(1, Math.round(sw*k)); h = Math.max(1, Math.round(sh*k)); }
+        const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+        const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, w, h);
+        cx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+        let q = o.quality, out = cv.toDataURL('image/jpeg', q);
+        while(out.length > o.maxChars && q > 0.3){ q -= 0.1; out = cv.toDataURL('image/jpeg', q); }
+        URL.revokeObjectURL(url);
+        if(!/^data:image\/jpeg;base64,/.test(out)) return reject(new Error('bad_image'));
+        resolve(out);
+      }catch(e){ URL.revokeObjectURL(url); reject(e); }
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('bad_image')); };
+    img.src = url;
+  });
+}
+function photoErrMsg(e){
+  if(e instanceof DbError) return t('conn_save_failed');
+  return (e && e.message==='too_big') ? t('photo_too_big') : t('photo_bad');
+}
+
+/* A button shows a spinner and ignores further clicks while its action runs. */
+async function withBusy(btn, fn){
+  if(btn){
+    if(btn.__busy) return;
+    btn.__busy = true; btn.classList.add('is-busy'); btn.disabled = true;
+  }
+  try{ return await fn(); }
+  finally{ if(btn){ btn.__busy = false; btn.classList.remove('is-busy'); btn.disabled = false; } }
+}
+
+/* Thin red progress line at the top of the screen. */
+let progTimer = null;
+function startProgress(){
+  const b = document.getElementById('topProgress'); if(!b) return;
+  clearTimeout(progTimer);
+  b.removeAttribute('style'); b.firstElementChild.removeAttribute('style');
+  b.classList.remove('run'); void b.offsetWidth; b.classList.add('run');
+}
+function doneProgress(){
+  const b = document.getElementById('topProgress'); if(!b || !b.classList.contains('run')) return;
+  const i = b.firstElementChild;
+  const w = getComputedStyle(i).width;
+  b.classList.remove('run');
+  i.style.animation = 'none'; i.style.width = w; void i.offsetWidth;
+  b.style.opacity = '1';
+  i.style.transition = 'width .18s ease'; i.style.width = '100%';
+  progTimer = setTimeout(()=>{
+    b.style.transition = 'opacity .3s'; b.style.opacity = '0';
+    progTimer = setTimeout(()=>{ b.removeAttribute('style'); i.removeAttribute('style'); }, 350);
+  }, 200);
+}
+function splashHtml(){
+  return `<div class="splash" role="status"><div class="splash-ring"><span class="splash-mark">TK</span></div><div class="splash-word">TRAINKRUB</div><div class="splash-bar"><i></i></div><div class="splash-note" id="splashNote"></div></div>`;
+}
+function skeletonHtml(){
+  return `<div class="view" aria-busy="true">
+    <span class="skel skel-head"></span><span class="skel skel-sub"></span>
+    <div class="card"><span class="skel skel-line" style="width:38%"></span><span class="skel skel-row"></span><span class="skel skel-row"></span><span class="skel skel-row" style="opacity:.6"></span></div>
+  </div>`;
+}
+
+/* Header avatar + profile editors */
+function paintProfileBtn(btn, name, photo){
+  const p = safePhoto(photo);
+  btn.classList.toggle('has-photo', !!p);
+  if(p) btn.innerHTML = `<img src="${p}" alt="">`; else btn.textContent = initials(name);
+}
+function photoEditorHtml(rec){
+  const p = safePhoto(rec.photo);
+  return `<div class="photo-edit">
+    <div id="myPhotoBox">${avatarHtml(rec.name, p, 'avatar-xl')}</div>
+    <div class="btns">
+      <label class="btn btn-sm file-btn">📷 ${esc(p ? t('photo_change') : t('photo_add'))}<input type="file" accept="image/*" id="photoFile"></label>
+      <button type="button" class="btn btn-sm btn-ghost" id="photoRemoveBtn" ${p?'':'style="display:none"'}>${esc(t('photo_remove'))}</button>
+    </div>
+    <div class="slot-hint" style="flex-basis:100%;margin:0">${esc(t('photo_hint'))}</div>
+  </div>`;
+}
+async function setMyPhoto(data){
+  if(!session || session.role==='admin') return;
+  const key = (session.role==='trainer' ? 'trainer:' : 'customer:') + session.id;
+  const rec = await dbGet(key);
+  if(!rec) return;
+  if(data) rec.photo = data; else delete rec.photo;
+  await dbSet(key, rec);
+  const btn = document.getElementById('profileIconBtn'); if(btn) paintProfileBtn(btn, session.name, data);
+  const box = document.getElementById('myPhotoBox'); if(box) box.innerHTML = avatarHtml(rec.name, data, 'avatar-xl');
+  const rm = document.getElementById('photoRemoveBtn'); if(rm) rm.style.display = data ? '' : 'none';
+}
+function showCertPreview(id, data){
+  const box = document.getElementById(id); if(!box) return;
+  box.dataset.img = data || '';
+  box.innerHTML = data ? `<img class="cert-prev" src="${data}" alt="">` : '';
+}
+function certChipsHtml(certs){
+  return `<div class="cert-badge-row">${(certs||[]).map(c=>`<span class="cert-badge">${esc(c.name)} · ${esc(c.issuer||'')} ${esc(c.year||'')}${c.imgId ? ` <button type="button" class="cert-view" data-view-certimg="${esc(c.imgId)}">📎 ${esc(t('cert_img_view'))}</button>` : ''}</span>`).join('')}</div>`;
+}
+async function openCertImage(id){
+  const box = document.getElementById('lightbox'), body = document.getElementById('lbBody');
+  if(!box || !body) return;
+  body.innerHTML = `<div class="lb-msg">${esc(t('cert_img_loading'))}</div>`;
+  box.classList.add('show');
+  try{
+    const rec = await dbGet('certimg:' + id);
+    const p = rec && safePhoto(rec.data);
+    body.innerHTML = p ? `<img src="${p}" alt="${esc(t('cert_img_view'))}">` : `<div class="lb-msg">${esc(t('cert_img_missing'))}</div>`;
+  }catch(e){ body.innerHTML = `<div class="lb-msg">${esc(t('cert_img_missing'))}</div>`; }
+}
+
+/* One set of document-level listeners (they survive every re-render of the page). */
+document.addEventListener('change', async (e)=>{
+  const el = e.target;
+  if(!el || el.type!=='file') return;
+  const file = el.files && el.files[0];
+  if(!file) return;
+  try{
+    if(el.id==='photoFile'){
+      const data = await readImageFile(file, PHOTO_OPTS);
+      await setMyPhoto(data);
+      toast(t('photo_saved'));
+    } else if(el.id==='apPhotoFile'){
+      pendingApplicationPhoto = await readImageFile(file, PHOTO_OPTS);
+      const box = document.getElementById('apPhotoPreview');
+      if(box) box.innerHTML = avatarHtml(applyDraft.name || '?', pendingApplicationPhoto, 'avatar-xl');
+    } else if(el.id==='newCertFile'){
+      showCertPreview('newCertPreview', await readImageFile(file, CERT_OPTS));
+    } else if(el.id==='apCertFile'){
+      showCertPreview('apCertPreview', await readImageFile(file, CERT_OPTS));
+    }
+  }catch(err){
+    if(!(err instanceof DbError) && err && err.message!=='bad_image' && err.message!=='too_big') console.error(err);
+    toast(photoErrMsg(err));
+  }finally{ try{ el.value = ''; }catch(_){} }
+});
+document.addEventListener('click', async (e)=>{
+  const tg = e.target;
+  if(!tg || !tg.closest) return;
+  const view = tg.closest('[data-view-certimg]');
+  if(view){ openCertImage(view.dataset.viewCertimg); return; }
+  if(tg.id==='photoRemoveBtn' || tg.closest('#photoRemoveBtn')){
+    try{ await setMyPhoto(''); toast(t('photo_removed')); }catch(err){ toast(photoErrMsg(err)); }
+    return;
+  }
+  if(tg.id==='lbClose' || tg.id==='lightbox'){ document.getElementById('lightbox').classList.remove('show'); return; }
+  const copy = tg.closest('[data-copy-code]');
+  if(copy){
+    const txt = '#' + copy.dataset.copyCode;
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(txt);
+      else { const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+      toast(t('td_code_copied'));
+    }catch(err){ toast(txt); }
+    return;
+  }
+  const sub = tg.closest('[data-code-submit]');
+  if(sub){
+    const scope = sub.closest('[data-code-scope]');
+    if(scope) submitTrainerCode(scope.querySelector('input.code-input'), sub, scope.querySelector('.code-msg'), scope.querySelector('.code-field'));
+  }
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape'){ const lb = document.getElementById('lightbox'); if(lb) lb.classList.remove('show'); return; }
+  if(e.key==='Enter' && e.target && e.target.classList && e.target.classList.contains('code-input')){
+    e.preventDefault();
+    const scope = e.target.closest('[data-code-scope]');
+    const b = scope && scope.querySelector('[data-code-submit]');
+    if(b) b.click();
+  }
+});
+document.addEventListener('input', (e)=>{
+  const el = e.target;
+  if(el && el.classList && el.classList.contains('code-input')){
+    const v = normCode(el.value);
+    if(v !== el.value) el.value = v;
+  }
+});
 function fmtDate(iso){
   if(!iso) return '—';
   const d = new Date(iso+'T00:00:00');
@@ -1319,7 +1649,7 @@ async function markAllRead(userId){
 }
 
 /* ---------------- render root ---------------- */
-async function renderRootInner(silent){
+async function renderRootInner(silent, ld){
   clearRenderCaches();
   document.getElementById('brandSub').textContent = t('brand_sub');
   document.querySelectorAll('#langToggle button').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
@@ -1348,7 +1678,8 @@ async function renderRootInner(silent){
   if(profileRoute){
     profileBtn.style.display = 'flex';
     profileBtn.title = t('nav_c_profile');
-    profileBtn.textContent = initials(session.name);
+    const meRec = await dbGet((session.role==='trainer' ? 'trainer:' : 'customer:') + session.id);
+    paintProfileBtn(profileBtn, session.name, meRec && meRec.photo);
     profileBtn.onclick = ()=> go('profile');
   } else {
     profileBtn.style.display = 'none';
@@ -1366,14 +1697,19 @@ async function renderRootInner(silent){
   }
   nav.style.display = 'flex';
   await renderNav();
-  await renderView(silent);
+  await renderView(silent, ld);
 }
 async function renderRoot(silent){
-  try{ await renderRootInner(silent); }
+  let ld = null;
+  try{
+    if(!silent && session) ld = beginLoading();
+    await renderRootInner(silent, ld);
+  }
   catch(e){
     if(!(e instanceof DbError)) throw e;
     if(!silent) showOfflineGate();     // a quiet background refresh just keeps what is on screen
   }
+  finally{ if(ld) endLoading(ld); }
 }
 
 function doLogout(){
@@ -1425,31 +1761,64 @@ async function renderNav(){
 }
 
 /* ================= VIEW ROUTER ================= */
-async function renderView(silent){
+/* While a page loads the old one stays on screen (dimmed, with a progress line on top);
+   a skeleton only appears when moving to a different page that is slow to arrive.
+   Loading starts the moment a render is requested, before any database call is made. */
+let navSeq = 0;
+function viewKey(){ return (session ? session.role : '-') + '|' + route + '|' + (routeParams.id || routeParams.trainerId || ''); }
+function beginLoading(){
+  const app = document.getElementById('app');
+  const ld = {seq: ++navSeq, routeChanged: app.__viewKey !== viewKey(), dim: null, skel: null};
+  startProgress();
+  ld.dim = setTimeout(()=>{ if(ld.seq===navSeq) app.classList.add('is-loading'); }, 140);
+  if(ld.routeChanged) ld.skel = setTimeout(()=>{
+    if(ld.seq!==navSeq) return;
+    app.classList.remove('is-loading');
+    app.innerHTML = skeletonHtml();
+    app.__lastHtml = null;
+  }, 380);
+  return ld;
+}
+function endLoading(ld){
+  clearTimeout(ld.dim); clearTimeout(ld.skel);
+  if(ld.seq===navSeq){ document.getElementById('app').classList.remove('is-loading'); doneProgress(); }
+}
+async function renderView(silent, ld){
   clearRenderCaches();
   const app = document.getElementById('app');
-  if(!silent) app.innerHTML = `<div class="loading-shell">…</div>`;
-  let html = '';
+  let own = null;
+  if(!silent && !ld) ld = own = beginLoading();
+  const seq = silent ? navSeq : ld.seq;
+  const key = viewKey();
+  const routeChanged = !silent && ld.routeChanged;
   try{
-    if(session.role==='customer') html = await renderCustomerView();
-    else if(session.role==='trainer') html = await renderTrainerView();
-    else if(session.role==='admin') html = await renderAdminView();
-  }catch(e){
-    if(e instanceof DbError){
-      if(silent) return;                 // keep what is already on screen; the banner explains
-      gateActive = true;
-      html = offlineGateHtml();
-    } else {
-      console.error(e);
-      html = `<div class="empty">Something went wrong loading this page.</div>`;
+    let html = '';
+    try{
+      if(session.role==='customer') html = await renderCustomerView();
+      else if(session.role==='trainer') html = await renderTrainerView();
+      else if(session.role==='admin') html = await renderAdminView();
+    }catch(e){
+      if(e instanceof DbError){
+        if(silent) return;                 // keep what is already on screen; the banner explains
+        gateActive = true;
+        html = offlineGateHtml();
+      } else {
+        console.error(e);
+        html = `<div class="empty">Something went wrong loading this page.</div>`;
+      }
     }
+    if(seq !== navSeq) return;             // a newer navigation took over while this one was loading
+    // A background refresh whose result is identical to what is showing changes nothing (no flicker, no lost state).
+    if(silent && app.__lastHtml === html) return;
+    app.__lastHtml = html;
+    app.innerHTML = `<div class="view ${routeChanged ? 'anim-in' : ''}">${html}</div>`;
+    app.__viewKey = key;
+    if(routeChanged) window.scrollTo(0, 0);   // a new page always starts at the top
+    bindGate();
+    wireView();
+  } finally {
+    if(own) endLoading(own);
   }
-  // A background refresh whose result is identical to what is showing changes nothing (no flicker, no lost state).
-  if(silent && app.__lastHtml === html) return;
-  app.__lastHtml = html;
-  app.innerHTML = `<div class="view anim-in">${html}</div>`;
-  bindGate();
-  wireView();
 }
 
 /* ======================================================================
@@ -1457,7 +1826,7 @@ async function renderView(silent){
    ====================================================================== */
 async function getActivePackage(customerId){
   const pkgs = await dbGetAll('custpkg:');
-  const today = new Date().toISOString().slice(0,10);
+  const today = localDateStr();
   // A package must still be within its expiry window to actually be usable —
   // remainingSessions>0 alone isn't enough, otherwise a customer could keep
   // booking indefinitely on a package that expired months ago.
@@ -1470,7 +1839,7 @@ async function getActivePackage(customerId){
    please renew" message instead of the generic "no package" one. */
 async function hasExpiredUnusedPackage(customerId){
   const pkgs = await dbGetAll('custpkg:');
-  const today = new Date().toISOString().slice(0,10);
+  const today = localDateStr();
   return pkgs.some(p=>p.customerId===customerId && p.status==='active' && p.remainingSessions>0 && p.expiryDate<today);
 }
 async function getAllMyPackages(customerId){
@@ -1502,6 +1871,8 @@ async function togglePinTrainer(id){
   const c = await dbGet('customer:'+session.id);
   if(!c) return;
   c.pinnedTrainerIds = c.pinnedTrainerIds || [];
+  c.myTrainerIds = c.myTrainerIds || [];
+  if(!c.myTrainerIds.includes(id)) c.myTrainerIds.push(id);   // pinning keeps a trainer in the customer's own list
   const trainer = await dbGet('trainer:'+id);
   const idx = c.pinnedTrainerIds.indexOf(id);
   if(idx >= 0){
@@ -1513,6 +1884,88 @@ async function togglePinTrainer(id){
   }
   await dbSet('customer:'+c.id, c);
   renderView();
+}
+
+/* ======================================================================
+   TRAINERS ARE FOUND BY CODE ONLY
+   A customer cannot browse or search trainers. They type the personal
+   code (#AB7K) a trainer gave them; that adds the trainer to "my
+   trainers" (customer.myTrainerIds), which is the only list the profile
+   and booking pages work from. Trainers a customer already pinned or
+   booked before this change are kept automatically.
+   NOTE: this is a screen-level rule. Until the database itself is locked
+   down with Supabase Auth + row-level security, someone technical could
+   still read trainer rows straight from the database.
+   ====================================================================== */
+function normCode(raw){ return String(raw||'').replace(/[^A-Za-z0-9]/g,'').toUpperCase().slice(0,8); }
+async function getMyTrainerIdSet(){
+  const [c, bookings] = await Promise.all([dbGet('customer:'+session.id), dbGetAll('booking:')]);
+  const ids = new Set([...((c && c.myTrainerIds) || []), ...((c && c.pinnedTrainerIds) || [])]);
+  bookings.forEach(b=>{ if(b.customerId===session.id && b.trainerId) ids.add(b.trainerId); });
+  return ids;
+}
+async function getMyTrainers(){
+  const [ids, all, pinnedIds] = await Promise.all([getMyTrainerIdSet(), getApprovedTrainers(), getPinnedTrainerIds()]);
+  return sortTrainersByPin(all.filter(x=>ids.has(x.id)), pinnedIds);
+}
+const codeTries = {n:0, until:0};
+async function lookupTrainerByCode(raw){
+  const code = normCode(raw);
+  if(!code) return {error:'empty'};
+  const now = Date.now();
+  if(now < codeTries.until) return {error:'throttle', wait:Math.ceil((codeTries.until-now)/1000)};
+  clearRenderCaches();                                  // a trainer approved a moment ago must be findable
+  const trainers = await dbGetAll('trainer:');
+  const tr = trainers.find(x=> x.status==='active' && (x.code||'').toUpperCase()===code);
+  if(!tr){
+    codeTries.n++;
+    if(codeTries.n >= 5){ codeTries.until = now + 30000; codeTries.n = 0; }   // slow down code guessing
+    return {error:'notfound'};
+  }
+  codeTries.n = 0;
+  return {tr};
+}
+async function addTrainerToMine(tr){
+  const c = await dbGet('customer:'+session.id);
+  if(!c) return;
+  c.myTrainerIds = c.myTrainerIds || [];
+  if(!c.myTrainerIds.includes(tr.id)){ c.myTrainerIds.unshift(tr.id); await dbSet('customer:'+c.id, c); }
+}
+async function submitTrainerCode(inputEl, btn, msgEl, fieldEl){
+  if(!inputEl) return;
+  const show = (cls, text)=>{ if(msgEl){ msgEl.className = 'code-msg ' + cls; msgEl.textContent = text; } };
+  const fail = (text)=>{
+    show('err', text);
+    if(fieldEl){ fieldEl.classList.remove('shake'); void fieldEl.offsetWidth; fieldEl.classList.add('shake'); }
+  };
+  await withBusy(btn, async ()=>{
+    try{
+      const r = await lookupTrainerByCode(inputEl.value);
+      if(r.error==='empty') return fail(t('ct_code_empty'));
+      if(r.error==='throttle') return fail(tt('ct_code_throttle',{s:r.wait}));
+      if(r.error==='notfound') return fail(t('ct_code_notfound'));
+      const already = (await getMyTrainerIdSet()).has(r.tr.id);
+      await addTrainerToMine(r.tr);
+      const msg = tt(already ? 'ct_code_already' : 'ct_code_added', {name:r.tr.name});
+      show('ok', '✓ ' + msg);
+      toast(msg);
+      // Straight on to the trainer's profile -- no extra tap needed.
+      setTimeout(()=>{ if(session && session.role==='customer' && (route==='trainers' || route==='dashboard')) go('trainerProfile', {id:r.tr.id}); }, 650);
+    }catch(e){
+      if(e instanceof DbError) fail(t('conn_save_failed')); else throw e;
+    }
+  });
+}
+function codeCardHtml(suffix, titleKey, hintKey){
+  return `<div class="card code-hero" data-code-scope>
+    <div class="card-head"><h3>${t(titleKey||'ct_code_title')}</h3></div>
+    <p class="code-hint">${t(hintKey||'ct_code_hint')}</p>
+    <div class="code-row">
+      <div class="code-field"><span class="hash">#</span><input type="text" class="code-input" id="codeInput${suffix}" maxlength="8" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="${esc(t('ct_search_ph'))}" aria-label="${esc(t('ct_code_title'))}"></div>
+      <button class="btn btn-primary" data-code-submit>${t('ct_search_btn')}</button>
+    </div>
+    <div class="code-msg" role="status" aria-live="polite"></div>
+  </div>`;
 }
 
 async function renderCustomerView(){
@@ -1534,8 +1987,10 @@ async function renderCDashboard(){
   const upcoming = mine.filter(b=>b.status==='confirmed' || b.status==='pending')
     .sort((a,b)=> (a.bookingDate+a.bookingTime).localeCompare(b.bookingDate+b.bookingTime));
   const notifs = (await getNotifications(session.id)).slice(0,4);
+  const noTrainersYet = (await getMyTrainerIdSet()).size === 0;
   return `
     <div class="page-head"><div><div class="eyebrow">${t('cp_eyebrow')}</div><h1>${tt('c_dash_h1',{name:esc(session.name)})}</h1><p>${t('c_dash_p')}</p></div></div>
+    ${noTrainersYet ? codeCardHtml('D','cd_start_title','cd_start_hint') : ''}
     <div class="grid-2">
       <div class="card c-dash-pkg">
         <div class="card-head"><h3>${t('c_dash_remaining')}</h3></div>
@@ -1591,24 +2046,21 @@ async function renderNotifPage(){
 }
 
 async function renderCTrainers(){
-  const q = (routeParams.q||'').toLowerCase();
-  let trainers = await getApprovedTrainers();
+  const trainers = await getMyTrainers();
   const pinnedIds = await getPinnedTrainerIds();
-  trainers = sortTrainersByPin(trainers, pinnedIds);
-  const qCode = q.replace(/^#/,'').toUpperCase();
-  if(q) trainers = trainers.filter(x=> x.name.toLowerCase().includes(q) || (x.specialty||'').toLowerCase().includes(q) || (x.code||'').toUpperCase()===qCode);
   return `
     <div class="page-head"><div><div class="eyebrow">${t('ct_eyebrow')}</div><h1>${t('ct_h1')}</h1><p>${t('ct_p')}</p></div></div>
+    ${codeCardHtml('T')}
     <div class="card">
-      <div class="search-row"><input type="text" id="trainerSearch" placeholder="${t('ct_search_ph')}" value="${esc(routeParams.q||'')}"><button class="btn btn-primary" id="trainerSearchBtn">${t('ct_search_btn')}</button></div>
-      ${pinnedIds.length ? `<div class="slot-hint" style="margin-top:-6px">${t('tr_pin_hint')}</div>` : ''}
+      <div class="card-head"><h3>${t('ct_mine_title')}</h3><span class="hint">${trainers.length}</span></div>
+      ${pinnedIds.length && trainers.length ? `<div class="slot-hint" style="margin-top:-6px">${t('tr_pin_hint')}</div>` : ''}
       <div id="trainerList">
         ${trainers.length ? trainers.map(tr=>{
           const pinned = pinnedIds.includes(tr.id);
           return `
           <div class="trainer-row ${pinned?'pinned':''}">
             <button class="pin-btn ${pinned?'pinned':''}" data-pin-trainer="${tr.id}" title="${pinned?t('tr_unpin_btn'):t('tr_pin_btn')}" aria-label="${pinned?t('tr_unpin_btn'):t('tr_pin_btn')}">★</button>
-            <div class="avatar">${initials(tr.name)}</div>
+            ${avatarHtml(tr.name, tr.photo)}
             <div class="meta"><div class="n">${esc(tr.name)}</div><div class="s">${esc(tr.specialty||'')}</div>
               <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">
                 <span class="badge ${tr.ready?'badge-active':'badge-role'}">${tr.ready?t('tr_ready'):t('tr_full')}</span>
@@ -1629,14 +2081,21 @@ async function renderCTrainers(){
 
 async function renderCTrainerProfile(){
   const tr = await dbGet('trainer:'+routeParams.id);
-  if(!tr) return `<div class="empty">Not found</div>`;
+  const mine = await getMyTrainerIdSet();
+  if(!tr || !mine.has(tr.id)){
+    return `
+      <div class="back-link" data-goto="trainers">← ${t('tp_back')}</div>
+      <div class="card"><div class="empty">${t('ct_not_mine')}</div></div>
+      ${codeCardHtml('P')}
+    `;
+  }
   const pinnedIds = await getPinnedTrainerIds();
   const pinned = pinnedIds.includes(tr.id);
   return `
     <div class="back-link" data-goto="trainers">← ${t('tp_back')}</div>
     <div class="card">
       <div class="profile-header">
-        <div class="avatar">${initials(tr.name)}</div>
+        ${avatarHtml(tr.name, tr.photo)}
         <div style="flex:1"><div class="n">${esc(tr.name)}</div><div class="s">${esc(tr.specialty||'')}</div></div>
         <button class="pin-btn ${pinned?'pinned':''}" data-pin-trainer="${tr.id}" title="${pinned?t('tr_unpin_btn'):t('tr_pin_btn')}" aria-label="${pinned?t('tr_unpin_btn'):t('tr_pin_btn')}">★</button>
       </div>
@@ -1649,14 +2108,14 @@ async function renderCTrainerProfile(){
       </div>
       <div class="card" style="background:transparent;border:none;padding:16px 0 0">
         <div class="card-head"><h3>${t('tp_certs_label')}</h3></div>
-        ${(tr.certs&&tr.certs.length) ? `<div class="cert-badge-row">${tr.certs.map(c=>`<span class="cert-badge">${esc(c.name)} · ${esc(c.issuer||'')} ${esc(c.year||'')}</span>`).join('')}</div>` : `<div class="empty">${t('tp_no_certs')}</div>`}
+        ${(tr.certs&&tr.certs.length) ? certChipsHtml(tr.certs) : `<div class="empty">${t('tp_no_certs')}</div>`}
       </div>
       <button class="btn btn-primary btn-block" style="margin-top:10px" data-book-trainer="${tr.id}">${t('tr_book')}</button>
     </div>
   `;
 }
 
-const DAYS = (()=>{ const arr=[]; const start=new Date(); for(let i=0;i<7;i++){ const d=new Date(start); d.setDate(start.getDate()+i); arr.push(d.toISOString().slice(0,10)); } return arr; })();
+const DAYS = (()=>{ const arr=[]; const start=new Date(); for(let i=0;i<7;i++){ const d=new Date(start); d.setDate(start.getDate()+i); arr.push(localDateStr(d)); } return arr; })();
 const TIMES = { morning:['06:00','07:00','08:00','09:00','10:00','11:00'], afternoon:['13:00','14:00','15:00','16:00'], evening:['17:00','18:00','19:00','20:00'] };
 let bookingState = { trainerId:null, day:DAYS[0], cat:'morning', time:null };
 
@@ -1691,11 +2150,13 @@ function slotAvailability(all, trainerId, date, time, customerId){
 }
 
 async function renderCBooking(){
-  if(routeParams.trainerId) bookingState.trainerId = routeParams.trainerId;
-  let trainers = await getApprovedTrainers();
+  if(routeParams.trainerId){            // arriving from a "book" button / QR link: take the trainer once, then let the drop-down decide
+    bookingState.trainerId = routeParams.trainerId; bookingState.time = null;
+    routeParams = Object.assign({}, routeParams); delete routeParams.trainerId;
+  }
+  const trainers = await getMyTrainers();      // only trainers the customer added with a code
   const pinnedIds = await getPinnedTrainerIds();
-  trainers = sortTrainersByPin(trainers, pinnedIds);
-  const trainer = bookingState.trainerId ? await dbGet('trainer:'+bookingState.trainerId) : null;
+  const trainer = (bookingState.trainerId && trainers.some(x=>x.id===bookingState.trainerId)) ? await dbGet('trainer:'+bookingState.trainerId) : null;
   const pkg = await getActivePackage(session.id);
   const expiredUnused = !pkg && await hasExpiredUnusedPackage(session.id);
   const allBookings = await dbGetAll('booking:');
@@ -1740,8 +2201,8 @@ async function renderCBooking(){
             ${trainers.map(x=>`<option value="${x.id}" ${trainer&&trainer.id===x.id?'selected':''}>${pinnedIds.includes(x.id)?'★ ':''}${esc(x.name)} — ${esc(x.specialty||'')}</option>`).join('')}
           </select>
         </div>
-        ${!trainer ? `<div class="empty">${t('cb_empty')}</div>` : `
-          ${!pkg ? `<div class="auth-error">${expiredUnused ? t('cb_expired_package') : t('cb_no_package')}</div>` : ''}
+        ${!trainer ? `<div class="empty">${trainers.length ? t('cb_empty') : t('cb_no_mine')}</div>${trainers.length ? '' : `<button class="btn btn-primary btn-block" style="margin-top:12px" data-goto="trainers">${t('cb_enter_code_btn')}</button>`}` : `
+          ${!pkg ? `<div class="auth-error">${expiredUnused ? t('cb_expired_package') : t('cb_no_package')}</div><button class="btn btn-sm btn-primary" style="margin:-6px 0 14px" data-goto="package">${t('cb_buy_first_btn')}</button>` : ''}
           <label>${t('cb_date_label')}</label>
           <div class="day-strip" id="dayStrip">${dayPills}</div>
           <label>${t('cb_cat_label')}</label>
@@ -1794,8 +2255,20 @@ async function submitBooking(){
   bookingState.time = null;
   document.getElementById('modalTitle').textContent = t('modal_title');
   document.getElementById('modalBody').textContent = t('modal_body');
-  document.getElementById('modalCloseBtn').textContent = t('modal_close');
+  document.getElementById('modalNote').textContent = t('modal_redirect');
+  document.getElementById('modalCloseBtn').textContent = t('modal_go');
   document.getElementById('bookingModal').classList.add('show');
+  clearTimeout(modalGoTimer);
+  modalGoTimer = setTimeout(()=>closeBookingModal(true), 2800);   // matches the countdown bar
+}
+let modalGoTimer = null;
+function closeBookingModal(goNext){
+  clearTimeout(modalGoTimer); modalGoTimer = null;
+  const m = document.getElementById('bookingModal');
+  if(!m.classList.contains('show')) return;
+  m.classList.remove('show');
+  if(!session) return;
+  if(goNext) go('mybookings'); else renderView();
 }
 
 async function renderCMyBookings(){
@@ -1856,10 +2329,12 @@ async function buyPackage(pkgId){
   const p = await dbGet('package:'+pkgId);
   if(!p) return;
   const inst = {id:newId('cp'), customerId:session.id, packageId:p.id, packageName:p.name, totalSessions:p.sessions,
-    usedSessions:0, remainingSessions:p.sessions, startDate:new Date().toISOString().slice(0,10), expiryDate:addDays(p.expirationDays||90), status:'active'};
+    usedSessions:0, remainingSessions:p.sessions, startDate:localDateStr(), expiryDate:addDays(p.expirationDays||90), status:'active'};
   await dbSet('custpkg:'+inst.id, inst);
   toast(tt('cp_toast_bought',{name:p.name}));
-  renderView();
+  const mineNow = await getMyTrainers();
+  if(mineNow.length) go('booking', mineNow.length===1 ? {trainerId:mineNow[0].id} : {});
+  else go('trainers');
 }
 
 /* Bookings store a snapshot of the customer's and trainer's names so each
@@ -1896,6 +2371,7 @@ async function renderCProfile(){
   return `
     <div class="page-head"><div><div class="eyebrow">${t('prof_eyebrow')}</div><h1>${t('prof_h1')}</h1><p>${t('prof_p')}</p></div></div>
     <div class="card" style="max-width:480px">
+      ${photoEditorHtml(c)}
       <div class="field"><label>${t('prof_name')}</label><input type="text" id="cProfName" value="${esc(c.name)}"></div>
       <div class="field"><label>${t('prof_phone')}</label><input type="text" id="cProfPhone" value="${esc(c.phone)}"></div>
       <button class="btn btn-primary btn-block" id="cProfSave">${t('prof_save')}</button>
@@ -1950,8 +2426,25 @@ async function renderTDashboard(){
   const done = bookings.filter(b=>b.status==='completed').length;
   const noshow = bookings.filter(b=>b.status==='no_show').length;
   const notifs = (await getNotifications(session.id)).slice(0,4);
+  const me = await dbGet('trainer:'+session.id);
+  const pcItems = me ? [[!!safePhoto(me.photo), t('pc_photo')], [!!(me.certs && me.certs.length), t('pc_certs')], [!!(me.bio && me.bio.trim()), t('pc_bio')]] : [];
+  const codeCard = (me && me.code) ? `
+    <div class="card" style="margin-bottom:16px">
+      <div class="code-share-row">
+        <div><div class="lbl">${t('td_code_title')}</div><div class="code-big">#${esc(me.code)}</div><div class="code-hint" style="margin-top:6px">${t('td_code_hint')}</div></div>
+        <button class="btn" data-copy-code="${esc(me.code)}">${t('td_code_copy')}</button>
+      </div>
+    </div>` : '';
+  const completeCard = (pcItems.length && !pcItems.every(i=>i[0])) ? `
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><h3>${t('prof_complete_title')}</h3></div>
+      <p class="code-hint" style="margin-bottom:12px">${t('prof_complete_body')}</p>
+      <div class="pc-row">${pcItems.map(i=>`<span class="pc-chip ${i[0]?'ok':''}">${i[0]?'✓':'○'} ${esc(i[1])}</span>`).join('')}</div>
+      <button class="btn btn-primary btn-block" style="margin-top:14px" data-goto="profile">${t('pc_go')}</button>
+    </div>` : '';
   return `
     <div class="page-head"><div><div class="eyebrow">${t('tq_eyebrow')}</div><h1>${tt('t_dash_h1',{name:esc(session.name)})}</h1><p>${t('t_dash_p')}</p></div></div>
+    ${codeCard}${completeCard}
     <div class="grid-4" style="margin-bottom:20px">
       <div class="stat-card"><div class="lbl">${t('tq_pending_label')}</div><div class="val accent">${pending}</div></div>
       <div class="stat-card"><div class="lbl">${t('tq_confirmed_label')}</div><div class="val">${confirmed}</div></div>
@@ -2153,16 +2646,17 @@ async function renderTCustomers(){
   const bookings = await trainerBookings();
   const doneBookings = bookings.filter(b=>b.status==='completed');
   const custIds = [...new Set(bookings.map(b=>b.customerId))];
+  const custMap = new Map((custIds.length ? await dbGetAll('customer:') : []).map(x=>[x.id, x]));
   const rows = custIds.map(cid=>{
     const b = bookings.find(x=>x.customerId===cid);
     const doneCount = doneBookings.filter(x=>x.customerId===cid).length;
-    return {name:b.customerName, id:cid, doneCount};
+    return {name:b.customerName, id:cid, doneCount, photo:(custMap.get(cid)||{}).photo};
   });
   return `
     <div class="page-head"><div><div class="eyebrow">${t('tc_eyebrow')}</div><h1>${t('tc_h1')}</h1><p>${t('tc_p')}</p></div></div>
     <div class="card">
       ${rows.length ? rows.map(r=>`
-        <div class="trainer-row"><div class="avatar">${initials(r.name)}</div><div class="meta"><div class="n">${esc(r.name)}</div><div class="s">${tt('tc_sessions_done',{n:r.doneCount})}</div></div></div>
+        <div class="trainer-row">${avatarHtml(r.name, r.photo)}<div class="meta"><div class="n">${esc(r.name)}</div><div class="s">${tt('tc_sessions_done',{n:r.doneCount})}</div></div></div>
       `).join('') : `<div class="empty">${t('tc_empty')}</div>`}
     </div>
   `;
@@ -2175,6 +2669,7 @@ async function renderTProfile(){
     <div class="grid-2">
       <div class="card">
         <div class="card-head"><h3>${t('tpz_personal_title')}</h3></div>
+        ${photoEditorHtml(tr)}
         <div class="field"><label>${t('tpz_name_label')}</label><input type="text" id="pfName" value="${esc(tr.name)}"></div>
         <div class="field-row">
           <div class="field"><label>${t('tpz_specialty_label')}</label><input type="text" id="pfSpecialty" value="${esc(tr.specialty||'')}"></div>
@@ -2205,18 +2700,22 @@ function certsCardInner(tr){
   return `
     <div class="card-head"><h3>${t('tpz_certs_title')}</h3><span class="hint">${(tr.certs||[]).length}</span></div>
     ${(tr.certs&&tr.certs.length) ? tr.certs.map((c,i)=>`
-      <div class="cert-chip"><div class="ic">🎓</div><div class="info"><div class="n">${esc(c.name)}</div><div class="s">${esc(c.issuer||'')} · ${esc(c.year||'')}</div></div><button class="btn btn-sm btn-ghost" data-remove-cert="${i}">✕</button></div>
+      <div class="cert-chip"><div class="ic">🎓</div><div class="info"><div class="n">${esc(c.name)}</div><div class="s">${esc(c.issuer||'')} · ${esc(c.year||'')}</div></div>${c.imgId ? `<button type="button" class="btn btn-sm" data-view-certimg="${esc(c.imgId)}">📎 ${esc(t('cert_img_view'))}</button>` : ''}<button class="btn btn-sm btn-ghost" data-remove-cert="${i}">✕</button></div>
     `).join('') : `<div class="empty">${t('tpz_no_certs')}</div>`}
     <div class="field" style="margin-top:14px"><label>${t('tpz_add_cert_label')}</label><input type="text" id="newCertName" placeholder="${t('tpz_cert_name_ph')}"></div>
     <div class="field-row">
       <div class="field"><input type="text" id="newCertIssuer" placeholder="${t('tpz_cert_issuer_ph')}"></div>
       <div class="field"><input type="text" id="newCertYear" placeholder="${t('tpz_cert_year_ph')}"></div>
     </div>
+    <div class="field">
+      <label>${t('cert_img_label')}</label>
+      <div class="cert-attach"><label class="btn btn-sm file-btn">📷 ${esc(t('cert_img_pick'))}<input type="file" accept="image/*" id="newCertFile"></label><span id="newCertPreview"></span></div>
+    </div>
     <button class="btn btn-block" id="addCertBtn">${t('tpz_add_cert_btn')}</button>
   `;
 }
 function wireCertsCard(){
-  const addCertBtn = document.getElementById('addCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', addCert);
+  const addCertBtn = document.getElementById('addCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', ()=> withBusy(addCertBtn, addCert));
   document.querySelectorAll('[data-remove-cert]').forEach(el=>el.addEventListener('click', ()=> removeCert(Number(el.dataset.removeCert))));
 }
 async function refreshCertsCard(){
@@ -2254,9 +2753,16 @@ async function addCert(){
   if(!name){ toast(t('tpz_toast_need_name')); return; }
   const issuer = document.getElementById('newCertIssuer').value.trim();
   const year = document.getElementById('newCertYear').value.trim();
+  const prevBox = document.getElementById('newCertPreview');
+  const imgData = (prevBox && prevBox.dataset.img) || '';
   const tr = await dbGet('trainer:'+session.id);
   tr.certs = tr.certs || [];
-  tr.certs.push({name, issuer, year});
+  const cert = {name, issuer, year};
+  if(imgData){
+    cert.imgId = newId('ci');                       // the picture lives under its own key so trainer lists stay small
+    await dbSet('certimg:'+cert.imgId, {data:imgData, ownerId:tr.id, createdAt:new Date().toISOString()});
+  }
+  tr.certs.push(cert);
   await dbSet('trainer:'+tr.id, tr);
   toast(t('tpz_toast_cert_added'));
   // Refresh only the certificates card — a full renderView() would rebuild
@@ -2266,8 +2772,9 @@ async function addCert(){
 }
 async function removeCert(idx){
   const tr = await dbGet('trainer:'+session.id);
-  tr.certs.splice(idx,1);
+  const gone = tr.certs.splice(idx,1)[0];
   await dbSet('trainer:'+tr.id, tr);
+  if(gone && gone.imgId){ try{ await dbDelete('certimg:'+gone.imgId); }catch(e){} }
   toast(t('tpz_toast_cert_removed'));
   await refreshCertsCard();
 }
@@ -2344,13 +2851,13 @@ async function renderAApps(){
       ${apps.length ? apps.map(a=>`
         <div class="req-card">
           <div class="req-top">
-            <div><div class="n">${esc(a.name)}</div><div class="t">${esc(a.specialty||'')} · ${esc(a.phone||'')}</div><div class="t">${t('aa_submitted_on')} ${fmtDateTime(a.submittedAt)}</div></div>
+            <div style="display:flex;gap:12px;align-items:center">${avatarHtml(a.name, a.photo)}<div><div class="n">${esc(a.name)}</div><div class="t">${esc(a.specialty||'')} · ${esc(a.phone||'')}</div><div class="t">${t('aa_submitted_on')} ${fmtDateTime(a.submittedAt)}</div></div></div>
             <span class="badge badge-pending">${t('aa_pending_badge')}</span>
           </div>
           <p style="font-size:13px;color:var(--text-dim);margin-bottom:10px;line-height:1.6">${esc(a.bio||'')}</p>
           <div style="margin-bottom:12px">
             <div class="hint" style="font-size:11px;color:var(--text-faint);margin-bottom:6px">${t('aa_certs_label')}</div>
-            ${(a.certs&&a.certs.length) ? `<div class="cert-badge-row">${a.certs.map(c=>`<span class="cert-badge">${esc(c.name)} · ${esc(c.issuer||'')} ${esc(c.year||'')}</span>`).join('')}</div>` : `<div style="font-size:12px;color:var(--text-faint)">${t('aa_no_certs')}</div>`}
+            ${(a.certs&&a.certs.length) ? certChipsHtml(a.certs) : `<div style="font-size:12px;color:var(--text-faint)">${t('aa_no_certs')}</div>`}
           </div>
           <div class="req-actions">
             <button class="btn btn-primary" data-approve-app="${a.id}">${t('aa_approve_btn')}</button>
@@ -2372,11 +2879,13 @@ async function approveApp(id, approve){
     const code = await genTrainerCode();
     const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
       specialty:app.specialty, bio:app.bio, certs:app.certs||[], status:'active', ready:true, role:'trainer', code};
+    if(app.photo) tr.photo = app.photo;
     await dbSet('trainer:'+tr.id, tr);
     await dbDelete('trainerApp:'+id);
     await pushNotification(tr.id, 'nav_t_dashboard', 'notif_approved', {}, null);
     toast(t('aa_toast_approve'));
   } else {
+    for(const c of (app.certs||[])){ if(c.imgId){ try{ await dbDelete('certimg:'+c.imgId); }catch(e){} } }
     await dbDelete('trainerApp:'+id);
     toast(t('aa_toast_reject'));
   }
@@ -2499,14 +3008,20 @@ let authError = '';
    had finished saving, creating duplicate accounts/applications. */
 let authSubmitting = false;
 let pendingApplicationCerts = [];
+let pendingApplicationPhoto = '';
 // Draft state for the register/apply forms so that if the screen has to
 // re-render (e.g. to show a validation error) whatever the person already
 // typed is preserved instead of being wiped out.
 let regDraft = {name:'', phone:'', pw:''};
 let applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
 
+function apCertListHtml(){
+  return pendingApplicationCerts.map(c=>`<span class="cert-badge" style="margin-right:6px">${esc(c.name)}${c.img?' 📎':''}</span>`).join('');
+}
 async function renderAuth(){
   const app = document.getElementById('app');
+  const firstAuthPaint = app.__viewKey !== 'auth';
+  app.__viewKey = 'auth'; app.__lastHtml = null;
   const icon = authRole==='customer' ? '👤' : authRole==='trainer' ? '🏋' : '🛠';
   let inner = '';
 
@@ -2544,6 +3059,12 @@ async function renderAuth(){
       <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">🏋</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_apply_heading')}</h2></div>
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
       <div class="auth-hint" style="margin-bottom:16px">${t('auth_apply_note')}</div>
+      <div class="field"><label>${t('ap_photo_label')}</label>
+        <div class="photo-edit" style="margin-bottom:0">
+          <div id="apPhotoPreview">${avatarHtml(applyDraft.name||'?', pendingApplicationPhoto, 'avatar-xl')}</div>
+          <div class="btns"><label class="btn btn-sm file-btn">📷 ${esc(t('photo_add'))}<input type="file" accept="image/*" id="apPhotoFile"></label></div>
+        </div>
+      </div>
       <div class="field"><label>${t('auth_name_label')}</label><input type="text" id="apName" value="${esc(applyDraft.name)}"></div>
       <div class="field-row">
         <div class="field"><label>${t('auth_specialty_label')}</label><input type="text" id="apSpecialty" value="${esc(applyDraft.specialty)}"></div>
@@ -2561,7 +3082,8 @@ async function renderAuth(){
           <input type="text" id="apCertYear" placeholder="${t('tpz_cert_year_ph')}">
           <button type="button" class="btn btn-sm" id="apAddCertBtn">${t('tpz_add_cert_btn')}</button>
         </div>
-        <div id="apCertList" style="margin-top:10px">${pendingApplicationCerts.map((c,i)=>`<span class="cert-badge" style="margin-right:6px">${esc(c.name)}</span>`).join('')}</div>
+        <div class="cert-attach" style="margin-top:10px"><label class="btn btn-sm file-btn">📷 ${esc(t('cert_img_pick'))}<input type="file" accept="image/*" id="apCertFile"></label><span id="apCertPreview"></span></div>
+        <div id="apCertList" style="margin-top:10px">${apCertListHtml()}</div>
       </div>
       <button class="btn btn-primary btn-block" id="applyBtn">${t('auth_apply_submit')}</button>
       <a class="auth-back" id="backToLogin2">← ${t('auth_back_to_login')}</a>
@@ -2569,7 +3091,7 @@ async function renderAuth(){
   }
 
   app.innerHTML = `
-    <div class="view">
+    <div class="view ${firstAuthPaint ? 'anim-in' : ''}">
       <div class="role-tab" id="authRoleTab">
         <button data-role="customer" class="${authRole==='customer'?'active':''}">${t('role_customer')}</button>
         <button data-role="trainer" class="${authRole==='trainer'?'active':''}">${t('role_trainer')}</button>
@@ -2585,7 +3107,7 @@ async function renderAuth(){
     authRole = b.dataset.role; authMode='login'; authError=''; renderAuth();
   }));
   const toReg = document.getElementById('toRegister'); if(toReg) toReg.addEventListener('click', ()=>{ authMode='register'; authError=''; regDraft={name:'',phone:'',pw:''}; renderAuth(); });
-  const toApp = document.getElementById('toApply'); if(toApp) toApp.addEventListener('click', ()=>{ authMode='apply'; authError=''; pendingApplicationCerts=[]; applyDraft={name:'',specialty:'',phone:'',pw:'',bio:''}; renderAuth(); });
+  const toApp = document.getElementById('toApply'); if(toApp) toApp.addEventListener('click', ()=>{ authMode='apply'; authError=''; pendingApplicationCerts=[]; pendingApplicationPhoto=''; applyDraft={name:'',specialty:'',phone:'',pw:'',bio:''}; renderAuth(); });
   const back1 = document.getElementById('backToLogin'); if(back1) back1.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
@@ -2614,14 +3136,16 @@ async function renderAuth(){
     const issuerEl = document.getElementById('apCertIssuer');
     const yearEl = document.getElementById('apCertYear');
     const name = nameEl.value.trim();
-    if(!name) return;
-    pendingApplicationCerts.push({name, issuer:issuerEl.value.trim(), year:yearEl.value.trim()});
+    if(!name){ toast(t('tpz_toast_need_name')); return; }
+    const certPrev = document.getElementById('apCertPreview');
+    pendingApplicationCerts.push({name, issuer:issuerEl.value.trim(), year:yearEl.value.trim(), img:(certPrev && certPrev.dataset.img) || ''});
+    showCertPreview('apCertPreview', '');
     // Update only the cert list in place (not a full renderAuth) so the rest of
     // the application form the applicant already filled in — name, specialty,
     // phone, password, bio — is never wiped out.
     nameEl.value=''; issuerEl.value=''; yearEl.value='';
     const listEl = document.getElementById('apCertList');
-    if(listEl) listEl.innerHTML = pendingApplicationCerts.map(c=>`<span class="cert-badge" style="margin-right:6px">${esc(c.name)}</span>`).join('');
+    if(listEl) listEl.innerHTML = apCertListHtml();
   });
 }
 
@@ -2685,7 +3209,7 @@ async function doRegisterInner(){
     rememberActiveSession(c.id,'customer');
     regDraft = {name:'', phone:'', pw:''};
     toast(t('auth_toast_registered'));
-    authError=''; route='dashboard';
+    authError=''; route='trainers'; routeParams={};
     await applyPendingTrainerCodeIfAny();
     renderRoot();
   } finally { authSubmitting = false; }
@@ -2703,9 +3227,20 @@ async function doApplyInner(){
     if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
     const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
     if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
-    const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:pendingApplicationCerts, submittedAt:new Date().toISOString(), status:'pending'};
+    // Certificate pictures are saved under their own keys; the application only keeps their ids.
+    const certsOut = [];
+    for(const c of pendingApplicationCerts){
+      const o = {name:c.name, issuer:c.issuer, year:c.year};
+      if(c.img){
+        o.imgId = newId('ci');
+        await dbSet('certimg:'+o.imgId, {data:c.img, createdAt:new Date().toISOString()});
+      }
+      certsOut.push(o);
+    }
+    const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:certsOut, submittedAt:new Date().toISOString(), status:'pending'};
+    if(pendingApplicationPhoto) app.photo = pendingApplicationPhoto;
     await dbSet('trainerApp:'+app.id, app);
-    pendingApplicationCerts = [];
+    pendingApplicationCerts = []; pendingApplicationPhoto = '';
     applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
     toast(t('auth_toast_applied'));
     authMode='login'; authError=''; renderAuth();
@@ -2717,31 +3252,37 @@ async function doLogin(){
   const idEl = document.getElementById('authId');
   const idVal = idEl ? idEl.value : '';
   clearRenderCaches();
-  try{ await doLoginInner(); }
-  catch(e){
-    if(!(e instanceof DbError)) throw e;
-    authError = authDbErrorMsg(e);
-    await renderAuth();
-    const el = document.getElementById('authId'); if(el) el.value = idVal;
-  }
+  await withBusy(document.getElementById('loginBtn'), async ()=>{
+    try{ await doLoginInner(); }
+    catch(e){
+      if(!(e instanceof DbError)) throw e;
+      authError = authDbErrorMsg(e);
+      await renderAuth();
+      const el = document.getElementById('authId'); if(el) el.value = idVal;
+    }
+  });
 }
 async function doRegister(){
   clearRenderCaches();
-  try{ await doRegisterInner(); }
-  catch(e){
-    if(!(e instanceof DbError)) throw e;
-    authError = authDbErrorMsg(e);
-    await renderAuth();
-  }
+  await withBusy(document.getElementById('registerBtn'), async ()=>{
+    try{ await doRegisterInner(); }
+    catch(e){
+      if(!(e instanceof DbError)) throw e;
+      authError = authDbErrorMsg(e);
+      await renderAuth();
+    }
+  });
 }
 async function doApply(){
   clearRenderCaches();
-  try{ await doApplyInner(); }
-  catch(e){
-    if(!(e instanceof DbError)) throw e;
-    authError = authDbErrorMsg(e);
-    await renderAuth();
-  }
+  await withBusy(document.getElementById('applyBtn'), async ()=>{
+    try{ await doApplyInner(); }
+    catch(e){
+      if(!(e instanceof DbError)) throw e;
+      authError = authDbErrorMsg(e);
+      await renderAuth();
+    }
+  });
 }
 
 /* ======================================================================
@@ -2753,10 +3294,6 @@ function wireView(){
   document.querySelectorAll('[data-book-trainer]').forEach(el=>el.addEventListener('click', ()=> go('booking', {trainerId:el.dataset.bookTrainer})));
   document.querySelectorAll('[data-pin-trainer]').forEach(el=>el.addEventListener('click', (e)=>{ e.stopPropagation(); togglePinTrainer(el.dataset.pinTrainer); }));
 
-  const searchBtn = document.getElementById('trainerSearchBtn');
-  if(searchBtn) searchBtn.addEventListener('click', ()=> go('trainers', {q:document.getElementById('trainerSearch').value}));
-  const searchInput = document.getElementById('trainerSearch');
-  if(searchInput) searchInput.addEventListener('keydown', e=>{ if(e.key==='Enter') go('trainers', {q:searchInput.value}); });
 
   const trainerSelect = document.getElementById('bookTrainerSelect');
   if(trainerSelect) trainerSelect.addEventListener('change', ()=>{ bookingState.trainerId = trainerSelect.value || null; bookingState.time=null; renderView(); });
@@ -2764,11 +3301,11 @@ function wireView(){
   document.querySelectorAll('.cat-pill[data-cat]').forEach(el=>el.addEventListener('click', ()=>{ bookingState.cat = el.dataset.cat; bookingState.time=null; renderView(); }));
   document.querySelectorAll('.time-slot[data-time]').forEach(el=>el.addEventListener('click', ()=>{ if(el.classList.contains('taken'))return; bookingState.time = el.dataset.time; renderView(); }));
   const submitBookingBtn = document.getElementById('submitBookingBtn');
-  if(submitBookingBtn) submitBookingBtn.addEventListener('click', submitBooking);
+  if(submitBookingBtn) submitBookingBtn.addEventListener('click', ()=> withBusy(submitBookingBtn, submitBooking));
 
-  document.querySelectorAll('[data-buy-pkg]').forEach(el=>el.addEventListener('click', ()=> buyPackage(el.dataset.buyPkg)));
+  document.querySelectorAll('[data-buy-pkg]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>buyPackage(el.dataset.buyPkg))));
 
-  const cProfSave = document.getElementById('cProfSave'); if(cProfSave) cProfSave.addEventListener('click', saveCProfile);
+  const cProfSave = document.getElementById('cProfSave'); if(cProfSave) cProfSave.addEventListener('click', ()=> withBusy(cProfSave, saveCProfile));
 
   document.querySelectorAll('[data-accept-booking]').forEach(el=>el.addEventListener('click', ()=> respondBooking(el.dataset.acceptBooking, true)));
   document.querySelectorAll('[data-accept-duo]').forEach(el=>el.addEventListener('click', ()=> acceptDuo(el.dataset.acceptDuo)));
@@ -2776,7 +3313,7 @@ function wireView(){
   document.querySelectorAll('[data-complete-booking]').forEach(el=>el.addEventListener('click', ()=> finishBooking(el.dataset.completeBooking, false)));
   document.querySelectorAll('[data-noshow-booking]').forEach(el=>el.addEventListener('click', ()=> finishBooking(el.dataset.noshowBooking, true)));
 
-  const pfSaveBtn = document.getElementById('pfSaveBtn'); if(pfSaveBtn) pfSaveBtn.addEventListener('click', saveTrainerProfile);
+  const pfSaveBtn = document.getElementById('pfSaveBtn'); if(pfSaveBtn) pfSaveBtn.addEventListener('click', ()=> withBusy(pfSaveBtn, saveTrainerProfile));
   const copyLinkBtn = document.getElementById('copyTrainerLinkBtn');
   if(copyLinkBtn) copyLinkBtn.addEventListener('click', async ()=>{
     const url = trainerJoinUrl(copyLinkBtn.dataset.trainerCode);
@@ -2786,7 +3323,7 @@ function wireView(){
       toast(t('tpz_code_copied'));
     }catch(e){ toast(url); }
   });
-  const addCertBtn = document.getElementById('addCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', addCert);
+  const addCertBtn = document.getElementById('addCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', ()=> withBusy(addCertBtn, addCert));
   document.querySelectorAll('[data-remove-cert]').forEach(el=>el.addEventListener('click', ()=> removeCert(Number(el.dataset.removeCert))));
 
   document.querySelectorAll('[data-approve-app]').forEach(el=>el.addEventListener('click', ()=>{
@@ -2836,10 +3373,7 @@ function wireView(){
   document.querySelectorAll('[data-remove-pkg]').forEach(el=>el.addEventListener('click', ()=> removePackage(el.dataset.removePkg)));
 }
 
-document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
-  document.getElementById('bookingModal').classList.remove('show');
-  renderView();
-});
+document.getElementById('modalCloseBtn').addEventListener('click', ()=> closeBookingModal(true));
 
 /* ---------------- device preview toggle ----------------
    Opens the current page inside a phone- or desktop-sized frame
@@ -2947,10 +3481,12 @@ if('serviceWorker' in navigator && !window.frameElement){
 
 let bootBusy = false;
 async function bootApp(){
-  document.getElementById('app').innerHTML = `<div class="loading-shell">Loading…</div>`;
-  await seedIfNeeded();
+  document.getElementById('app').innerHTML = splashHtml();
+  const slowNote = setTimeout(()=>{ const n = document.getElementById('splashNote'); if(n) n.textContent = t('splash_slow'); }, 5000);
+  try{ await seedIfNeeded();
   await resumeActiveSession();
   await applyPendingTrainerCodeIfAny();
+  } finally { clearTimeout(slowNote); }
   await renderRoot();
   cleanupOldData(false).catch(()=>{});
 }
