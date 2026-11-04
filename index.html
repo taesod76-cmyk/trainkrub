@@ -580,6 +580,12 @@
   .pay-chip.ok{border-color:rgba(79,214,138,.45);color:var(--green)}
   .pay-req .req-actions{flex-wrap:wrap}
   .pay-req .req-actions .btn{flex:1 1 150px}
+
+  .pay-wait{padding:12px 14px;border:1px solid rgba(240,171,60,.4);background:rgba(240,171,60,.08);border-radius:var(--r-md);color:#f0ab3c;font-size:14px;line-height:1.55;margin-bottom:14px}
+  .pay-namecheck{margin-top:10px;padding:10px 12px;border-radius:var(--r-md);background:rgba(240,171,60,.08);border:1px solid rgba(240,171,60,.35);color:#f0ab3c;font-size:13px;line-height:1.6}
+  .pay-mode-note{font-size:13px;color:var(--text-dim);margin:-4px 0 12px;line-height:1.6}
+  .prov-chip{display:inline-block;margin:4px 0 0 8px;vertical-align:middle}
+  .req-card .prov-chip{margin-left:0}
 </style>
 </head>
 <body>
@@ -791,6 +797,24 @@ const i18n = {
     tqr_title:'QR รับเงินของฉัน', tqr_hint:'อัปโหลด QR พร้อมเพย์หรือ QR ธนาคารของคุณ ลูกเทรนจะเห็น QR นี้ตอนซื้อแพ็กเกจ', tqr_none:'ยังไม่มี QR ลูกเทรนจะซื้อแพ็กเกจไม่ได้จนกว่าคุณจะอัปโหลด', tqr_upload:'อัปโหลด QR', tqr_replace:'เปลี่ยน QR', tqr_remove:'ลบ QR', tqr_toast_saved:'บันทึก QR แล้ว', tqr_toast_removed:'ลบ QR แล้ว',
     tdp_setup_title:'ตั้งค่าการรับเงิน', tdp_setup_body:'อัปโหลด QR รับเงินและตั้งแพ็กเกจ เพื่อให้ลูกเทรนซื้อกับคุณได้', tdp_pending_title:'มีรายการรอตรวจสอบการชำระเงิน', tdp_pending_body:'{n} รายการ ตรวจยอดเงินเข้าแล้วกดตอบรับเพื่อเติมครั้งให้ลูกเทรน', tdp_go:'ไปที่รับเงิน',
     notif_pay_new:'{customer} ส่งสลิปซื้อ {pkg} (฿{price}) ตรวจยอดเงินเข้าแล้วกดตอบรับ', notif_pay_approved:'{trainer} ยืนยันการชำระเงินแล้ว เติม {n} ครั้งให้คุณเรียบร้อย ({pkg})', notif_pay_rejected:'{trainer} ไม่พบยอดเงินของรายการ {pkg} ถ้าโอนแล้วโปรดติดต่อเทรนเนอร์',
+    pay_note_instant:'ส่งสลิปแล้วระบบเติมครั้งให้ทันที จองเวลาเทรนได้เลย เทรนเนอร์จะตรวจยอดเงินย้อนหลัง',
+    pay_note_strict:'เทรนเนอร์จะตรวจสลิปก่อนแล้วจึงเติมครั้งให้ คุณจะจองเวลาเทรนได้หลังเทรนเนอร์ตอบรับ',
+    pay_name_warn:'ก่อนโอน ตรวจชื่อผู้รับในแอปธนาคารให้ตรงกับชื่อเทรนเนอร์ ({name}) ถ้าชื่อไม่ตรงอย่าโอน',
+    pay_toast_sent_instant:'ส่งสลิปแล้ว เติมครั้งให้เรียบร้อย จองเวลาเทรนได้เลย',
+    pay_pending_sub_instant:'เติมครั้งให้แล้ว จองเวลาเทรนได้เลย เทรนเนอร์จะตรวจยอดเงินย้อนหลัง',
+    pay_st_credited:'เติมให้แล้ว รอตรวจ', pay_prov_badge:'รอเทรนเนอร์ตรวจสลิป',
+    pay_cancel_ask_title:'ยกเลิกรายการนี้?', pay_cancel_ask_body:'แพ็กเกจที่เติมให้แล้วและนัดที่จองไว้ด้วยแพ็กเกจนี้จะถูกยกเลิกด้วย', pay_cancel_keep:'ไม่ยกเลิก',
+    cb_pay_waiting:'ส่งสลิปแล้ว รอเทรนเนอร์ตรวจสอบ จองเวลาได้เมื่อเทรนเนอร์ตอบรับ', cb_prov_note:'แพ็กเกจนี้รอเทรนเนอร์ตรวจสลิป จองได้ตามปกติ',
+    tpay_mode_title:'การเติมครั้งให้ลูกเทรน', tpay_mode_hint:'ครั้งจะถูกตัดตอนคุณกดเสร็จสิ้นหลังเทรนจริงเท่านั้น', tpay_mode_instant:'เติมครั้งให้ทันทีที่ลูกเทรนส่งสลิป (ตรวจย้อนหลัง)', tpay_mode_strict:'ตรวจสลิปก่อน แล้วค่อยเติมครั้งให้',
+    tpay_mode_instant_note:'ลูกเทรนจองได้ทันที ถ้ายังไม่ได้ยืนยันรับเงิน ระบบจะถามให้ยืนยันตอนคุณกดเสร็จสิ้นครั้งแรก ถ้าไม่พบยอดเงินกด "ไม่พบยอดเงิน" แพ็กเกจและนัดที่ยังไม่ถึงจะถูกยกเลิก',
+    tpay_mode_strict_note:'ลูกเทรนจองไม่ได้จนกว่าคุณจะกดตอบรับ',
+    tpay_toast_mode:'บันทึกการตั้งค่าแล้ว', tpay_credited_hint:'ระบบเติมครั้งให้ลูกเทรนแล้ว ตรวจยอดเงินเข้าในแอปธนาคาร แล้วกดยืนยัน',
+    tpay_confirm_btn:'เงินเข้าแล้ว ยืนยัน', tpay_reject_credited_btn:'ไม่พบยอดเงิน ยกเลิกแพ็กเกจ',
+    tpay_toast_confirmed:'ยืนยันการชำระเงินของ {name} แล้ว', tpay_toast_voided:'ยกเลิกแพ็กเกจและนัดของ {name} แล้ว',
+    tgate_title:'ยืนยันรับเงินก่อนบันทึก', tgate_body:'{name} ส่งสลิปซื้อ {pkg} ฿{price} และคุณยังไม่ได้ยืนยันว่าเงินเข้า ตรวจยอดเงินเข้าแล้วใช่ไหม', tgate_ok:'เงินเข้าแล้ว ยืนยันและบันทึก', tgate_cancel:'ยังไม่บันทึก',
+    tchip_unverified:'ยังไม่ยืนยันรับเงิน',
+    notif_pay_new_instant:'{customer} ส่งสลิปซื้อ {pkg} (฿{price}) ระบบเติม {n} ครั้งให้แล้ว ตรวจยอดเงินเข้าแล้วกดยืนยัน',
+    notif_pay_rejected_void:'{trainer} ไม่พบยอดเงินของรายการ {pkg} แพ็กเกจและนัดที่ยังไม่ถึงถูกยกเลิก ถ้าโอนแล้วโปรดติดต่อเทรนเนอร์',
     footer_note:'ข้อมูลทั้งหมดถูกเก็บไว้ในฐานข้อมูลกลางที่ใช้ร่วมกันทั้ง 3 ระบบ (Customer / Trainer / Admin) และซิงค์กันแบบเรียลไทม์'
   },
   en:{
@@ -925,6 +949,24 @@ const i18n = {
     tqr_title:'My payment QR', tqr_hint:'Upload your PromptPay or bank QR. Customers see it when they buy a package.', tqr_none:'No QR yet. Customers cannot buy a package until you upload one.', tqr_upload:'Upload QR', tqr_replace:'Replace QR', tqr_remove:'Remove QR', tqr_toast_saved:'QR saved', tqr_toast_removed:'QR removed',
     tdp_setup_title:'Set up payments', tdp_setup_body:'Upload your payment QR and add packages so customers can buy from you.', tdp_pending_title:'Payments waiting to be checked', tdp_pending_body:'{n} waiting. Check the money arrived, then accept to add sessions.', tdp_go:'Open payments',
     notif_pay_new:'{customer} sent a slip for {pkg} (THB {price}). Check the money, then accept.', notif_pay_approved:'{trainer} confirmed your payment. {n} sessions added ({pkg}).', notif_pay_rejected:'{trainer} could not find a payment for {pkg}. If you already paid, please contact the trainer.',
+    pay_note_instant:'Once you send the slip, your sessions are added right away and you can book at once. Your trainer checks the payment afterwards.',
+    pay_note_strict:'Your trainer checks the slip first, then adds your sessions. You can book once they accept.',
+    pay_name_warn:'Before you transfer, check that the recipient name in your banking app matches your trainer ({name}). If it does not match, do not pay.',
+    pay_toast_sent_instant:'Slip sent. Your sessions are added, you can book now',
+    pay_pending_sub_instant:'Sessions added, you can book now. Your trainer will check the payment afterwards.',
+    pay_st_credited:'Added, to be checked', pay_prov_badge:'Waiting for trainer to check slip',
+    pay_cancel_ask_title:'Cancel this order?', pay_cancel_ask_body:'The sessions already added and any bookings made with this package will be cancelled too.', pay_cancel_keep:'Keep it',
+    cb_pay_waiting:'Slip sent, waiting for your trainer. You can book once they accept.', cb_prov_note:'This package is waiting for your trainer to check the slip. You can book as usual.',
+    tpay_mode_title:'Adding sessions for customers', tpay_mode_hint:'A session is only used up when you press Done after the real session.', tpay_mode_instant:'Add sessions as soon as the customer sends the slip (check later)', tpay_mode_strict:'Check the slip first, then add sessions',
+    tpay_mode_instant_note:'Customers can book at once. If you have not confirmed the money yet, the app asks you to confirm when you first press Done. If no money arrived, press No payment found: the package and upcoming bookings are cancelled.',
+    tpay_mode_strict_note:'Customers cannot book until you accept.',
+    tpay_toast_mode:'Setting saved', tpay_credited_hint:'Sessions are already added for the customer. Check the money in your banking app, then confirm.',
+    tpay_confirm_btn:'Money received, confirm', tpay_reject_credited_btn:'No payment found, cancel package',
+    tpay_toast_confirmed:'Payment from {name} confirmed', tpay_toast_voided:'Package and bookings of {name} cancelled',
+    tgate_title:'Confirm the payment first', tgate_body:'{name} sent a slip for {pkg} (THB {price}) and you have not confirmed the money yet. Have you checked that it arrived?', tgate_ok:'Money received, confirm and save', tgate_cancel:'Not yet',
+    tchip_unverified:'Payment not confirmed',
+    notif_pay_new_instant:'{customer} sent a slip for {pkg} (THB {price}). {n} sessions were added. Check the money, then confirm.',
+    notif_pay_rejected_void:'{trainer} could not find a payment for {pkg}. The package and upcoming bookings were cancelled. If you already paid, please contact the trainer.',
     footer_note:'All data lives in one shared database used by all 3 systems (Customer / Trainer / Admin) and stays in sync in real time.'
   }
 };
@@ -956,7 +998,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-03.4';
+const APP_BUILD = '2026-11-04.1';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -1441,7 +1483,7 @@ async function cleanupOldData(force){
     }
   }
   let removedBookings = 0, removedNotifs = 0;
-  const finishedStatuses = ['completed','no_show','rejected'];
+  const finishedStatuses = ['completed','no_show','rejected','cancelled'];
   const bookings = await dbGetAll('booking:');
   for(const b of bookings){
     if(finishedStatuses.includes(b.status) && isOlderThan(b.completedAt || b.createdAt, CLEANUP_BOOKING_DAYS)){
@@ -1461,7 +1503,7 @@ async function cleanupOldData(force){
   for(const o of orders){
     if(o.status==='pending' && isOlderThan(o.createdAt, 30)){
       o.status = 'cancelled'; o.decidedAt = new Date().toISOString();
-      await dbSet('order:'+o.id, o); await dbDelete('slip:'+o.id);
+      await dbSet('order:'+o.id, o); if(o.instant) await voidOrderPackage(o); await dbDelete('slip:'+o.id);
     } else if(o.status!=='pending' && isOlderThan(o.decidedAt || o.createdAt, CLEANUP_BOOKING_DAYS)){
       await dbDelete('order:'+o.id); await dbDelete('slip:'+o.id);
     }
@@ -2037,31 +2079,98 @@ function payFormSync(){
   if(btn && !btn.__busy) btn.disabled = !payDraft.slip || btn.dataset.canSend!=='1';
   if(txt) txt.textContent = '📷 ' + t(payDraft.slip ? 'pay_slip_change' : 'pay_slip_pick');
 }
+/* Trainers choose how quickly sessions arrive. By default the package is credited the moment the
+   slip is sent and stays `provisional` until the trainer has seen the money; with the switch off the
+   trainer must accept first. Either way a session is only used up when the trainer presses Done. */
+function instantOf(rec){ return !rec || rec.instantCredit!==false; }
+/* Small in-app yes/no sheet (the browser's own confirm() looks out of place in the installed app). */
+function askConfirm(o){
+  return new Promise(resolve=>{
+    const ov = document.createElement('div');
+    ov.className = 'modal-overlay show'; ov.style.zIndex = '260';
+    ov.innerHTML = `<div class="modal-box" role="dialog" aria-modal="true"><h2>${esc(o.title)}</h2><p>${esc(o.body)}</p>
+      <button class="btn btn-primary btn-block" data-ask="ok">${esc(o.ok)}</button>
+      <button class="btn btn-block btn-ghost" style="margin-top:10px" data-ask="no">${esc(o.cancel)}</button></div>`;
+    const done = v=>{ document.removeEventListener('keydown', onKey, true); ov.remove(); resolve(v); };
+    const onKey = e=>{ if(e.key==='Escape'){ e.preventDefault(); done(false); } };
+    ov.addEventListener('click', e=>{ const b = e.target.closest('[data-ask]'); if(b) done(b.dataset.ask==='ok'); else if(e.target===ov) done(false); });
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(ov);
+    const first = ov.querySelector('[data-ask="ok"]'); if(first) first.focus();
+  });
+}
+/* The money did not arrive (or the customer withdrew): cancel the provisional package and every
+   booking that was still open on it. Sessions already done stay on record. */
+async function voidOrderPackage(o){
+  const cpId = o.custpkgId || ('co_'+o.id);
+  const cp = await dbGet('custpkg:'+cpId);
+  if(!cp || !cp.provisional) return 0;
+  cp.status = 'cancelled'; cp.provisional = false; cp.cancelledAt = new Date().toISOString();
+  await dbSet('custpkg:'+cpId, cp);
+  let n = 0;
+  for(const b of await dbGetAll('booking:')){
+    if(b.packageInstanceId===cpId && (b.status==='pending' || b.status==='confirmed')){
+      b.status = 'cancelled'; await dbSet('booking:'+b.id, b); n++;
+    }
+  }
+  return n;
+}
+async function provisionalPkgIds(){
+  const all = await dbGetAll('custpkg:');
+  return new Set(all.filter(p=>p.provisional && p.status==='active').map(p=>p.id));
+}
+function provChip(b, set){
+  return (b.packageInstanceId && set.has(b.packageInstanceId)) ? `<span class="badge badge-pending prov-chip">${t('tchip_unverified')}</span>` : '';
+}
 async function submitOrder(){
+  clearRenderCaches();                                // money-critical: read fresh data
   const p = payDraft.pkgId ? await dbGet('tpkg:'+payDraft.pkgId) : null;
   const trainer = p ? await dbGet('trainer:'+p.trainerId) : null;
   if(!p || p.status!=='active' || !(Number(p.price)>0) || !trainer || trainer.status!=='active'){ toast(t('pay_not_found')); return; }
   if(!payDraft.slip){ toast(t('pay_need_slip')); return; }
+  const payRec = await dbGet('trainerpay:'+trainer.id);
+  if(!(payRec && safePhoto(payRec.qr))){ toast(t('pay_no_qr')); return; }
   const orders = await dbGetAll('order:');
   if(orders.some(o=>o.customerId===session.id && o.tpkgId===p.id && o.status==='pending')){ toast(t('pay_dup')); return; }
+  const instant = instantOf(payRec);
   const id = newId('ord');
+  const cpId = 'co_'+id;
   const order = {id, customerId:session.id, customerName:session.name, trainerId:trainer.id, trainerName:trainer.name,
     tpkgId:p.id, packageName:p.name, sessions:Number(p.sessions), price:Number(p.price), expirationDays:Number(p.expirationDays)||90,
-    status:'pending', createdAt:new Date().toISOString()};
+    instant, custpkgId: instant ? cpId : null, status:'pending', createdAt:new Date().toISOString()};
   // The slip image lives under its own key so lists of orders stay small.
   await dbSet('slip:'+id, {orderId:id, image:payDraft.slip, createdAt:order.createdAt});
-  try{ await dbSet('order:'+id, order); }
-  catch(e){ try{ await dbDelete('slip:'+id); }catch(_){} throw e; }
-  await pushNotification(trainer.id, 'nav_t_payments', 'notif_pay_new', {customer:session.name, pkg:p.name, price:Number(p.price).toLocaleString()}, null);
+  try{
+    await dbSet('order:'+id, order);
+    if(instant){
+      await dbSet('custpkg:'+cpId, {id:cpId, customerId:session.id, trainerId:trainer.id, trainerName:trainer.name, orderId:id,
+        packageId:p.id, packageName:p.name, totalSessions:order.sessions, usedSessions:0, remainingSessions:order.sessions,
+        pricePaid:order.price, startDate:localDateStr(), expiryDate:addDays(order.expirationDays), status:'active', provisional:true});
+    }
+  }catch(e){
+    for(const k of ['custpkg:'+cpId, 'order:'+id, 'slip:'+id]){ try{ await dbDelete(k); }catch(_){} }
+    throw e;
+  }
+  await pushNotification(trainer.id, 'nav_t_payments', instant ? 'notif_pay_new_instant' : 'notif_pay_new',
+    {customer:session.name, pkg:p.name, price:Number(p.price).toLocaleString(), n:order.sessions}, null);
   payDraft = {pkgId:null, slip:''};
-  toast(t('pay_toast_sent'));
-  go('package');
+  toast(t(instant ? 'pay_toast_sent_instant' : 'pay_toast_sent'));
+  if(instant) go('booking', {trainerId:trainer.id}); else go('package');
 }
 async function cancelOrder(id){
-  const o = await dbGet('order:'+id);
+  clearRenderCaches();
+  let o = await dbGet('order:'+id);
   if(!o || o.customerId!==session.id || o.status!=='pending'){ renderView(); return; }
+  if(o.instant){
+    const ok = await askConfirm({title:t('pay_cancel_ask_title'), body:t('pay_cancel_ask_body'), ok:t('pay_cancel_btn'), cancel:t('pay_cancel_keep')});
+    if(!ok) return;
+    clearRenderCaches();
+    o = await dbGet('order:'+id);                     // the trainer may have answered while the sheet was open
+    if(!o || o.status!=='pending'){ renderView(); renderNav(); return; }
+  }
   o.status = 'cancelled'; o.decidedAt = new Date().toISOString();
   await dbSet('order:'+id, o);
+  if(o.instant) await voidOrderPackage(o);
   try{ await dbDelete('slip:'+id); }catch(_){}
   toast(t('pay_toast_cancelled'));
   renderView(); renderNav();
@@ -2069,26 +2178,32 @@ async function cancelOrder(id){
 
 /* ---- trainer: accept (money seen) or decline an order ---- */
 async function respondOrder(id, accept){
+  clearRenderCaches();                                // another device may have answered already
   const o = await dbGet('order:'+id);
   if(!o || o.trainerId!==session.id){ renderView(); return; }
   if(o.status!=='pending'){ toast(t('tpay_already')); renderView(); renderNav(); return; }
   const now = new Date().toISOString();
   if(accept){
-    const cpId = 'co_'+o.id;                      // one package per order, even if the button is pressed twice
-    if(!(await dbGet('custpkg:'+cpId))){
+    const cpId = o.custpkgId || ('co_'+o.id);     // one package per order, even if the button is pressed twice
+    const ex = await dbGet('custpkg:'+cpId);
+    if(!ex){
       await dbSet('custpkg:'+cpId, {id:cpId, customerId:o.customerId, trainerId:o.trainerId, trainerName:o.trainerName, orderId:o.id,
         packageId:o.tpkgId, packageName:o.packageName, totalSessions:o.sessions, usedSessions:0, remainingSessions:o.sessions,
         pricePaid:o.price, startDate:localDateStr(), expiryDate:addDays(o.expirationDays||90), status:'active'});
+    } else if(ex.provisional){
+      ex.provisional = false;                       // money seen: the package is now final
+      await dbSet('custpkg:'+cpId, ex);
     }
     o.status = 'approved'; o.decidedAt = now; o.custpkgId = cpId;
     await dbSet('order:'+id, o);
     await pushNotification(o.customerId, 'nav_c_package', 'notif_pay_approved', {trainer:o.trainerName, n:o.sessions, pkg:o.packageName}, null);
-    toast(tt('tpay_toast_approved', {name:o.customerName}));
+    toast(tt(o.instant ? 'tpay_toast_confirmed' : 'tpay_toast_approved', {name:o.customerName}));
   } else {
+    if(o.instant) await voidOrderPackage(o);
     o.status = 'rejected'; o.decidedAt = now;
     await dbSet('order:'+id, o);
-    await pushNotification(o.customerId, 'nav_c_package', 'notif_pay_rejected', {trainer:o.trainerName, pkg:o.packageName}, null);
-    toast(t('tpay_toast_rejected'));
+    await pushNotification(o.customerId, 'nav_c_package', o.instant ? 'notif_pay_rejected_void' : 'notif_pay_rejected', {trainer:o.trainerName, pkg:o.packageName}, null);
+    toast(tt(o.instant ? 'tpay_toast_voided' : 'tpay_toast_rejected', {name:o.customerName}));
   }
   try{ await dbDelete('slip:'+id); }catch(_){}      // the slip has done its job
   renderView(); renderNav();
@@ -2142,13 +2257,21 @@ async function removeTrainerPackage(id){
   renderView();
 }
 async function saveTrainerQr(data){
-  await dbSet('trainerpay:'+session.id, {trainerId:session.id, qr:data, updatedAt:new Date().toISOString()});
+  const cur = (await dbGet('trainerpay:'+session.id)) || {};
+  await dbSet('trainerpay:'+session.id, Object.assign({}, cur, {trainerId:session.id, qr:data, updatedAt:new Date().toISOString()}));
   toast(t('tqr_toast_saved'));
   renderView();
 }
 async function removeTrainerQr(){
-  await dbDelete('trainerpay:'+session.id);
+  const cur = (await dbGet('trainerpay:'+session.id)) || {};
+  await dbSet('trainerpay:'+session.id, Object.assign({}, cur, {trainerId:session.id, qr:'', updatedAt:new Date().toISOString()}));   // keeps the credit setting
   toast(t('tqr_toast_removed'));
+  renderView();
+}
+async function saveInstantMode(on){
+  const cur = (await dbGet('trainerpay:'+session.id)) || {qr:''};
+  await dbSet('trainerpay:'+session.id, Object.assign({}, cur, {trainerId:session.id, instantCredit:!!on, updatedAt:new Date().toISOString()}));
+  toast(t('tpay_toast_mode'));
   renderView();
 }
 
@@ -2334,6 +2457,7 @@ function ringHtml(pkg){
         <div class="ring-label"><div class="num">${pkg.remainingSessions}</div><div class="of">${tt('cp_no_of',{total:pkg.totalSessions})}</div></div>
       </div>
       <div style="margin-top:14px;font-size:12px;color:var(--text-faint)">${esc(pkg.packageName)}${pkg.trainerName ? ' · ' + esc(pkg.trainerName) : ''} · ${t('cp_expiry')} ${fmtDate(pkg.expiryDate)}</div>
+      ${pkg.provisional ? `<div style="margin-top:10px"><span class="badge badge-pending">${t('pay_prov_badge')}</span></div>` : ''}
       ${pkg.remainingSessions<=0 ? `<div class="auth-error" style="margin-top:12px">${t('cp_full_warn')}</div>` : ''}
     </div>`;
 }
@@ -2475,6 +2599,7 @@ async function renderCBooking(){
   const trainer = (bookingState.trainerId && trainers.some(x=>x.id===bookingState.trainerId)) ? await dbGet('trainer:'+bookingState.trainerId) : null;
   const pkg = await getActivePackage(session.id, trainer ? trainer.id : null);
   const expiredUnused = !pkg && await hasExpiredUnusedPackage(session.id, trainer ? trainer.id : null);
+  const waitingPay = !pkg && !!trainer && (await dbGetAll('order:')).some(o=>o.customerId===session.id && o.trainerId===trainer.id && o.status==='pending');
   const allBookings = await dbGetAll('booking:');
 
   const dayPills = DAYS.map(d=>{
@@ -2518,7 +2643,7 @@ async function renderCBooking(){
           </select>
         </div>
         ${!trainer ? `<div class="empty">${trainers.length ? t('cb_empty') : t('cb_no_mine')}</div>${trainers.length ? '' : `<button class="btn btn-primary btn-block" style="margin-top:12px" data-goto="trainers">${t('cb_enter_code_btn')}</button>`}` : `
-          ${!pkg ? `<div class="auth-error">${expiredUnused ? t('cb_expired_package') : t('cb_no_package')}</div><button class="btn btn-sm btn-primary" style="margin:-6px 0 14px" data-buy-from="${trainer.id}">${t('cb_buy_first_btn')}</button>` : ''}
+          ${!pkg ? (waitingPay ? `<div class="pay-wait">${t('cb_pay_waiting')}</div>` : `<div class="auth-error">${expiredUnused ? t('cb_expired_package') : t('cb_no_package')}</div><button class="btn btn-sm btn-primary" style="margin:-6px 0 14px" data-buy-from="${trainer.id}">${t('cb_buy_first_btn')}</button>`) : (pkg.provisional ? `<div class="pay-mode-note" style="margin:0 0 12px">${t('cb_prov_note')}</div>` : '')}
           <label>${t('cb_date_label')}</label>
           <div class="day-strip" id="dayStrip">${dayPills}</div>
           <label>${t('cb_cat_label')}</label>
@@ -2653,11 +2778,11 @@ async function renderCPackage(){
     ${pending.length ? `
     <div class="card">
       <div class="card-head"><h3>${t('pay_pending_title')}</h3><span class="hint">${pending.length}</span></div>
-      <p class="slot-hint">${t('pay_pending_sub')}</p>
+      <p class="slot-hint">${t(pending.some(o=>o.instant) ? 'pay_pending_sub_instant' : 'pay_pending_sub')}</p>
       ${pending.map(o=>`
         <div class="pkg-buy-row">
           <div class="info"><div class="n">${esc(o.packageName)} · ${esc(o.trainerName)}</div><div class="s">${fmtBaht(o.price)} · ${fmtDateTime(o.createdAt)}</div></div>
-          <div class="pay-row-acts"><span class="badge badge-pending">${t('pay_st_pending')}</span><button class="btn btn-sm btn-danger-outline" data-cancel-order="${o.id}">${t('pay_cancel_btn')}</button></div>
+          <div class="pay-row-acts"><span class="badge badge-pending">${t(o.instant ? 'pay_st_credited' : 'pay_st_pending')}</span><button class="btn btn-sm btn-danger-outline" data-cancel-order="${o.id}">${t('pay_cancel_btn')}</button></div>
         </div>`).join('')}
     </div>` : ''}
     <div class="card">
@@ -2676,6 +2801,7 @@ async function renderCPay(){
   }
   const payRec = await dbGet('trainerpay:'+tr.id);
   const qr = payRec ? safePhoto(payRec.qr) : '';
+  const instant = instantOf(payRec);
   const orders = await dbGetAll('order:');
   const dupe = orders.some(o=>o.customerId===session.id && o.tpkgId===p.id && o.status==='pending');
   if(payDraft.pkgId !== p.id) payDraft = {pkgId:p.id, slip:''};
@@ -2688,7 +2814,8 @@ async function renderCPay(){
         <div class="card-head"><h3>${t('pay_qr_title')}</h3></div>
         <div class="pay-amount"><span class="lbl">${t('pay_row_total')}</span><span class="amt">${fmtBaht(p.price)}</span></div>
         ${qr ? `<div class="qr-box"><img src="${qr}" alt="QR" data-zoom="1"></div>
-        <div class="slot-hint" style="text-align:center">${tt('pay_qr_hint',{amount:Number(p.price).toLocaleString(), name:esc(tr.name)})} ${t('pay_qr_zoom')}</div>` : `<div class="auth-error">${t('pay_no_qr')}</div>`}
+        <div class="slot-hint" style="text-align:center">${tt('pay_qr_hint',{amount:Number(p.price).toLocaleString(), name:esc(tr.name)})} ${t('pay_qr_zoom')}</div>
+        <div class="pay-namecheck">🔎 ${tt('pay_name_warn',{name:esc(tr.name)})}</div>` : `<div class="auth-error">${t('pay_no_qr')}</div>`}
       </div>
       <div>
         <div class="card">
@@ -2707,6 +2834,7 @@ async function renderCPay(){
             <div id="slipPreview">${payDraft.slip ? `<img class="slip-prev" data-zoom="1" src="${payDraft.slip}" alt="">` : ''}</div>
           </div>
           <p class="slot-hint">${t('pay_slip_hint')}</p>
+          <p class="pay-mode-note">${t(instant ? 'pay_note_instant' : 'pay_note_strict')}</p>
           <button class="btn btn-primary btn-block" id="paySubmitBtn" data-can-send="${canSend?'1':'0'}" ${(canSend && payDraft.slip) ? '' : 'disabled'}>${t('pay_submit_btn')}</button>
         </div>
       </div>
@@ -2805,25 +2933,35 @@ async function renderTPayments(){
   const history = orders.filter(o=>o.status!=='pending').sort((a,b)=> new Date(b.decidedAt||b.createdAt)-new Date(a.decidedAt||a.createdAt)).slice(0,10);
   const pkgs = tpkgsOf(allTp, me, false);
   const qr = payRec ? safePhoto(payRec.qr) : '';
+  const instant = instantOf(payRec);
   const stLabel = {approved:t('pay_st_approved'), rejected:t('pay_st_rejected'), cancelled:t('pay_st_cancelled')};
   const stBadge = {approved:'badge-confirmed', rejected:'badge-rejected', cancelled:'badge-cancelled'};
   return `
     <div class="page-head"><div><div class="eyebrow">${t('tpay_eyebrow')}</div><h1>${t('tpay_h1')}</h1><p>${t('tpay_p')}</p></div></div>
     <div class="card">
       <div class="card-head"><h3>${t('tpay_pending_title')}</h3><span class="hint">${pending.length}</span></div>
-      ${pending.length ? `<p class="slot-hint">${t('tpay_check_hint')}</p>` : ''}
+      ${pending.length ? `<p class="slot-hint">${t(pending.some(o=>o.instant) ? 'tpay_credited_hint' : 'tpay_check_hint')}</p>` : ''}
       ${pending.length ? pending.map(o=>`
         <div class="req-card pay-req">
           <div class="req-top">
             <div><div class="n">${esc(o.customerName)}</div><div class="t">${esc(o.packageName)} · ${o.sessions} ${t('pay_unit_sessions')} · <b>${fmtBaht(o.price)}</b></div><div class="t">${fmtDateTime(o.createdAt)}</div></div>
-            <span class="badge badge-pending">${t('pay_st_pending')}</span>
+            <span class="badge badge-pending">${t(o.instant ? 'pay_st_credited' : 'pay_st_pending')}</span>
           </div>
           <div class="req-actions">
             <button class="btn btn-sm" data-view-slip="${o.id}">${t('tpay_view_slip')}</button>
-            <button class="btn btn-primary" data-approve-order="${o.id}">${tt('tpay_approve_btn',{n:o.sessions})}</button>
-            <button class="btn btn-danger-outline" data-reject-order="${o.id}">${t('tpay_reject_btn')}</button>
+            <button class="btn btn-primary" data-approve-order="${o.id}">${o.instant ? t('tpay_confirm_btn') : tt('tpay_approve_btn',{n:o.sessions})}</button>
+            <button class="btn btn-danger-outline" data-reject-order="${o.id}">${t(o.instant ? 'tpay_reject_credited_btn' : 'tpay_reject_btn')}</button>
           </div>
         </div>`).join('') : `<div class="empty">${t('tpay_pending_empty')}</div>`}
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>${t('tpay_mode_title')}</h3></div>
+      <p class="slot-hint">${t('tpay_mode_hint')}</p>
+      <div class="field"><select data-instant-mode="1">
+        <option value="1" ${instant?'selected':''}>${t('tpay_mode_instant')}</option>
+        <option value="0" ${instant?'':'selected'}>${t('tpay_mode_strict')}</option>
+      </select></div>
+      <p class="slot-hint" style="margin-bottom:0">${t(instant ? 'tpay_mode_instant_note' : 'tpay_mode_strict_note')}</p>
     </div>
     <div class="card table-wrap">
       <div class="card-head"><h3>${t('tpk_title')}</h3></div>
@@ -2925,6 +3063,7 @@ async function renderTDashboard(){
 }
 
 async function renderTRequests(){
+  const provSet = await provisionalPkgIds();
   const bookings = (await trainerBookings()).filter(b=>b.status==='pending').sort((a,b)=> new Date(a.createdAt)-new Date(b.createdAt));
   // Group pending requests that target the exact same date+time, so the
   // trainer can decide between a pair session and a solo lock.
@@ -2941,7 +3080,7 @@ async function renderTRequests(){
       const b = g.items[0];
       return `
         <div class="req-card">
-          <div class="req-top"><div><div class="n">${esc(b.customerName)}</div><div class="t">${fmtDate(b.bookingDate)} · ${fmtTime(b.bookingTime)}</div></div>${badgeFor(b.status)}</div>
+          <div class="req-top"><div><div class="n">${esc(b.customerName)}</div><div class="t">${fmtDate(b.bookingDate)} · ${fmtTime(b.bookingTime)}</div>${provChip(b, provSet)}</div>${badgeFor(b.status)}</div>
           <div class="req-actions">
             <button class="btn btn-primary" data-accept-booking="${b.id}">${t('tq_accept')}</button>
             <button class="btn btn-danger-outline" data-reject-booking="${b.id}">${t('tq_reject')}</button>
@@ -2957,7 +3096,7 @@ async function renderTRequests(){
         <div class="duo-hint">${t('duo_group_hint')}</div>
         ${g.items.map(b=>`
           <div class="duo-person">
-            <div class="pn">${esc(b.customerName)}</div>
+            <div class="pn">${esc(b.customerName)}${provChip(b, provSet)}</div>
             <div class="acts">
               <button class="btn btn-sm btn-ghost" data-accept-booking="${b.id}">${t('duo_accept_only')}</button>
               <button class="btn btn-sm btn-danger-outline" data-reject-booking="${b.id}">${t('tq_reject')}</button>
@@ -3037,6 +3176,7 @@ async function acceptDuo(slotKey){
 }
 
 async function renderTSchedule(){
+  const provSet = await provisionalPkgIds();
   const bookings = (await trainerBookings()).filter(b=>b.status==='confirmed').sort((a,b)=> (a.bookingDate+a.bookingTime).localeCompare(b.bookingDate+b.bookingTime));
   // Pair sessions share one slot, so show them grouped under a single header
   // while still letting the trainer record each customer's result separately.
@@ -3059,7 +3199,7 @@ async function renderTSchedule(){
       return `
         <div class="sched-row">
           <div class="time">${fmtTime(b.bookingTime)}</div>
-          <div class="who">${esc(b.customerName)} · ${fmtDate(b.bookingDate)}</div>
+          <div class="who">${esc(b.customerName)} · ${fmtDate(b.bookingDate)}${provChip(b, provSet)}</div>
           ${acts(b)}
         </div>`;
     }
@@ -3071,7 +3211,7 @@ async function renderTSchedule(){
         </div>
         ${g.items.map(b=>`
           <div class="duo-person">
-            <div class="pn">${esc(b.customerName)}</div>
+            <div class="pn">${esc(b.customerName)}${provChip(b, provSet)}</div>
             ${acts(b)}
           </div>
         `).join('')}
@@ -3085,7 +3225,33 @@ async function renderTSchedule(){
     </div>
   `;
 }
+const finishLocks = new Set();
+/* Recording a session uses it up. While the package is still waiting for the trainer to see the
+   money, ask first (one tap) so a session is never used up on an unchecked payment. */
 async function finishBooking(id, noShow){
+  if(finishLocks.has(id)) return;
+  finishLocks.add(id);
+  try{
+    clearRenderCaches();
+    const b = await dbGet('booking:'+id);
+    if(!b || b.status!=='confirmed') return;
+    if(b.packageInstanceId){
+      const gp = await dbGet('custpkg:'+b.packageInstanceId);
+      const ord = (gp && gp.provisional && gp.orderId) ? await dbGet('order:'+gp.orderId) : null;
+      if(ord && ord.status==='pending'){
+        const ok = await askConfirm({title:t('tgate_title'),
+          body:tt('tgate_body', {name:b.customerName, pkg:ord.packageName, price:Number(ord.price).toLocaleString()}),
+          ok:t('tgate_ok'), cancel:t('tgate_cancel')});
+        if(!ok) return;
+        await respondOrder(ord.id, true);
+        const again = await dbGet('booking:'+id);
+        if(!again || again.status!=='confirmed') return;
+      }
+    }
+    await finishBookingNow(id, noShow);
+  } finally { finishLocks.delete(id); }
+}
+async function finishBookingNow(id, noShow){
   const b = await dbGet('booking:'+id);
   if(!b || b.status!=='confirmed') return; // guard against double-deduction
   b.status = noShow ? 'no_show' : 'completed';
@@ -3790,6 +3956,7 @@ function wireView(){
   const addTpkgBtn = document.getElementById('addTpkgBtn'); if(addTpkgBtn) addTpkgBtn.addEventListener('click', ()=> withBusy(addTpkgBtn, addTrainerPackage));
   document.querySelectorAll('[data-remove-tpkg]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>removeTrainerPackage(el.dataset.removeTpkg))));
   document.querySelectorAll('[data-remove-qr]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, removeTrainerQr)));
+  document.querySelectorAll('[data-instant-mode]').forEach(el=>el.addEventListener('change', ()=> saveInstantMode(el.value==='1')));
 }
 
 document.getElementById('modalCloseBtn').addEventListener('click', ()=> closeBookingModal(true));
