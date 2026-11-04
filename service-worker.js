@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trainkrub-cache-v16';
+const CACHE_NAME = 'trainkrub-cache-v17';
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -22,6 +22,9 @@ self.addEventListener('activate', (event) => {
       Promise.all(
         keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
       )
+    ).then(() => caches.open(CACHE_NAME)).then((cache) =>
+      // drop any entry an earlier build stored under an address that still carried a #fragment
+      cache.keys().then((reqs) => Promise.all(reqs.filter((r) => r.url.indexOf('#') >= 0).map((r) => cache.delete(r))))
     ).then(() => self.clients.claim())
   );
 });
@@ -44,7 +47,8 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          // keyed without the #fragment: after signing in with Google the address carries a short-lived token there
+          caches.open(CACHE_NAME).then((cache) => cache.put(request.url.split('#')[0], copy));
           return response;
         })
         .catch(() => caches.match('./index.html'))

@@ -1099,7 +1099,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-04.5';
+const APP_BUILD = '2026-11-04.6';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -3911,7 +3911,7 @@ async function renderAuth(){
   `;
 
   document.querySelectorAll('#authRoleTab button').forEach(b=>b.addEventListener('click', ()=>{
-    authRole = b.dataset.role; authMode='login'; authError=''; renderAuth();
+    clearGoogleApplicant(); authRole = b.dataset.role; authMode='login'; authError=''; renderAuth();
   }));
   const toReg = document.getElementById('toRegister'); if(toReg) toReg.addEventListener('click', ()=>{ authMode='register'; authError=''; regDraft={name:'',phone:'',pw:''}; renderAuth(); });
   const toApp = document.getElementById('toApply'); if(toApp) toApp.addEventListener('click', ()=>{ clearGoogleApplicant(); authMode='apply'; authError=''; pendingApplicationCerts=[]; pendingApplicationPhoto=''; applyDraft={name:'',specialty:'',phone:'',pw:'',bio:''}; renderAuth(); });
@@ -4075,7 +4075,7 @@ async function signInWithGoogle(btn, intent){
     try{
       // The page is about to leave. Keep a ?t=CODE from a trainer's link/QR so it is still applied afterwards.
       if(pendingTrainerCode){ try{ localStorage.setItem(GOOGLE_CODE_KEY, pendingTrainerCode); }catch(e){} }
-      try{ localStorage.setItem(GOOGLE_INTENT_KEY, JSON.stringify(Object.assign({role:'customer', mode:'login'}, intent||{}, {ts:Date.now()}))); }catch(e){}
+      writeGoogleIntent(intent);
       const { error } = await supabaseClient.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: googleRedirectUrl(), queryParams:{ prompt:'select_account' } } });
       if(error) throw error;
     }catch(e){ console.warn('Google sign-in could not start:', e); toast(t('google_failed')); }
@@ -4084,10 +4084,20 @@ async function signInWithGoogle(btn, intent){
 window.addEventListener('pageshow', e=>{ if(e.persisted) document.querySelectorAll('[data-google-btn]').forEach(b=>{ b.disabled = false; }); });
 
 /* Who started the Google trip (customer or trainer, signing in or linking), kept for the round trip. */
+function writeGoogleIntent(intent){
+  const raw = JSON.stringify(Object.assign({role:'customer', mode:'login'}, intent||{}, {ts:Date.now()}));
+  try{ sessionStorage.setItem(GOOGLE_INTENT_KEY, raw); }catch(e){}
+  try{ localStorage.setItem(GOOGLE_INTENT_KEY, raw); }catch(e){}
+}
+/* null = this browser never started a Google sign-in recently, so whatever token arrived is not trusted.
+   (Otherwise a crafted link carrying somebody else's Google token could log a person into the sender's account.) */
 function readGoogleIntent(){
   let it = null;
-  try{ it = JSON.parse(localStorage.getItem(GOOGLE_INTENT_KEY) || 'null'); localStorage.removeItem(GOOGLE_INTENT_KEY); }catch(e){}
-  if(!it || it.role!=='trainer' || (Date.now() - (it.ts||0)) > 30*60*1000) return {role:'customer', mode:'login'};
+  for(const st of [sessionStorage, localStorage]){
+    try{ const raw = st.getItem(GOOGLE_INTENT_KEY); if(raw && !it) it = JSON.parse(raw); st.removeItem(GOOGLE_INTENT_KEY); }catch(e){}
+  }
+  if(!it || (Date.now() - (it.ts||0)) > 30*60*1000) return null;
+  if(it.role!=='trainer') return {role:'customer', mode:'login'};
   return {role:'trainer', mode: it.mode==='link' ? 'link' : 'login', trainerId: String(it.trainerId||'')};
 }
 /* A person who signed in with Google as a trainer but has no account yet: their (server-verified) Google identity,
@@ -4140,6 +4150,7 @@ async function finishGoogleLogin(){
   try{ const raw = sessionStorage.getItem(GOOGLE_RETURN_KEY); if(raw){ if(!ret) ret = JSON.parse(raw); sessionStorage.removeItem(GOOGLE_RETURN_KEY); } }catch(e){}
   if(!ret) return false;
   const intent = readGoogleIntent();
+  if(!intent){ authRole = 'customer'; authMode = 'login'; authError = t('google_failed'); return false; }   // not started from this browser: ignore the token
   const linking = intent.role==='trainer' && intent.mode==='link';
   const fail = (key)=>{ if(linking) googleNote = t(key); else authError = t(key); return false; };
   authRole = intent.role; authMode = 'login';
@@ -4148,7 +4159,9 @@ async function finishGoogleLogin(){
   // 1) ask Supabase who this token belongs to
   let user = null;
   try{
-    const r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, cache:'no-store' });
+    const ac = (typeof AbortController!=='undefined') ? new AbortController() : null;
+    const stopTimer = setTimeout(()=>{ if(ac) ac.abort(); }, 15000);
+    let r; try{ r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, cache:'no-store', signal: ac ? ac.signal : undefined }); } finally { clearTimeout(stopTimer); }
     if(r.status===401 || r.status===403) return fail('google_failed');
     if(!r.ok) throw new Error('auth user ' + r.status);
     user = await r.json();
@@ -4186,7 +4199,8 @@ async function finishGoogleLogin(){
     // the database could not be reached: keep the (still valid, short-lived) sign-in so the boot retry can finish it
     if(e instanceof DbError){
       googleReturnMem = ret;
-      try{ sessionStorage.setItem(GOOGLE_RETURN_KEY, JSON.stringify(ret)); localStorage.setItem(GOOGLE_INTENT_KEY, JSON.stringify(Object.assign({}, intent, {ts:Date.now()}))); }catch(x){}
+      try{ sessionStorage.setItem(GOOGLE_RETURN_KEY, JSON.stringify(ret)); }catch(x){}
+      writeGoogleIntent(intent);
     }
     throw e;
   }
@@ -4439,7 +4453,8 @@ if('serviceWorker' in navigator && !window.frameElement){
   try{
     const sp = new URLSearchParams(location.search);
     if(sp.get('clearlocal')==='1'){
-      Object.keys(localStorage).forEach(k=>{ if(k.indexOf('hug-yim-plus-fitness')===0 || k==='trainkrub:activeSession') localStorage.removeItem(k); });
+      Object.keys(localStorage).forEach(k=>{ if(k.indexOf('hug-yim-plus-fitness')===0 || k==='trainkrub:activeSession' || k.indexOf('trainkrub:google')===0) localStorage.removeItem(k); });
+      try{ Object.keys(sessionStorage).forEach(k=>{ if(k.indexOf('trainkrub:google')===0) sessionStorage.removeItem(k); }); }catch(e){}
       const cleanUrl = new URL(location.href);
       cleanUrl.searchParams.delete('clearlocal');
       let finished = false;
