@@ -815,6 +815,14 @@ const i18n = {
     tchip_unverified:'ยังไม่ยืนยันรับเงิน',
     notif_pay_new_instant:'{customer} ส่งสลิปซื้อ {pkg} (฿{price}) ระบบเติม {n} ครั้งให้แล้ว ตรวจยอดเงินเข้าแล้วกดยืนยัน',
     notif_pay_rejected_void:'{trainer} ไม่พบยอดเงินของรายการ {pkg} แพ็กเกจและนัดที่ยังไม่ถึงถูกยกเลิก ถ้าโอนแล้วโปรดติดต่อเทรนเนอร์',
+    tlead_title:'จองล่วงหน้า',
+    tlead_hint:'ลูกเทรนต้องจองล่วงหน้าอย่างน้อยกี่ชั่วโมงก่อนเวลาเทรน ถ้าเหลือเวลาน้อยกว่าที่ตั้ง ช่วงเวลานั้นจะกดจองไม่ได้ เพื่อให้คุณเตรียมตัวทัน (ถ้าไม่ได้ตั้ง แอปใช้ 1 ชั่วโมง)',
+    tlead_label:'ต้องจองล่วงหน้าอย่างน้อย', tlead_opt_0:'ไม่ต้องล่วงหน้า (จองได้จนถึงเวลานัด)',
+    tlead_opt_one:'1 ชั่วโมง', tlead_opt_hours:'{n} ชั่วโมง', tlead_opt_day_one:'1 วัน (24 ชั่วโมง)', tlead_opt_days:'{n} วัน ({h} ชั่วโมง)',
+    tlead_example:'ตัวอย่าง: ลูกเทรนอยากเทรนเวลา 18:00 ต้องกดจองก่อน {time} พ้นจากนั้นจะไม่มีเวลา 18:00 ให้เลือก',
+    tlead_toast:'บันทึกแล้ว ลูกเทรนต้องจองล่วงหน้า {label}',
+    cb_lead_hint:'เทรนเนอร์คนนี้ให้จองล่วงหน้าอย่างน้อย {label} เวลาที่เหลือน้อยกว่านั้นจะกดไม่ได้',
+    cb_slot_too_soon:'เวลานี้เลยกำหนดจองล่วงหน้าแล้ว (ต้องจองล่วงหน้าอย่างน้อย {label}) กรุณาเลือกเวลาอื่น',
     footer_note:'ข้อมูลทั้งหมดถูกเก็บไว้ในฐานข้อมูลกลางที่ใช้ร่วมกันทั้ง 3 ระบบ (Customer / Trainer / Admin) และซิงค์กันแบบเรียลไทม์'
   },
   en:{
@@ -967,6 +975,14 @@ const i18n = {
     tchip_unverified:'Payment not confirmed',
     notif_pay_new_instant:'{customer} sent a slip for {pkg} (THB {price}). {n} sessions were added. Check the money, then confirm.',
     notif_pay_rejected_void:'{trainer} could not find a payment for {pkg}. The package and upcoming bookings were cancelled. If you already paid, please contact the trainer.',
+    tlead_title:'Booking notice',
+    tlead_hint:'How many hours before a session customers must book. Slots that start sooner than this cannot be booked, so you have time to prepare. If you do not set it, the app uses 1 hour.',
+    tlead_label:'Minimum notice', tlead_opt_0:'No notice needed (book until the start time)',
+    tlead_opt_one:'1 hour', tlead_opt_hours:'{n} hours', tlead_opt_day_one:'1 day (24 hours)', tlead_opt_days:'{n} days ({h} hours)',
+    tlead_example:'Example: for an 18:00 session, customers must book before {time}. After that, 18:00 is no longer offered.',
+    tlead_toast:'Saved. Customers must book at least {label} ahead',
+    cb_lead_hint:'This trainer needs at least {label} notice. Slots starting sooner cannot be booked.',
+    cb_slot_too_soon:'This slot starts too soon (at least {label} notice is needed). Please pick another time.',
     footer_note:'All data lives in one shared database used by all 3 systems (Customer / Trainer / Admin) and stays in sync in real time.'
   }
 };
@@ -998,7 +1014,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-04.1';
+const APP_BUILD = '2026-11-04.2';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -2589,6 +2605,56 @@ function slotAvailability(all, trainerId, date, time, customerId){
   return {ok:true, reason:null, pending:pending.length};
 }
 
+/* ---- minimum booking notice (set by each trainer, default 1 hour) ---- */
+const DEFAULT_LEAD_HOURS = 1;
+const LEAD_OPTIONS = [0,1,2,3,4,6,12,24,48];
+function leadHoursOf(tr){
+  const raw = tr ? tr.leadHours : undefined;
+  if(raw===undefined || raw===null || raw==='') return DEFAULT_LEAD_HOURS;
+  const h = Number(raw);
+  return (isFinite(h) && h>=0) ? h : DEFAULT_LEAD_HOURS;
+}
+function leadLabel(h){
+  if(h===0) return t('tlead_opt_0');
+  if(h===1) return t('tlead_opt_one');
+  if(h>=24 && h%24===0) return h===24 ? t('tlead_opt_day_one') : tt('tlead_opt_days',{n:h/24, h:h});
+  return tt('tlead_opt_hours',{n:h});
+}
+/* true when the slot starts sooner than the trainer's notice (also covers slots already in the past) */
+function slotTooSoon(trainer, date, time){
+  const start = new Date(date+'T'+time+':00').getTime();
+  if(!isFinite(start)) return false;
+  return start - Date.now() < leadHoursOf(trainer) * 3600000;
+}
+function leadCardHtml(tr){
+  const cur = leadHoursOf(tr);
+  const opts = LEAD_OPTIONS.includes(cur) ? LEAD_OPTIONS : LEAD_OPTIONS.concat([cur]).sort((a,b)=>a-b);
+  let example = '';
+  if(cur>=1 && cur<=12){
+    const m = 18*60 - Math.round(cur*60);
+    example = tt('tlead_example',{time:String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')});
+  }
+  return `
+      <div class="card">
+        <div class="card-head"><h3>${t('tlead_title')}</h3></div>
+        <p class="slot-hint">${t('tlead_hint')}</p>
+        <div class="field"><label>${t('tlead_label')}</label>
+          <select data-lead-hours="1">${opts.map(h=>`<option value="${h}" ${h===cur?'selected':''}>${esc(leadLabel(h))}</option>`).join('')}</select>
+        </div>
+        ${example ? `<p class="slot-hint" style="margin-bottom:0">${example}</p>` : ''}
+      </div>`;
+}
+async function saveLeadHours(h){
+  if(!isFinite(h) || h<0) return;
+  clearRenderCaches();
+  const tr = await dbGet('trainer:'+session.id);
+  if(!tr) return;
+  tr.leadHours = h;
+  await dbSet('trainer:'+tr.id, tr);
+  toast(tt('tlead_toast',{label:leadLabel(h)}));
+  renderView();
+}
+
 async function renderCBooking(){
   if(routeParams.trainerId){            // arriving from a "book" button / QR link: take the trainer once, then let the drop-down decide
     bookingState.trainerId = routeParams.trainerId; bookingState.time = null;
@@ -2612,7 +2678,9 @@ async function renderCBooking(){
   let selectedIsDuo = false;
   const timeGrid = (TIMES[bookingState.cat]||[]).map(tm=>{
     if(!trainer) return `<div class="time-slot" data-time="${tm}">${fmtTime(tm)}</div>`;
-    const av = slotAvailability(allBookings, trainer.id, bookingState.day, tm, session.id);
+    const late = slotTooSoon(trainer, bookingState.day, tm);
+    if(late && bookingState.time === tm) bookingState.time = null;       // a slot picked a while ago can fall inside the notice window
+    const av = late ? {ok:false, reason:'late', pending:0} : slotAvailability(allBookings, trainer.id, bookingState.day, tm, session.id);
     const duoOpen = av.ok && av.pending === 1;
     if(duoOpen) anyDuoOpen = true;
     if(duoOpen && bookingState.time === tm) selectedIsDuo = true;
@@ -2620,6 +2688,8 @@ async function renderCBooking(){
     return `<div class="time-slot ${bookingState.time===tm?'sel':''} ${av.ok?'':'taken'} ${duoOpen?'duo-open':''}" data-time="${tm}" title="${esc(title)}">${fmtTime(tm)}</div>`;
   }).join('');
 
+  const leadH = trainer ? leadHoursOf(trainer) : 0;
+  const leadHint = (trainer && leadH>0) ? `<div class="slot-hint">${tt('cb_lead_hint',{label:leadLabel(leadH)})}</div>` : '';
   // When the customer actually picks an amber slot, spell out in full what
   // booking it means, instead of relying on the colour alone.
   const duoNotice = selectedIsDuo ? `
@@ -2654,6 +2724,7 @@ async function renderCBooking(){
           </div>
           <label>${t('cb_time_label')}</label>
           <div class="time-grid" id="timeGrid">${timeGrid}</div>
+          ${leadHint}
           ${anyDuoOpen && !selectedIsDuo ? `<div class="slot-hint">${t('duo_slot_hint')}</div>` : ''}
           ${duoNotice}
           <button class="btn btn-primary btn-block ${selectedIsDuo?'btn-duo':''}" id="submitBookingBtn" ${!pkg?'disabled':''}>${selectedIsDuo ? t('duo_submit_btn') : t('cb_submit_btn')}</button>
@@ -2673,9 +2744,16 @@ async function renderCBooking(){
 }
 
 async function submitBooking(){
+  clearRenderCaches();                                  // read the trainer's notice setting and the slots fresh
   const trainer = await dbGet('trainer:'+bookingState.trainerId);
   const pkg = trainer ? await getActivePackage(session.id, trainer.id) : null;
   if(!trainer || !pkg || !bookingState.time){ toast(t('cb_no_time_selected')); return; }
+  if(slotTooSoon(trainer, bookingState.day, bookingState.time)){
+    toast(tt('cb_slot_too_soon',{label:leadLabel(leadHoursOf(trainer))}));
+    bookingState.time = null;
+    renderView();
+    return;
+  }
   // Re-check against fresh data so two customers racing for the same slot
   // can still both get in (duo), but never past the capacity rules.
   const freshBookings = await dbGetAll('booking:');
@@ -3315,6 +3393,7 @@ async function renderTProfile(){
         <button class="btn btn-primary btn-block" id="pfSaveBtn">${t('tpz_save_btn')}</button>
       </div>
       <div class="card" id="certsCard">${certsCardInner(tr)}</div>
+      ${leadCardHtml(tr)}
       ${tr.code ? `
       <div class="card">
         <div class="card-head"><h3>${t('tpz_code_title')}</h3></div>
@@ -3957,6 +4036,7 @@ function wireView(){
   document.querySelectorAll('[data-remove-tpkg]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>removeTrainerPackage(el.dataset.removeTpkg))));
   document.querySelectorAll('[data-remove-qr]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, removeTrainerQr)));
   document.querySelectorAll('[data-instant-mode]').forEach(el=>el.addEventListener('change', ()=> saveInstantMode(el.value==='1')));
+  document.querySelectorAll('[data-lead-hours]').forEach(el=>el.addEventListener('change', ()=> saveLeadHours(Number(el.value))));
 }
 
 document.getElementById('modalCloseBtn').addEventListener('click', ()=> closeBookingModal(true));
