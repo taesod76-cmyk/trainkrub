@@ -732,6 +732,12 @@ const i18n = {
     nav_a_dashboard:'ภาพรวมระบบ', nav_a_apps:'ตรวจสอบเทรนเนอร์', nav_a_users:'จัดการผู้ใช้งาน', nav_a_packages:'จัดการแพ็กเกจ',
     logout:'ออกจากระบบ',
 
+    google_or_fill:'หรือกรอกข้อมูลเอง', google_apply_note:'กำลังสมัครเป็นเทรนเนอร์ด้วยบัญชี Google: {email} ไม่ต้องตั้งรหัสผ่าน กรอกข้อมูลที่เหลือแล้วรอแอดมินอนุมัติ จากนั้นเข้าสู่ระบบด้วย Google ได้เลย',
+    google_link_done:'เชื่อมบัญชี Google แล้ว ต่อไปเข้าสู่ระบบด้วย Google ได้เลย', google_link_taken:'บัญชี Google นี้ผูกกับเทรนเนอร์คนอื่นอยู่แล้ว',
+    google_link_other:'บัญชีนี้เชื่อมกับ Google อีกบัญชีหนึ่งอยู่แล้ว เลิกเชื่อมก่อนจึงจะเชื่อมใหม่ได้', google_unlinked:'เลิกเชื่อมบัญชี Google แล้ว',
+    tg_title:'เข้าสู่ระบบด้วย Google', tg_hint_unlinked:'เชื่อมบัญชี Google ไว้ จะได้เข้าสู่ระบบด้วยการกดปุ่ม Google ได้ โดยเบอร์โทรและรหัสผ่านเดิมยังใช้ได้เหมือนเดิม',
+    tg_linked:'เชื่อมกับ {email} แล้ว', tg_link_btn:'เชื่อมบัญชี Google', tg_unlink_btn:'เลิกเชื่อม Google', tg_only_google:'บัญชีนี้เข้าสู่ระบบด้วย Google เท่านั้น (ไม่มีรหัสผ่าน)',
+    aa_google_tag:'สมัครด้วย Google',
     google_login:'เข้าสู่ระบบด้วย Google', google_signup:'สมัครด้วย Google', google_or:'หรือ',
     google_failed:'เข้าสู่ระบบด้วย Google ไม่สำเร็จ ลองใหม่อีกครั้ง', google_cancelled:'ยกเลิกการเข้าสู่ระบบด้วย Google แล้ว',
     google_need_setup:'ตอนนี้ยังเข้าสู่ระบบด้วย Google ไม่ได้ ใช้เบอร์โทรศัพท์แทนได้',
@@ -899,6 +905,12 @@ const i18n = {
     nav_a_dashboard:'Dashboard', nav_a_apps:'Trainer approval', nav_a_users:'Manage users', nav_a_packages:'Manage packages',
     logout:'Log out',
 
+    google_or_fill:'or fill in the form', google_apply_note:'Applying as a trainer with your Google account: {email}. No password needed. Fill in the rest and wait for the admin to approve, then sign in with Google.',
+    google_link_done:'Google account linked. You can now sign in with Google.', google_link_taken:'This Google account is already linked to another trainer.',
+    google_link_other:'This account is already linked to a different Google account. Unlink it first to link a new one.', google_unlinked:'Google account unlinked.',
+    tg_title:'Sign in with Google', tg_hint_unlinked:'Link your Google account to sign in with the Google button. Your phone number and password keep working as before.',
+    tg_linked:'Linked to {email}', tg_link_btn:'Link Google account', tg_unlink_btn:'Unlink Google', tg_only_google:'This account signs in with Google only (no password).',
+    aa_google_tag:'Applied with Google',
     google_login:'Sign in with Google', google_signup:'Sign up with Google', google_or:'or',
     google_failed:'Google sign-in did not work. Please try again.', google_cancelled:'Google sign-in was cancelled.',
     google_need_setup:'Google sign-in is not available right now. You can use your phone number instead.',
@@ -1087,7 +1099,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-04.4';
+const APP_BUILD = '2026-11-04.5';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -1532,6 +1544,8 @@ let pendingTrainerCode = null;
    afterwards except the ordinary remembered {id, role}; the token is revoked. */
 const GOOGLE_RETURN_KEY = 'trainkrub:googleReturn';
 const GOOGLE_CODE_KEY = 'trainkrub:googlePendingCode';
+const GOOGLE_INTENT_KEY = 'trainkrub:googleIntent';
+const GOOGLE_APPLICANT_KEY = 'trainkrub:googleApplicant';
 let googleReturnMem = null;
 (function takeGoogleReturnFromUrl(){
   try{
@@ -3520,6 +3534,7 @@ async function renderTProfile(){
       </div>
       <div class="card" id="certsCard">${certsCardInner(tr)}</div>
       ${leadCardHtml(tr)}
+      ${googleCardHtml(tr)}
       ${tr.code ? `
       <div class="card">
         <div class="card-head"><h3>${t('tpz_code_title')}</h3></div>
@@ -3685,7 +3700,7 @@ async function renderAApps(){
       ${apps.length ? apps.map(a=>`
         <div class="req-card">
           <div class="req-top">
-            <div style="display:flex;gap:12px;align-items:center">${avatarHtml(a.name, a.photo)}<div><div class="n">${esc(a.name)}</div><div class="t">${esc(a.specialty||'')} · ${esc(a.phone||'')}</div><div class="t">${t('aa_submitted_on')} ${fmtDateTime(a.submittedAt)}</div></div></div>
+            <div style="display:flex;gap:12px;align-items:center">${avatarHtml(a.name, a.photo)}<div><div class="n">${esc(a.name)}</div><div class="t">${esc(a.specialty||'')} · ${esc(a.phone||'')}</div>${a.googleId ? `<div class="t">${esc(a.email||'')} · ${t('aa_google_tag')}</div>` : ''}<div class="t">${t('aa_submitted_on')} ${fmtDateTime(a.submittedAt)}</div></div></div>
             <span class="badge badge-pending">${t('aa_pending_badge')}</span>
           </div>
           <p style="font-size:13px;color:var(--text-dim);margin-bottom:10px;line-height:1.6">${esc(a.bio||'')}</p>
@@ -3714,6 +3729,7 @@ async function approveApp(id, approve){
     const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
       specialty:app.specialty, bio:app.bio, certs:app.certs||[], status:'active', ready:true, role:'trainer', code};
     if(app.photo) tr.photo = app.photo;
+    if(app.googleId){ tr.googleId = app.googleId; tr.email = app.email || ''; if(app.authProvider==='google') tr.authProvider = 'google'; }
     await dbSet('trainer:'+tr.id, tr);
     await dbDelete('trainerApp:'+id);
     await pushNotification(tr.id, 'nav_t_dashboard', 'notif_approved', {}, null);
@@ -3824,7 +3840,7 @@ async function renderAuth(){
       <div class="field"><label>${idLabel}</label><input type="text" id="authId" placeholder="${idPh}"></div>
       <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="authPw"></div>
       <button class="btn btn-primary btn-block" id="loginBtn">${t('auth_login_btn')}</button>
-      ${authRole==='customer' ? googleBtnHtml('google_login') : ''}
+      ${authRole==='customer' ? googleBtnHtml('google_login') : authRole==='trainer' ? googleBtnHtml('google_login','trainer') : ''}
     `;
     if(authRole==='admin'){
       inner += `<div class="auth-hint">${t('seed_note_admin')}</div>`;
@@ -3846,7 +3862,10 @@ async function renderAuth(){
     inner += `
       <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">${navIcon('dumbbell')}</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_apply_heading')}</h2></div>
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
-      <div class="auth-hint" style="margin-bottom:16px">${t('auth_apply_note')}</div>
+      ${googleApplicant
+        ? `<div class="auth-hint" style="margin-bottom:16px">${tt('google_apply_note',{email:esc(googleApplicant.email||'')})}</div>`
+        : `${googleBtnOnlyHtml('google_signup','trainer')}<div class="auth-divider"><span>${t('google_or_fill')}</span></div>
+      <div class="auth-hint" style="margin-bottom:16px">${t('auth_apply_note')}</div>`}
       <div class="field"><label>${t('ap_photo_label')}</label>
         <div class="photo-edit" style="margin-bottom:0">
           <div id="apPhotoPreview">${avatarHtml(applyDraft.name||'?', pendingApplicationPhoto, 'avatar-xl')}</div>
@@ -3858,7 +3877,7 @@ async function renderAuth(){
         <div class="field"><label>${t('auth_specialty_label')}</label><input type="text" id="apSpecialty" value="${esc(applyDraft.specialty)}"></div>
         <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="apPhone" value="${esc(applyDraft.phone)}"></div>
       </div>
-      <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="apPw" value="${esc(applyDraft.pw)}"></div>
+      ${googleApplicant ? '' : `<div class="field"><label>${t('auth_password_label')}</label><input type="password" id="apPw" value="${esc(applyDraft.pw)}"></div>`}
       <div class="field"><label>${t('auth_bio_label')}</label><textarea id="apBio" rows="2">${esc(applyDraft.bio)}</textarea></div>
       <div class="field">
         <label>${t('auth_certs_label')}</label>
@@ -3895,11 +3914,11 @@ async function renderAuth(){
     authRole = b.dataset.role; authMode='login'; authError=''; renderAuth();
   }));
   const toReg = document.getElementById('toRegister'); if(toReg) toReg.addEventListener('click', ()=>{ authMode='register'; authError=''; regDraft={name:'',phone:'',pw:''}; renderAuth(); });
-  const toApp = document.getElementById('toApply'); if(toApp) toApp.addEventListener('click', ()=>{ authMode='apply'; authError=''; pendingApplicationCerts=[]; pendingApplicationPhoto=''; applyDraft={name:'',specialty:'',phone:'',pw:'',bio:''}; renderAuth(); });
+  const toApp = document.getElementById('toApply'); if(toApp) toApp.addEventListener('click', ()=>{ clearGoogleApplicant(); authMode='apply'; authError=''; pendingApplicationCerts=[]; pendingApplicationPhoto=''; applyDraft={name:'',specialty:'',phone:'',pw:'',bio:''}; renderAuth(); });
   const back1 = document.getElementById('backToLogin'); if(back1) back1.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
-  const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
+  const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ clearGoogleApplicant(); authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
-  document.querySelectorAll('[data-google-btn]').forEach(b=>b.addEventListener('click', ()=> signInWithGoogle(b)));
+  document.querySelectorAll('[data-google-btn]').forEach(b=>b.addEventListener('click', ()=> signInWithGoogle(b, {role: b.dataset.googleRole==='trainer' ? 'trainer' : 'customer', mode:'login'})));
   const authIdEl = document.getElementById('authId'); if(authIdEl) authIdEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   const authPwEl = document.getElementById('authPw'); if(authPwEl) authPwEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   document.querySelectorAll('.quick-login-row').forEach(row=>row.addEventListener('click', ()=>{
@@ -4011,11 +4030,13 @@ async function doApplyInner(){
     const name = (document.getElementById('apName').value||'').trim();
     const specialty = (document.getElementById('apSpecialty').value||'').trim();
     const phone = (document.getElementById('apPhone').value||'').trim();
-    const pw = (document.getElementById('apPw').value||'').trim();
+    const gApp = googleApplicant;
+    const pw = gApp ? '' : (document.getElementById('apPw').value||'').trim();
     const bio = (document.getElementById('apBio').value||'').trim();
-    if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+    if(!name || !phone || (!pw && !gApp)){ authError = t('auth_toast_fill'); renderAuth(); return; }
     const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
-    if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
+    if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone||x.phone===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
+    if(gApp && (apps.some(x=>x.googleId===gApp.gid) || trainers.some(x=>x.googleId===gApp.gid))){ clearGoogleApplicant(); authError = t('auth_toast_pending'); renderAuth(); return; }
     // Certificate pictures are saved under their own keys; the application only keeps their ids.
     const certsOut = [];
     for(const c of pendingApplicationCerts){
@@ -4026,11 +4047,13 @@ async function doApplyInner(){
       }
       certsOut.push(o);
     }
-    const app = {id:newId('app'), username:phone, password:pw, name, phone, specialty, bio, certs:certsOut, submittedAt:new Date().toISOString(), status:'pending'};
+    const app = {id:newId('app'), username: gApp ? 'google:' + gApp.gid : phone, password:pw, name, phone, specialty, bio, certs:certsOut, submittedAt:new Date().toISOString(), status:'pending'};
+    if(gApp){ app.googleId = gApp.gid; app.email = gApp.email || ''; app.authProvider = 'google'; }
     if(pendingApplicationPhoto) app.photo = pendingApplicationPhoto;
     await dbSet('trainerApp:'+app.id, app);
     pendingApplicationCerts = []; pendingApplicationPhoto = '';
     applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
+    clearGoogleApplicant();
     toast(t('auth_toast_applied'));
     authMode='login'; authError=''; renderAuth();
   } finally { authSubmitting = false; }
@@ -4038,17 +4061,21 @@ async function doApplyInner(){
 
 
 const GOOGLE_G_SVG = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
-function googleBtnHtml(labelKey){
+function googleBtnOnlyHtml(labelKey, role){
+  return `<button type="button" class="btn btn-block btn-google" data-google-btn data-google-role="${role==='trainer' ? 'trainer' : 'customer'}">${GOOGLE_G_SVG}<span>${t(labelKey)}</span></button>`;
+}
+function googleBtnHtml(labelKey, role){
   return `<div class="auth-divider"><span>${t('google_or')}</span></div>
-      <button type="button" class="btn btn-block btn-google" data-google-btn>${GOOGLE_G_SVG}<span>${t(labelKey)}</span></button>`;
+      ${googleBtnOnlyHtml(labelKey, role)}`;
 }
 function googleRedirectUrl(){ return location.origin + location.pathname.replace(/index\.html$/, ''); }
-async function signInWithGoogle(btn){
+async function signInWithGoogle(btn, intent){
   if(!supabaseClient){ toast(t('google_need_setup')); return; }
   await withBusy(btn, async ()=>{
     try{
       // The page is about to leave. Keep a ?t=CODE from a trainer's link/QR so it is still applied afterwards.
       if(pendingTrainerCode){ try{ localStorage.setItem(GOOGLE_CODE_KEY, pendingTrainerCode); }catch(e){} }
+      try{ localStorage.setItem(GOOGLE_INTENT_KEY, JSON.stringify(Object.assign({role:'customer', mode:'login'}, intent||{}, {ts:Date.now()}))); }catch(e){}
       const { error } = await supabaseClient.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: googleRedirectUrl(), queryParams:{ prompt:'select_account' } } });
       if(error) throw error;
     }catch(e){ console.warn('Google sign-in could not start:', e); toast(t('google_failed')); }
@@ -4056,30 +4083,86 @@ async function signInWithGoogle(btn){
 }
 window.addEventListener('pageshow', e=>{ if(e.persisted) document.querySelectorAll('[data-google-btn]').forEach(b=>{ b.disabled = false; }); });
 
-/* Runs at boot. Returns true when a Google sign-in was completed and a customer session now exists. */
+/* Who started the Google trip (customer or trainer, signing in or linking), kept for the round trip. */
+function readGoogleIntent(){
+  let it = null;
+  try{ it = JSON.parse(localStorage.getItem(GOOGLE_INTENT_KEY) || 'null'); localStorage.removeItem(GOOGLE_INTENT_KEY); }catch(e){}
+  if(!it || it.role!=='trainer' || (Date.now() - (it.ts||0)) > 30*60*1000) return {role:'customer', mode:'login'};
+  return {role:'trainer', mode: it.mode==='link' ? 'link' : 'login', trainerId: String(it.trainerId||'')};
+}
+/* A person who signed in with Google as a trainer but has no account yet: their (server-verified) Google identity,
+   kept while they fill in the application. */
+let googleApplicant = null;
+try{ googleApplicant = JSON.parse(sessionStorage.getItem(GOOGLE_APPLICANT_KEY) || 'null'); }catch(e){ googleApplicant = null; }
+function clearGoogleApplicant(){ googleApplicant = null; try{ sessionStorage.removeItem(GOOGLE_APPLICANT_KEY); }catch(e){} }
+let googleNote = '';  // a message to show once the screen is up (used when linking, where there is no login screen)
+
+async function finishGoogleTrainer(user, intent){
+  const email = String(user.email || '').trim().toLowerCase();
+  const trainers = await dbGetAll('trainer:');
+  const mine = trainers.find(x=> x && x.googleId===user.id);
+
+  if(intent.mode==='link'){
+    let saved = null; try{ saved = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY) || 'null'); }catch(e){}
+    const me = (saved && saved.role==='trainer' && saved.id===intent.trainerId) ? await dbGet('trainer:' + saved.id) : null;
+    if(!me || me.status!=='active'){ googleNote = t('google_failed'); return false; }
+    session = {id:me.id, role:'trainer', name:me.name}; route = 'profile'; routeParams = {};
+    if(mine && mine.id!==me.id){ googleNote = t('google_link_taken'); return true; }
+    if(me.googleId && me.googleId!==user.id){ googleNote = t('google_link_other'); return true; }
+    if(!me.googleId){ me.googleId = user.id; me.email = email; await dbSet('trainer:' + me.id, me); }
+    googleNote = t('google_link_done');
+    return true;
+  }
+
+  authRole = 'trainer'; authMode = 'login';
+  if(mine){
+    if(mine.status!=='active'){ authError = t('auth_toast_suspended'); return false; }
+    session = {id:mine.id, role:'trainer', name:mine.name};
+    rememberActiveSession(mine.id, 'trainer');
+    authError = ''; route = 'dashboard'; routeParams = {};
+    return true;
+  }
+  const apps = await dbGetAll('trainerApp:');
+  if(apps.some(x=> x && x.googleId===user.id)){ authError = t('auth_toast_pending'); return false; }
+  // first time: carry on as a trainer application (admin approval still applies)
+  const meta = user.user_metadata || {};
+  googleApplicant = {gid:user.id, email, name: String(meta.full_name || meta.name || '').trim() || email.split('@')[0] || ''};
+  try{ sessionStorage.setItem(GOOGLE_APPLICANT_KEY, JSON.stringify(googleApplicant)); }catch(e){}
+  authMode = 'apply'; authError = '';
+  pendingApplicationCerts = []; pendingApplicationPhoto = '';
+  applyDraft = {name:googleApplicant.name, specialty:'', phone:'', pw:'', bio:''};
+  return false;
+}
+
+/* Runs at boot. Returns true when a Google sign-in was completed and a session now exists. */
 async function finishGoogleLogin(){
   let ret = googleReturnMem; googleReturnMem = null;
   try{ const raw = sessionStorage.getItem(GOOGLE_RETURN_KEY); if(raw){ if(!ret) ret = JSON.parse(raw); sessionStorage.removeItem(GOOGLE_RETURN_KEY); } }catch(e){}
   if(!ret) return false;
-  authRole = 'customer'; authMode = 'login';
-  if(ret.error){ authError = ret.denied ? t('google_cancelled') : t('google_failed'); return false; }
+  const intent = readGoogleIntent();
+  const linking = intent.role==='trainer' && intent.mode==='link';
+  const fail = (key)=>{ if(linking) googleNote = t(key); else authError = t(key); return false; };
+  authRole = intent.role; authMode = 'login';
+  if(ret.error) return fail(ret.denied ? 'google_cancelled' : 'google_failed');
 
   // 1) ask Supabase who this token belongs to
   let user = null;
   try{
     const r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, cache:'no-store' });
-    if(r.status===401 || r.status===403){ authError = t('google_failed'); return false; }
+    if(r.status===401 || r.status===403) return fail('google_failed');
     if(!r.ok) throw new Error('auth user ' + r.status);
     user = await r.json();
-  }catch(e){ console.warn('Google sign-in check failed:', e); authError = t('conn_login_failed'); return false; }
+  }catch(e){ console.warn('Google sign-in check failed:', e); return fail('conn_login_failed'); }
   // the token has done its job -- revoke it so nothing keeps a live login for this browser
   try{ fetch(SUPABASE_URL + '/auth/v1/logout?scope=local', { method:'POST', headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, keepalive:true }).catch(()=>{}); }catch(e){}
   const viaGoogle = !!(user && user.id && ((user.identities||[]).some(i=>i && i.provider==='google') || (user.app_metadata && user.app_metadata.provider==='google')));
-  if(!viaGoogle){ authError = t('google_failed'); return false; }
+  if(!viaGoogle) return fail('google_failed');
 
-  // 2) find (or create) the matching customer. The id comes from the Google account id, so the same Google account always lands on the same record.
   try{
     clearRenderCaches();
+    if(intent.role==='trainer') return await finishGoogleTrainer(user, intent);
+
+    // 2) customer: find (or create) the matching record. The id comes from the Google account id, so the same Google account always lands on the same record.
     const cid = 'cg_' + String(user.id).replace(/[^A-Za-z0-9]/g, '');
     let c = await dbGet('customer:' + cid);
     if(!c) c = (await dbGetAll('customer:')).find(x=> x && x.googleId===user.id) || null;
@@ -4101,9 +4184,34 @@ async function finishGoogleLogin(){
     return true;
   }catch(e){
     // the database could not be reached: keep the (still valid, short-lived) sign-in so the boot retry can finish it
-    if(e instanceof DbError){ googleReturnMem = ret; try{ sessionStorage.setItem(GOOGLE_RETURN_KEY, JSON.stringify(ret)); }catch(x){} }
+    if(e instanceof DbError){
+      googleReturnMem = ret;
+      try{ sessionStorage.setItem(GOOGLE_RETURN_KEY, JSON.stringify(ret)); localStorage.setItem(GOOGLE_INTENT_KEY, JSON.stringify(Object.assign({}, intent, {ts:Date.now()}))); }catch(x){}
+    }
     throw e;
   }
+}
+
+/* Trainer profile: link / unlink a Google account for sign-in. */
+function googleCardHtml(tr){
+  const only = tr.authProvider==='google';
+  return `
+      <div class="card">
+        <div class="card-head"><h3>${t('tg_title')}</h3></div>
+        ${tr.googleId
+          ? `<p class="slot-hint">${tt('tg_linked',{email:esc(tr.email||'Google')})}</p>
+             ${only ? `<p class="slot-hint">${t('tg_only_google')}</p>` : `<button type="button" class="btn btn-block" data-google-unlink>${t('tg_unlink_btn')}</button>`}`
+          : `<p class="slot-hint">${t('tg_hint_unlinked')}</p>
+             <button type="button" class="btn btn-block btn-google" data-google-link>${GOOGLE_G_SVG}<span>${t('tg_link_btn')}</span></button>`}
+      </div>`;
+}
+async function unlinkGoogleTrainer(){
+  const tr = await dbGet('trainer:' + session.id);
+  if(!tr || tr.authProvider==='google' || !tr.googleId) return;
+  delete tr.googleId; delete tr.email;
+  await dbSet('trainer:' + tr.id, tr);
+  toast(t('google_unlinked'));
+  renderView();
 }
 
 function authDbErrorMsg(e){ return e instanceof DbUnavailableError ? t('conn_login_failed') : t('db_rejected'); }
@@ -4236,6 +4344,8 @@ function wireView(){
   document.querySelectorAll('[data-remove-qr]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, removeTrainerQr)));
   document.querySelectorAll('[data-instant-mode]').forEach(el=>el.addEventListener('change', ()=> saveInstantMode(el.value==='1')));
   document.querySelectorAll('[data-lead-hours]').forEach(el=>el.addEventListener('change', ()=> saveLeadHours(Number(el.value))));
+  document.querySelectorAll('[data-google-link]').forEach(b=>b.addEventListener('click', ()=> signInWithGoogle(b, {role:'trainer', mode:'link', trainerId:session.id})));
+  document.querySelectorAll('[data-google-unlink]').forEach(b=>b.addEventListener('click', ()=> withBusy(b, unlinkGoogleTrainer)));
 }
 
 document.getElementById('modalCloseBtn').addEventListener('click', ()=> closeBookingModal(true));
@@ -4352,7 +4462,9 @@ async function bootApp(){
   if(!(await finishGoogleLogin())) await resumeActiveSession();
   await applyPendingTrainerCodeIfAny();
   } finally { clearTimeout(slowNote); }
+  if(!session && googleApplicant){ authRole = 'trainer'; authMode = 'apply'; if(!applyDraft.name) applyDraft.name = googleApplicant.name || ''; }
   await renderRoot();
+  if(googleNote){ toast(googleNote); googleNote = ''; }
   cleanupOldData(false).catch(()=>{});
 }
 /* Starts (or restarts, from the "Retry" button / when the connection comes back) the app. */
