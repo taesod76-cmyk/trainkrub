@@ -26,10 +26,15 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Publish only what the app needs (not the database scripts, notes or workflows)
+        run: |
+          mkdir _site
+          cp index.html manifest.webmanifest service-worker.js _site/
+          cp -r icons vendor _site/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
