@@ -3,11 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-RrWYn6i6tO4BbH3wAeVcsdvRg4Ghm78s4MF8tCSoph4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <title>เทรนครับ (TRAINKRUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b0909">
 <script>
 (function(){
+  /* never run inside somebody else's page (click-jacking) */
+  try{ if(window.top!==window.self){ void window.top.location.href; } }catch(e){ document.documentElement.style.display='none'; try{ window.top.location.replace(window.self.location.href); }catch(_){} }
   var th=null;
   try{ th=localStorage.getItem('tk_theme'); }catch(e){}
   if(th!=='light'&&th!=='dark'){ th=(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'; }
@@ -711,11 +715,6 @@
 
 <script src="vendor/supabase-js-2.118.0.js"></script>
 <script>
-/* supabase-js is served from this site (vendor/) so a blocked/slow CDN can never cut the app off
-   from the shared database. The CDN is only a last-resort backup (same pinned version). */
-if(!window.supabase){ document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"><\/script>'); }
-</script>
-<script>
 /* ======================================================================
    HUG YIM PLUS FITNESS — Customer / Trainer / Admin (3 separate systems)
    Data layer: window.storage (shared=true) acts as the central "database"
@@ -755,6 +754,22 @@ const i18n = {
     conn_offline:'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ — ข้อมูลที่เห็นอาจไม่ใช่ล่าสุด', conn_retry:'ลองใหม่', conn_restored:'เชื่อมต่อกลับมาแล้ว',
     conn_save_failed:'บันทึกไม่สำเร็จ เพราะเชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง', conn_login_failed:'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ จึงตรวจรหัสผ่านไม่ได้ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่',
     conn_gate_title:'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้', conn_gate_body:'ตรวจอินเทอร์เน็ตของเครื่องนี้ แล้วกด “ลองใหม่” (ระบบจะลองเองอัตโนมัติด้วย)',
+    err_too_soon:'เวลานี้ใกล้เกินไปสำหรับเทรนเนอร์ กรุณาเลือกเวลาอื่น', err_rate:'ทำรายการถี่เกินไป กรุณารอสักครู่แล้วลองใหม่',
+    err_too_many:'มีรายการค้างอยู่มากเกินไป กรุณารอให้เสร็จก่อนแล้วลองใหม่', err_image:'รูปภาพไม่ถูกต้องหรือไฟล์ใหญ่เกินไป',
+    err_invalid:'ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบแล้วลองใหม่', err_changed:'รายการนี้ถูกเปลี่ยนแปลงไปแล้ว กรุณารีเฟรชหน้าจอ',
+    err_forbidden:'ไม่มีสิทธิ์ทำรายการนี้', err_trainer_unavailable:'เทรนเนอร์ท่านนี้ไม่พร้อมรับนัดหมายในขณะนี้',
+    auth_toast_locked:'ใส่รหัสผิดหลายครั้ง ระบบล็อกชั่วคราว ลองใหม่ในอีก {min} นาที',
+    auth_toast_weak:'รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร และต้องไม่ใช่รหัสง่ายๆ (เช่น 12345678) หรือเบอร์โทร',
+    auth_toast_invalid:'ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบชื่อและเบอร์โทรอีกครั้ง', auth_toast_rate:'ทำรายการถี่เกินไป กรุณารอสักครู่แล้วลองใหม่',
+    auth_session_expired:'หมดเวลาการเข้าสู่ระบบ กรุณาเข้าสู่ระบบอีกครั้ง', auth_pw_rule:'อย่างน้อย 8 ตัวอักษร',
+    auth_toast_applied_noimg:'ส่งใบสมัครแล้ว แต่รูปใบรับรองบางรูปส่งไม่สำเร็จ เพิ่มรูปได้ที่โปรไฟล์หลังได้รับอนุมัติ',
+    google_ticket_expired:'การยืนยันบัญชี Google หมดอายุ กรุณากดปุ่ม Google อีกครั้ง',
+    au_reset_weak:'รหัสผ่านใหม่สั้นหรือง่ายเกินไป (ต้องอย่างน้อย 8 ตัวอักษร)', ad_cleanup_done:'ล้างข้อมูลเก่าเรียบร้อยแล้ว',
+    sec_title:'ความปลอดภัยของบัญชี', sec_hint:'เมื่อเปลี่ยนรหัสผ่าน เครื่องอื่นที่เข้าสู่ระบบอยู่จะถูกออกจากระบบ',
+    sec_pw_old:'รหัสผ่านปัจจุบัน', sec_pw_new:'รหัสผ่านใหม่', sec_pw_change:'เปลี่ยนรหัสผ่าน', sec_pw_done:'เปลี่ยนรหัสผ่านแล้ว',
+    sec_pw_wrong:'รหัสผ่านปัจจุบันไม่ถูกต้อง', sec_google_note:'บัญชีนี้เข้าสู่ระบบด้วย Google จึงไม่มีรหัสผ่านในแอป',
+    sec_logout_all:'ออกจากระบบทุกอุปกรณ์', sec_logout_all_body:'ทุกเครื่องที่เข้าสู่ระบบด้วยบัญชีนี้ (รวมเครื่องนี้) จะถูกออกจากระบบ และต้องเข้าสู่ระบบใหม่',
+    sec_logout_all_ok:'ออกจากระบบทุกเครื่อง', sec_cancel:'ยกเลิก', sec_logout_all_done:'ออกจากระบบทุกอุปกรณ์แล้ว',
     db_rejected:'บันทึกไม่สำเร็จ ฐานข้อมูลปฏิเสธคำขอ กรุณาแจ้งผู้ดูแลระบบ', conn_local_only:'โหมดเฉพาะเครื่องนี้ — ยังไม่ได้เชื่อมฐานข้อมูลกลาง ข้อมูลจะไม่ส่งถึงเครื่องอื่น', auth_toast_suspended:'บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', auth_toast_pending:'ใบสมัครของคุณยังรอการอนุมัติจากผู้ดูแลระบบ',
     auth_toast_welcome:'ยินดีต้อนรับ {name}', auth_toast_fill:'กรุณากรอกข้อมูลให้ครบถ้วน', auth_toast_phone_used:'เบอร์โทร/ชื่อผู้ใช้นี้มีผู้ใช้งานแล้ว',
     auth_toast_registered:'สมัครสมาชิกสำเร็จ เข้าสู่ระบบให้อัตโนมัติแล้ว', auth_toast_applied:'ส่งใบสมัครเรียบร้อย รอผู้ดูแลระบบตรวจสอบและอนุมัติก่อนเข้าสู่ระบบได้',
@@ -928,6 +943,22 @@ const i18n = {
     conn_offline:'Can’t reach the server — what you see may be out of date', conn_retry:'Retry', conn_restored:'Back online',
     conn_save_failed:'Couldn’t save — can’t reach the server. Please try again.', conn_login_failed:'Can’t reach the server, so your login couldn’t be checked. Check your connection and try again.',
     conn_gate_title:'Can’t reach the server', conn_gate_body:'Check this device’s internet connection, then tap Retry (it also retries automatically).',
+    err_too_soon:'This time is too soon for the trainer. Please pick another time.', err_rate:'Too many tries. Please wait a moment and try again.',
+    err_too_many:'Too many open items. Please wait for some to finish and try again.', err_image:'The picture is not valid or is too large.',
+    err_invalid:'Something does not look right. Please check and try again.', err_changed:'This item has just changed. Please refresh.',
+    err_forbidden:'You are not allowed to do this.', err_trainer_unavailable:'This trainer cannot take bookings right now.',
+    auth_toast_locked:'Too many wrong attempts. Locked for a while — try again in {min} min.',
+    auth_toast_weak:'Password must be at least 8 characters and not an easy one (like 12345678) or your phone number.',
+    auth_toast_invalid:'Something does not look right. Please check the name and phone number.', auth_toast_rate:'Too many tries. Please wait a moment and try again.',
+    auth_session_expired:'Your sign-in has ended. Please sign in again.', auth_pw_rule:'At least 8 characters',
+    auth_toast_applied_noimg:'Application sent, but some certificate pictures could not be uploaded. Add them in your profile after approval.',
+    google_ticket_expired:'Your Google confirmation expired. Please press the Google button again.',
+    au_reset_weak:'The new password is too short or too easy (at least 8 characters).', ad_cleanup_done:'Old data cleaned up.',
+    sec_title:'Account security', sec_hint:'When you change your password, other devices signed in to this account are signed out.',
+    sec_pw_old:'Current password', sec_pw_new:'New password', sec_pw_change:'Change password', sec_pw_done:'Password changed',
+    sec_pw_wrong:'The current password is not correct', sec_google_note:'This account signs in with Google, so there is no password in the app.',
+    sec_logout_all:'Sign out of all devices', sec_logout_all_body:'Every device signed in to this account (including this one) will be signed out and must sign in again.',
+    sec_logout_all_ok:'Sign out everywhere', sec_cancel:'Cancel', sec_logout_all_done:'Signed out of all devices',
     db_rejected:'Couldn’t save — the database rejected the request. Please contact the admin.', conn_local_only:'This-device-only mode — not connected to the shared database, so data won’t reach other devices', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval',
     auth_toast_welcome:'Welcome, {name}', auth_toast_fill:'Please fill in all fields', auth_toast_phone_used:'This phone/username is already registered',
     auth_toast_registered:'Account created — signed in automatically', auth_toast_applied:'Application submitted — an admin must approve it before you can sign in',
@@ -1099,7 +1130,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-04.6';
+const APP_BUILD = '2026-11-04.7';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -1192,44 +1223,79 @@ function scheduleReconnect(){
   reconnectTimer = setTimeout(async ()=>{ reconnectTimer = null; await probeConnection(); }, 6000);
 }
 async function probeConnection(){
-  try{ await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).select('key').limit(1), 0); }
-  catch(e){ scheduleReconnect(); }
+  try{ await rpc('app_whoami', {p_token:null}, {retries:0}); }
+  catch(e){ if(e instanceof DbUnavailableError) scheduleReconnect(); }
 }
 window.addEventListener('online', ()=>{ if(REMOTE_MODE && connState!=='online') probeConnection(); });
 
 function sbSleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
-/* Runs one Supabase request with retries. Network trouble -> DbUnavailableError (after retrying);
-   the server answering with an error of its own -> DbServerError right away (retrying can't help). */
-async function sbCall(makeReq, retries){
-  if(!supabaseClient){ setConn(false); throw new DbUnavailableError('Supabase client not loaded'); }
-  const max = (retries==null ? 2 : retries);
+/* ---------------- talking to the database ----------------
+   The data table behind this app is closed to the public. Everything goes through a few server
+   functions (RPC) that first check WHO is asking: the sign-in token (kept only in this browser)
+   travels with every call, and the server decides what that person may see or change. */
+class ApiError extends DbServerError{
+  constructor(status, reason, code){ super(reason); this.name = 'ApiError'; this.status = status; this.reason = reason; this.code = code || ''; }
+}
+let authToken = null;
+let sessionLostBusy = false;
+/* The server no longer accepts this sign-in (it ended, was revoked, or the account was suspended). */
+function sessionLost(){
+  if(sessionLostBusy) return;
+  sessionLostBusy = true; setTimeout(()=>{ sessionLostBusy = false; }, 1500);
+  const had = !!session;
+  authToken = null; session = null; route = 'dashboard'; routeParams = {};
+  clearActiveSession();
+  if(had){ authError = t('auth_session_expired'); try{ renderRoot(); }catch(e){} }
+}
+/* Network trouble -> DbUnavailableError (after retrying); the server answering with an error of its own -> ApiError right away. */
+async function rpc(fn, args, o){
+  o = o || {};
+  if(!REMOTE_MODE) throw new DbUnavailableError('Database not configured');
+  const max = (o.retries == null ? 2 : o.retries);
+  const headers = {'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer ' + (o.bearer || SUPABASE_ANON_KEY), 'Content-Type':'application/json', 'Accept':'application/json'};
+  const body = JSON.stringify(args || {});
   let last = null;
-  for(let i=0;i<=max;i++){
+  for(let i = 0; i <= max; i++){
+    let res, text;
     try{
-      let q = makeReq();
-      if(q && typeof q.retry==='function') q = q.retry(false);   // we do our own, visible retrying
-      const res = await q;
-      if(res && res.error) throw res.error;
+      res = await sbFetch(SUPABASE_URL + '/rest/v1/rpc/' + fn, {method:'POST', headers, body, credentials:'omit', referrerPolicy:'no-referrer'});
+      text = await res.text();
+    }catch(e){ last = e; if(i < max) await sbSleep(i === 0 ? 400 : 1200); continue; }
+    let data;
+    try{ data = text ? JSON.parse(text) : null; }catch(e){ data = undefined; }
+    if(res.ok){ setConn(true); return data === undefined ? null : data; }
+    const answered = data && typeof data === 'object' && typeof data.code === 'string' && data.code !== '';
+    if(answered && res.status < 500){
       setConn(true);
-      return res;
-    }catch(e){
-      last = e;
-      if(e && typeof e.code==='string' && e.code !== ''){      // the server replied with an error
-        setConn(true);
-        throw new DbServerError(e.message);
-      }
-      if(i<max) await sbSleep(i===0 ? 400 : 1200);
+      if(res.status === 401 && !o.bearer && authToken) sessionLost();
+      throw new ApiError(res.status, String(data.message || 'error'), data.code);
     }
+    if(answered){ setConn(true); throw new ApiError(res.status, String(data.message || 'error'), data.code); }
+    last = new Error('HTTP ' + res.status);
+    if(i < max) await sbSleep(i === 0 ? 400 : 1200);
   }
   setConn(false);
   throw new DbUnavailableError(last && last.message);
+}
+const API_ERR_KEY = {locked:'cb_slot_locked', full:'cb_slot_full_requests', already_mine:'cb_slot_already_mine', no_package:'cb_no_package',
+  pay_not_found:'pay_not_found', pay_no_qr:'pay_no_qr', pay_need_slip:'pay_need_slip', pay_dup:'pay_dup', phone_used:'auth_toast_phone_used',
+  rate_limited:'err_rate', too_many_open:'err_too_many', invalid_image:'err_image', invalid:'err_invalid', invalid_date:'err_invalid',
+  bad_transition:'err_changed', forbidden:'err_forbidden', trainer_unavailable:'err_trainer_unavailable'};
+function apiErrText(e){
+  if(e instanceof ApiError){
+    if(e.reason === 'too_soon') return t('err_too_soon');
+    const k = API_ERR_KEY[e.reason]; if(k) return t(k);
+    if(e.status === 429) return t('err_rate');
+  }
+  return t('db_rejected');
 }
 /* A save that fails outside a form that handles it itself still tells the person, instead of failing silently. */
 window.addEventListener('unhandledrejection', ev=>{
   const e = ev && ev.reason;
   if(e instanceof DbError){
     ev.preventDefault();
-    try{ toast(e instanceof DbUnavailableError ? t('conn_save_failed') : t('db_rejected')); }catch(_){}
+    if(e instanceof ApiError && e.status === 401) return;       // the sign-in screen explains
+    try{ toast(e instanceof DbUnavailableError ? t('conn_save_failed') : apiErrText(e)); }catch(_){}
   }
 });
 
@@ -1354,51 +1420,57 @@ function storageIsAvailable(){
   return storageProbePromise;
 }
 
+function needSignIn(){ if(!authToken) throw new ApiError(401, 'unauthenticated', 'PT401'); }
 async function dbGet(key){
   expireStaleCaches();
   if(REMOTE_MODE){
     if(keyCache.has(key)) return keyCache.get(key);
-    const { data } = await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).select('value').eq('key', key).maybeSingle());
-    const val = data ? data.value : null;
-    keyCache.set(key, val);
-    return val;
+    needSignIn();
+    const val = await rpc('app_get', {p_token:authToken, p_key:key});
+    const v = (val == null ? null : val);
+    keyCache.set(key, v);
+    return v;
   }
   return localGet(key);
 }
 async function dbSet(key, val){
   if(REMOTE_MODE){
-    await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).upsert({ key, value: val, updated_at: new Date().toISOString() }));
-    keyCache.set(key, val);
+    needSignIn();
+    const r = await rpc('app_set', {p_token:authToken, p_key:key, p_value:val});
+    const stored = (r && r.value != null) ? r.value : val;
+    keyCache.set(key, stored);
     invalidateListsFor(key);
-    return {ok:true};
+    return {ok:true, value:stored};
   }
   return localSet(key, val);
 }
 async function dbDelete(key){
   if(REMOTE_MODE){
-    await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).delete().eq('key', key));
+    needSignIn();
+    await rpc('app_del', {p_token:authToken, p_key:key});
     keyCache.delete(key);
     invalidateListsFor(key);
     return;
   }
   return localDelete(key);
 }
-/* Reads every row under a prefix, page by page (the server caps one response at 1000 rows). */
-async function sbSelectAll(cols, prefix){
+/* Reads every row the caller may see under a prefix, page by page. */
+async function rpcListAll(prefix){
+  needSignIn();
   const out = [];
-  const PAGE = 1000;
-  for(let from=0;;from+=PAGE){
-    const { data } = await sbCall(()=> supabaseClient.from(SUPABASE_TABLE).select(cols).like('key', prefix + '%').order('key').range(from, from+PAGE-1));
-    const rows = data || [];
-    for(const r of rows) out.push(r);
-    if(rows.length < PAGE) break;
+  let after = null;
+  for(let guard = 0; guard < 200; guard++){
+    const r = await rpc('app_list', {p_token:authToken, p_prefix:prefix, p_after:after, p_limit:500});
+    for(const row of ((r && r.rows) || [])) out.push(row);
+    if(!r || !r.next) break;
+    after = r.next;
   }
   return out;
 }
 async function dbList(prefix){
   if(REMOTE_MODE){
-    const rows = await sbSelectAll('key', prefix);
-    return rows.map(r=>r.key);
+    const rows = await rpcListAll(prefix);
+    return rows.map(r=>r.k);
   }
   return localList(prefix);
 }
@@ -1406,12 +1478,12 @@ async function dbGetAll(prefix){
   expireStaleCaches();
   if(listCache.has(prefix)) return listCache.get(prefix).slice();
   if(REMOTE_MODE){
-    // One request returns every matching row's key AND value (no N+1 round trips) and warms keyCache.
-    const rows = await sbSelectAll('key,value', prefix);
+    // One request returns every visible row's key AND value (no N+1 round trips) and warms keyCache.
+    const rows = await rpcListAll(prefix);
     const result = [];
     for(const row of rows){
-      keyCache.set(row.key, row.value);
-      if(row.value) result.push(row.value);
+      keyCache.set(row.k, row.v);
+      if(row.v) result.push(row.v);
     }
     listCache.set(prefix, result);
     return result.slice();
@@ -1500,23 +1572,10 @@ function purgeLegacyLocalData(){
 function newId(prefix){ return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
 /* ---------------- trainer code (Discord-style #TAG) ----------------
-   Each approved trainer gets a short, random, unique code so a customer
+   The server hands each approved trainer a short, random, unique code so a customer
    can jump straight to them -- by typing the code into the trainer
    search box, or by scanning a QR code (generated from a link carrying
    ?t=CODE) that the trainer can print or show on their phone. */
-const TRAINER_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O/1/I to avoid mix-ups
-function randomTrainerCode(){
-  let s='';
-  for(let i=0;i<4;i++) s += TRAINER_CODE_CHARS[Math.floor(Math.random()*TRAINER_CODE_CHARS.length)];
-  return s;
-}
-async function genTrainerCode(){
-  const trainers = await dbGetAll('trainer:');
-  const taken = new Set(trainers.map(x=>x.code).filter(Boolean));
-  let code;
-  do{ code = randomTrainerCode(); }while(taken.has(code));
-  return code;
-}
 function trainerJoinUrl(code){
   return location.origin + location.pathname + '?t=' + encodeURIComponent(code);
 }
@@ -1539,9 +1598,9 @@ let pendingTrainerCode = null;
 /* ---------------- sign in with Google (customers) ----------------
    Supabase Auth does the Google part. The browser comes back to this page with
    #access_token=... (or #error=...). That is read once, removed from the address
-   bar right away, and then checked with Supabase (GET /auth/v1/user) so the
-   Google identity is verified by the server and not just believed. Nothing is kept
-   afterwards except the ordinary remembered {id, role}; the token is revoked. */
+   bar right away, and handed to OUR server function, which reads the signature-checked
+   Google identity from it. Nothing is kept afterwards except our own sign-in token; the
+   Google token is revoked. */
 const GOOGLE_RETURN_KEY = 'trainkrub:googleReturn';
 const GOOGLE_CODE_KEY = 'trainkrub:googlePendingCode';
 const GOOGLE_INTENT_KEY = 'trainkrub:googleIntent';
@@ -1566,33 +1625,31 @@ let googleReturnMem = null;
 async function applyPendingTrainerCodeIfAny(){
   if(!pendingTrainerCode || !session || session.role!=='customer') return;
   const code = pendingTrainerCode;
-  try{
-    clearRenderCaches();
-    const trainers = await dbGetAll('trainer:');
-    const tr = trainers.find(x=> (x.code||'').toUpperCase()===code && x.status==='active');
-    if(tr){
-      await addTrainerToMine(tr);
-      route='booking'; routeParams={trainerId:tr.id};
-      toast(tt('ct_code_added',{name:tr.name}));
-    } else {
-      route='trainers'; routeParams={};
-      toast(t('ct_code_notfound'));
-    }
-    pendingTrainerCode = null; // only ever succeeds once; kept if the database could not be reached so a retry still works
-  }catch(e){ throw e; }
+  clearRenderCaches();
+  const r = await findTrainerByCode(code);
+  if(r.tr){
+    await addTrainerToMine(r.tr);
+    route='booking'; routeParams={trainerId:r.tr.id};
+    toast(tt('ct_code_added',{name:r.tr.name}));
+  } else {
+    route='trainers'; routeParams={};
+    toast(r.error==='throttle' ? tt('ct_code_throttle',{s:r.wait}) : t('ct_code_notfound'));
+  }
+  pendingTrainerCode = null; // only ever succeeds once; kept if the database could not be reached so a retry still works
+}
+/* The only way to find a trainer: the server checks the code (and slows down guessing). */
+async function findTrainerByCode(code){
+  let r;
+  try{ r = await rpc('app_find_trainer', {p_token:authToken, p_code:code}); }
+  catch(e){ if(e instanceof ApiError && e.status===429) return {error:'throttle', wait:60}; throw e; }
+  if(r && r.ok && r.trainer) return {tr:r.trainer};
+  if(r && r.reason==='locked') return {error:'throttle', wait:Math.max(1, Number(r.retry)||30)};
+  return {error:'notfound'};
 }
 
 /* ---------------- data cleanup / archiving ----------------
-   Bookings and notifications otherwise pile up forever. Once a booking
-   is finished (completed/no-show/rejected) or a notification has been
-   read, nothing in the app ever needs it again after a while — it just
-   adds to storage and to the size of every dbGetAll('booking:') /
-   dbGetAll('notif:') fetch (and therefore every render and every
-   auto-refresh poll). This clears that old, settled data out.
-   Runs once per boot at most, throttled to at most once a day via
-   'system:lastCleanup' so it never adds extra requests to a normal
-   session — pass force:true (the admin "clean up now" button) to
-   bypass the throttle. */
+   Old finished bookings, read notifications and unanswered orders are cleared out by the server
+   itself (once a day, when someone signs in); the admin can also run it from the dashboard. */
 const CLEANUP_BOOKING_DAYS = 90;   // finished bookings older than this get removed
 const CLEANUP_NOTIF_DAYS = 30;     // already-read notifications older than this get removed
 const CLEANUP_MIN_INTERVAL_MS = 24 * 60 * 60 * 1000;
@@ -1604,69 +1661,6 @@ function isOlderThan(iso, days){
   return (Date.now() - ms) > days * 24 * 60 * 60 * 1000;
 }
 
-async function cleanupOldData(force){
-  if(!force){
-    const last = await dbGet('system:lastCleanup');
-    if(last && (Date.now() - new Date(last).getTime()) < CLEANUP_MIN_INTERVAL_MS){
-      return {skipped:true, removedBookings:0, removedNotifs:0};
-    }
-  }
-  let removedBookings = 0, removedNotifs = 0;
-  const finishedStatuses = ['completed','no_show','rejected','cancelled'];
-  const bookings = await dbGetAll('booking:');
-  for(const b of bookings){
-    if(finishedStatuses.includes(b.status) && isOlderThan(b.completedAt || b.createdAt, CLEANUP_BOOKING_DAYS)){
-      await dbDelete('booking:'+b.id);
-      removedBookings++;
-    }
-  }
-  const notifs = await dbGetAll('notif:');
-  for(const n of notifs){
-    if(n.isRead && isOlderThan(n.createdAt, CLEANUP_NOTIF_DAYS)){
-      await dbDelete('notif:'+n.id);
-      removedNotifs++;
-    }
-  }
-  // Orders nobody answered for a month are cancelled and their slip photo removed; old decided orders are dropped.
-  const orders = await dbGetAll('order:');
-  for(const o of orders){
-    if(o.status==='pending' && isOlderThan(o.createdAt, 30)){
-      o.status = 'cancelled'; o.decidedAt = new Date().toISOString();
-      await dbSet('order:'+o.id, o); if(o.instant) await voidOrderPackage(o); await dbDelete('slip:'+o.id);
-    } else if(o.status!=='pending' && isOlderThan(o.decidedAt || o.createdAt, CLEANUP_BOOKING_DAYS)){
-      await dbDelete('order:'+o.id); await dbDelete('slip:'+o.id);
-    }
-  }
-  await dbSet('system:lastCleanup', new Date().toISOString());
-  return {skipped:false, removedBookings, removedNotifs};
-}
-
-/* Keeps the admin login out of plain sight in the page source — this is a
-   single static HTML file with no server, so it can't be a real secrets
-   vault, but it stops the credential from showing up to a casual glance
-   or a plain-text search of the file. */
-function _d64(s){ try{ return atob(s); }catch(e){ return s; } }
-
-/* ---------------- seed data (self-healing) ----------------
-   Rather than relying on a single "already seeded" flag (which could get
-   stuck as true even if a write failed partway through), each demo
-   account/record is checked and created individually every time the app
-   boots. This makes seeding safe to re-run and immune to partial failures. */
-async function ensureRecord(key, factory){
-  const existing = await dbGet(key);
-  if(existing) return existing;
-  const val = factory();
-  await dbSet(key, val);
-  return val;
-}
-async function seedIfNeeded(){
-  // Production data starts empty on purpose: only the admin account is
-  // seeded. Trainers get in via "สมัครเป็นเทรนเนอร์" (apply -> admin
-  // approves), customers via "สมัครสมาชิก" (self-registration) — both
-  // flows already exist and don't need any seed data to work. The admin
-  // adds real packages from the admin panel once, after first login.
-  await ensureRecord('admin:admin', ()=>({username:_d64('Y29icmEtMzY4MQ=='), password:_d64('TERzJUE3R1RwM2FRXlheOU1T'), name:'ผู้ดูแลระบบ / System Admin', role:'admin'}));
-}
 function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return localDateStr(d); }
 
 /* ---------------- session ----------------
@@ -1677,29 +1671,35 @@ function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return localD
    re-fetch the actual record from the DB and re-check it is still
    active before trusting it, so a suspended/removed account can't stay
    "logged in" just because this browser remembers it. */
-let session = null; // {id, role, name, ...}
+let session = null; // {id, role, name}
 const ACTIVE_SESSION_KEY = 'trainkrub:activeSession';
-function rememberActiveSession(id, role){
-  try{ localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify({id, role})); }catch(e){}
+/* Only {id, role, token} is kept on this device. The token is a random value the server can recognise
+   (it keeps only a fingerprint of it); the password is never stored. */
+function readSavedSession(){
+  try{
+    const sv = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY) || 'null');
+    return (sv && sv.id && sv.role && typeof sv.token==='string' && sv.token.length >= 40) ? sv : null;
+  }catch(e){ return null; }
+}
+function rememberActiveSession(id, role, token){
+  try{ localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify({id, role, token})); }catch(e){}
 }
 function clearActiveSession(){
   try{ localStorage.removeItem(ACTIVE_SESSION_KEY); }catch(e){}
 }
+function startSession(token, user){
+  authToken = token;
+  session = {id:user.id, role:user.role, name:user.name};
+  rememberActiveSession(user.id, user.role, token);
+}
+/* "Stay signed in": on every boot the server is asked whether the saved token is still good
+   (not ended, not revoked, account still active) before it is trusted. */
 async function resumeActiveSession(){
-  let saved = null;
-  try{ saved = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY) || 'null'); }catch(e){ saved = null; }
-  if(!saved || !saved.id || !saved.role) return false;
+  const saved = readSavedSession();
+  if(!saved){ clearActiveSession(); return false; }          // an older build's note without a token: sign in once more
   try{
-    if(saved.role==='admin'){
-      const admin = await dbGet('admin:admin');
-      if(admin){ session = {id:'admin', role:'admin', name:admin.name}; return true; }
-    } else if(saved.role==='trainer'){
-      const tr = await dbGet('trainer:'+saved.id);
-      if(tr && tr.status==='active'){ session = {id:tr.id, role:'trainer', name:tr.name}; return true; }
-    } else if(saved.role==='customer'){
-      const c = await dbGet('customer:'+saved.id);
-      if(c && c.status==='active'){ session = {id:c.id, role:'customer', name:c.name}; return true; }
-    }
+    const r = await rpc('app_whoami', {p_token:saved.token});
+    if(r && r.ok && r.user){ authToken = saved.token; session = {id:r.user.id, role:r.user.role, name:r.user.name}; return true; }
   }catch(e){ if(e instanceof DbError) throw e; console.warn('Resume session check failed:', e); }
   clearActiveSession();
   return false;
@@ -1955,7 +1955,8 @@ function badgeFor(status){
 /* ---------------- notifications ---------------- */
 async function pushNotification(userId, titleKey, bodyKey, params, bookingId){
   const n = {id:newId('notif'), userId, title:t(titleKey), message:tt(bodyKey, params), isRead:false, createdAt:new Date().toISOString(), bookingId: bookingId||null};
-  await dbSet('notif:'+n.id, n);
+  try{ await dbSet('notif:'+n.id, n); }
+  catch(e){ if(e instanceof ApiError && e.status!==401){ console.warn('notification not sent:', e.reason); return; } throw e; }
 }
 async function getNotifications(userId){
   const all = await dbGetAll('notif:');
@@ -2036,8 +2037,10 @@ async function renderRoot(silent){
 }
 
 function doLogout(){
-  session = null; route = 'dashboard'; routeParams = {};
+  const tok = authToken;
+  session = null; authToken = null; route = 'dashboard'; routeParams = {};
   clearActiveSession();
+  if(tok){ rpc('app_logout', {p_token:tok}, {retries:1}).catch(()=>{}); }       // the server forgets this sign-in too
   toast(t('auth_toast_logout'));
   renderRoot();
 }
@@ -2303,6 +2306,7 @@ async function submitOrder(){
     }
   }catch(e){
     for(const k of ['custpkg:'+cpId, 'order:'+id, 'slip:'+id]){ try{ await dbDelete(k); }catch(_){} }
+    if(e instanceof ApiError && e.status!==401){ toast(apiErrText(e)); return; }
     throw e;
   }
   await pushNotification(trainer.id, 'nav_t_payments', instant ? 'notif_pay_new_instant' : 'notif_pay_new',
@@ -2331,7 +2335,17 @@ async function cancelOrder(id){
 }
 
 /* ---- trainer: accept (money seen) or decline an order ---- */
+const orderBusy = new Set();
 async function respondOrder(id, accept){
+  if(orderBusy.has(id)) return;                       // double tap: the first press does the work
+  orderBusy.add(id);
+  try{ await respondOrderRun(id, accept); }
+  catch(e){
+    if(e instanceof ApiError && e.status!==401){ toast(e.reason==='bad_transition' ? t('tpay_already') : apiErrText(e)); clearRenderCaches(); renderView(); renderNav(); return; }
+    throw e;
+  } finally { orderBusy.delete(id); }
+}
+async function respondOrderRun(id, accept){
   clearRenderCaches();                                // another device may have answered already
   const o = await dbGet('order:'+id);
   if(!o || o.trainerId!==session.id){ renderView(); return; }
@@ -2497,16 +2511,16 @@ async function lookupTrainerByCode(raw){
   if(!code) return {error:'empty'};
   const now = Date.now();
   if(now < codeTries.until) return {error:'throttle', wait:Math.ceil((codeTries.until-now)/1000)};
-  clearRenderCaches();                                  // a trainer approved a moment ago must be findable
-  const trainers = await dbGetAll('trainer:');
-  const tr = trainers.find(x=> x.status==='active' && (x.code||'').toUpperCase()===code);
-  if(!tr){
+  clearRenderCaches();
+  const r = await findTrainerByCode(code);
+  if(r.error==='throttle') return r;
+  if(!r.tr){
     codeTries.n++;
     if(codeTries.n >= 5){ codeTries.until = now + 30000; codeTries.n = 0; }   // slow down code guessing
     return {error:'notfound'};
   }
   codeTries.n = 0;
-  return {tr};
+  return {tr:r.tr};
 }
 async function addTrainerToMine(tr){
   const c = await dbGet('customer:'+session.id);
@@ -2907,7 +2921,16 @@ async function submitBooking(){
     packageInstanceId: pkg.id, bookingDate: bookingState.day, bookingTime: bookingState.time,
     status:'pending', sessionMode:null, partnerNames:[], createdAt:new Date().toISOString(), completedAt:null
   };
-  await dbSet('booking:'+booking.id, booking);
+  try{ await dbSet('booking:'+booking.id, booking); }
+  catch(e){
+    if(e instanceof ApiError && e.status!==401){
+      toast(e.reason==='too_soon' ? tt('cb_slot_too_soon',{label:leadLabel(leadHoursOf(trainer))}) : apiErrText(e));
+      bookingState.time = null;
+      renderView();
+      return;
+    }
+    throw e;
+  }
   await pushNotification(trainer.id, 'nav_t_requests', 'notif_new_request', {customer:session.name, date:fmtDate(booking.bookingDate), time:fmtTime(booking.bookingTime)}, booking.id);
   bookingState.time = null;
   document.getElementById('modalTitle').textContent = t('modal_title');
@@ -3064,27 +3087,7 @@ async function renderCPay(){
    old name forever — so push the new name through every affected booking
    (and through any pair-session partner lists that mention it). */
 async function propagateNameChange(role, id, newName){
-  const bookings = await dbGetAll('booking:');
-  let touchedCustomer = false;
-  for(const b of bookings){
-    let changed = false;
-    if(role==='customer' && b.customerId===id && b.customerName!==newName){ b.customerName = newName; changed = true; touchedCustomer = true; }
-    if(role==='trainer'  && b.trainerId===id  && b.trainerName!==newName){ b.trainerName  = newName; changed = true; }
-    if(changed) await dbSet('booking:'+b.id, b);
-  }
-  if(touchedCustomer){
-    const fresh = await dbGetAll('booking:');
-    for(const b of fresh){
-      if(b.sessionMode !== 'duo') continue;
-      const names = fresh
-        .filter(x=> x.id!==b.id && x.trainerId===b.trainerId && x.bookingDate===b.bookingDate && x.bookingTime===b.bookingTime && x.sessionMode==='duo')
-        .map(x=> x.customerName);
-      if(JSON.stringify(names) !== JSON.stringify(b.partnerNames||[])){
-        b.partnerNames = names;
-        await dbSet('booking:'+b.id, b);
-      }
-    }
-  }
+  /* the server updates every booking / order / package that carries this name, as part of saving the profile */
 }
 
 async function renderCProfile(){
@@ -3099,26 +3102,22 @@ async function renderCProfile(){
       ${c.authProvider==='google' ? `<div class="auth-hint" style="margin:0 0 14px">${t('google_profile_note')}</div>` : ''}
       <button class="btn btn-primary btn-block" id="cProfSave">${t('prof_save')}</button>
     </div>
+    ${securityCardHtml(c, 'max-width:480px;margin-top:16px')}
   `;
 }
 async function saveCProfile(){
   const c = await dbGet('customer:'+session.id);
   const newName = document.getElementById('cProfName').value.trim() || c.name;
   const newPhone = document.getElementById('cProfPhone').value.trim() || c.phone;
-  // A phone number is a login ID here, so it has to stay unique — otherwise
-  // two accounts answer to the same credentials and login becomes ambiguous.
-  if(newPhone !== c.phone){
-    const others = (await dbGetAll('customer:')).filter(x=> x.id !== c.id);
-    if(others.some(x=> x.phone===newPhone || x.username===newPhone)){
-      toast(t('auth_toast_phone_used'));
-      return;
-    }
-  }
   c.name = newName;
   c.phone = newPhone;
   if(newPhone) c.username = newPhone;
-  await dbSet('customer:'+c.id, c);
-  await propagateNameChange('customer', c.id, c.name);
+  // a phone number is a login ID, so it has to stay unique -- the server checks that
+  try{ await dbSet('customer:'+c.id, c); }
+  catch(e){
+    if(e instanceof ApiError && e.status!==401){ toast(e.reason==='phone_used' ? t('auth_toast_phone_used') : apiErrText(e)); return; }
+    throw e;
+  }
   session.name = c.name;
   toast(t('prof_saved'));
   renderRoot();
@@ -3535,6 +3534,7 @@ async function renderTProfile(){
       <div class="card" id="certsCard">${certsCardInner(tr)}</div>
       ${leadCardHtml(tr)}
       ${googleCardHtml(tr)}
+      ${securityCardHtml(tr)}
       ${tr.code ? `
       <div class="card">
         <div class="card-head"><h3>${t('tpz_code_title')}</h3></div>
@@ -3547,6 +3547,41 @@ async function renderTProfile(){
       </div>` : ''}
     </div>
   `;
+}
+function securityCardHtml(rec, style){
+  const google = !!rec && rec.authProvider === 'google';
+  return `
+      <div class="card" id="secCard"${style ? ` style="${style}"` : ''}>
+        <div class="card-head"><h3>${t('sec_title')}</h3></div>
+        ${google ? `<p class="slot-hint">${t('sec_google_note')}</p>` : `
+        <p class="slot-hint">${t('sec_hint')}</p>
+        <div class="field"><label>${t('sec_pw_old')}</label><input type="password" id="secPwOld" autocomplete="current-password"></div>
+        <div class="field"><label>${t('sec_pw_new')}</label><input type="password" id="secPwNew" autocomplete="new-password"><div class="slot-hint" style="margin:6px 0 0">${t('auth_pw_rule')}</div></div>
+        <button class="btn btn-primary btn-block" id="secPwSave" type="button">${t('sec_pw_change')}</button>`}
+        <button class="btn btn-block btn-ghost" id="secLogoutAll" type="button" style="margin-top:12px">${t('sec_logout_all')}</button>
+      </div>`;
+}
+function lockedText(r){ return tt('auth_toast_locked', {min: Math.max(1, Math.ceil((Number(r && r.retry) || 60) / 60))}); }
+async function changeMyPassword(){
+  const oldEl = document.getElementById('secPwOld'), newEl = document.getElementById('secPwNew');
+  if(!oldEl || !newEl) return;
+  if(!oldEl.value || !newEl.value){ toast(t('auth_toast_fill')); return; }
+  let r;
+  try{ r = await rpc('app_change_password', {p_token:authToken, p_old:oldEl.value, p_new:newEl.value}); }
+  catch(e){ if(e instanceof ApiError && e.status!==401){ toast(apiErrText(e)); return; } throw e; }
+  if(r && r.ok){ oldEl.value = ''; newEl.value = ''; toast(t('sec_pw_done')); return; }
+  const why = r && r.reason;
+  toast(why==='wrong' ? t('sec_pw_wrong') : why==='weak' ? t('auth_toast_weak') : why==='locked' ? lockedText(r) : t('err_invalid'));
+}
+async function logoutEverywhere(){
+  const ok = await askConfirm({title:t('sec_logout_all'), body:t('sec_logout_all_body'), ok:t('sec_logout_all_ok'), cancel:t('sec_cancel')});
+  if(!ok) return;
+  try{ await rpc('app_logout_all', {p_token:authToken}); }
+  catch(e){ if(e instanceof ApiError && e.status===401) return; throw e; }
+  session = null; authToken = null; route = 'dashboard'; routeParams = {};
+  clearActiveSession();
+  toast(t('sec_logout_all_done'));
+  renderRoot();
 }
 function certsCardInner(tr){
   return `
@@ -3581,21 +3616,17 @@ async function saveTrainerProfile(){
   const tr = await dbGet('trainer:'+session.id);
   const newName = document.getElementById('pfName').value.trim() || tr.name;
   const newPhone = document.getElementById('pfPhone').value.trim();
-  // Same uniqueness rule as customers: the phone doubles as the login ID,
-  // and a pending application must not be able to squat an existing one.
-  if(newPhone && newPhone !== tr.phone){
-    const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
-    const clash = trainers.some(x=> x.id!==tr.id && (x.phone===newPhone || x.username===newPhone))
-               || apps.some(x=> x.username===newPhone || x.phone===newPhone);
-    if(clash){ toast(t('auth_toast_phone_used')); return; }
-  }
   tr.name = newName;
   tr.specialty = document.getElementById('pfSpecialty').value.trim();
   if(newPhone){ tr.phone = newPhone; tr.username = newPhone; }
   tr.bio = document.getElementById('pfBio').value.trim();
   tr.ready = document.getElementById('pfReady').checked;
-  await dbSet('trainer:'+tr.id, tr);
-  await propagateNameChange('trainer', tr.id, tr.name);
+  // the phone doubles as the login ID: the server makes sure no other trainer or pending application uses it
+  try{ await dbSet('trainer:'+tr.id, tr); }
+  catch(e){
+    if(e instanceof ApiError && e.status!==401){ toast(e.reason==='phone_used' ? t('auth_toast_phone_used') : apiErrText(e)); return; }
+    throw e;
+  }
   session.name = tr.name;
   toast(t('tpz_toast_saved'));
   renderRoot();
@@ -3646,7 +3677,8 @@ async function renderADashboard(){
     dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
     dbGetAll('tpkg:'), dbGetAll('booking:'), dbGetAll('custpkg:')
   ]);
-  const lastCleanup = await dbGet('system:lastCleanup');
+  const maintRec = await dbGet('system:maintenance');
+  const lastCleanup = maintRec && maintRec.ts;
   const sbConnected = (connState==='online');
   const diag = {
     hasUrl: !!SUPABASE_URL,
@@ -3722,24 +3754,21 @@ async function approveApp(id, approve){
   if(appActionBusy.has(id)) return; // ignore a second click while the first is still in flight
   appActionBusy.add(id);
   try{
-  const app = await dbGet('trainerApp:'+id);
-  if(!app){ return; }
-  if(approve){
-    const code = await genTrainerCode();
-    const tr = {id:'t_'+app.id, username:app.username, password:app.password, name:app.name, phone:app.phone,
-      specialty:app.specialty, bio:app.bio, certs:app.certs||[], status:'active', ready:true, role:'trainer', code};
-    if(app.photo) tr.photo = app.photo;
-    if(app.googleId){ tr.googleId = app.googleId; tr.email = app.email || ''; if(app.authProvider==='google') tr.authProvider = 'google'; }
-    await dbSet('trainer:'+tr.id, tr);
-    await dbDelete('trainerApp:'+id);
-    await pushNotification(tr.id, 'nav_t_dashboard', 'notif_approved', {}, null);
-    toast(t('aa_toast_approve'));
-  } else {
-    for(const c of (app.certs||[])){ if(c.imgId){ try{ await dbDelete('certimg:'+c.imgId); }catch(e){} } }
-    await dbDelete('trainerApp:'+id);
-    toast(t('aa_toast_reject'));
-  }
-  renderView(); renderNav();
+    if(approve){
+      const r = await rpc('app_approve_trainer', {p_token:authToken, p_app_id:id});     // the server creates the trainer, the code and the account
+      if(r && r.ok){
+        await pushNotification(r.trainerId, 'nav_t_dashboard', 'notif_approved', {}, null);
+        toast(t('aa_toast_approve'));
+      }
+    } else {
+      await rpc('app_reject_trainer', {p_token:authToken, p_app_id:id});
+      toast(t('aa_toast_reject'));
+    }
+    clearRenderCaches();
+    renderView(); renderNav();
+  }catch(e){
+    if(e instanceof ApiError && e.status!==401){ toast(apiErrText(e)); renderView(); return; }
+    throw e;
   } finally { appActionBusy.delete(id); }
 }
 
@@ -3753,17 +3782,13 @@ async function renderAUsers(){
     <div class="page-head"><div><div class="eyebrow">${t('au_eyebrow')}</div><h1>${t('au_h1')}</h1><p>${t('au_p')}</p></div></div>
     <div class="card table-wrap">
       <table class="table">
-        <thead><tr><th>${t('au_th_name')}</th><th>${t('au_th_role')}</th><th>${t('au_th_phone')}</th><th>${t('au_th_password')}</th><th>${t('au_th_status')}</th><th></th></tr></thead>
+        <thead><tr><th>${t('au_th_name')}</th><th>${t('au_th_role')}</th><th>${t('au_th_phone')}</th><th>${t('au_th_status')}</th><th></th></tr></thead>
         <tbody>
           ${rows.map(u=>`
             <tr>
               <td data-label="${t('au_th_name')}">${esc(u.name)}${u.code?`<div style="font-size:11px;color:var(--text-faint);font-family:var(--font-mono)">#${esc(u.code)}</div>`:''}</td>
-              <td data-label="${t('au_th_role')}"><span class="badge badge-role">${u.roleLabel}</span></td>
+              <td data-label="${t('au_th_role')}"><span class="badge badge-role">${u.roleLabel}</span>${u.authProvider==='google' ? ` <span class="badge badge-role">${t('au_google_acct')}</span>` : ''}</td>
               <td data-label="${t('au_th_phone')}">${esc(u.phone||(u.authProvider==='google' ? u.email : u.username)||'')}</td>
-              <td data-label="${t('au_th_password')}">
-                ${u.authProvider==='google' ? `<span class="badge badge-role">${t('au_google_acct')}</span>` : `<span class="pw-mask" data-pw="${esc(u.password||'')}" data-revealed="0" style="font-family:var(--font-mono)">••••••</span>
-                <button class="btn btn-sm btn-ghost" data-toggle-pw type="button" style="padding:2px 8px">👁</button>`}
-              </td>
               <td data-label="${t('au_th_status')}"><span class="badge ${u.status==='active'?'badge-active':'badge-suspended'}">${u.status==='active'?t('au_status_active'):t('au_status_suspended')}</span></td>
               <td class="td-actions">${u.status==='active'
                 ? `<button class="btn btn-sm btn-danger-outline" data-suspend-user="${u.role}:${u.id}">${t('au_suspend_btn')}</button>`
@@ -3789,12 +3814,11 @@ async function setUserStatus(roleAndId, status){
 }
 async function resetUserPassword(roleAndId, newPw){
   const [role, id] = roleAndId.split(':');
-  const key = (role==='trainer'?'trainer:':'customer:')+id;
-  const u = await dbGet(key);
-  if(!u) return;
-  u.password = newPw;
-  await dbSet(key, u);
-  toast(t('au_toast_reset'));
+  const target = (role==='trainer'?'trainer:':'customer:')+id;
+  let r;
+  try{ r = await rpc('app_reset_password', {p_token:authToken, p_target:target, p_new:newPw}); }
+  catch(e){ if(e instanceof ApiError && e.status!==401){ toast(apiErrText(e)); return; } throw e; }
+  toast(r && r.ok ? t('au_toast_reset') : (r && r.reason==='weak') ? t('au_reset_weak') : t('err_invalid'));
   renderView();
 }
 
@@ -3853,7 +3877,7 @@ async function renderAuth(){
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
       <div class="field"><label>${t('auth_name_label')}</label><input type="text" id="regName" value="${esc(regDraft.name)}"></div>
       <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="regPhone" value="${esc(regDraft.phone)}"></div>
-      <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="regPw" value="${esc(regDraft.pw)}"></div>
+      <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="regPw" value="${esc(regDraft.pw)}" autocomplete="new-password"><div class="slot-hint" style="margin:6px 0 0">${t('auth_pw_rule')}</div></div>
       <button class="btn btn-primary btn-block" id="registerBtn">${t('auth_register_btn')}</button>
       ${googleBtnHtml('google_signup')}
       <a class="auth-back" id="backToLogin">← ${t('auth_back_to_login')}</a>
@@ -3877,7 +3901,7 @@ async function renderAuth(){
         <div class="field"><label>${t('auth_specialty_label')}</label><input type="text" id="apSpecialty" value="${esc(applyDraft.specialty)}"></div>
         <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="apPhone" value="${esc(applyDraft.phone)}"></div>
       </div>
-      ${googleApplicant ? '' : `<div class="field"><label>${t('auth_password_label')}</label><input type="password" id="apPw" value="${esc(applyDraft.pw)}"></div>`}
+      ${googleApplicant ? '' : `<div class="field"><label>${t('auth_password_label')}</label><input type="password" id="apPw" value="${esc(applyDraft.pw)}" autocomplete="new-password"><div class="slot-hint" style="margin:6px 0 0">${t('auth_pw_rule')}</div></div>`}
       <div class="field"><label>${t('auth_bio_label')}</label><textarea id="apBio" rows="2">${esc(applyDraft.bio)}</textarea></div>
       <div class="field">
         <label>${t('auth_certs_label')}</label>
@@ -3957,48 +3981,29 @@ async function renderAuth(){
   });
 }
 
+function loginFailText(r){
+  if(!r) return t('auth_toast_wrong');
+  if(r.reason==='locked') return lockedText(r);
+  if(r.reason==='suspended') return t('auth_toast_suspended');
+  if(r.reason==='pending') return t('auth_toast_pending');
+  return t('auth_toast_wrong');
+}
+function authApiErr(e){
+  if(e instanceof ApiError && e.status!==401){ authError = e.status===429 ? t('auth_toast_rate') : apiErrText(e); renderAuth(); return true; }
+  return false;
+}
 async function doLoginInner(){
   const id = (document.getElementById('authId').value||'').trim();
   const pw = (document.getElementById('authPw').value||'').trim();
   if(!id || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
-
-  if(authRole==='admin'){
-    const admin = await dbGet('admin:admin');
-    if(admin && admin.username===id && admin.password===pw){
-      session = {id:'admin', role:'admin', name:admin.name};
-      rememberActiveSession('admin','admin');
-      authError=''; route='dashboard'; renderRoot(); return;
-    }
-    authError = t('auth_toast_wrong'); renderAuth(); return;
-  }
-
-  if(authRole==='trainer'){
-    const trainers = await dbGetAll('trainer:');
-    const tr = trainers.find(x=> (x.username===id || x.phone===id) && x.password===pw);
-    if(tr){
-      if(tr.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
-      session = {id:tr.id, role:'trainer', name:tr.name};
-      rememberActiveSession(tr.id,'trainer');
-      authError=''; route='dashboard'; renderRoot(); return;
-    }
-    const apps = await dbGetAll('trainerApp:');
-    const pendingApp = apps.find(x=> x.username===id && x.password===pw);
-    if(pendingApp){ authError = t('auth_toast_pending'); renderAuth(); return; }
-    authError = t('auth_toast_wrong'); renderAuth(); return;
-  }
-
-  // customer
-  const customers = await dbGetAll('customer:');
-  const c = customers.find(x=> (x.username===id || x.phone===id) && x.password===pw);
-  if(c){
-    if(c.status!=='active'){ authError = t('auth_toast_suspended'); renderAuth(); return; }
-    session = {id:c.id, role:'customer', name:c.name};
-    rememberActiveSession(c.id,'customer');
-    authError=''; route='dashboard';
-    await applyPendingTrainerCodeIfAny();
-    renderRoot(); return;
-  }
-  authError = t('auth_toast_wrong'); renderAuth();
+  let r;
+  try{ r = await rpc('app_login', {p_role:authRole, p_id:id, p_pw:pw}); }      // the password is checked on the server and goes nowhere else
+  catch(e){ if(authApiErr(e)) return; throw e; }
+  if(!(r && r.ok && r.token && r.user)){ authError = loginFailText(r); renderAuth(); return; }
+  startSession(r.token, r.user);
+  authError=''; route='dashboard'; routeParams={};
+  if(session.role==='customer') await applyPendingTrainerCodeIfAny();
+  renderRoot();
 }
 
 async function doRegisterInner(){
@@ -4009,12 +4014,14 @@ async function doRegisterInner(){
     const phone = (document.getElementById('regPhone').value||'').trim();
     const pw = (document.getElementById('regPw').value||'').trim();
     if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
-    const customers = await dbGetAll('customer:');
-    if(customers.some(x=>x.phone===phone || x.username===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
-    const c = {id:newId('c'), username:phone, password:pw, name, phone, status:'active', role:'customer'};
-    await dbSet('customer:'+c.id, c);
-    session = {id:c.id, role:'customer', name:c.name};
-    rememberActiveSession(c.id,'customer');
+    let r;
+    try{ r = await rpc('app_register_customer', {p_name:name, p_phone:phone, p_pw:pw}); }
+    catch(e){ if(authApiErr(e)) return; throw e; }
+    if(!(r && r.ok && r.token && r.user)){
+      authError = (r && r.reason==='phone_used') ? t('auth_toast_phone_used') : (r && r.reason==='weak') ? t('auth_toast_weak') : t('auth_toast_invalid');
+      renderAuth(); return;
+    }
+    startSession(r.token, r.user);
     regDraft = {name:'', phone:'', pw:''};
     toast(t('auth_toast_registered'));
     authError=''; route='trainers'; routeParams={};
@@ -4034,27 +4041,32 @@ async function doApplyInner(){
     const pw = gApp ? '' : (document.getElementById('apPw').value||'').trim();
     const bio = (document.getElementById('apBio').value||'').trim();
     if(!name || !phone || (!pw && !gApp)){ authError = t('auth_toast_fill'); renderAuth(); return; }
-    const [trainers, apps] = await Promise.all([dbGetAll('trainer:'), dbGetAll('trainerApp:')]);
-    if(trainers.some(x=>x.phone===phone||x.username===phone) || apps.some(x=>x.username===phone||x.phone===phone)){ authError = t('auth_toast_phone_used'); renderAuth(); return; }
-    if(gApp && (apps.some(x=>x.googleId===gApp.gid) || trainers.some(x=>x.googleId===gApp.gid))){ clearGoogleApplicant(); authError = t('auth_toast_pending'); renderAuth(); return; }
-    // Certificate pictures are saved under their own keys; the application only keeps their ids.
-    const certsOut = [];
-    for(const c of pendingApplicationCerts){
-      const o = {name:c.name, issuer:c.issuer, year:c.year};
-      if(c.img){
-        o.imgId = newId('ci');
-        await dbSet('certimg:'+o.imgId, {data:c.img, createdAt:new Date().toISOString()});
-      }
-      certsOut.push(o);
-    }
-    const app = {id:newId('app'), username: gApp ? 'google:' + gApp.gid : phone, password:pw, name, phone, specialty, bio, certs:certsOut, submittedAt:new Date().toISOString(), status:'pending'};
-    if(gApp){ app.googleId = gApp.gid; app.email = gApp.email || ''; app.authProvider = 'google'; }
+    const app = {name, specialty, phone, bio, certs: pendingApplicationCerts.map(c=>({name:c.name, issuer:c.issuer, year:c.year}))};
     if(pendingApplicationPhoto) app.photo = pendingApplicationPhoto;
-    await dbSet('trainerApp:'+app.id, app);
+    let r;
+    try{ r = await rpc('app_apply_trainer', {p_app:app, p_pw: gApp ? null : pw, p_ticket: gApp ? gApp.ticket : null}); }
+    catch(e){ if(authApiErr(e)) return; throw e; }
+    if(!(r && r.ok)){
+      const why = r && r.reason;
+      if(why==='ticket'){ clearGoogleApplicant(); authError = t('google_ticket_expired'); }
+      else if(why==='pending'){ clearGoogleApplicant(); authError = t('auth_toast_pending'); }
+      else if(why==='phone_used') authError = t('auth_toast_phone_used');
+      else if(why==='weak') authError = t('auth_toast_weak');
+      else authError = t('auth_toast_invalid');
+      renderAuth(); return;
+    }
+    // certificate pictures follow one by one; the application only keeps their ids
+    let failedPictures = 0;
+    for(let i = 0; i < pendingApplicationCerts.length; i++){
+      const img = pendingApplicationCerts[i].img;
+      if(!img) continue;
+      try{ await rpc('app_apply_cert', {p_app_id:r.appId, p_ut:r.uploadToken, p_idx:i, p_img:img}); }
+      catch(e){ if(e instanceof DbError) failedPictures++; else throw e; }
+    }
     pendingApplicationCerts = []; pendingApplicationPhoto = '';
     applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
     clearGoogleApplicant();
-    toast(t('auth_toast_applied'));
+    toast(t(failedPictures ? 'auth_toast_applied_noimg' : 'auth_toast_applied'));
     authMode='login'; authError=''; renderAuth();
   } finally { authSubmitting = false; }
 }
@@ -4107,41 +4119,19 @@ try{ googleApplicant = JSON.parse(sessionStorage.getItem(GOOGLE_APPLICANT_KEY) |
 function clearGoogleApplicant(){ googleApplicant = null; try{ sessionStorage.removeItem(GOOGLE_APPLICANT_KEY); }catch(e){} }
 let googleNote = '';  // a message to show once the screen is up (used when linking, where there is no login screen)
 
-async function finishGoogleTrainer(user, intent){
-  const email = String(user.email || '').trim().toLowerCase();
-  const trainers = await dbGetAll('trainer:');
-  const mine = trainers.find(x=> x && x.googleId===user.id);
-
-  if(intent.mode==='link'){
-    let saved = null; try{ saved = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY) || 'null'); }catch(e){}
-    const me = (saved && saved.role==='trainer' && saved.id===intent.trainerId) ? await dbGet('trainer:' + saved.id) : null;
-    if(!me || me.status!=='active'){ googleNote = t('google_failed'); return false; }
-    session = {id:me.id, role:'trainer', name:me.name}; route = 'profile'; routeParams = {};
-    if(mine && mine.id!==me.id){ googleNote = t('google_link_taken'); return true; }
-    if(me.googleId && me.googleId!==user.id){ googleNote = t('google_link_other'); return true; }
-    if(!me.googleId){ me.googleId = user.id; me.email = email; await dbSet('trainer:' + me.id, me); }
-    googleNote = t('google_link_done');
-    return true;
-  }
-
-  authRole = 'trainer'; authMode = 'login';
-  if(mine){
-    if(mine.status!=='active'){ authError = t('auth_toast_suspended'); return false; }
-    session = {id:mine.id, role:'trainer', name:mine.name};
-    rememberActiveSession(mine.id, 'trainer');
-    authError = ''; route = 'dashboard'; routeParams = {};
-    return true;
-  }
-  const apps = await dbGetAll('trainerApp:');
-  if(apps.some(x=> x && x.googleId===user.id)){ authError = t('auth_toast_pending'); return false; }
-  // first time: carry on as a trainer application (admin approval still applies)
-  const meta = user.user_metadata || {};
-  googleApplicant = {gid:user.id, email, name: String(meta.full_name || meta.name || '').trim() || email.split('@')[0] || ''};
-  try{ sessionStorage.setItem(GOOGLE_APPLICANT_KEY, JSON.stringify(googleApplicant)); }catch(e){}
-  authMode = 'apply'; authError = '';
-  pendingApplicationCerts = []; pendingApplicationPhoto = '';
-  applyDraft = {name:googleApplicant.name, specialty:'', phone:'', pw:'', bio:''};
-  return false;
+/* A trainer's Google account is attached to the account that is signed in right now. */
+async function finishGoogleLink(ret, intent, fail, revoke){
+  const saved = readSavedSession();
+  if(!saved || saved.role!=='trainer' || saved.id!==intent.trainerId){ revoke(); return fail('google_failed'); }
+  const who = await rpc('app_whoami', {p_token:saved.token});          // a lost connection propagates so the boot can retry
+  if(!(who && who.ok && who.user && who.user.role==='trainer' && who.user.id===saved.id)){ revoke(); clearActiveSession(); return fail('google_failed'); }
+  authToken = saved.token; session = {id:who.user.id, role:'trainer', name:who.user.name}; route = 'profile'; routeParams = {};
+  let r;
+  try{ r = await rpc('app_google_link', {p_token:saved.token}, {bearer: ret.token}); }
+  catch(e){ revoke(); if(e instanceof ApiError){ googleNote = t('google_failed'); return true; } throw e; }
+  revoke();
+  googleNote = t(r && r.ok ? 'google_link_done' : (r && r.reason==='taken') ? 'google_link_taken' : (r && r.reason==='other') ? 'google_link_other' : 'google_failed');
+  return true;
 }
 
 /* Runs at boot. Returns true when a Google sign-in was completed and a session now exists. */
@@ -4155,49 +4145,46 @@ async function finishGoogleLogin(){
   const fail = (key)=>{ if(linking) googleNote = t(key); else authError = t(key); return false; };
   authRole = intent.role; authMode = 'login';
   if(ret.error) return fail(ret.denied ? 'google_cancelled' : 'google_failed');
-
-  // 1) ask Supabase who this token belongs to
-  let user = null;
-  try{
-    const ac = (typeof AbortController!=='undefined') ? new AbortController() : null;
-    const stopTimer = setTimeout(()=>{ if(ac) ac.abort(); }, 15000);
-    let r; try{ r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, cache:'no-store', signal: ac ? ac.signal : undefined }); } finally { clearTimeout(stopTimer); }
-    if(r.status===401 || r.status===403) return fail('google_failed');
-    if(!r.ok) throw new Error('auth user ' + r.status);
-    user = await r.json();
-  }catch(e){ console.warn('Google sign-in check failed:', e); return fail('conn_login_failed'); }
-  // the token has done its job -- revoke it so nothing keeps a live login for this browser
-  try{ fetch(SUPABASE_URL + '/auth/v1/logout?scope=local', { method:'POST', headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, keepalive:true }).catch(()=>{}); }catch(e){}
-  const viaGoogle = !!(user && user.id && ((user.identities||[]).some(i=>i && i.provider==='google') || (user.app_metadata && user.app_metadata.provider==='google')));
-  if(!viaGoogle) return fail('google_failed');
+  // the Google token has done its job once our server has seen it -- revoke it so nothing keeps a live login for this browser
+  const revoke = ()=>{ try{ fetch(SUPABASE_URL + '/auth/v1/logout?scope=local', { method:'POST', headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, keepalive:true }).catch(()=>{}); }catch(e){} };
 
   try{
     clearRenderCaches();
-    if(intent.role==='trainer') return await finishGoogleTrainer(user, intent);
+    if(linking) return await finishGoogleLink(ret, intent, fail, revoke);
 
-    // 2) customer: find (or create) the matching record. The id comes from the Google account id, so the same Google account always lands on the same record.
-    const cid = 'cg_' + String(user.id).replace(/[^A-Za-z0-9]/g, '');
-    let c = await dbGet('customer:' + cid);
-    if(!c) c = (await dbGetAll('customer:')).find(x=> x && x.googleId===user.id) || null;
-    let created = false;
-    if(!c){
-      const meta = user.user_metadata || {};
-      const email = String(user.email || '').trim().toLowerCase();
-      const name = String(meta.full_name || meta.name || '').trim() || email.split('@')[0] || 'Google';
-      c = {id:cid, username:'google:' + user.id, password:'', name, phone:'', email, googleId:user.id, authProvider:'google', status:'active', role:'customer'};
-      await dbSet('customer:' + c.id, c);
-      created = true;
+    let g;
+    try{ g = await rpc('app_google_login', {p_role:intent.role}, {bearer: ret.token}); }
+    catch(e){
+      if(e instanceof ApiError){ revoke(); return fail(e.status===429 ? 'auth_toast_rate' : 'google_failed'); }
+      throw e;
     }
-    if(c.status!=='active'){ authError = t('auth_toast_suspended'); return false; }
-    session = {id:c.id, role:'customer', name:c.name};
-    rememberActiveSession(c.id, 'customer');
-    authError = ''; route = created ? 'trainers' : 'dashboard'; routeParams = {};
-    try{ const sc = localStorage.getItem(GOOGLE_CODE_KEY); if(sc){ localStorage.removeItem(GOOGLE_CODE_KEY); if(!pendingTrainerCode) pendingTrainerCode = sc; } }catch(e){}
-    if(created) toast(t('google_welcome'));
-    return true;
+    revoke();
+    const why = g && g.reason;
+    if(g && g.ok && g.token && g.user){
+      startSession(g.token, g.user);
+      authError = ''; route = (intent.role==='customer' && g.created) ? 'trainers' : 'dashboard'; routeParams = {};
+      if(intent.role==='customer'){
+        try{ const sc = localStorage.getItem(GOOGLE_CODE_KEY); if(sc){ localStorage.removeItem(GOOGLE_CODE_KEY); if(!pendingTrainerCode) pendingTrainerCode = sc; } }catch(e){}
+        if(g.created) toast(t('google_welcome'));
+      }
+      return true;
+    }
+    if(why==='suspended'){ authError = t('auth_toast_suspended'); return false; }
+    if(why==='pending'){ authError = t('auth_toast_pending'); return false; }
+    if(why==='none' && g.ticket && g.applicant && intent.role==='trainer'){
+      // first time: carry on as a trainer application (admin approval still applies)
+      const email = String(g.applicant.email || '').trim().toLowerCase();
+      googleApplicant = {ticket:g.ticket, gid:g.applicant.gid, email, name: String(g.applicant.name || '').trim() || email.split('@')[0] || ''};
+      try{ sessionStorage.setItem(GOOGLE_APPLICANT_KEY, JSON.stringify(googleApplicant)); }catch(e){}
+      authMode = 'apply'; authError = '';
+      pendingApplicationCerts = []; pendingApplicationPhoto = '';
+      applyDraft = {name:googleApplicant.name, specialty:'', phone:'', pw:'', bio:''};
+      return false;
+    }
+    return fail('google_failed');
   }catch(e){
     // the database could not be reached: keep the (still valid, short-lived) sign-in so the boot retry can finish it
-    if(e instanceof DbError){
+    if(e instanceof DbError && !(e instanceof ApiError)){
       googleReturnMem = ret;
       try{ sessionStorage.setItem(GOOGLE_RETURN_KEY, JSON.stringify(ret)); }catch(x){}
       writeGoogleIntent(intent);
@@ -4220,15 +4207,11 @@ function googleCardHtml(tr){
       </div>`;
 }
 async function unlinkGoogleTrainer(){
-  const tr = await dbGet('trainer:' + session.id);
-  if(!tr || tr.authProvider==='google' || !tr.googleId) return;
-  delete tr.googleId; delete tr.email;
-  await dbSet('trainer:' + tr.id, tr);
-  toast(t('google_unlinked'));
-  renderView();
+  const r = await rpc('app_google_unlink', {p_token:authToken});
+  if(r && r.ok){ clearRenderCaches(); toast(t('google_unlinked')); renderView(); }
 }
 
-function authDbErrorMsg(e){ return e instanceof DbUnavailableError ? t('conn_login_failed') : t('db_rejected'); }
+function authDbErrorMsg(e){ return e instanceof DbUnavailableError ? t('conn_login_failed') : apiErrText(e); }
 async function doLogin(){
   const idEl = document.getElementById('authId');
   const idVal = idEl ? idEl.value : '';
@@ -4293,6 +4276,8 @@ function wireView(){
   document.querySelectorAll('[data-reject-order]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>respondOrder(el.dataset.rejectOrder, false))));
 
   const cProfSave = document.getElementById('cProfSave'); if(cProfSave) cProfSave.addEventListener('click', ()=> withBusy(cProfSave, saveCProfile));
+  const secPwSave = document.getElementById('secPwSave'); if(secPwSave) secPwSave.addEventListener('click', ()=> withBusy(secPwSave, changeMyPassword));
+  const secLogoutAll = document.getElementById('secLogoutAll'); if(secLogoutAll) secLogoutAll.addEventListener('click', ()=> withBusy(secLogoutAll, logoutEverywhere));
 
   document.querySelectorAll('[data-accept-booking]').forEach(el=>el.addEventListener('click', ()=> respondBooking(el.dataset.acceptBooking, true)));
   document.querySelectorAll('[data-accept-duo]').forEach(el=>el.addEventListener('click', ()=> acceptDuo(el.dataset.acceptDuo)));
@@ -4324,16 +4309,6 @@ function wireView(){
 
   document.querySelectorAll('[data-suspend-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.suspendUser, 'suspended')));
   document.querySelectorAll('[data-activate-user]').forEach(el=>el.addEventListener('click', ()=> setUserStatus(el.dataset.activateUser, 'active')));
-  document.querySelectorAll('[data-toggle-pw]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const span = btn.previousElementSibling;
-      if(!span) return;
-      const revealed = span.dataset.revealed === '1';
-      span.textContent = revealed ? '••••••' : (span.dataset.pw || '');
-      span.dataset.revealed = revealed ? '0' : '1';
-      btn.textContent = revealed ? '👁' : '🙈';
-    });
-  });
   document.querySelectorAll('[data-reset-pw]').forEach(el=>el.addEventListener('click', ()=>{
     const pw = prompt(t('au_reset_prompt'));
     if(pw && pw.trim()) resetUserPassword(el.dataset.resetPw, pw.trim());
@@ -4344,8 +4319,8 @@ function wireView(){
     runCleanupBtn.disabled = true;
     runCleanupBtn.textContent = 'กำลังล้างข้อมูล…';
     try{
-      const r = await cleanupOldData(true);
-      toast(`ลบนัดเทรนเก่า ${r.removedBookings} รายการ · แจ้งเตือนเก่า ${r.removedNotifs} รายการ`);
+      await rpc('app_admin_maintain', {p_token:authToken});
+      toast(t('ad_cleanup_done'));
     }catch(e){
       toast('ล้างข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง');
     }
@@ -4473,14 +4448,13 @@ let bootBusy = false;
 async function bootApp(){
   document.getElementById('app').innerHTML = splashHtml();
   const slowNote = setTimeout(()=>{ const n = document.getElementById('splashNote'); if(n) n.textContent = t('splash_slow'); }, 5000);
-  try{ await seedIfNeeded();
+  try{
   if(!(await finishGoogleLogin())) await resumeActiveSession();
   await applyPendingTrainerCodeIfAny();
   } finally { clearTimeout(slowNote); }
   if(!session && googleApplicant){ authRole = 'trainer'; authMode = 'apply'; if(!applyDraft.name) applyDraft.name = googleApplicant.name || ''; }
   await renderRoot();
   if(googleNote){ toast(googleNote); googleNote = ''; }
-  cleanupOldData(false).catch(()=>{});
 }
 /* Starts (or restarts, from the "Retry" button / when the connection comes back) the app. */
 async function runBoot(){
