@@ -352,6 +352,12 @@
   .quick-login-row .qn{font-size:14px;font-weight:500;flex:1;min-width:0}
   .quick-login-row .qc{font-size:12px;color:var(--text-faint);flex-shrink:0}
   .auth-switch{text-align:center;font-size:14px;color:var(--text-dim);margin-top:18px}
+  .auth-divider{display:flex;align-items:center;gap:12px;margin:18px 0 14px;color:var(--text-faint);font-size:13px}
+  .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--line-strong)}
+  .btn-google{background:#fff;color:#3c4043;border:1px solid #dadce0;font-weight:600;gap:10px}
+  .btn-google svg{width:18px;height:18px;flex:none}
+  @media(hover:hover){.btn-google:hover:not(:disabled){background:#f6f8fb;border-color:#c6cbd1}}
+  .btn-google:disabled{opacity:.7}
   .auth-switch a{color:var(--red-bright);font-weight:600;cursor:pointer}
   .auth-back{text-align:center;font-size:14px;color:var(--text-dim);margin-top:16px;display:block;cursor:pointer}
   .auth-error{background:var(--red-glow);color:#ff9aa6;font-size:13.5px;padding:11px 13px;border-radius:12px;margin-bottom:14px;line-height:1.55}
@@ -726,6 +732,12 @@ const i18n = {
     nav_a_dashboard:'ภาพรวมระบบ', nav_a_apps:'ตรวจสอบเทรนเนอร์', nav_a_users:'จัดการผู้ใช้งาน', nav_a_packages:'จัดการแพ็กเกจ',
     logout:'ออกจากระบบ',
 
+    google_login:'เข้าสู่ระบบด้วย Google', google_signup:'สมัครด้วย Google', google_or:'หรือ',
+    google_failed:'เข้าสู่ระบบด้วย Google ไม่สำเร็จ ลองใหม่อีกครั้ง', google_cancelled:'ยกเลิกการเข้าสู่ระบบด้วย Google แล้ว',
+    google_need_setup:'ตอนนี้ยังเข้าสู่ระบบด้วย Google ไม่ได้ ใช้เบอร์โทรศัพท์แทนได้',
+    google_welcome:'ยินดีต้อนรับ! สร้างบัญชีจาก Google ให้แล้ว',
+    prof_email:'อีเมล (จาก Google)', google_profile_note:'บัญชีนี้เข้าสู่ระบบด้วย Google ใส่เบอร์โทรไว้ได้ เพื่อให้เทรนเนอร์ติดต่อคุณ',
+    au_google_acct:'บัญชี Google',
     auth_login_heading:'เข้าสู่ระบบ', auth_as:'ระบบ', auth_phone_label:'เบอร์โทรศัพท์', auth_username_label:'ชื่อผู้ใช้', auth_password_label:'รหัสผ่าน',
     auth_login_btn:'เข้าสู่ระบบ', auth_no_account:'ยังไม่มีบัญชี?', auth_register_link:'สมัครสมาชิกใหม่',
     auth_no_trainer_account:'ยังไม่ได้เป็นเทรนเนอร์ในระบบ?', auth_apply_link:'สมัครเทรนเนอร์ใหม่',
@@ -887,6 +899,12 @@ const i18n = {
     nav_a_dashboard:'Dashboard', nav_a_apps:'Trainer approval', nav_a_users:'Manage users', nav_a_packages:'Manage packages',
     logout:'Log out',
 
+    google_login:'Sign in with Google', google_signup:'Sign up with Google', google_or:'or',
+    google_failed:'Google sign-in did not work. Please try again.', google_cancelled:'Google sign-in was cancelled.',
+    google_need_setup:'Google sign-in is not available right now. You can use your phone number instead.',
+    google_welcome:'Welcome! Your account was created from Google.',
+    prof_email:'Email (from Google)', google_profile_note:'This account signs in with Google. You can add a phone number so your trainer can reach you.',
+    au_google_acct:'Google account',
     auth_login_heading:'Sign in', auth_as:'System', auth_phone_label:'Phone number', auth_username_label:'Username', auth_password_label:'Password',
     auth_login_btn:'Sign in', auth_no_account:"Don't have an account?", auth_register_link:'Create one',
     auth_no_trainer_account:'Not a registered trainer yet?', auth_apply_link:'Apply as a trainer',
@@ -1069,7 +1087,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-04.3';
+const APP_BUILD = '2026-11-04.4';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -1503,6 +1521,32 @@ let pendingTrainerCode = null;
   try{
     const p = new URLSearchParams(location.search).get('t');
     if(p) pendingTrainerCode = p.toUpperCase();
+  }catch(e){}
+})();
+
+/* ---------------- sign in with Google (customers) ----------------
+   Supabase Auth does the Google part. The browser comes back to this page with
+   #access_token=... (or #error=...). That is read once, removed from the address
+   bar right away, and then checked with Supabase (GET /auth/v1/user) so the
+   Google identity is verified by the server and not just believed. Nothing is kept
+   afterwards except the ordinary remembered {id, role}; the token is revoked. */
+const GOOGLE_RETURN_KEY = 'trainkrub:googleReturn';
+const GOOGLE_CODE_KEY = 'trainkrub:googlePendingCode';
+let googleReturnMem = null;
+(function takeGoogleReturnFromUrl(){
+  try{
+    const hp = new URLSearchParams((location.hash||'').replace(/^#/,''));
+    const sp = new URLSearchParams(location.search);
+    let ret = null;
+    if(hp.get('access_token')) ret = {token: hp.get('access_token')};
+    else if(hp.get('error') || hp.get('error_code')) ret = {error: hp.get('error_code') || hp.get('error'), denied: hp.get('error')==='access_denied'};
+    else if(sp.get('error') && (sp.get('error_description') || sp.get('error_code'))) ret = {error: sp.get('error_code') || sp.get('error'), denied: sp.get('error')==='access_denied'};
+    if(!ret) return;
+    googleReturnMem = ret;
+    try{ sessionStorage.setItem(GOOGLE_RETURN_KEY, JSON.stringify(ret)); }catch(e){}
+    ['error','error_code','error_description'].forEach(k=>sp.delete(k));
+    const qs = sp.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?'+qs : ''));
   }catch(e){}
 })();
 async function applyPendingTrainerCodeIfAny(){
@@ -3036,7 +3080,9 @@ async function renderCProfile(){
     <div class="card" style="max-width:480px">
       ${photoEditorHtml(c)}
       <div class="field"><label>${t('prof_name')}</label><input type="text" id="cProfName" value="${esc(c.name)}"></div>
+      ${c.authProvider==='google' ? `<div class="field"><label>${t('prof_email')}</label><input type="text" id="cProfEmail" value="${esc(c.email||'')}" disabled></div>` : ''}
       <div class="field"><label>${t('prof_phone')}</label><input type="text" id="cProfPhone" value="${esc(c.phone)}"></div>
+      ${c.authProvider==='google' ? `<div class="auth-hint" style="margin:0 0 14px">${t('google_profile_note')}</div>` : ''}
       <button class="btn btn-primary btn-block" id="cProfSave">${t('prof_save')}</button>
     </div>
   `;
@@ -3056,7 +3102,7 @@ async function saveCProfile(){
   }
   c.name = newName;
   c.phone = newPhone;
-  c.username = newPhone;
+  if(newPhone) c.username = newPhone;
   await dbSet('customer:'+c.id, c);
   await propagateNameChange('customer', c.id, c.name);
   session.name = c.name;
@@ -3697,16 +3743,16 @@ async function renderAUsers(){
             <tr>
               <td data-label="${t('au_th_name')}">${esc(u.name)}${u.code?`<div style="font-size:11px;color:var(--text-faint);font-family:var(--font-mono)">#${esc(u.code)}</div>`:''}</td>
               <td data-label="${t('au_th_role')}"><span class="badge badge-role">${u.roleLabel}</span></td>
-              <td data-label="${t('au_th_phone')}">${esc(u.phone||u.username||'')}</td>
+              <td data-label="${t('au_th_phone')}">${esc(u.phone||(u.authProvider==='google' ? u.email : u.username)||'')}</td>
               <td data-label="${t('au_th_password')}">
-                <span class="pw-mask" data-pw="${esc(u.password||'')}" data-revealed="0" style="font-family:var(--font-mono)">••••••</span>
-                <button class="btn btn-sm btn-ghost" data-toggle-pw type="button" style="padding:2px 8px">👁</button>
+                ${u.authProvider==='google' ? `<span class="badge badge-role">${t('au_google_acct')}</span>` : `<span class="pw-mask" data-pw="${esc(u.password||'')}" data-revealed="0" style="font-family:var(--font-mono)">••••••</span>
+                <button class="btn btn-sm btn-ghost" data-toggle-pw type="button" style="padding:2px 8px">👁</button>`}
               </td>
               <td data-label="${t('au_th_status')}"><span class="badge ${u.status==='active'?'badge-active':'badge-suspended'}">${u.status==='active'?t('au_status_active'):t('au_status_suspended')}</span></td>
               <td class="td-actions">${u.status==='active'
                 ? `<button class="btn btn-sm btn-danger-outline" data-suspend-user="${u.role}:${u.id}">${t('au_suspend_btn')}</button>`
                 : `<button class="btn btn-sm btn-primary" data-activate-user="${u.role}:${u.id}">${t('au_activate_btn')}</button>`}
-                <button class="btn btn-sm" data-reset-pw="${u.role}:${u.id}">${t('au_reset_btn')}</button>
+                ${u.authProvider==='google' ? '' : `<button class="btn btn-sm" data-reset-pw="${u.role}:${u.id}">${t('au_reset_btn')}</button>`}
               </td>
             </tr>
           `).join('')}
@@ -3778,6 +3824,7 @@ async function renderAuth(){
       <div class="field"><label>${idLabel}</label><input type="text" id="authId" placeholder="${idPh}"></div>
       <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="authPw"></div>
       <button class="btn btn-primary btn-block" id="loginBtn">${t('auth_login_btn')}</button>
+      ${authRole==='customer' ? googleBtnHtml('google_login') : ''}
     `;
     if(authRole==='admin'){
       inner += `<div class="auth-hint">${t('seed_note_admin')}</div>`;
@@ -3792,6 +3839,7 @@ async function renderAuth(){
       <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="regPhone" value="${esc(regDraft.phone)}"></div>
       <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="regPw" value="${esc(regDraft.pw)}"></div>
       <button class="btn btn-primary btn-block" id="registerBtn">${t('auth_register_btn')}</button>
+      ${googleBtnHtml('google_signup')}
       <a class="auth-back" id="backToLogin">← ${t('auth_back_to_login')}</a>
     `;
   } else if(authMode==='apply'){
@@ -3851,6 +3899,7 @@ async function renderAuth(){
   const back1 = document.getElementById('backToLogin'); if(back1) back1.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
+  document.querySelectorAll('[data-google-btn]').forEach(b=>b.addEventListener('click', ()=> signInWithGoogle(b)));
   const authIdEl = document.getElementById('authId'); if(authIdEl) authIdEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   const authPwEl = document.getElementById('authPw'); if(authPwEl) authPwEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   document.querySelectorAll('.quick-login-row').forEach(row=>row.addEventListener('click', ()=>{
@@ -3985,6 +4034,76 @@ async function doApplyInner(){
     toast(t('auth_toast_applied'));
     authMode='login'; authError=''; renderAuth();
   } finally { authSubmitting = false; }
+}
+
+
+const GOOGLE_G_SVG = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+function googleBtnHtml(labelKey){
+  return `<div class="auth-divider"><span>${t('google_or')}</span></div>
+      <button type="button" class="btn btn-block btn-google" data-google-btn>${GOOGLE_G_SVG}<span>${t(labelKey)}</span></button>`;
+}
+function googleRedirectUrl(){ return location.origin + location.pathname.replace(/index\.html$/, ''); }
+async function signInWithGoogle(btn){
+  if(!supabaseClient){ toast(t('google_need_setup')); return; }
+  await withBusy(btn, async ()=>{
+    try{
+      // The page is about to leave. Keep a ?t=CODE from a trainer's link/QR so it is still applied afterwards.
+      if(pendingTrainerCode){ try{ localStorage.setItem(GOOGLE_CODE_KEY, pendingTrainerCode); }catch(e){} }
+      const { error } = await supabaseClient.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: googleRedirectUrl(), queryParams:{ prompt:'select_account' } } });
+      if(error) throw error;
+    }catch(e){ console.warn('Google sign-in could not start:', e); toast(t('google_failed')); }
+  });
+}
+window.addEventListener('pageshow', e=>{ if(e.persisted) document.querySelectorAll('[data-google-btn]').forEach(b=>{ b.disabled = false; }); });
+
+/* Runs at boot. Returns true when a Google sign-in was completed and a customer session now exists. */
+async function finishGoogleLogin(){
+  let ret = googleReturnMem; googleReturnMem = null;
+  try{ const raw = sessionStorage.getItem(GOOGLE_RETURN_KEY); if(raw){ if(!ret) ret = JSON.parse(raw); sessionStorage.removeItem(GOOGLE_RETURN_KEY); } }catch(e){}
+  if(!ret) return false;
+  authRole = 'customer'; authMode = 'login';
+  if(ret.error){ authError = ret.denied ? t('google_cancelled') : t('google_failed'); return false; }
+
+  // 1) ask Supabase who this token belongs to
+  let user = null;
+  try{
+    const r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, cache:'no-store' });
+    if(r.status===401 || r.status===403){ authError = t('google_failed'); return false; }
+    if(!r.ok) throw new Error('auth user ' + r.status);
+    user = await r.json();
+  }catch(e){ console.warn('Google sign-in check failed:', e); authError = t('conn_login_failed'); return false; }
+  // the token has done its job -- revoke it so nothing keeps a live login for this browser
+  try{ fetch(SUPABASE_URL + '/auth/v1/logout?scope=local', { method:'POST', headers:{ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + ret.token }, keepalive:true }).catch(()=>{}); }catch(e){}
+  const viaGoogle = !!(user && user.id && ((user.identities||[]).some(i=>i && i.provider==='google') || (user.app_metadata && user.app_metadata.provider==='google')));
+  if(!viaGoogle){ authError = t('google_failed'); return false; }
+
+  // 2) find (or create) the matching customer. The id comes from the Google account id, so the same Google account always lands on the same record.
+  try{
+    clearRenderCaches();
+    const cid = 'cg_' + String(user.id).replace(/[^A-Za-z0-9]/g, '');
+    let c = await dbGet('customer:' + cid);
+    if(!c) c = (await dbGetAll('customer:')).find(x=> x && x.googleId===user.id) || null;
+    let created = false;
+    if(!c){
+      const meta = user.user_metadata || {};
+      const email = String(user.email || '').trim().toLowerCase();
+      const name = String(meta.full_name || meta.name || '').trim() || email.split('@')[0] || 'Google';
+      c = {id:cid, username:'google:' + user.id, password:'', name, phone:'', email, googleId:user.id, authProvider:'google', status:'active', role:'customer'};
+      await dbSet('customer:' + c.id, c);
+      created = true;
+    }
+    if(c.status!=='active'){ authError = t('auth_toast_suspended'); return false; }
+    session = {id:c.id, role:'customer', name:c.name};
+    rememberActiveSession(c.id, 'customer');
+    authError = ''; route = created ? 'trainers' : 'dashboard'; routeParams = {};
+    try{ const sc = localStorage.getItem(GOOGLE_CODE_KEY); if(sc){ localStorage.removeItem(GOOGLE_CODE_KEY); if(!pendingTrainerCode) pendingTrainerCode = sc; } }catch(e){}
+    if(created) toast(t('google_welcome'));
+    return true;
+  }catch(e){
+    // the database could not be reached: keep the (still valid, short-lived) sign-in so the boot retry can finish it
+    if(e instanceof DbError){ googleReturnMem = ret; try{ sessionStorage.setItem(GOOGLE_RETURN_KEY, JSON.stringify(ret)); }catch(x){} }
+    throw e;
+  }
 }
 
 function authDbErrorMsg(e){ return e instanceof DbUnavailableError ? t('conn_login_failed') : t('db_rejected'); }
@@ -4230,7 +4349,7 @@ async function bootApp(){
   document.getElementById('app').innerHTML = splashHtml();
   const slowNote = setTimeout(()=>{ const n = document.getElementById('splashNote'); if(n) n.textContent = t('splash_slow'); }, 5000);
   try{ await seedIfNeeded();
-  await resumeActiveSession();
+  if(!(await finishGoogleLogin())) await resumeActiveSession();
   await applyPendingTrainerCodeIfAny();
   } finally { clearTimeout(slowNote); }
   await renderRoot();
