@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-Qc8gf8SZ1kfCdlUOUul07O5KTHEFgQpZ77lQvfqud6A='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-fHTeDwi5BpV9CCPwjgNSoKEVZZfN4cisYRAWtL3IE40='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนครับ (TRAINKRUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -70,7 +70,7 @@
   ::selection{background:var(--red);color:#fff}
   :focus-visible{outline:2px solid var(--red-bright);outline-offset:2px}
   input:focus-visible,textarea:focus-visible,select:focus-visible{outline:none}
-  button,.day-pill,.time-slot,.nav button,.role-tab button,.cat-pill{transition:transform .12s ease,background .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease}
+  button,.day-pill,.time-slot,.nav button,.role-tab button,.cat-pill,.lead-pill{transition:transform .12s ease,background .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease}
   button:active,.day-pill:active,.time-slot:active,.cat-pill:active,.role-tab button:active{transform:scale(.96)}
 
   /* ---------- app bar ---------- */
@@ -699,6 +699,20 @@
   .cu-stat.main.low b{color:var(--amber)}
   .cu-foot{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:12px;font-size:12.5px;color:var(--text-faint)}
   @media(max-width:560px){.cu-stats{grid-template-columns:repeat(2,1fr)}.sch-sum-i{padding:10px 11px}.sch-sum-i b{font-size:23px}}
+  .lead-bar{padding:16px 18px;margin-bottom:14px}
+  .lead-top{display:flex;align-items:baseline;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;margin-bottom:12px}
+  .lead-title{font:600 15px/1.4 var(--f-display)}
+  .lead-now{font:600 15px/1.4 var(--f-display);color:var(--red-bright)}
+  .lead-pills{display:flex;flex-wrap:wrap;gap:8px}
+  .lead-pill{min-width:60px;padding:10px 14px;border-radius:13px;border:1px solid var(--line-strong);font:600 14px/1.2 var(--f-body);background:var(--surface-2);color:var(--text-dim);cursor:pointer}
+  .lead-pill.sel{background:linear-gradient(180deg,#f43b51,#d8233a);border-color:#ff5f72;color:#fff}
+  .lead-hint{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--text-faint)}
+  @media(max-width:560px){.lead-pill{flex:1 1 calc(20% - 8px);min-width:56px;padding:10px 6px}}
+  .lead-note{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;margin:0 0 14px;border-radius:14px;border:1px solid rgba(240,171,60,.6);background:rgba(240,171,60,.13);color:var(--text);line-height:1.5}
+  .lead-note svg{flex:none;width:24px;height:24px;margin-top:1px;color:var(--amber)}
+  .lead-note-t{font-size:15px;font-weight:500}
+  .lead-note-n{font-weight:700;background:rgba(240,171,60,.3);padding:1px 8px;border-radius:7px;white-space:nowrap}
+  .lead-note-s{display:block;margin-top:3px;font-size:13px;font-weight:400;color:var(--text-dim)}
 </style>
 </head>
 <body>
@@ -959,7 +973,9 @@ const i18n = {
     tlead_opt_one:'1 ชั่วโมง', tlead_opt_hours:'{n} ชั่วโมง', tlead_opt_day_one:'1 วัน (24 ชั่วโมง)', tlead_opt_days:'{n} วัน ({h} ชั่วโมง)',
     tlead_example:'ตัวอย่าง: ลูกค้าอยากเทรนเวลา 18:00 ต้องนัดก่อน {time} หลังจากนั้นจะไม่มีเวลา 18:00 ให้เลือก',
     tlead_toast:'บันทึกแล้ว ลูกค้าต้องนัดล่วงหน้า {label}',
+    tlead_bar_title:'ลูกค้าต้องนัดล่วงหน้าอย่างน้อย', tlead_bar_hint:'ใช้กับทุกนัดใหม่ ลูกค้ากดนัดเวลาที่เหลือน้อยกว่านี้ไม่ได้', tlead_short_none:'ไม่ต้อง', tlead_short_h:'{n} ชม.', tlead_short_d:'{n} วัน',
     cb_lead_hint:'เทรนเนอร์คนนี้ให้นัดล่วงหน้าอย่างน้อย {label} เวลาที่เหลือน้อยกว่านี้จะกดไม่ได้',
+    cb_lead_note_a:'เทรนเนอร์คนนี้ให้นัดล่วงหน้าอย่างน้อย', cb_lead_note_b:'เวลาที่เหลือน้อยกว่านี้จะกดไม่ได้ (ช่องที่ขีดฆ่าสีจาง)',
     cb_slot_too_soon:'เวลานี้เลยกำหนดนัดล่วงหน้าแล้ว (ต้องนัดล่วงหน้าอย่างน้อย {label}) กรุณาเลือกเวลาอื่น',
     theme_to_light:'เปลี่ยนเป็นโหมดสว่าง', theme_to_dark:'เปลี่ยนเป็นโหมดมืด',
     footer_note:'ข้อมูลทั้งหมดอยู่ในฐานข้อมูลกลางเดียวกัน ลูกค้า เทรนเนอร์ และผู้ดูแลระบบจึงเห็นข้อมูลตรงกันทันที'
@@ -1149,7 +1165,9 @@ const i18n = {
     tlead_opt_one:'1 hour', tlead_opt_hours:'{n} hours', tlead_opt_day_one:'1 day (24 hours)', tlead_opt_days:'{n} days ({h} hours)',
     tlead_example:'Example: for an 18:00 session, customers must book before {time}. After that, 18:00 is no longer offered.',
     tlead_toast:'Saved. Customers must book at least {label} ahead',
+    tlead_bar_title:'Customers must book at least', tlead_bar_hint:'Applies to every new booking. Customers cannot book a time that starts sooner than this.', tlead_short_none:'None', tlead_short_h:'{n} h', tlead_short_d:'{n} d',
     cb_lead_hint:'This trainer needs at least {label} notice. Slots starting sooner cannot be booked.',
+    cb_lead_note_a:'This trainer needs at least', cb_lead_note_b:'notice. Times that start sooner cannot be booked (the faded, struck-through ones).',
     cb_slot_too_soon:'This slot starts too soon (at least {label} notice is needed). Please pick another time.',
     theme_to_light:'Switch to light mode', theme_to_dark:'Switch to dark mode',
     footer_note:'All data lives in one shared database, so customers, trainers and admins always see the same information.'
@@ -1183,7 +1201,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-05.2';
+const APP_BUILD = '2026-11-05.3';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -2840,7 +2858,13 @@ function slotTooSoon(trainer, date, time){
   if(!isFinite(start)) return false;
   return start - Date.now() < leadHoursOf(trainer) * 3600000;
 }
-function leadCardHtml(tr){
+function leadShort(h){
+  if(h===0) return t('tlead_short_none');
+  if(h>=24 && h%24===0) return tt('tlead_short_d',{n:h/24});
+  return tt('tlead_short_h',{n:h});
+}
+/* one row of buttons at the top of the schedule page: the current value is highlighted, one tap saves */
+function leadBarHtml(tr){
   const cur = leadHoursOf(tr);
   const opts = LEAD_OPTIONS.includes(cur) ? LEAD_OPTIONS : LEAD_OPTIONS.concat([cur]).sort((a,b)=>a-b);
   let example = '';
@@ -2849,14 +2873,13 @@ function leadCardHtml(tr){
     example = tt('tlead_example',{time:String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')});
   }
   return `
-      <div class="card">
-        <div class="card-head"><h3>${t('tlead_title')}</h3></div>
-        <p class="slot-hint">${t('tlead_hint')}</p>
-        <div class="field"><label>${t('tlead_label')}</label>
-          <select data-lead-hours="1">${opts.map(h=>`<option value="${h}" ${h===cur?'selected':''}>${esc(leadLabel(h))}</option>`).join('')}</select>
-        </div>
-        ${example ? `<p class="slot-hint" style="margin-bottom:0">${example}</p>` : ''}
-      </div>`;
+    <div class="card lead-bar">
+      <div class="lead-top"><div class="lead-title">${t('tlead_bar_title')}</div><div class="lead-now">${esc(leadLabel(cur))}</div></div>
+      <div class="lead-pills" role="radiogroup" aria-label="${esc(t('tlead_bar_title'))}">
+        ${opts.map(h=>`<button type="button" role="radio" aria-checked="${h===cur}" class="lead-pill ${h===cur?'sel':''}" data-lead-pill="${h}">${esc(leadShort(h))}</button>`).join('')}
+      </div>
+      <p class="lead-hint">${example ? esc(example)+'<br>' : ''}${esc(t('tlead_bar_hint'))}</p>
+    </div>`;
 }
 async function saveLeadHours(h){
   if(!isFinite(h) || h<0) return;
@@ -2897,7 +2920,7 @@ async function renderCBooking(){
   }).join('');
 
   const leadH = trainer ? leadHoursOf(trainer) : 0;
-  const leadHint = (trainer && leadH>0) ? `<div class="slot-hint">${tt('cb_lead_hint',{label:leadLabel(leadH)})}</div>` : '';
+  const leadNote = (trainer && leadH>0) ? `<div class="lead-note" role="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div class="lead-note-t">${t('cb_lead_note_a')} <b class="lead-note-n">${esc(leadLabel(leadH))}</b><span class="lead-note-s">${t('cb_lead_note_b')}</span></div></div>` : '';
   return `
     <div class="page-head"><div><div class="eyebrow">${t('cb_eyebrow')}</div><h1>${t('cb_h1')}</h1><p>${t('cb_p')}</p></div></div>
     <div class="grid-2">
@@ -2920,8 +2943,8 @@ async function renderCBooking(){
             <button type="button" class="cat-pill ${bookingState.cat==='evening'?'sel':''}" data-cat="evening">${t('cb_cat_evening')}</button>
           </div>
           <label>${t('cb_time_label')}</label>
+          ${leadNote}
           <div class="time-grid" id="timeGrid">${timeGrid}</div>
-          ${leadHint}
           <button class="btn btn-primary btn-block" id="submitBookingBtn" ${!pkg?'disabled':''}>${t('cb_submit_btn')}</button>
         `}
       </div>
@@ -3463,6 +3486,7 @@ async function acceptDuo(slotKey){
 }
 
 async function renderTSchedule(){
+  const meTrainer = await dbGet('trainer:'+session.id);
   const provSet = await provisionalPkgIds();
   const all = (await trainerBookings()).filter(b=>b.status==='confirmed')
     .sort((a,b)=> (a.bookingDate+a.bookingTime).localeCompare(b.bookingDate+b.bookingTime));
@@ -3515,6 +3539,7 @@ async function renderTSchedule(){
 
   return `
     <div class="page-head"><div><div class="eyebrow">${t('ts_eyebrow')}</div><h1>${t('ts_h1')}</h1><p>${t('ts_p')}</p></div></div>
+    ${leadBarHtml(meTrainer)}
     <div class="sch-sum">
       <div class="sch-sum-i"><b>${todayN}</b><span>${t('ts_sum_today')}</span></div>
       <div class="sch-sum-i"><b>${coming.length}</b><span>${t('ts_sum_upcoming')}</span></div>
@@ -3664,7 +3689,6 @@ async function renderTProfile(){
         <button class="btn btn-primary btn-block" id="pfSaveBtn">${t('tpz_save_btn')}</button>
       </div>
       <div class="card" id="certsCard">${certsCardInner(tr)}</div>
-      ${leadCardHtml(tr)}
       ${googleCardHtml(tr)}
       ${securityCardHtml(tr)}
       ${tr.code ? `
@@ -4496,7 +4520,7 @@ function wireView(){
   document.querySelectorAll('[data-remove-tpkg]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>removeTrainerPackage(el.dataset.removeTpkg))));
   document.querySelectorAll('[data-remove-qr]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, removeTrainerQr)));
   document.querySelectorAll('[data-instant-mode]').forEach(el=>el.addEventListener('change', ()=> saveInstantMode(el.value==='1')));
-  document.querySelectorAll('[data-lead-hours]').forEach(el=>el.addEventListener('change', ()=> saveLeadHours(Number(el.value))));
+  document.querySelectorAll('[data-lead-pill]').forEach(el=>el.addEventListener('click', ()=> saveLeadHours(Number(el.dataset.leadPill))));
   document.querySelectorAll('[data-google-link]').forEach(b=>b.addEventListener('click', ()=> signInWithGoogle(b, {role:'trainer', mode:'link', trainerId:session.id})));
   document.querySelectorAll('[data-google-unlink]').forEach(b=>b.addEventListener('click', ()=> withBusy(b, unlinkGoogleTrainer)));
 }
