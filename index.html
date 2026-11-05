@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-RrWYn6i6tO4BbH3wAeVcsdvRg4Ghm78s4MF8tCSoph4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-8OiyvR2gloSXvbb0RTqYu8KXIvGKztRizsCaFzAOmog='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนครับ (TRAINKRUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -731,7 +731,7 @@ const i18n = {
     nav_a_dashboard:'ภาพรวมระบบ', nav_a_apps:'ตรวจสอบเทรนเนอร์', nav_a_users:'จัดการผู้ใช้งาน', nav_a_packages:'จัดการแพ็กเกจ',
     logout:'ออกจากระบบ',
 
-    google_or_fill:'หรือกรอกข้อมูลเอง', google_apply_note:'กำลังสมัครเป็นเทรนเนอร์ด้วยบัญชี Google: {email} ไม่ต้องตั้งรหัสผ่าน กรอกข้อมูลที่เหลือแล้วรอแอดมินอนุมัติ จากนั้นเข้าสู่ระบบด้วย Google ได้เลย',
+    google_or_fill:'หรือกรอกข้อมูลเอง', google_apply_note:'กำลังสมัครเป็นเทรนเนอร์ด้วยบัญชี Google: {email} ไม่ต้องตั้งรหัสผ่าน กรอกข้อมูลที่เหลือแล้วกดสมัคร ระบบจะพาเข้าใช้งานให้ทันที',
     google_link_done:'เชื่อมบัญชี Google แล้ว ต่อไปเข้าสู่ระบบด้วย Google ได้เลย', google_link_taken:'บัญชี Google นี้ผูกกับเทรนเนอร์คนอื่นอยู่แล้ว',
     google_link_other:'บัญชีนี้เชื่อมกับ Google อีกบัญชีหนึ่งอยู่แล้ว เลิกเชื่อมก่อนจึงจะเชื่อมใหม่ได้', google_unlinked:'เลิกเชื่อมบัญชี Google แล้ว',
     tg_title:'เข้าสู่ระบบด้วย Google', tg_hint_unlinked:'เชื่อมบัญชี Google ไว้ จะได้เข้าสู่ระบบด้วยการกดปุ่ม Google ได้ โดยเบอร์โทรและรหัสผ่านเดิมยังใช้ได้เหมือนเดิม',
@@ -747,7 +747,7 @@ const i18n = {
     auth_login_btn:'เข้าสู่ระบบ', auth_no_account:'ยังไม่มีบัญชี?', auth_register_link:'สมัครสมาชิกใหม่',
     auth_no_trainer_account:'ยังไม่ได้เป็นเทรนเนอร์ในระบบ?', auth_apply_link:'สมัครเทรนเนอร์ใหม่',
     auth_register_heading:'สมัครสมาชิกลูกค้าใหม่', auth_name_label:'ชื่อ-นามสกุล', auth_register_btn:'สมัครสมาชิกและเข้าสู่ระบบ', auth_back_to_login:'กลับไปเข้าสู่ระบบ',
-    auth_apply_heading:'สมัครเป็นเทรนเนอร์ใหม่', auth_apply_note:'เทรนเนอร์จะไม่ปรากฏในระบบทันที ต้องรอผู้ดูแลระบบตรวจสอบและอนุมัติก่อน จึงจะเข้าสู่ระบบด้วยรหัสผ่านที่ตั้งไว้ได้',
+    auth_apply_heading:'สมัครเป็นเทรนเนอร์ใหม่', auth_apply_note:'สมัครเสร็จแล้วใช้งานได้ทันที ลูกค้าจะค้นหาคุณด้วยโค้ดเทรนเนอร์ที่ระบบสร้างให้',
     auth_specialty_label:'ความเชี่ยวชาญ', auth_bio_label:'ประสบการณ์และเกี่ยวกับตัวคุณ', auth_certs_label:'ใบรับรองที่แนบมาพร้อมใบสมัคร (ไม่บังคับ)',
     auth_apply_submit:'ส่งใบสมัครให้ผู้ดูแลระบบตรวจสอบ',
     auth_toast_wrong:'ข้อมูลเข้าสู่ระบบไม่ถูกต้อง',
@@ -762,7 +762,7 @@ const i18n = {
     auth_toast_weak:'รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร และต้องไม่ใช่รหัสง่ายๆ (เช่น 12345678) หรือเบอร์โทร',
     auth_toast_invalid:'ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบชื่อและเบอร์โทรอีกครั้ง', auth_toast_rate:'ทำรายการถี่เกินไป กรุณารอสักครู่แล้วลองใหม่',
     auth_session_expired:'หมดเวลาการเข้าสู่ระบบ กรุณาเข้าสู่ระบบอีกครั้ง', auth_pw_rule:'อย่างน้อย 8 ตัวอักษร',
-    auth_toast_applied_noimg:'ส่งใบสมัครแล้ว แต่รูปใบรับรองบางรูปส่งไม่สำเร็จ เพิ่มรูปได้ที่โปรไฟล์หลังได้รับอนุมัติ',
+    auth_toast_applied_noimg:'สมัครสำเร็จแล้ว แต่รูปใบรับรองบางรูปส่งไม่สำเร็จ เพิ่มรูปได้ที่โปรไฟล์',
     google_ticket_expired:'การยืนยันบัญชี Google หมดอายุ กรุณากดปุ่ม Google อีกครั้ง',
     au_reset_weak:'รหัสผ่านใหม่สั้นหรือง่ายเกินไป (ต้องอย่างน้อย 8 ตัวอักษร)', ad_cleanup_done:'ล้างข้อมูลเก่าเรียบร้อยแล้ว',
     sec_title:'ความปลอดภัยของบัญชี', sec_hint:'เมื่อเปลี่ยนรหัสผ่าน เครื่องอื่นที่เข้าสู่ระบบอยู่จะถูกออกจากระบบ',
@@ -770,9 +770,9 @@ const i18n = {
     sec_pw_wrong:'รหัสผ่านปัจจุบันไม่ถูกต้อง', sec_google_note:'บัญชีนี้เข้าสู่ระบบด้วย Google จึงไม่มีรหัสผ่านในแอป',
     sec_logout_all:'ออกจากระบบทุกอุปกรณ์', sec_logout_all_body:'ทุกเครื่องที่เข้าสู่ระบบด้วยบัญชีนี้ (รวมเครื่องนี้) จะถูกออกจากระบบ และต้องเข้าสู่ระบบใหม่',
     sec_logout_all_ok:'ออกจากระบบทุกเครื่อง', sec_cancel:'ยกเลิก', sec_logout_all_done:'ออกจากระบบทุกอุปกรณ์แล้ว',
-    db_rejected:'บันทึกไม่สำเร็จ ฐานข้อมูลปฏิเสธคำขอ กรุณาแจ้งผู้ดูแลระบบ', conn_local_only:'โหมดเฉพาะเครื่องนี้ — ยังไม่ได้เชื่อมฐานข้อมูลกลาง ข้อมูลจะไม่ส่งถึงเครื่องอื่น', auth_toast_suspended:'บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', auth_toast_pending:'ใบสมัครของคุณยังรอการอนุมัติจากผู้ดูแลระบบ',
+    db_rejected:'บันทึกไม่สำเร็จ ฐานข้อมูลปฏิเสธคำขอ กรุณาแจ้งผู้ดูแลระบบ', conn_local_only:'โหมดเฉพาะเครื่องนี้ — ยังไม่ได้เชื่อมฐานข้อมูลกลาง ข้อมูลจะไม่ส่งถึงเครื่องอื่น', auth_toast_suspended:'บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ', auth_toast_pending:'บัญชีนี้สมัครเป็นเทรนเนอร์แล้ว กรุณาเข้าสู่ระบบ',
     auth_toast_welcome:'ยินดีต้อนรับ {name}', auth_toast_fill:'กรุณากรอกข้อมูลให้ครบถ้วน', auth_toast_phone_used:'เบอร์โทร/ชื่อผู้ใช้นี้มีผู้ใช้งานแล้ว',
-    auth_toast_registered:'สมัครสมาชิกสำเร็จ เข้าสู่ระบบให้อัตโนมัติแล้ว', auth_toast_applied:'ส่งใบสมัครเรียบร้อย รอผู้ดูแลระบบตรวจสอบและอนุมัติก่อนเข้าสู่ระบบได้',
+    auth_toast_registered:'สมัครสมาชิกสำเร็จ เข้าสู่ระบบให้อัตโนมัติแล้ว', auth_toast_applied:'สมัครเป็นเทรนเนอร์สำเร็จ เข้าสู่ระบบให้อัตโนมัติแล้ว', auth_toast_applied_signin:'สมัครเรียบร้อยแล้ว กรุณาเข้าสู่ระบบด้วยบัญชีที่สมัคร (การเชื่อมต่อสะดุดชั่วคราว)',
     auth_toast_logout:'ออกจากระบบแล้ว', auth_signed_in_as:'เข้าสู่ระบบเป็น',
 
     c_dash_h1:'สวัสดี, {name}', c_dash_p:'ภาพรวมบัญชีของคุณวันนี้',
@@ -842,9 +842,9 @@ const i18n = {
     tpz_toast_saved:'บันทึกข้อมูลโปรไฟล์แล้ว', tpz_toast_cert_added:'เพิ่มใบรับรองแล้ว ลูกค้าจะเห็นในโปรไฟล์ของคุณ', tpz_toast_cert_removed:'ลบใบรับรองแล้ว', tpz_toast_need_name:'กรุณากรอกชื่อใบรับรองก่อนเพิ่ม',
 
     ad_eyebrow:'ผู้ดูแลระบบ', ad_h1:'ภาพรวมระบบ', ad_p:'สรุปสถานะผู้ใช้งาน คำขอสมัครเทรนเนอร์ และข้อมูลหลักของระบบทั้งหมด',
-    ad_stat_trainers:'เทรนเนอร์ในระบบ', ad_stat_customers:'ลูกค้าในระบบ', ad_stat_pending:'คำขอสมัครรออนุมัติ', ad_stat_packages:'แพ็กเกจที่เทรนเนอร์เปิดขาย', ad_stat_bookings:'นัดเทรนทั้งหมด', ad_stat_active_pkg:'แพ็กเกจที่ลูกค้าถืออยู่',
-    aa_eyebrow:'ตรวจสอบสิทธิ์', aa_h1:'คำขอสมัครเทรนเนอร์', aa_p:'ตรวจสอบข้อมูลและใบรับรองก่อนอนุมัติให้เข้าระบบ เทรนเนอร์จะปรากฏต่อลูกค้าได้ก็ต่อเมื่อผ่านการอนุมัติแล้วเท่านั้น',
-    aa_no_apps:'ไม่มีคำขอสมัครที่รอตรวจสอบ', aa_submitted_on:'ส่งเมื่อ', aa_certs_label:'ใบรับรองที่แนบมา', aa_no_certs:'ไม่มีใบรับรองแนบมา',
+    ad_stat_trainers:'เทรนเนอร์ในระบบ', ad_stat_customers:'ลูกค้าในระบบ', ad_stat_pending:'คำขอเก่าที่ค้างอยู่', ad_stat_packages:'แพ็กเกจที่เทรนเนอร์เปิดขาย', ad_stat_bookings:'นัดเทรนทั้งหมด', ad_stat_active_pkg:'แพ็กเกจที่ลูกค้าถืออยู่',
+    aa_eyebrow:'ตรวจสอบสิทธิ์', aa_h1:'คำขอสมัครเทรนเนอร์', aa_p:'ผู้สมัครใหม่ผ่านอัตโนมัติและใช้งานได้ทันที หน้านี้แสดงเฉพาะคำขอเก่าที่ยังค้างอยู่ ตรวจข้อมูลและใบรับรองแล้วกดอนุมัติได้',
+    aa_no_apps:'ไม่มีคำขอเก่าที่ค้างอยู่', aa_submitted_on:'ส่งเมื่อ', aa_certs_label:'ใบรับรองที่แนบมา', aa_no_certs:'ไม่มีใบรับรองแนบมา',
     aa_approve_btn:'อนุมัติเข้าระบบ', aa_reject_btn:'ปฏิเสธ', aa_pending_badge:'รอตรวจสอบ', aa_toast_approve:'อนุมัติเทรนเนอร์แล้ว เข้าระบบและแสดงให้ลูกค้าเห็นทันที', aa_toast_reject:'ปฏิเสธใบสมัครแล้ว',
     au_eyebrow:'สิทธิ์การใช้งาน', au_h1:'จัดการผู้ใช้งาน', au_p:'ดูรายชื่อผู้ใช้งานทั้งหมดในระบบ ระงับหรือเปิดใช้งานบัญชีได้ตามความเหมาะสม',
     au_th_name:'ชื่อ', au_th_role:'บทบาท', au_th_phone:'เบอร์ติดต่อ', au_th_status:'สถานะ',
@@ -920,7 +920,7 @@ const i18n = {
     nav_a_dashboard:'Dashboard', nav_a_apps:'Trainer approval', nav_a_users:'Manage users', nav_a_packages:'Manage packages',
     logout:'Log out',
 
-    google_or_fill:'or fill in the form', google_apply_note:'Applying as a trainer with your Google account: {email}. No password needed. Fill in the rest and wait for the admin to approve, then sign in with Google.',
+    google_or_fill:'or fill in the form', google_apply_note:'Applying as a trainer with your Google account: {email}. No password needed. Fill in the rest and submit — you will be signed in right away.',
     google_link_done:'Google account linked. You can now sign in with Google.', google_link_taken:'This Google account is already linked to another trainer.',
     google_link_other:'This account is already linked to a different Google account. Unlink it first to link a new one.', google_unlinked:'Google account unlinked.',
     tg_title:'Sign in with Google', tg_hint_unlinked:'Link your Google account to sign in with the Google button. Your phone number and password keep working as before.',
@@ -936,7 +936,7 @@ const i18n = {
     auth_login_btn:'Sign in', auth_no_account:"Don't have an account?", auth_register_link:'Create one',
     auth_no_trainer_account:'Not a registered trainer yet?', auth_apply_link:'Apply as a trainer',
     auth_register_heading:'Create a customer account', auth_name_label:'Full name', auth_register_btn:'Register & sign in', auth_back_to_login:'Back to sign in',
-    auth_apply_heading:'Apply as a new trainer', auth_apply_note:"New trainers don't appear in the system immediately — an admin must review and approve your application before you can sign in.",
+    auth_apply_heading:'Apply as a new trainer', auth_apply_note:"You can start right after signing up. Customers find you with the trainer code we give you.",
     auth_specialty_label:'Specialty', auth_bio_label:'Experience & about you', auth_certs_label:'Certificates attached (optional)',
     auth_apply_submit:'Submit application for review',
     auth_toast_wrong:'Incorrect login details',
@@ -951,7 +951,7 @@ const i18n = {
     auth_toast_weak:'Password must be at least 8 characters and not an easy one (like 12345678) or your phone number.',
     auth_toast_invalid:'Something does not look right. Please check the name and phone number.', auth_toast_rate:'Too many tries. Please wait a moment and try again.',
     auth_session_expired:'Your sign-in has ended. Please sign in again.', auth_pw_rule:'At least 8 characters',
-    auth_toast_applied_noimg:'Application sent, but some certificate pictures could not be uploaded. Add them in your profile after approval.',
+    auth_toast_applied_noimg:'Account created, but some certificate pictures could not be uploaded. Add them in your profile.',
     google_ticket_expired:'Your Google confirmation expired. Please press the Google button again.',
     au_reset_weak:'The new password is too short or too easy (at least 8 characters).', ad_cleanup_done:'Old data cleaned up.',
     sec_title:'Account security', sec_hint:'When you change your password, other devices signed in to this account are signed out.',
@@ -959,9 +959,9 @@ const i18n = {
     sec_pw_wrong:'The current password is not correct', sec_google_note:'This account signs in with Google, so there is no password in the app.',
     sec_logout_all:'Sign out of all devices', sec_logout_all_body:'Every device signed in to this account (including this one) will be signed out and must sign in again.',
     sec_logout_all_ok:'Sign out everywhere', sec_cancel:'Cancel', sec_logout_all_done:'Signed out of all devices',
-    db_rejected:'Couldn’t save — the database rejected the request. Please contact the admin.', conn_local_only:'This-device-only mode — not connected to the shared database, so data won’t reach other devices', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'Your application is still pending admin approval',
+    db_rejected:'Couldn’t save — the database rejected the request. Please contact the admin.', conn_local_only:'This-device-only mode — not connected to the shared database, so data won’t reach other devices', auth_toast_suspended:'This account is suspended — please contact an admin', auth_toast_pending:'This account has already applied as a trainer — please sign in',
     auth_toast_welcome:'Welcome, {name}', auth_toast_fill:'Please fill in all fields', auth_toast_phone_used:'This phone/username is already registered',
-    auth_toast_registered:'Account created — signed in automatically', auth_toast_applied:'Application submitted — an admin must approve it before you can sign in',
+    auth_toast_registered:'Account created — signed in automatically', auth_toast_applied:'Trainer account created — signed in automatically', auth_toast_applied_signin:'Application saved — please sign in with the account you used (the connection dropped for a moment)',
     auth_toast_logout:'Logged out', auth_signed_in_as:'Signed in as',
 
     c_dash_h1:'Hi, {name}', c_dash_p:"Here's your account overview",
@@ -1031,9 +1031,9 @@ const i18n = {
     tpz_toast_saved:'Profile saved', tpz_toast_cert_added:'Certificate added — visible on your public profile', tpz_toast_cert_removed:'Certificate removed', tpz_toast_need_name:'Please enter a certificate name first',
 
     ad_eyebrow:'Admin', ad_h1:'System overview', ad_p:'A summary of users, trainer applications, and core system data.',
-    ad_stat_trainers:'Trainers', ad_stat_customers:'Customers', ad_stat_pending:'Applications pending', ad_stat_packages:'Packages trainers sell', ad_stat_bookings:'Total sessions booked', ad_stat_active_pkg:'Active customer packages',
-    aa_eyebrow:'Verification', aa_h1:'Trainer applications', aa_p:'Review details and certificates before approving. Trainers only appear to customers once approved.',
-    aa_no_apps:'No applications awaiting review', aa_submitted_on:'Submitted', aa_certs_label:'Attached certificates', aa_no_certs:'No certificates attached',
+    ad_stat_trainers:'Trainers', ad_stat_customers:'Customers', ad_stat_pending:'Older applications waiting', ad_stat_packages:'Packages trainers sell', ad_stat_bookings:'Total sessions booked', ad_stat_active_pkg:'Active customer packages',
+    aa_eyebrow:'Verification', aa_h1:'Trainer applications', aa_p:'New applicants are accepted automatically and can start at once. This page only lists older applications that were still waiting.',
+    aa_no_apps:'No older applications waiting', aa_submitted_on:'Submitted', aa_certs_label:'Attached certificates', aa_no_certs:'No certificates attached',
     aa_approve_btn:'Approve', aa_reject_btn:'Reject', aa_pending_badge:'Pending review', aa_toast_approve:'Trainer approved — now visible to customers', aa_toast_reject:'Application rejected',
     au_eyebrow:'Access control', au_h1:'Manage users', au_p:'View every account in the system. Suspend or reactivate as needed.',
     au_th_name:'Name', au_th_role:'Role', au_th_phone:'Contact', au_th_status:'Status',
@@ -1130,7 +1130,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-04.7';
+const APP_BUILD = '2026-11-04.8';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -4049,7 +4049,7 @@ async function doApplyInner(){
     if(!(r && r.ok)){
       const why = r && r.reason;
       if(why==='ticket'){ clearGoogleApplicant(); authError = t('google_ticket_expired'); }
-      else if(why==='pending'){ clearGoogleApplicant(); authError = t('auth_toast_pending'); }
+      else if(why==='exists' || why==='pending'){ clearGoogleApplicant(); authError = t('auth_toast_pending'); }
       else if(why==='phone_used') authError = t('auth_toast_phone_used');
       else if(why==='weak') authError = t('auth_toast_weak');
       else authError = t('auth_toast_invalid');
@@ -4066,8 +4066,18 @@ async function doApplyInner(){
     pendingApplicationCerts = []; pendingApplicationPhoto = '';
     applyDraft = {name:'', specialty:'', phone:'', pw:'', bio:''};
     clearGoogleApplicant();
+    // the application is complete: the server accepts it now and hands back a sign-in
+    let f = null;
+    try{ f = await rpc('app_finish_apply', {p_app_id:r.appId, p_ut:r.uploadToken}); }
+    catch(e){ if(!(e instanceof DbError)) throw e; }     // a dropped connection: the application is saved, signing in finishes it
+    if(!(f && f.ok && f.token && f.user)){
+      toast(t('auth_toast_applied_signin'));
+      authMode='login'; authError=''; renderAuth(); return;
+    }
+    startSession(f.token, f.user);
+    authError=''; route='dashboard'; routeParams={};
     toast(t(failedPictures ? 'auth_toast_applied_noimg' : 'auth_toast_applied'));
-    authMode='login'; authError=''; renderAuth();
+    renderRoot();
   } finally { authSubmitting = false; }
 }
 
@@ -4172,7 +4182,7 @@ async function finishGoogleLogin(){
     if(why==='suspended'){ authError = t('auth_toast_suspended'); return false; }
     if(why==='pending'){ authError = t('auth_toast_pending'); return false; }
     if(why==='none' && g.ticket && g.applicant && intent.role==='trainer'){
-      // first time: carry on as a trainer application (admin approval still applies)
+      // first time: carry on as a trainer application (it is accepted as soon as it is sent)
       const email = String(g.applicant.email || '').trim().toLowerCase();
       googleApplicant = {ticket:g.ticket, gid:g.applicant.gid, email, name: String(g.applicant.name || '').trim() || email.split('@')[0] || ''};
       try{ sessionStorage.setItem(GOOGLE_APPLICANT_KEY, JSON.stringify(googleApplicant)); }catch(e){}

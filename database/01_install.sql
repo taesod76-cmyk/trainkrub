@@ -222,7 +222,7 @@ end $$;
 create or replace function app_private.display_name(p_key text) returns text
 language sql stable as $$ select value->>'name' from public.kv_store where key = p_key $$;
 -- =====================================================================
--- part 2: sign in, sign up, Google, passwords, trainer approval
+-- part 2: sign in, sign up, Google, passwords, trainer sign-up (accepted automatically)
 -- Every function here is the ONLY way these things can happen: the browser
 -- cannot read or write the data tables directly any more.
 -- =====================================================================
@@ -295,18 +295,23 @@ begin
     perform extensions.crypt(p_pw, extensions.gen_salt('bf', 10));   -- same work whether or not the account exists
   end if;
 
-  if not ok then
-    -- a trainer whose application is still waiting gets told so (only after proving the password)
-    if p_role = 'trainer' then
-      select key into a_key from public.kv_store
-       where key like 'trainerApp:%' and (value->>'username' = v_id or value->>'phone' = v_id) limit 1;
-      if a_key is not null then
-        select pw_hash into a_h from app_private.cred where ukey = a_key;
-        if a_h is not null and extensions.crypt(p_pw, a_h) = a_h then
-          return jsonb_build_object('ok', false, 'reason', 'pending');
+  if not ok and p_role = 'trainer' then
+    -- an application that was never finished (the page was closed half way, or it is an older one): whoever proves
+    -- the password is the applicant, so the application is accepted now and they are signed in
+    select key into a_key from public.kv_store
+     where key like 'trainerApp:%' and (value->>'username' = v_id or value->>'phone' = v_id) limit 1;
+    if a_key is not null then
+      select pw_hash into a_h from app_private.cred where ukey = a_key;
+      if a_h is not null and extensions.crypt(p_pw, a_h) = a_h then
+        r_key := app_private.approve_app(a_key);
+        if r_key is not null then
+          select value into r_val from public.kv_store where key = r_key;
+          ok := true;
         end if;
       end if;
     end if;
+  end if;
+  if not ok then
     max_fail := case when p_role = 'admin' then 5 else 8 end;
     perform app_private.lock_fail(b_acct, max_fail, 900, 900);
     perform app_private.lock_fail(b_ip, 40, 1800, 900);
@@ -424,7 +429,7 @@ begin
     return jsonb_build_object('ok', false, 'reason', 'phone_used');
   end if;
   if g is not null and exists (select 1 from public.kv_store where (key like 'trainer:%' or key like 'trainerApp:%') and value->>'googleId' = g->>'sub') then
-    return jsonb_build_object('ok', false, 'reason', 'pending');
+    return jsonb_build_object('ok', false, 'reason', 'exists');
   end if;
 
   id := 'app_' || app_private.rand_hex(6);
@@ -485,15 +490,15 @@ begin
   return code;
 end $$;
 
-create or replace function public.app_approve_trainer(p_token text, p_app_id text) returns jsonb
+-- turns an application into a trainer (account, code, certificate pictures). Returns the trainer's key, or null if the application is gone.
+create or replace function app_private.approve_app(ak text) returns text
 language plpgsql security definer set search_path = pg_catalog, public, app_private, extensions as $$
-declare c app_private.ctx_t := app_private.ctx(p_token); ak text := 'trainerApp:' || coalesce(p_app_id,''); a jsonb;
-        tid text; tk text; code text; t jsonb; cert jsonb;
+declare a jsonb; tid text; tk text; code text; t jsonb; cert jsonb;
 begin
-  if c.role <> 'admin' then perform app_private.err(403, 'forbidden'); end if;
   select value into a from public.kv_store where key = ak for update;
-  if a is null then return jsonb_build_object('ok', false, 'reason', 'gone'); end if;
-  tid := 't_' || p_app_id; tk := 'trainer:' || tid;
+  if a is null then return null; end if;
+  tid := 't_' || substr(ak, length('trainerApp:') + 1);
+  tk := 'trainer:' || tid;
   code := app_private.new_trainer_code();
   t := jsonb_build_object('id', tid, 'username', a->>'username', 'name', a->>'name', 'phone', a->>'phone',
         'specialty', coalesce(a->>'specialty',''), 'bio', coalesce(a->>'bio',''), 'certs', coalesce(a->'certs','[]'::jsonb),
@@ -512,8 +517,37 @@ begin
     end if;
   end loop;
   delete from public.kv_store where key = ak;
+  return tk;
+end $$;
+
+-- admin: accept an application that is still waiting (new applications are accepted automatically)
+create or replace function public.app_approve_trainer(p_token text, p_app_id text) returns jsonb
+language plpgsql security definer set search_path = pg_catalog, public, app_private, extensions as $$
+declare c app_private.ctx_t := app_private.ctx(p_token); tk text; t jsonb;
+begin
+  if c.role <> 'admin' then perform app_private.err(403, 'forbidden'); end if;
+  tk := app_private.approve_app('trainerApp:' || coalesce(p_app_id,''));
+  if tk is null then return jsonb_build_object('ok', false, 'reason', 'gone'); end if;
+  select value into t from public.kv_store where key = tk;
   perform app_private.audit(c.ukey, 'approve_trainer', tk, true, null);
-  return jsonb_build_object('ok', true, 'trainerId', tid, 'code', code);
+  return jsonb_build_object('ok', true, 'trainerId', t->>'id', 'code', t->>'code');
+end $$;
+
+-- the applicant finishes the application with the one-time upload token: the trainer exists at once and is signed in
+create or replace function public.app_finish_apply(p_app_id text, p_ut text, p_dev text default null) returns jsonb
+language plpgsql security definer set search_path = pg_catalog, public, app_private, extensions as $$
+declare k text := 'trainerApp:' || coalesce(p_app_id,''); v jsonb; tk text; tv jsonb; tok text;
+begin
+  perform app_private.rate_hit('finish:' || app_private.client_ip(), 3600, 30);
+  select value into v from public.kv_store where key = k for update;
+  if v is null or coalesce(p_ut,'') = '' or app_private.sha(p_ut) <> coalesce(v->>'_ut','') then
+    perform app_private.err(403, 'forbidden');
+  end if;
+  tk := app_private.approve_app(k);
+  select value into tv from public.kv_store where key = tk;
+  tok := app_private.session_new('trainer', tv->>'id', tk, p_dev);
+  perform app_private.audit(tk, 'apply_accepted', 'trainer', true, null);
+  return jsonb_build_object('ok', true, 'token', tok, 'user', app_private.user_out(tk, tv));
 end $$;
 
 create or replace function public.app_reject_trainer(p_token text, p_app_id text) returns jsonb
@@ -585,7 +619,7 @@ end $$;
 create or replace function public.app_google_login(p_role text, p_dev text default null) returns jsonb
 language plpgsql security definer set search_path = pg_catalog, public, app_private, extensions as $$
 declare g jsonb := app_private.google_claims(); sub text; k text; v jsonb; id text; nm text; tok text; created boolean := false;
-        tk text; tv jsonb; tkt_id text;
+        tk text; tv jsonb; tkt_id text; a_key text;
 begin
   if g is null then return jsonb_build_object('ok', false, 'reason', 'invalid'); end if;
   sub := g->>'sub';
@@ -617,8 +651,16 @@ begin
       perform app_private.audit(tk, 'login_google', 'trainer', true, null);
       return jsonb_build_object('ok', true, 'token', tok, 'created', false, 'user', app_private.user_out(tk, tv));
     end if;
-    if exists (select 1 from public.kv_store where key like 'trainerApp:%' and value->>'googleId' = sub) then
-      return jsonb_build_object('ok', false, 'reason', 'pending');
+    select key into a_key from public.kv_store where key like 'trainerApp:%' and value->>'googleId' = sub limit 1;
+    if a_key is not null then
+      -- an application of this Google account that was never finished: accept it now
+      tk := app_private.approve_app(a_key);
+      if tk is not null then
+        select value into tv from public.kv_store where key = tk;
+        tok := app_private.session_new('trainer', tv->>'id', tk, p_dev);
+        perform app_private.audit(tk, 'login_google', 'trainer', true, null);
+        return jsonb_build_object('ok', true, 'token', tok, 'created', true, 'user', app_private.user_out(tk, tv));
+      end if;
     end if;
     tkt_id := app_private.rand_hex(24);
     delete from app_private.ticket where expires_at <= now();
@@ -1426,7 +1468,7 @@ begin
               'app_login','app_whoami','app_logout','app_logout_all','app_register_customer','app_apply_trainer','app_apply_cert',
               'app_approve_trainer','app_reject_trainer','app_change_password','app_reset_password',
               'app_google_login','app_google_link','app_google_unlink','app_get','app_list','app_set','app_del',
-              'app_find_trainer','app_admin_maintain','app_ping') loop
+              'app_find_trainer','app_admin_maintain','app_ping','app_finish_apply') loop
     execute format('grant execute on function %s to anon, authenticated', f.sig);
   end loop;
 end $$;

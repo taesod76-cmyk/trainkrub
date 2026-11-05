@@ -1,6 +1,8 @@
 # Database scripts
 
-Run these in the Supabase dashboard → SQL Editor, in this order.
+Run these in the Supabase dashboard → SQL Editor.
+
+## First install (in this order)
 
 1. `01_install.sql` — adds the private tables and the server functions. Safe to run more than once.
    The website keeps working while it runs. Existing passwords are converted to bcrypt hashes.
@@ -19,3 +21,20 @@ Run these in the Supabase dashboard → SQL Editor, in this order.
 After step 4 nobody (including someone holding the public key) can read the data table, list users, or
 read a password, and every sign-in attempt, wrong password and sensitive action is logged in
 `app_private.audit` (kept 180 days; readable only from the SQL editor).
+
+## Updating a database that is already installed
+
+- `03_update_trainer_signup.sql` — trainers who apply are accepted at once (no waiting for the admin).
+  Run it once, **before** publishing the website version that goes with it. Safe to run more than once;
+  it only replaces server functions and does not touch any data.
+
+`01_install.sql` already contains everything in `03_update_trainer_signup.sql`, so a brand-new install
+does not need it.
+
+## Trainer sign-up
+
+A trainer applies with a password or with Google. The server creates the trainer account, the trainer
+code and the sign-in token in one step, and the app opens the trainer dashboard straight away.
+Certificate pictures are uploaded one by one before that step with a single-use upload token. If the
+upload step is cut off, the application is completed the next time the applicant signs in with the same
+password or the same Google account. The admin can still suspend any trainer from the admin page.
