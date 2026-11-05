@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-fHTeDwi5BpV9CCPwjgNSoKEVZZfN4cisYRAWtL3IE40='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-96OBdV54YbJ292FiIDCd25Y55itqMavCW1hQcKvzuCU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนครับ (TRAINKRUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -713,6 +713,23 @@
   .lead-note-t{font-size:15px;font-weight:500}
   .lead-note-n{font-weight:700;background:rgba(240,171,60,.3);padding:1px 8px;border-radius:7px;white-space:nowrap}
   .lead-note-s{display:block;margin-top:3px;font-size:13px;font-weight:400;color:var(--text-dim)}
+  .push-card{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;margin-bottom:16px}
+  .push-ico{flex:none;width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--red-glow);color:var(--red-bright);border:1px solid rgba(255,77,98,.35)}
+  .push-ico svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .push-card.on .push-ico{background:rgba(79,214,138,.14);color:var(--green);border-color:rgba(79,214,138,.4)}
+  .push-body{flex:1;min-width:0}
+  .push-body h3{font:600 17px/1.35 var(--f-display);margin:0 0 6px}
+  .push-desc{margin:0 0 12px;font-size:14px;line-height:1.65;color:var(--text-dim)}
+  .push-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .push-state{display:inline-flex;align-items:center;gap:7px;margin:0 0 6px;font:600 14.5px/1.4 var(--f-display);color:var(--green)}
+  .push-state svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .push-banner{display:flex;gap:12px;align-items:center;padding:12px 14px;margin-bottom:16px;border-color:rgba(255,77,98,.4);background:var(--red-glow)}
+  .push-banner .push-ico{width:40px;height:40px;border-radius:12px}
+  .push-banner-txt{flex:1;min-width:0}
+  .push-banner-t{font:600 15px/1.4 var(--f-display)}
+  .push-banner-s{margin-top:1px;font-size:13px;line-height:1.5;color:var(--text-dim)}
+  .push-banner-act{display:flex;gap:4px;align-items:center;flex:none}
+  @media(max-width:560px){.push-banner{flex-wrap:wrap}.push-banner-txt{flex:1 1 calc(100% - 56px)}.push-banner-act{flex:1 1 100%;justify-content:flex-end}}
 </style>
 </head>
 <body>
@@ -974,6 +991,7 @@ const i18n = {
     tlead_example:'ตัวอย่าง: ลูกค้าอยากเทรนเวลา 18:00 ต้องนัดก่อน {time} หลังจากนั้นจะไม่มีเวลา 18:00 ให้เลือก',
     tlead_toast:'บันทึกแล้ว ลูกค้าต้องนัดล่วงหน้า {label}',
     tlead_bar_title:'ลูกค้าต้องนัดล่วงหน้าอย่างน้อย', tlead_bar_hint:'ใช้กับทุกนัดใหม่ ลูกค้ากดนัดเวลาที่เหลือน้อยกว่านี้ไม่ได้', tlead_short_none:'ไม่ต้อง', tlead_short_h:'{n} ชม.', tlead_short_d:'{n} วัน',
+    push_card_title:'แจ้งเตือนเด้งขึ้นมือถือ', push_card_off:'เมื่อมีนัดใหม่ มีการยกเลิก หรือมีเรื่องที่เกี่ยวกับคุณ ข้อความจะเด้งขึ้นหน้าจอเครื่องนี้ทันที แม้ไม่ได้เปิดแอปอยู่', push_btn_on:'เปิดแจ้งเตือนบนเครื่องนี้', push_state_on:'เปิดอยู่บนเครื่องนี้', push_on_hint:'ถ้าใช้หลายเครื่อง ให้เปิดแอปในเครื่องนั้นแล้วกดเปิดอีกครั้ง ข้อความแจ้งเตือนอาจแสดงบนหน้าจอล็อก', push_btn_test:'ส่งแจ้งเตือนทดสอบ', push_btn_off:'ปิดบนเครื่องนี้', push_denied:'เครื่องนี้ปิดกั้นการแจ้งเตือนของเว็บนี้ไว้ ต้องไปเปิดที่การตั้งค่าของเบราว์เซอร์ (หัวข้อการแจ้งเตือน → อนุญาต) แล้วกลับมากดเปิดอีกครั้ง', push_ios:'บน iPhone / iPad ต้องเพิ่มแอปลงหน้าจอโฮมก่อน: เปิดเว็บนี้ใน Safari → กดปุ่มแชร์ → “เพิ่มลงหน้าจอโฮม” แล้วเปิดแอปจากไอคอนบนหน้าจอ จึงจะเปิดแจ้งเตือนได้ (ต้องเป็น iOS 16.4 ขึ้นไป)', push_unsupported:'เบราว์เซอร์นี้ยังไม่รองรับการแจ้งเตือนเด้ง ลองใช้ Chrome หรือ Edge', push_toast_on:'เปิดแจ้งเตือนแล้ว', push_toast_off:'ปิดแจ้งเตือนบนเครื่องนี้แล้ว', push_toast_denied:'ยังไม่ได้รับอนุญาตให้แจ้งเตือน จึงเปิดไม่ได้', push_toast_fail:'เปิดแจ้งเตือนไม่สำเร็จ ลองใหม่อีกครั้ง', push_toast_test:'ส่งแล้ว อีกสักครู่จะเด้งขึ้นที่เครื่องนี้', push_test_title:'ทดสอบการแจ้งเตือน', push_test_body:'ใช้งานได้แล้ว! ต่อไปนัดใหม่และเรื่องต่าง ๆ จะเด้งขึ้นหน้าจอแบบนี้', push_banner_t:'ให้แจ้งเตือนเด้งขึ้นมือถือ', push_banner_s:'จะไม่พลาดนัดใหม่หรือการยกเลิก แม้ปิดแอปอยู่', push_banner_btn:'เปิด', push_banner_later:'ไว้ก่อน',
     cb_lead_hint:'เทรนเนอร์คนนี้ให้นัดล่วงหน้าอย่างน้อย {label} เวลาที่เหลือน้อยกว่านี้จะกดไม่ได้',
     cb_lead_note_a:'เทรนเนอร์คนนี้ให้นัดล่วงหน้าอย่างน้อย', cb_lead_note_b:'เวลาที่เหลือน้อยกว่านี้จะกดไม่ได้ (ช่องที่ขีดฆ่าสีจาง)',
     cb_slot_too_soon:'เวลานี้เลยกำหนดนัดล่วงหน้าแล้ว (ต้องนัดล่วงหน้าอย่างน้อย {label}) กรุณาเลือกเวลาอื่น',
@@ -1166,6 +1184,7 @@ const i18n = {
     tlead_example:'Example: for an 18:00 session, customers must book before {time}. After that, 18:00 is no longer offered.',
     tlead_toast:'Saved. Customers must book at least {label} ahead',
     tlead_bar_title:'Customers must book at least', tlead_bar_hint:'Applies to every new booking. Customers cannot book a time that starts sooner than this.', tlead_short_none:'None', tlead_short_h:'{n} h', tlead_short_d:'{n} d',
+    push_card_title:'Phone alerts', push_card_off:'New bookings, cancellations and updates for you pop up on this device right away, even when the app is closed.', push_btn_on:'Turn on for this device', push_state_on:'On for this device', push_on_hint:'Using more than one device? Open the app on it and turn it on there too. Alerts can show on the lock screen.', push_btn_test:'Send a test alert', push_btn_off:'Turn off here', push_denied:'Alerts from this site are blocked on this device. Allow them in the browser settings (Notifications → Allow), then come back and turn them on.', push_ios:'On iPhone / iPad, add the app to the Home Screen first: open this site in Safari → tap Share → “Add to Home Screen”, then open the app from its icon. Needs iOS 16.4 or newer.', push_unsupported:'This browser cannot show pop-up alerts yet. Try Chrome or Edge.', push_toast_on:'Alerts are on', push_toast_off:'Alerts are off on this device', push_toast_denied:'Permission was not given, so alerts stay off', push_toast_fail:'Could not turn alerts on. Please try again.', push_toast_test:'Sent. It should pop up on this device in a moment.', push_test_title:'Alert test', push_test_body:'It works! New bookings and updates will pop up on your screen like this.', push_banner_t:'Get alerts on your phone', push_banner_s:'Never miss a new booking or a cancellation, even with the app closed', push_banner_btn:'Turn on', push_banner_later:'Not now',
     cb_lead_hint:'This trainer needs at least {label} notice. Slots starting sooner cannot be booked.',
     cb_lead_note_a:'This trainer needs at least', cb_lead_note_b:'notice. Times that start sooner cannot be booked (the faded, struck-through ones).',
     cb_slot_too_soon:'This slot starts too soon (at least {label} notice is needed). Please pick another time.',
@@ -1201,7 +1220,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-05.3';
+const APP_BUILD = '2026-11-05.4';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -2053,6 +2072,158 @@ async function markAllRead(userId){
   for(const n of all){ if(!n.isRead){ n.isRead = true; await dbSet('notif:'+n.id, n); } }
 }
 
+/* ---------------- phone pop-up notifications (Web Push) ----------------
+   The person turns them on per device. The browser makes a subscription; the server keeps it for that person.
+   When a new notification is saved, the database asks the "push-send" function to send it to those devices. */
+const PUSH_FLAG = 'tk_push_on';        // ids of people who turned the pop-ups on in this browser
+const PUSH_NUDGE = 'tk_push_nudge';    // ids of people who closed the banner on the home page
+let pushCfg = {key:null, at:0, asked:0};
+let pushSynced = {};
+function pushList(k){ try{ const a = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function pushListHas(k, id){ return pushList(k).indexOf(id) >= 0; }
+function pushListAdd(k, id){ try{ const a = pushList(k).filter(x=>x!==id); a.push(id); localStorage.setItem(k, JSON.stringify(a.slice(-20))); }catch(e){} }
+function pushListDel(k, id){ try{ localStorage.setItem(k, JSON.stringify(pushList(k).filter(x=>x!==id))); }catch(e){} }
+function pushIsIOS(){ return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+function pushStandalone(){ try{ return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; }catch(e){ return false; } }
+function pushCanUse(){ return ('serviceWorker' in navigator) && ('PushManager' in window) && ('Notification' in window); }
+function pushKeyBytes(s){
+  const p = String(s).replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - String(s).length % 4) % 4);
+  const bin = atob(p); const o = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) o[i] = bin.charCodeAt(i);
+  return o;
+}
+function pushSameKey(a, b){ if(!a || !b || a.length !== b.length) return false; for(let i = 0; i < a.length; i++) if(a[i] !== b[i]) return false; return true; }
+function pushDeviceLabel(){
+  const ua = navigator.userAgent || '';
+  const os = /Android/.test(ua) ? 'Android' : /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Windows/.test(ua) ? 'Windows' : /Mac/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : '';
+  const br = /OPR\//.test(ua) ? 'Opera' : /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : '';
+  return (os + ' ' + br).trim();
+}
+/* The public key the browser needs. null while the server side is not ready (nothing is shown then). */
+async function pushServerKey(){
+  const now = Date.now();
+  if(pushCfg.at && now - pushCfg.at < 7200000) return pushCfg.key;       // asked at most every 2 hours (and again after a reload)
+  pushCfg.at = now;
+  try{
+    const r = await rpc('app_push_config', {p_token:authToken}, {retries:0});
+    pushCfg.key = (r && r.publicKey) || null;
+    if(!pushCfg.key && !pushCfg.asked){ pushCfg.asked = now; rpc('app_push_wake', {p_token:authToken}, {retries:0}).catch(()=>{}); }   // once per page load
+  }catch(e){ pushCfg.key = null; }
+  return pushCfg.key;
+}
+async function pushRegistration(){
+  if(!('serviceWorker' in navigator)) return null;
+  try{ return await Promise.race([navigator.serviceWorker.ready, new Promise(r=>setTimeout(()=>r(null), 6000))]); }catch(e){ return null; }
+}
+async function pushCurrentSub(){
+  const reg = await pushRegistration();
+  if(!reg || !reg.pushManager) return null;
+  try{ return await reg.pushManager.getSubscription(); }catch(e){ return null; }
+}
+/* What the card shows on this device: hidden | ios | unsupported | denied | off | on */
+async function pushUiState(){
+  try{
+    if(!session || session.role === 'admin') return {mode:'hidden'};
+    if(!(await pushServerKey())) return {mode:'hidden'};
+    if(!pushCanUse()) return {mode: (pushIsIOS() && !pushStandalone()) ? 'ios' : 'unsupported'};
+    if(Notification.permission === 'denied') return {mode:'denied'};
+    const sub = await pushCurrentSub();
+    if(sub && Notification.permission === 'granted' && pushListHas(PUSH_FLAG, session.id)) return {mode:'on'};
+    return {mode:'off'};
+  }catch(e){ return {mode:'hidden'}; }
+}
+/* Turns the pop-ups on for this device. Returns ok | denied | dismissed | fail */
+async function pushEnable(){
+  if(!pushCanUse()) return 'fail';
+  let perm = Notification.permission;
+  if(perm === 'default'){ try{ perm = await Notification.requestPermission(); }catch(e){ perm = 'default'; } }   // first thing, while the tap still counts
+  if(perm === 'denied') return 'denied';
+  if(perm !== 'granted') return 'dismissed';
+  const key = await pushServerKey();
+  const reg = await pushRegistration();
+  if(!key || !reg || !reg.pushManager) return 'fail';
+  let sub = null;
+  try{
+    sub = await reg.pushManager.getSubscription();
+    if(sub && sub.options && sub.options.applicationServerKey && !pushSameKey(new Uint8Array(sub.options.applicationServerKey), pushKeyBytes(key))){
+      try{ await sub.unsubscribe(); }catch(e){}
+      sub = null;
+    }
+    if(!sub) sub = await reg.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:pushKeyBytes(key)});
+  }catch(e){ console.warn('push subscribe failed:', e && e.message); return 'fail'; }
+  try{ await rpc('app_push_subscribe', {p_token:authToken, p_sub:sub.toJSON(), p_ua:pushDeviceLabel()}, {retries:1}); }
+  catch(e){ return 'fail'; }
+  pushListAdd(PUSH_FLAG, session.id);
+  return 'ok';
+}
+async function pushDisable(){
+  const sub = await pushCurrentSub();
+  if(sub){
+    try{ await rpc('app_push_unsubscribe', {p_token:authToken, p_endpoint:sub.endpoint}, {retries:1}); }catch(e){}
+    try{ await sub.unsubscribe(); }catch(e){}
+  }
+  pushListDel(PUSH_FLAG, session.id);
+}
+/* After signing in (or when the browser changed its subscription) the server is told again, so the right person gets the alerts on this device. */
+async function pushResync(){
+  if(!session || session.role === 'admin' || !pushCanUse()) return;
+  if(Notification.permission !== 'granted' || !pushListHas(PUSH_FLAG, session.id)) return;
+  const key = await pushServerKey();
+  const reg = await pushRegistration();
+  if(!key || !reg || !reg.pushManager) return;
+  let sub = await reg.pushManager.getSubscription();
+  if(!sub){ try{ sub = await reg.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:pushKeyBytes(key)}); }catch(e){ return; } }
+  await rpc('app_push_subscribe', {p_token:authToken, p_sub:sub.toJSON(), p_ua:pushDeviceLabel()}, {retries:0});
+}
+function pushSyncSoon(){
+  if(pushSynced.id === session.id && pushSynced.tok === authToken) return;
+  pushSynced = {id:session.id, tok:authToken};
+  setTimeout(()=>{ pushResync().catch(()=>{}); }, 2500);
+}
+/* Signing out: this device stops getting this person's alerts (they come back at the next sign-in). */
+async function pushForgetDevice(tok, uid){
+  try{
+    if(!uid || !pushListHas(PUSH_FLAG, uid) || !pushCanUse()) return;
+    const sub = await Promise.race([pushCurrentSub(), new Promise(r=>setTimeout(()=>r(null), 2500))]);
+    if(sub) await rpc('app_push_unsubscribe', {p_token:tok, p_endpoint:sub.endpoint}, {retries:0});
+  }catch(e){}
+}
+function pushCardHtml(st){
+  if(!st || st.mode === 'hidden') return '';
+  let body;
+  if(st.mode === 'on'){
+    body = `<div class="push-state"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>${t('push_state_on')}</div>
+      <p class="push-desc">${t('push_on_hint')}</p>
+      <div class="push-actions"><button class="btn btn-sm" data-push-test>${t('push_btn_test')}</button><button class="btn btn-sm btn-ghost" data-push-disable>${t('push_btn_off')}</button></div>`;
+  } else if(st.mode === 'off'){
+    body = `<p class="push-desc">${t('push_card_off')}</p>
+      <div class="push-actions"><button class="btn btn-primary btn-sm" data-push-enable>${t('push_btn_on')}</button></div>`;
+  } else {
+    body = `<p class="push-desc" style="margin:0">${t(st.mode === 'denied' ? 'push_denied' : st.mode === 'ios' ? 'push_ios' : 'push_unsupported')}</p>`;
+  }
+  return `<div class="card push-card ${st.mode === 'on' ? 'on' : ''}"><div class="push-ico">${navIcon('bell')}</div><div class="push-body"><h3>${t('push_card_title')}</h3>${body}</div></div>`;
+}
+function pushBannerHtml(st){
+  if(!st || st.mode !== 'off' || !session || pushListHas(PUSH_NUDGE, session.id)) return '';
+  return `<div class="card push-banner"><div class="push-ico">${navIcon('bell')}</div><div class="push-banner-txt"><div class="push-banner-t">${t('push_banner_t')}</div><div class="push-banner-s">${t('push_banner_s')}</div></div><div class="push-banner-act"><button class="btn btn-primary btn-sm" data-push-enable>${t('push_banner_btn')}</button><button class="btn btn-ghost btn-sm" data-push-later>${t('push_banner_later')}</button></div></div>`;
+}
+async function pushEnableFlow(){
+  const r = await pushEnable();
+  if(r === 'ok') toast(t('push_toast_on'));
+  else if(r === 'denied') toast(t('push_toast_denied'));
+  else if(r === 'fail') toast(t('push_toast_fail'));
+  await renderRoot(true);
+}
+async function pushDisableFlow(){
+  await pushDisable();
+  toast(t('push_toast_off'));
+  await renderRoot(true);
+}
+async function pushTestFlow(){
+  await pushNotification(session.id, 'push_test_title', 'push_test_body', {}, null);
+  toast(t('push_toast_test'));
+}
+
 /* ---------------- render root ---------------- */
 async function renderRootInner(silent, ld){
   clearRenderCaches();
@@ -2107,6 +2278,7 @@ async function renderRootInner(silent, ld){
     notifBtn.style.display = 'none';
   }
   nav.style.display = 'flex';
+  pushSyncSoon();
   await renderNav();
   await renderView(silent, ld);
 }
@@ -2126,9 +2298,11 @@ async function renderRoot(silent){
 
 function doLogout(){
   const tok = authToken;
+  const uid = session && session.id;
   session = null; authToken = null; route = 'dashboard'; routeParams = {};
+  pushSynced = {};
   clearActiveSession();
-  if(tok){ rpc('app_logout', {p_token:tok}, {retries:1}).catch(()=>{}); }       // the server forgets this sign-in too
+  if(tok){ pushForgetDevice(tok, uid).finally(()=>{ rpc('app_logout', {p_token:tok}, {retries:1}).catch(()=>{}); }); }       // this device stops getting alerts, then the server forgets this sign-in too
   toast(t('auth_toast_logout'));
   renderRoot();
 }
@@ -2676,6 +2850,7 @@ async function renderCDashboard(){
   const noTrainersYet = (await getMyTrainerIdSet()).size === 0;
   return `
     <div class="page-head"><div><div class="eyebrow">${t('cp_eyebrow')}</div><h1>${tt('c_dash_h1',{name:esc(session.name)})}</h1><p>${t('c_dash_p')}</p></div></div>
+    ${pushBannerHtml(await pushUiState())}
     ${noTrainersYet ? codeCardHtml('D','cd_start_title','cd_start_hint') : ''}
     <div class="grid-2">
       <div class="card c-dash-pkg">
@@ -2726,8 +2901,10 @@ function fmtDateTime(iso){ try{ const d=new Date(iso); return d.toLocaleString(l
 async function renderNotifPage(){
   const notifs = await getNotifications(session.id);
   await markAllRead(session.id);
+  const pst = await pushUiState();
   return `
     <div class="page-head"><div><div class="eyebrow">${t('notif_eyebrow')}</div><h1>${t('notif_h1')}</h1><p>${t('notif_p')}</p></div></div>
+    ${pushCardHtml(pst)}
     <div class="card">${notifs.length ? notifs.map(n=>notifRow(n)).join('') : `<div class="empty">${t('notif_empty')}</div>`}</div>
   `;
 }
@@ -3352,6 +3529,7 @@ async function renderTDashboard(){
     </div>` : '';
   return `
     <div class="page-head"><div><div class="eyebrow">${t('tq_eyebrow')}</div><h1>${tt('t_dash_h1',{name:esc(session.name)})}</h1><p>${t('t_dash_p')}</p></div></div>
+    ${pushBannerHtml(await pushUiState())}
     <div class="t-top">${codeCard}${completeCard}</div>
     ${payCard}
     <div class="grid-4" style="margin-bottom:20px">
@@ -4520,6 +4698,10 @@ function wireView(){
   document.querySelectorAll('[data-remove-tpkg]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, ()=>removeTrainerPackage(el.dataset.removeTpkg))));
   document.querySelectorAll('[data-remove-qr]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, removeTrainerQr)));
   document.querySelectorAll('[data-instant-mode]').forEach(el=>el.addEventListener('change', ()=> saveInstantMode(el.value==='1')));
+  document.querySelectorAll('[data-push-enable]').forEach(b=>b.addEventListener('click', ()=> withBusy(b, pushEnableFlow)));
+  document.querySelectorAll('[data-push-disable]').forEach(b=>b.addEventListener('click', ()=> withBusy(b, pushDisableFlow)));
+  document.querySelectorAll('[data-push-test]').forEach(b=>b.addEventListener('click', ()=> withBusy(b, pushTestFlow)));
+  document.querySelectorAll('[data-push-later]').forEach(b=>b.addEventListener('click', ()=>{ if(session) pushListAdd(PUSH_NUDGE, session.id); const bn = b.closest('.push-banner'); if(bn) bn.remove(); }));
   document.querySelectorAll('[data-lead-pill]').forEach(el=>el.addEventListener('click', ()=> saveLeadHours(Number(el.dataset.leadPill))));
   document.querySelectorAll('[data-google-link]').forEach(b=>b.addEventListener('click', ()=> signInWithGoogle(b, {role:'trainer', mode:'link', trainerId:session.id})));
   document.querySelectorAll('[data-google-unlink]').forEach(b=>b.addEventListener('click', ()=> withBusy(b, unlinkGoogleTrainer)));
@@ -4616,6 +4798,15 @@ document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) softRef
 window.addEventListener('focus', ()=> softRefresh());
 
 /* ---------------- service worker ---------------- */
+if('serviceWorker' in navigator){
+  // messages from the pop-up code in the service worker: a new notification arrived / a pop-up was tapped
+  navigator.serviceWorker.addEventListener('message', (ev)=>{
+    const d = (ev && ev.data) || {};
+    if(!session || session.role === 'admin') return;
+    if(d.type === 'tk-open'){ go('notif'); }
+    else if(d.type === 'tk-new'){ softRefresh(true); }
+  });
+}
 if('serviceWorker' in navigator && !window.frameElement){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('service-worker.js').catch(()=>{});
@@ -4656,6 +4847,14 @@ async function bootApp(){
   try{
   if(!(await finishGoogleLogin())) await resumeActiveSession();
   await applyPendingTrainerCodeIfAny();
+  try{                                              // opened from a pop-up: go straight to the notifications
+    const sp0 = new URLSearchParams(location.search);
+    if(sp0.get('go') === 'notif'){
+      if(session && session.role !== 'admin') route = 'notif';
+      sp0.delete('go');
+      history.replaceState(null, '', location.pathname + (sp0.toString() ? '?' + sp0.toString() : '') + location.hash);
+    }
+  }catch(e){}
   } finally { clearTimeout(slowNote); }
   if(!session && googleApplicant){ authRole = 'trainer'; authMode = 'apply'; if(!applyDraft.name) applyDraft.name = googleApplicant.name || ''; }
   await renderRoot();

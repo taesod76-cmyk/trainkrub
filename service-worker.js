@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trainkrub-cache-v22';
+const CACHE_NAME = 'trainkrub-cache-v23';
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -76,4 +76,44 @@ self.addEventListener('fetch', (event) => {
       return response;
     }).catch(() => caches.match(request))
   );
+});
+
+/* ---------------- pop-up notifications (Web Push) ----------------
+   The server sends an encrypted message {title, body, tag, url}; this shows it as a system notification
+   even when the app is closed. Tapping it opens the app on the notifications page. */
+self.addEventListener('push', (event) => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; }
+  catch (e) { try { d = { body: event.data.text() }; } catch (e2) { d = {}; } }
+  const title = String(d.title || 'เทรนครับ');
+  const options = {
+    body: String(d.body || ''),
+    icon: 'icons/icon-192.png',
+    badge: 'icons/badge-96.png',
+    tag: d.tag ? String(d.tag) : undefined,
+    data: { url: String(d.url || './?go=notif') },
+    lang: 'th'
+  };
+  event.waitUntil((async () => {
+    await self.registration.showNotification(title, options);
+    // a window that is open right now refreshes itself so the bell and the lists are current
+    const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    wins.forEach((c) => { try { c.postMessage({ type: 'tk-new' }); } catch (e) { /* ignore */ } });
+  })());
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = new URL((event.notification.data && event.notification.data.url) || './?go=notif', self.registration.scope).href;
+  event.waitUntil((async () => {
+    const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const c of wins) {
+      if (c.url.indexOf(self.registration.scope) === 0) {
+        try { await c.focus(); } catch (e) { /* ignore */ }
+        try { c.postMessage({ type: 'tk-open', route: 'notif' }); } catch (e) { /* ignore */ }
+        return;
+      }
+    }
+    await self.clients.openWindow(target);
+  })());
 });
