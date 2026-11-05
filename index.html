@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-96OBdV54YbJ292FiIDCd25Y55itqMavCW1hQcKvzuCU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-/tSsO1O5zFJwUQ45EMywVQTJvm5S3v9qisWx+a7DIvk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนครับ (TRAINKRUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -720,6 +720,7 @@
   .push-body{flex:1;min-width:0}
   .push-body h3{font:600 17px/1.35 var(--f-display);margin:0 0 6px}
   .push-desc{margin:0 0 12px;font-size:14px;line-height:1.65;color:var(--text-dim)}
+  .push-err{margin-top:8px;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--text-dim);word-break:break-all;user-select:all}
   .push-actions{display:flex;gap:10px;flex-wrap:wrap}
   .push-state{display:inline-flex;align-items:center;gap:7px;margin:0 0 6px;font:600 14.5px/1.4 var(--f-display);color:var(--green)}
   .push-state svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
@@ -991,7 +992,8 @@ const i18n = {
     tlead_example:'ตัวอย่าง: ลูกค้าอยากเทรนเวลา 18:00 ต้องนัดก่อน {time} หลังจากนั้นจะไม่มีเวลา 18:00 ให้เลือก',
     tlead_toast:'บันทึกแล้ว ลูกค้าต้องนัดล่วงหน้า {label}',
     tlead_bar_title:'ลูกค้าต้องนัดล่วงหน้าอย่างน้อย', tlead_bar_hint:'ใช้กับทุกนัดใหม่ ลูกค้ากดนัดเวลาที่เหลือน้อยกว่านี้ไม่ได้', tlead_short_none:'ไม่ต้อง', tlead_short_h:'{n} ชม.', tlead_short_d:'{n} วัน',
-    push_card_title:'แจ้งเตือนเด้งขึ้นมือถือ', push_card_off:'เมื่อมีนัดใหม่ มีการยกเลิก หรือมีเรื่องที่เกี่ยวกับคุณ ข้อความจะเด้งขึ้นหน้าจอเครื่องนี้ทันที แม้ไม่ได้เปิดแอปอยู่', push_btn_on:'เปิดแจ้งเตือนบนเครื่องนี้', push_state_on:'เปิดอยู่บนเครื่องนี้', push_on_hint:'ถ้าใช้หลายเครื่อง ให้เปิดแอปในเครื่องนั้นแล้วกดเปิดอีกครั้ง ข้อความแจ้งเตือนอาจแสดงบนหน้าจอล็อก', push_btn_test:'ส่งแจ้งเตือนทดสอบ', push_btn_off:'ปิดบนเครื่องนี้', push_denied:'เครื่องนี้ปิดกั้นการแจ้งเตือนของเว็บนี้ไว้ ต้องไปเปิดที่การตั้งค่าของเบราว์เซอร์ (หัวข้อการแจ้งเตือน → อนุญาต) แล้วกลับมากดเปิดอีกครั้ง', push_ios:'บน iPhone / iPad ต้องเพิ่มแอปลงหน้าจอโฮมก่อน: เปิดเว็บนี้ใน Safari → กดปุ่มแชร์ → “เพิ่มลงหน้าจอโฮม” แล้วเปิดแอปจากไอคอนบนหน้าจอ จึงจะเปิดแจ้งเตือนได้ (ต้องเป็น iOS 16.4 ขึ้นไป)', push_unsupported:'เบราว์เซอร์นี้ยังไม่รองรับการแจ้งเตือนเด้ง ลองใช้ Chrome หรือ Edge', push_toast_on:'เปิดแจ้งเตือนแล้ว', push_toast_off:'ปิดแจ้งเตือนบนเครื่องนี้แล้ว', push_toast_denied:'ยังไม่ได้รับอนุญาตให้แจ้งเตือน จึงเปิดไม่ได้', push_toast_fail:'เปิดแจ้งเตือนไม่สำเร็จ ลองใหม่อีกครั้ง', push_toast_test:'ส่งแล้ว อีกสักครู่จะเด้งขึ้นที่เครื่องนี้', push_test_title:'ทดสอบการแจ้งเตือน', push_test_body:'ใช้งานได้แล้ว! ต่อไปนัดใหม่และเรื่องต่าง ๆ จะเด้งขึ้นหน้าจอแบบนี้', push_banner_t:'ให้แจ้งเตือนเด้งขึ้นมือถือ', push_banner_s:'จะไม่พลาดนัดใหม่หรือการยกเลิก แม้ปิดแอปอยู่', push_banner_btn:'เปิด', push_banner_later:'ไว้ก่อน',
+    push_card_title:'แจ้งเตือนเด้งขึ้นมือถือ', push_card_off:'เมื่อมีนัดใหม่ มีการยกเลิก หรือมีเรื่องที่เกี่ยวกับคุณ ข้อความจะเด้งขึ้นหน้าจอเครื่องนี้ทันที แม้ไม่ได้เปิดแอปอยู่', push_btn_on:'เปิดแจ้งเตือนบนเครื่องนี้', push_state_on:'เปิดอยู่บนเครื่องนี้', push_on_hint:'ถ้าใช้หลายเครื่อง ให้เปิดแอปในเครื่องนั้นแล้วกดเปิดอีกครั้ง ข้อความแจ้งเตือนอาจแสดงบนหน้าจอล็อก', push_btn_test:'ส่งแจ้งเตือนทดสอบ', push_btn_off:'ปิดบนเครื่องนี้', push_denied:'เครื่องนี้ปิดกั้นการแจ้งเตือนของเว็บนี้ไว้ ต้องไปเปิดที่การตั้งค่าของเบราว์เซอร์ (หัวข้อการแจ้งเตือน → อนุญาต) แล้วกลับมากดเปิดอีกครั้ง', push_ios:'บน iPhone / iPad ต้องเพิ่มแอปลงหน้าจอโฮมก่อน: เปิดเว็บนี้ใน Safari → กดปุ่มแชร์ → “เพิ่มลงหน้าจอโฮม” แล้วเปิดแอปจากไอคอนบนหน้าจอ จึงจะเปิดแจ้งเตือนได้ (ต้องเป็น iOS 16.4 ขึ้นไป)', push_unsupported:'เบราว์เซอร์นี้ยังไม่รองรับการแจ้งเตือนเด้ง ลองใช้ Chrome หรือ Edge', push_toast_on:'เปิดแจ้งเตือนแล้ว', push_toast_off:'ปิดแจ้งเตือนบนเครื่องนี้แล้ว', push_toast_denied:'ยังไม่ได้รับอนุญาตให้แจ้งเตือน จึงเปิดไม่ได้', push_toast_fail:'เปิดแจ้งเตือนไม่สำเร็จ ลองใหม่อีกครั้ง',
+    push_err_label:'รหัสสาเหตุ:', push_toast_test:'ส่งแล้ว อีกสักครู่จะเด้งขึ้นที่เครื่องนี้', push_test_title:'ทดสอบการแจ้งเตือน', push_test_body:'ใช้งานได้แล้ว! ต่อไปนัดใหม่และเรื่องต่าง ๆ จะเด้งขึ้นหน้าจอแบบนี้', push_banner_t:'ให้แจ้งเตือนเด้งขึ้นมือถือ', push_banner_s:'จะไม่พลาดนัดใหม่หรือการยกเลิก แม้ปิดแอปอยู่', push_banner_btn:'เปิด', push_banner_later:'ไว้ก่อน',
     cb_lead_hint:'เทรนเนอร์คนนี้ให้นัดล่วงหน้าอย่างน้อย {label} เวลาที่เหลือน้อยกว่านี้จะกดไม่ได้',
     cb_lead_note_a:'เทรนเนอร์คนนี้ให้นัดล่วงหน้าอย่างน้อย', cb_lead_note_b:'เวลาที่เหลือน้อยกว่านี้จะกดไม่ได้ (ช่องที่ขีดฆ่าสีจาง)',
     cb_slot_too_soon:'เวลานี้เลยกำหนดนัดล่วงหน้าแล้ว (ต้องนัดล่วงหน้าอย่างน้อย {label}) กรุณาเลือกเวลาอื่น',
@@ -1184,7 +1186,8 @@ const i18n = {
     tlead_example:'Example: for an 18:00 session, customers must book before {time}. After that, 18:00 is no longer offered.',
     tlead_toast:'Saved. Customers must book at least {label} ahead',
     tlead_bar_title:'Customers must book at least', tlead_bar_hint:'Applies to every new booking. Customers cannot book a time that starts sooner than this.', tlead_short_none:'None', tlead_short_h:'{n} h', tlead_short_d:'{n} d',
-    push_card_title:'Phone alerts', push_card_off:'New bookings, cancellations and updates for you pop up on this device right away, even when the app is closed.', push_btn_on:'Turn on for this device', push_state_on:'On for this device', push_on_hint:'Using more than one device? Open the app on it and turn it on there too. Alerts can show on the lock screen.', push_btn_test:'Send a test alert', push_btn_off:'Turn off here', push_denied:'Alerts from this site are blocked on this device. Allow them in the browser settings (Notifications → Allow), then come back and turn them on.', push_ios:'On iPhone / iPad, add the app to the Home Screen first: open this site in Safari → tap Share → “Add to Home Screen”, then open the app from its icon. Needs iOS 16.4 or newer.', push_unsupported:'This browser cannot show pop-up alerts yet. Try Chrome or Edge.', push_toast_on:'Alerts are on', push_toast_off:'Alerts are off on this device', push_toast_denied:'Permission was not given, so alerts stay off', push_toast_fail:'Could not turn alerts on. Please try again.', push_toast_test:'Sent. It should pop up on this device in a moment.', push_test_title:'Alert test', push_test_body:'It works! New bookings and updates will pop up on your screen like this.', push_banner_t:'Get alerts on your phone', push_banner_s:'Never miss a new booking or a cancellation, even with the app closed', push_banner_btn:'Turn on', push_banner_later:'Not now',
+    push_card_title:'Phone alerts', push_card_off:'New bookings, cancellations and updates for you pop up on this device right away, even when the app is closed.', push_btn_on:'Turn on for this device', push_state_on:'On for this device', push_on_hint:'Using more than one device? Open the app on it and turn it on there too. Alerts can show on the lock screen.', push_btn_test:'Send a test alert', push_btn_off:'Turn off here', push_denied:'Alerts from this site are blocked on this device. Allow them in the browser settings (Notifications → Allow), then come back and turn them on.', push_ios:'On iPhone / iPad, add the app to the Home Screen first: open this site in Safari → tap Share → “Add to Home Screen”, then open the app from its icon. Needs iOS 16.4 or newer.', push_unsupported:'This browser cannot show pop-up alerts yet. Try Chrome or Edge.', push_toast_on:'Alerts are on', push_toast_off:'Alerts are off on this device', push_toast_denied:'Permission was not given, so alerts stay off', push_toast_fail:'Could not turn alerts on. Please try again.',
+    push_err_label:'Reason code:', push_toast_test:'Sent. It should pop up on this device in a moment.', push_test_title:'Alert test', push_test_body:'It works! New bookings and updates will pop up on your screen like this.', push_banner_t:'Get alerts on your phone', push_banner_s:'Never miss a new booking or a cancellation, even with the app closed', push_banner_btn:'Turn on', push_banner_later:'Not now',
     cb_lead_hint:'This trainer needs at least {label} notice. Slots starting sooner cannot be booked.',
     cb_lead_note_a:'This trainer needs at least', cb_lead_note_b:'notice. Times that start sooner cannot be booked (the faded, struck-through ones).',
     cb_slot_too_soon:'This slot starts too soon (at least {label} notice is needed). Please pick another time.',
@@ -1220,7 +1223,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-05.4';
+const APP_BUILD = '2026-11-05.5';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -2111,9 +2114,17 @@ async function pushServerKey(){
   }catch(e){ pushCfg.key = null; }
   return pushCfg.key;
 }
+let pushRegMemo = null;
+let pushLastErr = '';      // why the last "turn on" failed (shown under the button)
+function pushFail(code){ pushLastErr = String(code || 'unknown').slice(0, 120); console.warn('push enable failed:', pushLastErr); return 'fail'; }
 async function pushRegistration(){
+  if(pushRegMemo) return pushRegMemo;
   if(!('serviceWorker' in navigator)) return null;
-  try{ return await Promise.race([navigator.serviceWorker.ready, new Promise(r=>setTimeout(()=>r(null), 6000))]); }catch(e){ return null; }
+  try{
+    const r = await Promise.race([navigator.serviceWorker.ready, new Promise(r=>setTimeout(()=>r(null), 6000))]);
+    if(r) pushRegMemo = r;
+    return r;
+  }catch(e){ return null; }
 }
 async function pushCurrentSub(){
   const reg = await pushRegistration();
@@ -2134,14 +2145,17 @@ async function pushUiState(){
 }
 /* Turns the pop-ups on for this device. Returns ok | denied | dismissed | fail */
 async function pushEnable(){
-  if(!pushCanUse()) return 'fail';
+  pushLastErr = '';
+  if(!pushCanUse()) return pushFail('unsupported');
   let perm = Notification.permission;
   if(perm === 'default'){ try{ perm = await Notification.requestPermission(); }catch(e){ perm = 'default'; } }   // first thing, while the tap still counts
   if(perm === 'denied') return 'denied';
   if(perm !== 'granted') return 'dismissed';
   const key = await pushServerKey();
   const reg = await pushRegistration();
-  if(!key || !reg || !reg.pushManager) return 'fail';
+  if(!key) return pushFail('no-key');
+  if(!reg) return pushFail('no-sw');
+  if(!reg.pushManager) return pushFail('no-pushmanager');
   let sub = null;
   try{
     sub = await reg.pushManager.getSubscription();
@@ -2150,9 +2164,9 @@ async function pushEnable(){
       sub = null;
     }
     if(!sub) sub = await reg.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:pushKeyBytes(key)});
-  }catch(e){ console.warn('push subscribe failed:', e && e.message); return 'fail'; }
+  }catch(e){ return pushFail('subscribe:' + ((e && e.name) || '?') + ':' + String((e && e.message) || '').slice(0, 70)); }
   try{ await rpc('app_push_subscribe', {p_token:authToken, p_sub:sub.toJSON(), p_ua:pushDeviceLabel()}, {retries:1}); }
-  catch(e){ return 'fail'; }
+  catch(e){ return pushFail('save:' + ((e && e.status) || '') + ':' + String((e && (e.reason || e.message)) || '?').slice(0, 70)); }
   pushListAdd(PUSH_FLAG, session.id);
   return 'ok';
 }
@@ -2197,15 +2211,16 @@ function pushCardHtml(st){
       <div class="push-actions"><button class="btn btn-sm" data-push-test>${t('push_btn_test')}</button><button class="btn btn-sm btn-ghost" data-push-disable>${t('push_btn_off')}</button></div>`;
   } else if(st.mode === 'off'){
     body = `<p class="push-desc">${t('push_card_off')}</p>
-      <div class="push-actions"><button class="btn btn-primary btn-sm" data-push-enable>${t('push_btn_on')}</button></div>`;
+      <div class="push-actions"><button class="btn btn-primary btn-sm" data-push-enable>${t('push_btn_on')}</button></div>${pushErrHtml()}`;
   } else {
     body = `<p class="push-desc" style="margin:0">${t(st.mode === 'denied' ? 'push_denied' : st.mode === 'ios' ? 'push_ios' : 'push_unsupported')}</p>`;
   }
   return `<div class="card push-card ${st.mode === 'on' ? 'on' : ''}"><div class="push-ico">${navIcon('bell')}</div><div class="push-body"><h3>${t('push_card_title')}</h3>${body}</div></div>`;
 }
+function pushErrHtml(){ return pushLastErr ? `<div class="push-err">${t('push_err_label')} ${esc(pushLastErr)}</div>` : ''; }
 function pushBannerHtml(st){
   if(!st || st.mode !== 'off' || !session || pushListHas(PUSH_NUDGE, session.id)) return '';
-  return `<div class="card push-banner"><div class="push-ico">${navIcon('bell')}</div><div class="push-banner-txt"><div class="push-banner-t">${t('push_banner_t')}</div><div class="push-banner-s">${t('push_banner_s')}</div></div><div class="push-banner-act"><button class="btn btn-primary btn-sm" data-push-enable>${t('push_banner_btn')}</button><button class="btn btn-ghost btn-sm" data-push-later>${t('push_banner_later')}</button></div></div>`;
+  return `<div class="card push-banner"><div class="push-ico">${navIcon('bell')}</div><div class="push-banner-txt"><div class="push-banner-t">${t('push_banner_t')}</div><div class="push-banner-s">${t('push_banner_s')}</div>${pushErrHtml()}</div><div class="push-banner-act"><button class="btn btn-primary btn-sm" data-push-enable>${t('push_banner_btn')}</button><button class="btn btn-ghost btn-sm" data-push-later>${t('push_banner_later')}</button></div></div>`;
 }
 async function pushEnableFlow(){
   const r = await pushEnable();

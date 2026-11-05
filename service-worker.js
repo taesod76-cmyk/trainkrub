@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trainkrub-cache-v23';
+const CACHE_NAME = 'trainkrub-cache-v24';
 const PRECACHE_URLS = [
   './',
   './index.html',
