@@ -774,14 +774,16 @@ begin
     if c.role = 'admin' then return v - 'password'; end if;
     return null;
   elsif pfx = 'customer' then
-    if c.role = 'admin' or (c.role = 'customer' and v->>'id' = c.uid) then return v - 'password'; end if;
+    if c.role = 'admin' then return v - 'password' - 'photo'; end if;
+    if c.role = 'customer' and v->>'id' = c.uid then return v - 'password'; end if;
     if c.role = 'trainer' and app_private.rel_trainer_customer(c.uid, v->>'id') then
       return jsonb_strip_nulls(jsonb_build_object('id', v->'id', 'name', v->'name', 'phone', v->'phone', 'photo', v->'photo',
                                                    'status', v->'status', 'role', v->'role'));
     end if;
     return null;
   elsif pfx = 'trainer' then
-    if c.role = 'admin' or (c.role = 'trainer' and v->>'id' = c.uid) then return v - 'password'; end if;
+    if c.role = 'admin' then return v - 'password' - 'photo'; end if;
+    if c.role = 'trainer' and v->>'id' = c.uid then return v - 'password'; end if;
     if c.role = 'customer' and v->>'status' = 'active' and app_private.customer_knows_trainer(c.uid, v->>'id') then
       return app_private.trainer_public(v);
     end if;
@@ -869,7 +871,10 @@ declare nm text; ph text; photo text; arr jsonb; x jsonb;
 begin
   if o is null then perform app_private.err(403, 'forbidden'); end if;
   if c.role = 'admin' then
-    if n->>'status' in ('active','suspended') and app_private.same_except(o, n, array['status']) then return n; end if;
+    -- the admin's view has no profile picture, so only the status of what was sent counts; the stored row is kept as it is
+    if n->>'status' in ('active','suspended') and app_private.same_except(o, n, array['status','photo']) then
+      return o || jsonb_build_object('status', n->>'status');
+    end if;
     perform app_private.err(403, 'forbidden');
   end if;
   if c.role <> 'customer' or o->>'id' <> c.uid then perform app_private.err(403, 'forbidden'); end if;
@@ -913,7 +918,10 @@ declare nm text; ph text; photo text; lead numeric; cert jsonb; certs jsonb := '
 begin
   if o is null then perform app_private.err(403, 'forbidden'); end if;
   if c.role = 'admin' then
-    if n->>'status' in ('active','suspended') and app_private.same_except(o, n, array['status']) then return n; end if;
+    -- the admin's view has no profile picture, so only the status of what was sent counts; the stored row is kept as it is
+    if n->>'status' in ('active','suspended') and app_private.same_except(o, n, array['status','photo']) then
+      return o || jsonb_build_object('status', n->>'status');
+    end if;
     perform app_private.err(403, 'forbidden');
   end if;
   if c.role <> 'trainer' or o->>'id' <> c.uid then perform app_private.err(403, 'forbidden'); end if;
@@ -967,7 +975,7 @@ end $$;
 create or replace function app_private.w_booking(c app_private.ctx_t, p_key text, o jsonb, n jsonb) returns jsonb
 language plpgsql as $$
 declare
-  t jsonb; pkg jsonb; cu jsonb; d date; tm text; start_ts timestamptz; lead numeric; tid text; slot_conf int; slot_pend int; open_n int; pid text;
+  t jsonb; pkg jsonb; cu jsonb; d date; tm text; start_ts timestamptz; lead numeric; tid text; open_n int; pid text;
   mode text; pn jsonb; other_conf int; from_s text; to_s text;
 begin
   if o is null then
@@ -994,27 +1002,27 @@ begin
     if start_ts - now() < make_interval(secs => lead * 3600) then perform app_private.err(409, 'too_soon'); end if;
 
     perform pg_advisory_xact_lock(hashtext('slot:' || tid || (n->>'bookingDate') || tm));
-    select count(*) filter (where value->>'status' = 'confirmed'), count(*) filter (where value->>'status' = 'pending')
-      into slot_conf, slot_pend
-      from public.kv_store where key like 'booking:%' and value->>'trainerId' = tid and value->>'bookingDate' = n->>'bookingDate'
-       and value->>'bookingTime' = tm and value->>'status' in ('pending','confirmed');
     if exists (select 1 from public.kv_store where key like 'booking:%' and value->>'trainerId' = tid and value->>'bookingDate' = n->>'bookingDate'
                   and value->>'bookingTime' = tm and value->>'status' in ('pending','confirmed') and value->>'customerId' = c.uid) then
       perform app_private.err(409, 'already_mine');
     end if;
-    if slot_conf > 0 then perform app_private.err(409, 'locked'); end if;
-    if slot_pend >= 2 then perform app_private.err(409, 'full'); end if;
+    -- the first customer to book a time gets it: it goes onto the trainer's schedule straight away
+    if exists (select 1 from public.kv_store where key like 'booking:%' and value->>'trainerId' = tid and value->>'bookingDate' = n->>'bookingDate'
+                  and value->>'bookingTime' = tm and value->>'status' in ('pending','confirmed')) then
+      perform app_private.err(409, 'locked');
+    end if;
 
     select count(*) into open_n from public.kv_store
      where key like 'booking:%' and value->>'packageInstanceId' = pid and value->>'status' in ('pending','confirmed');
     if open_n >= (pkg->>'remainingSessions')::int then perform app_private.err(400, 'no_package'); end if;
-    if (select count(*) from public.kv_store where key like 'booking:%' and value->>'customerId' = c.uid and value->>'status' = 'pending') >= 30 then
+    if (select count(*) from public.kv_store where key like 'booking:%' and value->>'customerId' = c.uid
+           and value->>'status' in ('pending','confirmed') and value->>'bookingDate' >= app_private.today()::text) >= 30 then
       perform app_private.err(429, 'too_many_open');
     end if;
     cu := (select value from public.kv_store where key = c.ukey);
     return jsonb_build_object('id', substr(p_key, 9), 'customerId', c.uid, 'customerName', cu->>'name', 'trainerId', tid,
         'trainerName', t->>'name', 'packageInstanceId', pid, 'bookingDate', n->>'bookingDate', 'bookingTime', tm,
-        'status', 'pending', 'sessionMode', null, 'partnerNames', '[]'::jsonb,
+        'status', 'confirmed', 'sessionMode', 'solo', 'partnerNames', '[]'::jsonb,
         'createdAt', to_char(now() at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'), 'completedAt', null);
   end if;
 
@@ -1355,6 +1363,24 @@ begin
   return jsonb_build_object('ok', true, 'trainer', app_private.trainer_public(v));
 end $$;
 
+-- the numbers on the admin dashboard (counts only; no rows travel)
+create or replace function public.app_admin_stats(p_token text) returns jsonb
+language plpgsql security definer set search_path = pg_catalog, public, app_private, extensions as $$
+declare c app_private.ctx_t := app_private.ctx(p_token);
+begin
+  if c.role <> 'admin' then perform app_private.err(403, 'forbidden'); end if;
+  perform app_private.rate_hit('stats:' || c.ukey, 60, 60);
+  return jsonb_build_object('ok', true,
+    'trainers',  (select count(*) from public.kv_store where key like 'trainer:%'),
+    'customers', (select count(*) from public.kv_store where key like 'customer:%'),
+    'apps',      (select count(*) from public.kv_store where key like 'trainerApp:%'),
+    'appsPending', (select count(*) from public.kv_store where key like 'trainerApp:%' and value->>'status' = 'pending'),
+    'packages',  (select count(*) from public.kv_store where key like 'tpkg:%' and value->>'status' = 'active'
+                    and (value->>'price') ~ '^[0-9]+(\.[0-9]+)?$' and (value->>'price')::numeric > 0),
+    'bookings',  (select count(*) from public.kv_store where key like 'booking:%'),
+    'activePkgs', (select count(*) from public.kv_store where key like 'custpkg:%' and value->>'status' = 'active'));
+end $$;
+
 -- the admin's "clean up now" button
 create or replace function public.app_admin_maintain(p_token text) returns jsonb
 language plpgsql security definer set search_path = pg_catalog, public, app_private, extensions as $$
@@ -1468,7 +1494,7 @@ begin
               'app_login','app_whoami','app_logout','app_logout_all','app_register_customer','app_apply_trainer','app_apply_cert',
               'app_approve_trainer','app_reject_trainer','app_change_password','app_reset_password',
               'app_google_login','app_google_link','app_google_unlink','app_get','app_list','app_set','app_del',
-              'app_find_trainer','app_admin_maintain','app_ping','app_finish_apply') loop
+              'app_find_trainer','app_admin_maintain','app_admin_stats','app_ping','app_finish_apply') loop
     execute format('grant execute on function %s to anon, authenticated', f.sig);
   end loop;
 end $$;

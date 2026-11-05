@@ -22,14 +22,22 @@ After step 4 nobody (including someone holding the public key) can read the data
 read a password, and every sign-in attempt, wrong password and sensitive action is logged in
 `app_private.audit` (kept 180 days; readable only from the SQL editor).
 
+`01_install.sql` always contains everything in the update scripts below, so a brand-new install needs
+only the four steps above.
+
 ## Updating a database that is already installed
 
-- `03_update_trainer_signup.sql` — trainers who apply are accepted at once (no waiting for the admin).
-  Run it once, **before** publishing the website version that goes with it. Safe to run more than once;
-  it only replaces server functions and does not touch any data.
+Run the updates you have not run yet, in this order. Each is safe to run more than once and only replaces
+server functions (`05` also closes out requests that were still waiting, see below).
+Run it **before** publishing the website version that goes with it.
 
-`01_install.sql` already contains everything in `03_update_trainer_signup.sql`, so a brand-new install
-does not need it.
+- `03_update_trainer_signup.sql` — trainers who apply are accepted at once (no waiting for the admin).
+- `04_update_light_refresh.sql` — lighter background refresh: a small call for the admin dashboard numbers,
+  no profile pictures in the admin's lists, and suspending a user keeps the stored picture.
+- `05_update_auto_confirm.sql` — a customer's booking is confirmed at once and goes straight onto the trainer's
+  schedule (the trainer already set the notice time). Requests that were still waiting today are turned into
+  bookings: when two people asked for the same time the first one gets it and the other is declined, and times
+  that have already passed are closed. After it ran, no booking stays "pending".
 
 ## Trainer sign-up
 

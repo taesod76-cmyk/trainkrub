@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-8OiyvR2gloSXvbb0RTqYu8KXIvGKztRizsCaFzAOmog='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-Qc8gf8SZ1kfCdlUOUul07O5KTHEFgQpZ77lQvfqud6A='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนครับ (TRAINKRUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -390,7 +390,7 @@
   .splash-ring{position:relative;width:88px;height:88px;display:flex;align-items:center;justify-content:center}
   .splash-ring::before{content:'';position:absolute;inset:0;border-radius:50%;border:3px solid var(--surface-3);border-top-color:var(--red);animation:spin .9s linear infinite}
   .splash-ring::after{content:'';position:absolute;inset:-12px;border-radius:50%;border:1px solid var(--red-glow);animation:pulse 1.8s ease-in-out infinite}
-  .splash-mark{font:700 26px/1 var(--f-display);color:var(--text)}
+  .splash-logo{width:56px;height:56px;border-radius:16px;display:block}
   .splash-word{font:500 12px/1 var(--f-display);letter-spacing:.3em;color:var(--text-faint)}
   .splash-bar{width:140px;height:3px;border-radius:3px;background:var(--surface-3);overflow:hidden}
   .splash-bar i{display:block;height:100%;width:40%;background:var(--red);border-radius:3px;animation:slideBar 1.2s ease-in-out infinite}
@@ -648,6 +648,57 @@
     :root[data-theme="light"] .nav .count{border-color:#fff}
     :root[data-theme="light"] .nav button.active::before{box-shadow:0 4px 12px rgba(217,37,60,.45)}
   }
+
+  /* ---------- round 14: trainer schedule, customers, dashboard ---------- */
+  .sch-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .sch-sum-i{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px}
+  .sch-sum-i b{display:block;font:600 26px/1.1 var(--f-display)}
+  .sch-sum-i span{display:block;font-size:12.5px;color:var(--text-faint);margin-top:4px;line-height:1.35}
+  .sch-sum-i.warn{border-color:var(--amber)}.sch-sum-i.warn b{color:var(--amber)}
+  .sch-day{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:22px 2px 10px}
+  .sch-day b{font:600 18px/1.3 var(--f-display)}
+  .sch-day span{font-size:13px;color:var(--text-faint)}
+  .sch-day.late b{color:var(--amber)}
+  .sch-row{display:grid;grid-template-columns:92px 1fr auto;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);margin-bottom:10px}
+  .sch-row.is-next{border-color:rgba(224,41,63,.55);background:linear-gradient(90deg,var(--red-glow),rgba(0,0,0,0) 65%),var(--surface)}
+  .sch-row.is-now{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+  .sch-row.is-late{border-color:rgba(240,171,60,.5)}
+  .sch-time b{display:block;font:600 25px/1.1 var(--f-display);white-space:nowrap}
+  .sch-time span{display:block;font-size:12px;color:var(--text-faint);margin-top:4px}
+  .sch-who{display:flex;align-items:center;gap:12px;min-width:0}
+  .sch-who .avatar{width:44px;height:44px;font-size:15px}
+  .sch-id{min-width:0}
+  .sch-name{font:500 17px/1.3 var(--f-display);overflow-wrap:anywhere}
+  .sch-sub{font-size:13px;color:var(--text-faint);margin-top:2px}
+  .sch-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .sch-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .badge-next{background:var(--red-glow);color:var(--red-bright)}
+  @media(max-width:640px){
+    .sch-row{grid-template-columns:76px 1fr;gap:10px 12px;align-items:start}
+    .sch-time b{font-size:22px}
+    .sch-acts{grid-column:1/-1;justify-content:stretch}
+    .sch-acts .btn{flex:1 1 auto}
+    .sch-acts .btn-ghost{flex:0 0 auto}
+  }
+  .sch-mini{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .sch-mini:last-child{border-bottom:none}
+  .sch-mini .mt{font:600 19px/1.2 var(--f-display);min-width:78px;white-space:nowrap}
+  .sch-mini .md{font:400 12px/1.3 var(--f-body);color:var(--text-faint);margin-top:2px}
+  .sch-mini .mn{font:500 16px/1.3 var(--f-display);flex:1;min-width:0;overflow-wrap:anywhere}
+  .cu-card{border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);padding:16px;margin-bottom:12px}
+  .cu-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .cu-id{flex:1;min-width:140px}
+  .cu-name{font:500 18px/1.3 var(--f-display);overflow-wrap:anywhere}
+  .cu-next{font-size:13px;color:var(--text-faint);margin-top:2px}
+  .cu-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+  .cu-stat{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px 8px;text-align:center}
+  .cu-stat b{display:block;font:600 27px/1.1 var(--f-display)}
+  .cu-stat span{display:block;font-size:12px;color:var(--text-faint);margin-top:5px;line-height:1.35}
+  .cu-stat.main{border-color:rgba(224,41,63,.5);background:linear-gradient(180deg,var(--red-glow),rgba(0,0,0,0)),var(--surface-2)}
+  .cu-stat.main b{color:var(--red-bright)}
+  .cu-stat.main.low b{color:var(--amber)}
+  .cu-foot{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:12px;font-size:12.5px;color:var(--text-faint)}
+  @media(max-width:560px){.cu-stats{grid-template-columns:repeat(2,1fr)}.sch-sum-i{padding:10px 11px}.sch-sum-i b{font-size:23px}}
 </style>
 </head>
 <body>
@@ -658,7 +709,7 @@
 <div class="shell">
   <div class="topbar">
     <div class="brand" id="brandHome">
-      <img class="brand-mark" src="data:image/webp;base64,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" alt="TRAINKRUB" width="46" height="46" decoding="async">
+      <img class="brand-mark" src="data:image/webp;base64,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" alt="TRAINKRUB" width="46" height="46" decoding="async">
       <div class="brand-text">
         <div class="name-row"><span class="wordmark">TRAINKRUB</span><span class="name">เทรนครับ</span></div>
         <div class="sub" id="brandSub">Fitness booking</div>
@@ -677,7 +728,7 @@
     </div>
   </div>
 
-  <div id="app"><div class="splash" role="status"><div class="splash-ring"><span class="splash-mark">TK</span></div><div class="splash-word">TRAINKRUB</div><div class="splash-bar"><i></i></div><div class="splash-note" id="splashNote"></div></div></div>
+  <div id="app"><div class="splash" role="status"><div class="splash-ring"><img class="splash-logo" src="data:image/webp;base64,UklGRh4GAABXRUJQVlA4IBIGAABQHwCdASp4AHgAPikSiEKhoSEUyoyIGAKEoA1XnXfruo5dk/Iz2gak/Ovvr+4v+d6FqXe8y9ZfuX5mfzbtPeYJ+jv+V/Kf+RdwDzAfsB+qHYl9Ab+Zf3brGfQA/YD0v/2f+CD9jf2m+Ab+W/2T7/9Fo7Gf8RXdb8+1tug8DdJrMZ8Yn5n/iPYH/Vv9Yva09jvollepl4kHDLv697xq6APOuW/kKR6vzyGBng6U+AezjB9oWgj8FRnVgqTVaCDznXW6wdicgdl7o094nDY4LUJPyHLP2UthyeDxS+C/XzCNdyhhDiskTq5RHUaJ9gGhI839FmQab9UpKon7vQkVBkxIqAQAAP7+/NJ+Y4AAAGOe2vlqTbKcM8CkEO/A3dPr3NbSY7EVG7/ZpeZW/nLxBf+3og0QtMaHY6+DjB8AePqTjs/cEk4GV1VpydmtRIGCpXJMk4WTeBnxKe/uqZzrIvtHzso3b/2H0Pxi7agNoxZkd3ZeGqXVxhRtuElPgjmfrffh+iIyocZUSd8jf//0dNuKODDEkCUIiOFrfNkGJ0hY5a/m77CE/XETx4gmR2KgLU61GtBSfEry8v6TiuDAhVMt8allIjxf9hBtdfDFzZxKGsbxv2HLRJuY6KnjtmrpDvqo4D8YLCyrB6dmpcrl/jzkh/EiRjDiP3Szgc3j2qHm/Ef2aDRVztGbVkQ39Yx69ryY/IrU7cbVh2daaBVQj+NkMNE6wLZDVz+/rfj/3L+VPR+aO9N2+LSpNtjbF2H/0qn39FlLPa7elpKfD9XZ1qX+xn/PqTn7zEIC13bDNZmVOK+vn/tdb+B5mWQfq/t1sK+6PedRtu+WMX/QuzYZ2q/nw1NWiCuWoxRS8f9f28vNdzXgtOPN1ye55n+/cX/C7GrubEqluSgiYyYufLY8r+gVSudV8PKQkj4Rt2/PdPMHrvq2V3IVy4NYyCWmQ9Kaics4AJmnwsHgLrrglJvQwQFQgBSKQ/PKmZIMF7EVLaNPl9+HpJ/R+hvtOVKnJMn+/yhZkXaeFZPB97hu9SVHduFQ0eSY3dOhDWT/e0oi1uKUzh91zIJFrkhTbPH4nflV+y+wlbEdDMLI5V31Bl5z6XGF7m2XQVvRTu+b8gM+2weNTWbivSUq5nvG5S4zIBx9pDqw5lt8s8VHd7dHU07fMkxgilbEsKPg0SMWQtJHLCdglcpvv8tQ9d4tEYj9OsMQxVbE/Xf4/M6QD6NeVnVhsXApcFnHdYiF2Y6Hstz9OWpHii0Q0bcAN8Dybr55dc8UI4tuKuX8gtUhEb1/EoWoTRus9dAqiVmO8qVkfTGEtF7Ot/N1ntDjmuBx/2Uf7FiWdsmmrNAVUjQe3vubZmijedZfR0p4slVUwI7vizIVDe7+r3YgQvQ5+unoxUkDMM91r08HoA9WJlRK5nhq3asgDoA+UHGZfud2IaVIRGtBtwAHgeu6+a+Gi0c9bVeLd9RpxVYzuZljsC8RgAoMB/JItcW95d2Uy65OhvlnE+bh5hyYLjXvvl7vohrcWoRvKDOqdyY20YKAMHaYJ9zbfs669CPiqdxKUyoZWWgscEe5xNlVdx7UhOHnml4g3hEzKRh66nu+gG3PQSnNPwPjsViVJt5jTFEkKNT7bfvbrAcmjEUmygCcz013ttyCl3xbtJK+Dt9UH5klYemdXnIgXKpmkcw5K9amsOF6UbatAmqm087oqyeBquPH6QxlVy8V371Vi1k5zezuXu2i/WLvBHurOYGC+po1YaBI+LSTlYTC9JvY5HoCNqOxiqgbDyP5a6oY/vH4w5P+QKol6zAGuQGJQQG9Ll4dXXi0vgtNMYRC5rJWRAZ8/HvxB9dqdJ3RUj1gV1MWZjTM8nQeJlcJFXYvkftmDJ6mvOn2joV/z/EoX1GYt41WKtMZcmr8U/cxvV97KSpzEwgTWibvAMNpFVWEbjwnykPIpox/zvx7AFGV7GQGD4mpN0i0QAIWNV6YLXmG7FYjvY60C2YZCXngwHYmOJ4/YXZzYKy8UIkR48yuqiMpd9x+EZes4FOLdm+dRi8b2pHCJFLeuQ9Mh3QQGAAJyAAAAAA=" alt=""></div><div class="splash-word">TRAINKRUB</div><div class="splash-bar"><i></i></div><div class="splash-note" id="splashNote"></div></div></div>
 </div>
 
 <div class="modal-overlay" id="bookingModal">
@@ -784,15 +835,15 @@ const i18n = {
     tr_pin_hint:'เทรนเนอร์ที่ปักหมุดไว้จะแสดงอยู่บนสุดของรายการเสมอ เพื่อให้หาเจอไวขึ้นครั้งต่อไป',
     tr_pinned_toast:'ปักหมุด {name} ไว้บนสุดแล้ว', tr_unpinned_toast:'เลิกปักหมุด {name} แล้ว',
     tp_back:'กลับไปหน้ารายชื่อเทรนเนอร์', tp_contact_label:'เบอร์ติดต่อ', tp_about_label:'เกี่ยวกับเทรนเนอร์', tp_certs_label:'ใบรับรองและวุฒิบัตร', tp_no_certs:'เทรนเนอร์ยังไม่ได้แนบใบรับรอง', tp_code_label:'โค้ดเทรนเนอร์',
-    cb_eyebrow:'นัดเวลาเทรน', cb_h1:'นัดเวลาเทรน', cb_p:'เลือกเทรนเนอร์ วัน และเวลาที่สะดวก เทรนเนอร์จะได้รับคำขอทันที จำนวนครั้งจะถูกตัดตอนเทรนเสร็จเท่านั้น',
+    cb_eyebrow:'นัดเวลาเทรน', cb_h1:'นัดเวลาเทรน', cb_p:'เลือกเทรนเนอร์ วัน และเวลาที่สะดวก จองแล้วนัดจะขึ้นตารางของเทรนเนอร์ทันที ไม่ต้องรอตอบรับ จำนวนครั้งจะถูกตัดตอนเทรนเสร็จเท่านั้น',
     cb_pick_trainer:'เลือกเทรนเนอร์', cb_empty:'เลือกเทรนเนอร์ก่อน แล้วค่อยเลือกเวลา',
     cb_selected_hint:'เทรนเนอร์ที่เลือก', cb_date_label:'เลือกวันที่', cb_cat_label:'ช่วงเวลา',
     cb_cat_morning:'รอบเช้า (06:00–12:00)', cb_cat_afternoon:'รอบบ่าย (13:00–16:00)', cb_cat_evening:'รอบเย็น (17:00–20:00)',
-    cb_time_label:'เลือกเวลา', cb_submit_btn:'ส่งคำขอนัดเทรน', cb_no_package:'คุณยังไม่มีแพ็กเกจของเทรนเนอร์คนนี้ ซื้อแพ็กเกจก่อนจึงจะนัดเวลาเทรนได้',
+    cb_time_label:'เลือกเวลา', cb_submit_btn:'จองเวลานี้', cb_no_package:'คุณยังไม่มีแพ็กเกจของเทรนเนอร์คนนี้ ซื้อแพ็กเกจก่อนจึงจะนัดเวลาเทรนได้',
     cb_expired_package:'แพ็กเกจของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้ง ซื้อแพ็กเกจใหม่ก่อนจึงจะนัดเวลาเทรนได้',
-    cb_summary_title:'สรุปนัดเทรน', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะหลังส่ง', cb_status_after:'รอเทรนเนอร์ยืนยัน',
-    cb_no_time_selected:'กรุณาเลือกเวลาก่อนส่งคำขอ', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
-    modal_title:'ส่งคำขอนัดเทรนแล้ว!', modal_body:'รอเทรนเนอร์ตอบ คุณจะได้รับแจ้งเตือนทันทีเมื่อเทรนเนอร์ตอบกลับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ดของเทรนเนอร์ก่อนจึงจะนัดเวลาเทรนได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูนัดของฉัน", modal_redirect:"กำลังพาไปหน้า “นัดของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว", tab_c_dashboard:"หน้าแรก", tab_c_trainers:"เทรนเนอร์", tab_c_booking:"นัดเวลา", tab_c_mybookings:"นัดของฉัน", tab_t_dashboard:"ภาพรวม", tab_t_requests:"คำขอ", tab_t_schedule:"ตาราง", tab_t_customers:"ลูกค้า", tab_a_dashboard:"ภาพรวม", tab_a_apps:"ตรวจสอบ", tab_a_users:"ผู้ใช้", tab_a_packages:"แพ็กเกจ",
+    cb_summary_title:'สรุปนัดเทรน', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะ', cb_status_after:'ยืนยันทันที ขึ้นตารางเทรนเนอร์',
+    cb_no_time_selected:'กรุณาเลือกเวลาก่อนจอง', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
+    modal_title:'จองสำเร็จแล้ว!', modal_body:'นัดของคุณขึ้นตารางของเทรนเนอร์เรียบร้อย ไม่ต้องรอยืนยัน มาให้ตรงเวลานะครับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ดของเทรนเนอร์ก่อนจึงจะนัดเวลาเทรนได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูนัดของฉัน", modal_redirect:"กำลังพาไปหน้า “นัดของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว", tab_c_dashboard:"หน้าแรก", tab_c_trainers:"เทรนเนอร์", tab_c_booking:"นัดเวลา", tab_c_mybookings:"นัดของฉัน", tab_t_dashboard:"ภาพรวม", tab_t_requests:"คำขอ", tab_t_schedule:"ตาราง", tab_t_customers:"ลูกค้า", tab_a_dashboard:"ภาพรวม", tab_a_apps:"ตรวจสอบ", tab_a_users:"ผู้ใช้", tab_a_packages:"แพ็กเกจ",
     mb_eyebrow:'ประวัตินัดเทรน', mb_h1:'นัดของฉัน', mb_p:'ดูสถานะนัดเทรนทั้งหมดของคุณ', mb_empty:'คุณยังไม่มีนัดเทรน',
     cp_eyebrow:'ภาพรวม', cp_h1:'แพ็กเกจของฉัน', cp_p:'ติดตามจำนวนครั้งคงเหลือและซื้อแพ็กเกจเพิ่มเติม',
     cp_remaining_title:'จำนวนครั้งคงเหลือ', cp_no_of:'จาก {total} ครั้ง', cp_expiry:'หมดอายุ', cp_status:'สถานะ',
@@ -824,16 +875,17 @@ const i18n = {
     duo_notice_body:'มีลูกค้าอีก 1 คนขอเวลา {time} วันที่ {date} ไว้แล้ว ถ้าคุณขอเวลาเดียวกัน จะเป็นการ “ขอเทรนคู่” เทรนเนอร์จะเลือกว่ารับทั้งสองคนพร้อมกัน หรือรับแค่คนเดียว ถ้ารับแค่คนเดียว อีกคนต้องเลือกเวลาใหม่',
     duo_submit_btn:'ส่งคำขอเทรนคู่',
     duo_sum_mode:'รูปแบบ', duo_sum_mode_duo:'ขอเทรนคู่ (มีคนขอแล้ว 1 คน)', duo_sum_mode_solo:'เทรนเดี่ยว',
-    cb_slot_locked:'เวลานี้ถูกยืนยันไปแล้ว กรุณาเลือกเวลาอื่น',
+    cb_slot_locked:'เวลานี้มีคนจองไปแล้ว กรุณาเลือกเวลาอื่น',
     cb_slot_full_requests:'เวลานี้มีคนขอครบ 2 คนแล้ว กรุณาเลือกเวลาอื่น',
     cb_slot_already_mine:'คุณขอเวลานี้ไว้แล้ว',
     notif_slot_lost:'{trainer} เลือกรับเทรนเดี่ยวในวันที่ {date} เวลา {time} คำขอของคุณจึงถูกยกเลิก กรุณาเลือกเวลาใหม่',
     notif_accepted_duo:'{trainer} ยืนยันนัดเทรนวันที่ {date} เวลา {time} แบบเทรนคู่กับ {partner}',
-    ts_eyebrow:'ตารางเทรน', ts_h1:'ตารางเทรน', ts_p:'เทรนจบแล้วกด “เทรนเสร็จ” ระบบจะตัดจำนวนครั้งของลูกค้าให้เอง',
-    ts_no_schedule:'ยังไม่มีนัดที่ยืนยันแล้ว', ts_mark_done:'เทรนเสร็จ', ts_mark_noshow:'ไม่มา',
+    ts_eyebrow:'ตารางเทรน', ts_h1:'ตารางเทรน', ts_p:'ลูกค้าจองแล้วนัดจะขึ้นที่นี่ทันที เทรนจบแล้วกด “เทรนเสร็จ” ระบบจะตัดจำนวนครั้งของลูกค้าให้เอง',
+    ts_no_schedule:'ยังไม่มีนัด เมื่อลูกค้าจองเวลา นัดจะขึ้นที่นี่ทันที', ts_mark_done:'เทรนเสร็จ', ts_mark_noshow:'ไม่มา',
     ts_toast_done:'บันทึกว่าเทรนเสร็จแล้ว ตัดจำนวนครั้งแล้ว', ts_toast_noshow:'บันทึกว่าลูกค้าไม่มา ตัดจำนวนครั้งแล้ว',
     badge_confirmed:'ยืนยันแล้ว', badge_done:'เทรนเสร็จแล้ว', badge_noshow:'ไม่มา', badge_pending:'รอยืนยัน', badge_rejected:'ปฏิเสธ', badge_cancelled:'ยกเลิก',
-    tc_eyebrow:'ลูกค้า', tc_h1:'ลูกค้าของฉัน', tc_p:'ลูกค้าที่เคยจองหรือเทรนกับคุณ', tc_empty:'ยังไม่มีลูกค้า', tc_sessions_done:'เทรนแล้ว {n} ครั้ง',
+    tc_eyebrow:'ลูกค้า', tc_h1:'ลูกค้าของฉัน', tc_p:'ดูว่าลูกค้าแต่ละคนเหลือเทรนอีกกี่ครั้ง เทรนไปแล้วกี่ครั้ง กี่วัน และต่อคอร์สไปกี่ครั้ง', tc_empty:'ยังไม่มีลูกค้า', tc_sessions_done:'เทรนแล้ว {n} ครั้ง',
+    ts_today:'วันนี้', ts_tomorrow:'พรุ่งนี้', ts_until:'ถึง {time}', ts_left:'เหลือ {n} ครั้ง', ts_now:'กำลังเทรน', ts_next:'ถัดไป', ts_record:'รอบันทึกผล', ts_cancel_btn:'ยกเลิกนัด', ts_late_title:'รอบันทึกผล', ts_late_hint:'{n} นัดที่เลยเวลาแล้ว กด “เทรนเสร็จ” หรือ “ไม่มา”', ts_day_count:'{n} นัด', ts_sum_today:'นัดวันนี้', ts_sum_upcoming:'นัดที่จะถึง', ts_sum_record:'รอบันทึกผล', tcan_title:'ยกเลิกนัดนี้?', tcan_body:'นัดของ {name} วันที่ {date} เวลา {time} จะถูกยกเลิก และระบบจะแจ้งลูกค้า ลูกค้าไม่เสียจำนวนครั้ง', tcan_ok:'ยกเลิกนัด', tcan_no:'ไม่ยกเลิก', tcan_toast:'ยกเลิกนัดแล้ว แจ้งลูกค้าเรียบร้อย', notif_new_booking:'{customer} จองเวลา {date} {time} แล้ว นัดขึ้นตารางของคุณเรียบร้อย', notif_cancelled_by_trainer:'{trainer} ยกเลิกนัดวันที่ {date} เวลา {time} คุณไม่เสียจำนวนครั้ง กรุณาเลือกเวลาใหม่', td_stat_today:'นัดวันนี้', td_stat_upcoming:'นัดที่จะถึง', td_next_title:'นัดถัดไป', td_next_all:'ดูตารางทั้งหมด', td_next_empty:'ยังไม่มีนัดที่จะถึง', tcs_left:'เหลือเทรนอีก (ครั้ง)', tcs_done:'เทรนแล้ว (ครั้ง)', tcs_days:'เทรนมาแล้ว (วัน)', tcs_renew:'ต่อคอร์สแล้ว (ครั้ง)', tcs_next:'นัดถัดไป {date} · {time}', tcs_no_next:'ยังไม่มีนัดล่วงหน้า', tcs_since:'เริ่มเทรนเมื่อ {date}', tcs_not_started:'ยังไม่เคยเทรน', tcs_bought:'ซื้อคอร์สรวม {n} ครั้ง ({c} คอร์ส)', tcs_noshow:'ไม่มา {n} ครั้ง', tcs_lapsed:'หมดอายุก่อนใช้ {n} ครั้ง', tcs_low:'ใกล้หมด', tcs_out:'หมดแล้ว', tcs_nopkg:'ยังไม่มีคอร์ส',
     tpz_eyebrow:'บัญชีของฉัน', tpz_h1:'โปรไฟล์เทรนเนอร์', tpz_p:'แก้ข้อมูลและใบรับรองที่ลูกค้าจะเห็นในโปรไฟล์ของคุณ',
     tpz_personal_title:'ข้อมูลส่วนตัว', tpz_name_label:'ชื่อ-นามสกุล', tpz_specialty_label:'ความเชี่ยวชาญ', tpz_phone_label:'เบอร์โทรศัพท์', tpz_bio_label:'เกี่ยวกับฉัน', tpz_save_btn:'บันทึกข้อมูล',
     tpz_ready_label:'พร้อมรับลูกค้าใหม่', tpz_certs_title:'ใบรับรอง / Certificate', tpz_no_certs:'ยังไม่มีใบรับรอง', tpz_add_cert_label:'เพิ่มใบรับรองใหม่',
@@ -973,15 +1025,15 @@ const i18n = {
     tr_pin_hint:'Pinned trainers always show at the top of the list, so they are quicker to find next time.',
     tr_pinned_toast:'Pinned {name} to the top', tr_unpinned_toast:'Unpinned {name}',
     tp_back:'Back to trainer list', tp_contact_label:'Contact', tp_about_label:'About the trainer', tp_certs_label:'Certificates', tp_no_certs:'No certificates attached yet', tp_code_label:'Trainer code',
-    cb_eyebrow:'Book a session', cb_h1:'Book a session', cb_p:"Pick a trainer, date and time. The trainer gets your request right away. A session is only deducted after the training is done.",
+    cb_eyebrow:'Book a session', cb_h1:'Book a session', cb_p:'Pick a trainer, date and time. Your booking goes straight onto the trainer’s schedule, with no waiting for a reply. A session is only deducted after the training is done.',
     cb_pick_trainer:'Choose a trainer', cb_empty:'Please choose a trainer to start booking.',
     cb_selected_hint:'Selected trainer', cb_date_label:'Select date', cb_cat_label:'Time of day',
     cb_cat_morning:'Morning (6:00 AM–12:00 PM)', cb_cat_afternoon:'Afternoon (1:00 PM–4:00 PM)', cb_cat_evening:'Evening (5:00 PM–8:00 PM)',
-    cb_time_label:'Select time', cb_submit_btn:'Send session request', cb_no_package:'You have no usable package with this trainer. Please buy one before booking.',
+    cb_time_label:'Select time', cb_submit_btn:'Book this time', cb_no_package:'You have no usable package with this trainer. Please buy one before booking.',
     cb_expired_package:'Your package has expired. Even with sessions remaining, please buy a new package before booking.',
-    cb_summary_title:'Session summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status after sending', cb_status_after:'Waiting for trainer',
-    cb_no_time_selected:'Please select a time before sending', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
-    modal_title:'Session request sent!', modal_body:"Waiting for the trainer's response. You'll be notified as soon as they reply.", modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my sessions", modal_redirect:"Taking you to “My sessions”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied", tab_c_dashboard:"Home", tab_c_trainers:"Trainers", tab_c_booking:"Book", tab_c_mybookings:"Sessions", tab_t_dashboard:"Overview", tab_t_requests:"Requests", tab_t_schedule:"Schedule", tab_t_customers:"Clients", tab_a_dashboard:"Overview", tab_a_apps:"Approvals", tab_a_users:"Users", tab_a_packages:"Packages",
+    cb_summary_title:'Session summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status', cb_status_after:'Confirmed at once, on the trainer’s schedule',
+    cb_no_time_selected:'Please select a time before booking', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
+    modal_title:'Booked!', modal_body:'Your session is on the trainer’s schedule. No need to wait for a reply, just show up on time.', modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my sessions", modal_redirect:"Taking you to “My sessions”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied", tab_c_dashboard:"Home", tab_c_trainers:"Trainers", tab_c_booking:"Book", tab_c_mybookings:"Sessions", tab_t_dashboard:"Overview", tab_t_requests:"Requests", tab_t_schedule:"Schedule", tab_t_customers:"Clients", tab_a_dashboard:"Overview", tab_a_apps:"Approvals", tab_a_users:"Users", tab_a_packages:"Packages",
     mb_eyebrow:'History', mb_h1:'My sessions', mb_p:'Track the status of all your sessions', mb_empty:"You have no sessions yet",
     cp_eyebrow:'Overview', cp_h1:'My package', cp_p:'Track remaining sessions and buy more.',
     cp_remaining_title:'Sessions remaining', cp_no_of:'of {total} sessions', cp_expiry:'Expires', cp_status:'Status',
@@ -1013,16 +1065,17 @@ const i18n = {
     duo_notice_body:'Another customer has already requested {time} on {date}. Booking the same slot counts as asking for a pair session — the trainer decides whether to take you both together or just one of you. If they pick a solo session, the other request is cancelled and that person has to choose a new time.',
     duo_submit_btn:'Request a pair session',
     duo_sum_mode:'Session type', duo_sum_mode_duo:'Pair request (1 person already booked)', duo_sum_mode_solo:'Solo session',
-    cb_slot_locked:'This slot is already confirmed. Please pick another time.',
+    cb_slot_locked:'Someone has just booked this time. Please pick another time.',
     cb_slot_full_requests:'This slot already has 2 requests. Please pick another time.',
     cb_slot_already_mine:'You have already requested this slot.',
     notif_slot_lost:'{trainer} chose a solo session on {date} at {time}, so your request was cancelled. Please pick another time.',
     notif_accepted_duo:'{trainer} confirmed your booking on {date} at {time} as a pair session with {partner}',
-    ts_eyebrow:'Schedule', ts_h1:'Schedule', ts_p:'After each session, press “Mark complete” and the customer session count updates for you.',
-    ts_no_schedule:'No confirmed sessions', ts_mark_done:'Mark complete', ts_mark_noshow:'No-show',
+    ts_eyebrow:'Schedule', ts_h1:'Schedule', ts_p:'Bookings appear here the moment a customer books. After each session press “Mark complete” and the customer’s count updates for you.',
+    ts_no_schedule:'No sessions yet. When a customer books a time it appears here at once.', ts_mark_done:'Mark complete', ts_mark_noshow:'No-show',
     ts_toast_done:'Session marked complete — 1 session deducted', ts_toast_noshow:'No-show recorded — 1 session deducted',
     badge_confirmed:'Confirmed', badge_done:'Completed', badge_noshow:'No-show', badge_pending:'Pending', badge_rejected:'Rejected', badge_cancelled:'Cancelled',
-    tc_eyebrow:'Customers', tc_h1:'My customers', tc_p:"Customers who've booked or trained with you", tc_empty:'No customers yet', tc_sessions_done:'{n} session(s) completed',
+    tc_eyebrow:'Customers', tc_h1:'My customers', tc_p:'See, for each customer, how many sessions are left, how many are done, how many days since the first one, and how many times they renewed.', tc_empty:'No customers yet', tc_sessions_done:'{n} session(s) completed',
+    ts_today:'Today', ts_tomorrow:'Tomorrow', ts_until:'until {time}', ts_left:'{n} sessions left', ts_now:'In progress', ts_next:'Next', ts_record:'Record result', ts_cancel_btn:'Cancel', ts_late_title:'Record the result', ts_late_hint:'{n} past session(s). Press “Mark complete” or “No-show”', ts_day_count:'{n} session(s)', ts_sum_today:'Today', ts_sum_upcoming:'Coming up', ts_sum_record:'To record', tcan_title:'Cancel this session?', tcan_body:'{name}’s session on {date} at {time} will be cancelled and the customer is told. They keep the session.', tcan_ok:'Cancel session', tcan_no:'Keep it', tcan_toast:'Session cancelled and the customer was told', notif_new_booking:'{customer} booked {date} at {time}. It is on your schedule.', notif_cancelled_by_trainer:'{trainer} cancelled your session on {date} at {time}. You keep the session. Please pick a new time.', td_stat_today:'Today', td_stat_upcoming:'Coming up', td_next_title:'Next sessions', td_next_all:'Full schedule', td_next_empty:'No upcoming sessions', tcs_left:'Sessions left', tcs_done:'Sessions done', tcs_days:'Days training', tcs_renew:'Renewals', tcs_next:'Next: {date} · {time}', tcs_no_next:'No session booked', tcs_since:'First session {date}', tcs_not_started:'Not trained yet', tcs_bought:'{n} sessions bought ({c} package(s))', tcs_noshow:'{n} no-show(s)', tcs_lapsed:'{n} expired unused', tcs_low:'Running low', tcs_out:'None left', tcs_nopkg:'No package',
     tpz_eyebrow:'My account', tpz_h1:'Trainer profile', tpz_p:'Edit your details and manage certificates customers will see on your public profile.',
     tpz_personal_title:'Personal info', tpz_name_label:'Full name', tpz_specialty_label:'Specialty', tpz_phone_label:'Phone number', tpz_bio_label:'About me', tpz_save_btn:'Save changes',
     tpz_ready_label:'Accepting new clients', tpz_certs_title:'Certificates', tpz_no_certs:'No certificates yet', tpz_add_cert_label:'Add a new certificate',
@@ -1130,7 +1183,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-04.8';
+const APP_BUILD = '2026-11-05.2';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -1187,6 +1240,15 @@ if(REMOTE_MODE && window.supabase && typeof window.supabase.createClient==='func
 
 let connState = 'unknown';   // 'online' | 'offline' | 'unknown'
 let gateActive = false;      // true while the full-screen "can't connect" panel is showing
+/* Background refresh pacing (see the timer near the end of the file) and the remembered header picture. */
+const REFRESH_ACTIVE_MS = 60 * 1000;          // somebody is using the page
+const REFRESH_IDLE_MS = 5 * 60 * 1000;        // the page is open but nobody has touched it for a while
+const IDLE_AFTER_MS = 5 * 60 * 1000;
+const REFRESH_MIN_GAP_MS = 20 * 1000;         // coming back to the page never refreshes data younger than this
+const AVATAR_TTL_MS = 10 * 60 * 1000;
+let lastActivityAt = Date.now();
+let lastRefreshAt = Date.now();
+let meAvatar = {key:'', photo:null, at:0};
 let reconnectTimer = null;
 
 function renderConnBanner(){
@@ -1214,7 +1276,7 @@ function setConn(ok){
   renderConnBanner();
   if(ok && prev==='offline'){
     try{ toast(t('conn_restored')); }catch(e){}
-    setTimeout(()=>{ if(gateActive) runBoot(); else softRefresh(); }, 50);
+    setTimeout(()=>{ if(gateActive) runBoot(); else softRefresh(true); }, 50);
   }
   if(!ok) scheduleReconnect();
 }
@@ -1688,6 +1750,7 @@ function clearActiveSession(){
   try{ localStorage.removeItem(ACTIVE_SESSION_KEY); }catch(e){}
 }
 function startSession(token, user){
+  meAvatar = {key:'', photo:null, at:0};
   authToken = token;
   session = {id:user.id, role:user.role, name:user.name};
   rememberActiveSession(user.id, user.role, token);
@@ -1801,7 +1864,7 @@ function doneProgress(){
   }, 200);
 }
 function splashHtml(){
-  return `<div class="splash" role="status"><div class="splash-ring"><span class="splash-mark">TK</span></div><div class="splash-word">TRAINKRUB</div><div class="splash-bar"><i></i></div><div class="splash-note" id="splashNote"></div></div>`;
+  return `<div class="splash" role="status"><div class="splash-ring"><img class="splash-logo" src="data:image/webp;base64,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" alt=""></div><div class="splash-word">TRAINKRUB</div><div class="splash-bar"><i></i></div><div class="splash-note" id="splashNote"></div></div>`;
 }
 function skeletonHtml(){
   return `<div class="view" aria-busy="true">
@@ -1834,6 +1897,7 @@ async function setMyPhoto(data){
   if(!rec) return;
   if(data) rec.photo = data; else delete rec.photo;
   await dbSet(key, rec);
+  meAvatar = {key, photo:data || null, at:Date.now()};
   const btn = document.getElementById('profileIconBtn'); if(btn) paintProfileBtn(btn, session.name, data);
   const box = document.getElementById('myPhotoBox'); if(box) box.innerHTML = avatarHtml(rec.name, data, 'avatar-xl');
   const rm = document.getElementById('photoRemoveBtn'); if(rm) rm.style.display = data ? '' : 'none';
@@ -2002,8 +2066,13 @@ async function renderRootInner(silent, ld){
   if(profileRoute){
     profileBtn.style.display = 'flex';
     profileBtn.title = t('nav_c_profile');
-    const meRec = await dbGet((session.role==='trainer' ? 'trainer:' : 'customer:') + session.id);
-    paintProfileBtn(profileBtn, session.name, meRec && meRec.photo);
+    // the small picture in the header is read once and remembered; it is read again after 10 minutes or when the picture is changed here
+    const meKey = (session.role==='trainer' ? 'trainer:' : 'customer:') + session.id;
+    if(!(meAvatar.key === meKey && Date.now() - meAvatar.at < AVATAR_TTL_MS)){
+      const meRec = await dbGet(meKey);
+      meAvatar = {key:meKey, photo:(meRec && meRec.photo) || null, at:Date.now()};
+    }
+    paintProfileBtn(profileBtn, session.name, meAvatar.photo);
     profileBtn.onclick = ()=> go('profile');
   } else {
     profileBtn.style.display = 'none';
@@ -2028,6 +2097,7 @@ async function renderRoot(silent){
   try{
     if(!silent && session) ld = beginLoading();
     await renderRootInner(silent, ld);
+    lastRefreshAt = Date.now();
   }
   catch(e){
     if(!(e instanceof DbError)) throw e;
@@ -2099,9 +2169,9 @@ async function renderNav(){
     badgeCount = bookings.filter(b=>b.trainerId===session.id && b.status==='pending').length;
   }
   if(session.role==='admin'){
-    const apps = await dbGetAll('trainerApp:');
-    badgeCount = apps.filter(a=>a.status==='pending').length;
+    badgeCount = (await adminStats()).appsPending;
   }
+  if(session.role==='trainer' && badgeCount===0) items = items.filter(i=>i[0]!=='requests');
   nav.innerHTML = items.map(([key,label,short])=>{
     let extra = '';
     if(session.role==='trainer' && key==='requests' && badgeCount>0) extra = `<span class="count">${badgeCount}</span>`;
@@ -2728,17 +2798,12 @@ const TIMES = { morning:['06:00','07:00','08:00','09:00','10:00','11:00'], after
 let bookingState = { trainerId:null, day:DAYS[0], cat:'morning', time:null };
 
 /* ======================================================================
-   DUO BOOKING (ระบบจองคู่)
-   A slot can hold up to DUO_CAPACITY (2) customers, but only while the
-   requests are still pending. The trainer is the one who decides:
-     - accept both  -> pair session (sessionMode 'duo'), slot now full
-     - accept one   -> solo session, slot LOCKED and every other pending
-                       request at that exact slot is auto-declined so the
-                       other customer is bounced out to pick a new time
-   Therefore, for new bookings a slot is:
-     - locked   : any confirmed booking exists there (solo lock or duo full)
-     - full     : already has DUO_CAPACITY pending requests
-     - duo-open : exactly 1 pending request — still bookable as a pair ask
+   BOOKING
+   A booking goes straight onto the trainer's schedule: the trainer already set how much
+   notice is needed, so nobody has to accept it. The first customer to book a time gets it;
+   the server enforces this (a second customer is refused with "locked").
+   Older "waiting" requests from before this change were turned into bookings by the server
+   update; the old accept / pair-session code below is only kept so none of them can get stuck.
    ====================================================================== */
 const DUO_CAPACITY = 2;
 const ACTIVE_BOOKING_STATUSES = ['pending','confirmed'];
@@ -2749,12 +2814,9 @@ function bookingsAtSlot(all, trainerId, date, time){
 /* Returns why (if at all) a customer cannot book this slot. */
 function slotAvailability(all, trainerId, date, time, customerId){
   const at = bookingsAtSlot(all, trainerId, date, time);
-  const confirmed = at.filter(b=>b.status==='confirmed');
-  const pending = at.filter(b=>b.status==='pending');
-  if(customerId && at.some(b=>b.customerId===customerId)) return {ok:false, reason:'already_mine', pending:pending.length};
-  if(confirmed.length) return {ok:false, reason:'locked', pending:pending.length};
-  if(pending.length >= DUO_CAPACITY) return {ok:false, reason:'full', pending:pending.length};
-  return {ok:true, reason:null, pending:pending.length};
+  if(customerId && at.some(b=>b.customerId===customerId)) return {ok:false, reason:'already_mine', pending:0};
+  if(at.length) return {ok:false, reason:'locked', pending:0};
+  return {ok:true, reason:null, pending:0};
 }
 
 /* ---- minimum booking notice (set by each trainer, default 1 hour) ---- */
@@ -2826,33 +2888,16 @@ async function renderCBooking(){
     return `<div class="day-pill ${bookingState.day===d?'sel':''}" data-day="${d}"><div class="d">${dayShort}</div><div class="n">${dt.getDate()}</div></div>`;
   }).join('');
 
-  let anyDuoOpen = false;
-  let selectedIsDuo = false;
   const timeGrid = (TIMES[bookingState.cat]||[]).map(tm=>{
     if(!trainer) return `<div class="time-slot" data-time="${tm}">${fmtTime(tm)}</div>`;
     const late = slotTooSoon(trainer, bookingState.day, tm);
-    if(late && bookingState.time === tm) bookingState.time = null;       // a slot picked a while ago can fall inside the notice window
-    const av = late ? {ok:false, reason:'late', pending:0} : slotAvailability(allBookings, trainer.id, bookingState.day, tm, session.id);
-    const duoOpen = av.ok && av.pending === 1;
-    if(duoOpen) anyDuoOpen = true;
-    if(duoOpen && bookingState.time === tm) selectedIsDuo = true;
-    const title = duoOpen ? t('duo_slot_pending_one') : '';
-    return `<div class="time-slot ${bookingState.time===tm?'sel':''} ${av.ok?'':'taken'} ${duoOpen?'duo-open':''}" data-time="${tm}" title="${esc(title)}">${fmtTime(tm)}</div>`;
+    const av = late ? {ok:false, reason:'late'} : slotAvailability(allBookings, trainer.id, bookingState.day, tm, session.id);
+    if(!av.ok && bookingState.time === tm) bookingState.time = null;     // a slot picked a while ago can have been taken or fallen inside the notice window
+    return `<div class="time-slot ${bookingState.time===tm?'sel':''} ${av.ok?'':'taken'}" data-time="${tm}">${fmtTime(tm)}</div>`;
   }).join('');
 
   const leadH = trainer ? leadHoursOf(trainer) : 0;
   const leadHint = (trainer && leadH>0) ? `<div class="slot-hint">${tt('cb_lead_hint',{label:leadLabel(leadH)})}</div>` : '';
-  // When the customer actually picks an amber slot, spell out in full what
-  // booking it means, instead of relying on the colour alone.
-  const duoNotice = selectedIsDuo ? `
-    <div class="duo-notice">
-      <div class="dn-icon">👥</div>
-      <div class="dn-body">
-        <div class="dn-title">${t('duo_notice_title')}</div>
-        <p>${tt('duo_notice_body',{time:fmtTime(bookingState.time), date:fmtDate(bookingState.day)})}</p>
-      </div>
-    </div>` : '';
-
   return `
     <div class="page-head"><div><div class="eyebrow">${t('cb_eyebrow')}</div><h1>${t('cb_h1')}</h1><p>${t('cb_p')}</p></div></div>
     <div class="grid-2">
@@ -2877,9 +2922,7 @@ async function renderCBooking(){
           <label>${t('cb_time_label')}</label>
           <div class="time-grid" id="timeGrid">${timeGrid}</div>
           ${leadHint}
-          ${anyDuoOpen && !selectedIsDuo ? `<div class="slot-hint">${t('duo_slot_hint')}</div>` : ''}
-          ${duoNotice}
-          <button class="btn btn-primary btn-block ${selectedIsDuo?'btn-duo':''}" id="submitBookingBtn" ${!pkg?'disabled':''}>${selectedIsDuo ? t('duo_submit_btn') : t('cb_submit_btn')}</button>
+          <button class="btn btn-primary btn-block" id="submitBookingBtn" ${!pkg?'disabled':''}>${t('cb_submit_btn')}</button>
         `}
       </div>
       <div class="card">
@@ -2887,7 +2930,6 @@ async function renderCBooking(){
         <div class="summary-row"><span class="k">${t('cb_sum_trainer')}</span><span class="v">${trainer?esc(trainer.name):'—'}</span></div>
         <div class="summary-row"><span class="k">${t('cb_sum_date')}</span><span class="v">${fmtDate(bookingState.day)}</span></div>
         <div class="summary-row"><span class="k">${t('cb_sum_time')}</span><span class="v">${bookingState.time?fmtTime(bookingState.time):'—'}</span></div>
-        ${bookingState.time ? `<div class="summary-row"><span class="k">${t('duo_sum_mode')}</span><span class="v">${selectedIsDuo?`<span class="badge badge-duo">${t('duo_sum_mode_duo')}</span>`:t('duo_sum_mode_solo')}</span></div>` : ''}
         <div class="summary-row"><span class="k">${t('cb_sum_sessions')}</span><span class="v">${pkg? (pkg.remainingSessions+' / '+pkg.totalSessions) : '0 / 0'}</span></div>
         <div class="summary-row"><span class="k">${t('cb_sum_status')}</span><span class="v">${t('cb_status_after')}</span></div>
       </div>
@@ -2919,7 +2961,7 @@ async function submitBooking(){
   const booking = {
     id:newId('bk'), customerId:session.id, customerName:session.name, trainerId:trainer.id, trainerName:trainer.name,
     packageInstanceId: pkg.id, bookingDate: bookingState.day, bookingTime: bookingState.time,
-    status:'pending', sessionMode:null, partnerNames:[], createdAt:new Date().toISOString(), completedAt:null
+    status:'confirmed', sessionMode:'solo', partnerNames:[], createdAt:new Date().toISOString(), completedAt:null
   };
   try{ await dbSet('booking:'+booking.id, booking); }
   catch(e){
@@ -2931,7 +2973,7 @@ async function submitBooking(){
     }
     throw e;
   }
-  await pushNotification(trainer.id, 'nav_t_requests', 'notif_new_request', {customer:session.name, date:fmtDate(booking.bookingDate), time:fmtTime(booking.bookingTime)}, booking.id);
+  await pushNotification(trainer.id, 'nav_t_schedule', 'notif_new_booking', {customer:session.name, date:fmtDate(booking.bookingDate), time:fmtTime(booking.bookingTime)}, booking.id);
   bookingState.time = null;
   document.getElementById('modalTitle').textContent = t('modal_title');
   document.getElementById('modalBody').textContent = t('modal_body');
@@ -3137,6 +3179,27 @@ async function renderTrainerView(){
   return renderTDashboard();
 }
 
+/* ---- time helpers for the schedule (all times are the trainer's local clock) ---- */
+const SESSION_MIN = 60;
+function hmToMin(tm){ const p = String(tm||'0:0').split(':').map(Number); return (p[0]||0)*60 + (p[1]||0); }
+function minToHm(m){ m = ((m % 1440) + 1440) % 1440; return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0'); }
+function nowMinutes(){ const d = new Date(); return d.getHours()*60 + d.getMinutes(); }
+function dayDiff(fromIso, toIso){ return Math.round((new Date(toIso+'T00:00:00') - new Date(fromIso+'T00:00:00')) / 86400000); }
+/* late = the hour is over and the result has not been recorded; now = the session is going on; soon = later today; future = another day */
+function sessionPhase(b, today, nowMin){
+  if(b.bookingDate < today) return 'late';
+  if(b.bookingDate > today) return 'future';
+  const st = hmToMin(b.bookingTime);
+  if(nowMin >= st + SESSION_MIN) return 'late';
+  if(nowMin >= st) return 'now';
+  return 'soon';
+}
+function dayHeading(iso, today){
+  const tm = new Date(today+'T00:00:00'); tm.setDate(tm.getDate()+1);
+  if(iso === today) return t('ts_today');
+  if(iso === localDateStr(tm)) return t('ts_tomorrow');
+  return fmtDate(iso);
+}
 async function trainerBookings(){
   const all = await dbGetAll('booking:');
   return all.filter(b=>b.trainerId===session.id);
@@ -3226,8 +3289,10 @@ async function renderTPayments(){
 
 async function renderTDashboard(){
   const bookings = await trainerBookings();
-  const pending = bookings.filter(b=>b.status==='pending').length;
-  const confirmed = bookings.filter(b=>b.status==='confirmed').length;
+  const today = localDateStr();
+  const coming = bookings.filter(b=>b.status==='confirmed' && b.bookingDate>=today).sort((x,y)=> (x.bookingDate+x.bookingTime).localeCompare(y.bookingDate+y.bookingTime));
+  const todayN = coming.filter(b=>b.bookingDate===today).length;
+  const confirmed = coming.length;
   const done = bookings.filter(b=>b.status==='completed').length;
   const noshow = bookings.filter(b=>b.status==='no_show').length;
   const notifs = (await getNotifications(session.id)).slice(0,4);
@@ -3267,10 +3332,15 @@ async function renderTDashboard(){
     <div class="t-top">${codeCard}${completeCard}</div>
     ${payCard}
     <div class="grid-4" style="margin-bottom:20px">
-      <div class="stat-card"><div class="lbl">${t('tq_pending_label')}</div><div class="val accent">${pending}</div></div>
-      <div class="stat-card"><div class="lbl">${t('tq_confirmed_label')}</div><div class="val">${confirmed}</div></div>
+      <div class="stat-card"><div class="lbl">${t('td_stat_today')}</div><div class="val accent">${todayN}</div></div>
+      <div class="stat-card"><div class="lbl">${t('td_stat_upcoming')}</div><div class="val">${confirmed}</div></div>
       <div class="stat-card"><div class="lbl">${t('tq_done_label')}</div><div class="val">${done}</div></div>
       <div class="stat-card"><div class="lbl">${t('tq_noshow_label')}</div><div class="val">${noshow}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>${t('td_next_title')}</h3><button class="btn btn-sm btn-ghost" data-goto="schedule">${t('td_next_all')}</button></div>
+      ${coming.length ? coming.slice(0,4).map(b=>`
+        <div class="sch-mini"><div class="mt">${lang==='th' ? b.bookingTime : fmtTime(b.bookingTime)}<div class="md">${b.bookingDate===today ? t('ts_today') : fmtDate(b.bookingDate)}</div></div><div class="mn">${esc(b.customerName)}</div></div>`).join('') : `<div class="empty">${t('td_next_empty')}</div>`}
     </div>
     <div class="card">
       <div class="card-head"><h3>${t('c_dash_notif')}</h3></div>
@@ -3394,53 +3464,86 @@ async function acceptDuo(slotKey){
 
 async function renderTSchedule(){
   const provSet = await provisionalPkgIds();
-  const bookings = (await trainerBookings()).filter(b=>b.status==='confirmed').sort((a,b)=> (a.bookingDate+a.bookingTime).localeCompare(b.bookingDate+b.bookingTime));
-  // Pair sessions share one slot, so show them grouped under a single header
-  // while still letting the trainer record each customer's result separately.
-  const groups = [];
-  const bySlot = {};
-  bookings.forEach(b=>{
-    const key = b.bookingDate+'|'+b.bookingTime;
-    if(!bySlot[key]){ bySlot[key] = {key, date:b.bookingDate, time:b.bookingTime, items:[]}; groups.push(bySlot[key]); }
-    bySlot[key].items.push(b);
-  });
+  const all = (await trainerBookings()).filter(b=>b.status==='confirmed')
+    .sort((a,b)=> (a.bookingDate+a.bookingTime).localeCompare(b.bookingDate+b.bookingTime));
+  const pkgs = new Map((all.length ? await dbGetAll('custpkg:') : []).map(p=>[p.id, p]));
+  const custMap = new Map((all.length ? await dbGetAll('customer:') : []).map(x=>[x.id, x]));
+  const today = localDateStr(), nowMin = nowMinutes();
+  const rows = all.map(b=>({b, phase:sessionPhase(b, today, nowMin)}));
+  const late = rows.filter(r=>r.phase==='late');
+  const coming = rows.filter(r=>r.phase!=='late');
+  const todayN = coming.filter(r=>r.b.bookingDate===today).length;
+  const nextId = coming.length ? coming[0].b.id : null;
 
-  const body = groups.map(g=>{
-    const acts = b=>`
-      <div class="acts">
-        <button class="btn btn-sm btn-primary" data-complete-booking="${b.id}">${t('ts_mark_done')}</button>
-        <button class="btn btn-sm btn-danger-outline" data-noshow-booking="${b.id}">${t('ts_mark_noshow')}</button>
-      </div>`;
-    if(g.items.length < 2){
-      const b = g.items[0];
-      return `
-        <div class="sched-row">
-          <div class="time">${fmtTime(b.bookingTime)}</div>
-          <div class="who">${esc(b.customerName)} · ${fmtDate(b.bookingDate)}${provChip(b, provSet)}</div>
-          ${acts(b)}
-        </div>`;
-    }
+  const rowHtml = ({b, phase})=>{
+    const p = pkgs.get(b.packageInstanceId);
+    const c = custMap.get(b.customerId) || {};
+    const end = minToHm(hmToMin(b.bookingTime) + SESSION_MIN);
+    const chips = [];
+    if(phase==='now') chips.push(`<span class="badge badge-confirmed">${t('ts_now')}</span>`);
+    else if(b.id===nextId) chips.push(`<span class="badge badge-next">${t('ts_next')}</span>`);
+    if(phase==='late') chips.push(`<span class="badge badge-pending">${t('ts_record')}</span>`);
+    if(b.sessionMode==='duo') chips.push(`<span class="badge badge-duo">${t('duo_badge')}</span>`);
+    const prov = provChip(b, provSet);
+    const canRecord = phase !== 'future';
     return `
-      <div class="duo-group">
-        <div class="duo-head">
-          <div><div class="n">${fmtTime(g.time)} · ${fmtDate(g.date)}</div><div class="t">${g.items.map(x=>esc(x.customerName)).join(' + ')}</div></div>
-          <span class="badge badge-duo">${t('duo_badge')}</span>
+      <div class="sch-row ${phase==='now'?'is-now':''} ${phase==='late'?'is-late':''} ${(b.id===nextId && phase!=='now')?'is-next':''}">
+        <div class="sch-time"><b>${lang==='th' ? b.bookingTime : fmtTime(b.bookingTime)}</b><span>${phase==='late' ? fmtDate(b.bookingDate) : tt('ts_until',{time:fmtTime(end)})}</span></div>
+        <div class="sch-main">
+          <div class="sch-who">${avatarHtml(b.customerName, c.photo)}<div class="sch-id"><div class="sch-name">${esc(b.customerName)}</div>${p ? `<div class="sch-sub">${tt('ts_left',{n:p.remainingSessions})}</div>` : ''}</div></div>
+          ${(chips.length || prov) ? `<div class="sch-chips">${chips.join('')}${prov}</div>` : ''}
         </div>
-        ${g.items.map(b=>`
-          <div class="duo-person">
-            <div class="pn">${esc(b.customerName)}${provChip(b, provSet)}</div>
-            ${acts(b)}
-          </div>
-        `).join('')}
+        <div class="sch-acts">
+          ${canRecord ? `<button class="btn btn-sm btn-primary" data-complete-booking="${b.id}">${t('ts_mark_done')}</button>
+          <button class="btn btn-sm btn-danger-outline" data-noshow-booking="${b.id}">${t('ts_mark_noshow')}</button>` : ''}
+          <button class="btn btn-sm btn-ghost" data-cancel-booking="${b.id}">${t('ts_cancel_btn')}</button>
+        </div>
       </div>`;
-  }).join('');
+  };
+  const days = [];
+  coming.forEach(r=>{
+    let g = days[days.length-1];
+    if(!g || g.date !== r.b.bookingDate){ g = {date:r.b.bookingDate, items:[]}; days.push(g); }
+    g.items.push(r);
+  });
+  const lateHtml = late.length ? `
+    <div class="sch-day late"><b>${t('ts_late_title')}</b><span>${tt('ts_late_hint',{n:late.length})}</span></div>
+    ${late.map(rowHtml).join('')}` : '';
+  const daysHtml = days.map(g=>`
+    <div class="sch-day"><b>${esc(dayHeading(g.date, today))}</b><span>${g.date===today || dayHeading(g.date, today)!==fmtDate(g.date) ? fmtDate(g.date) + ' · ' : ''}${tt('ts_day_count',{n:g.items.length})}</span></div>
+    ${g.items.map(rowHtml).join('')}`).join('');
 
   return `
     <div class="page-head"><div><div class="eyebrow">${t('ts_eyebrow')}</div><h1>${t('ts_h1')}</h1><p>${t('ts_p')}</p></div></div>
-    <div class="card">
-      ${bookings.length ? body : `<div class="empty">${t('ts_no_schedule')}</div>`}
+    <div class="sch-sum">
+      <div class="sch-sum-i"><b>${todayN}</b><span>${t('ts_sum_today')}</span></div>
+      <div class="sch-sum-i"><b>${coming.length}</b><span>${t('ts_sum_upcoming')}</span></div>
+      <div class="sch-sum-i ${late.length?'warn':''}"><b>${late.length}</b><span>${t('ts_sum_record')}</span></div>
     </div>
+    ${all.length ? lateHtml + daysHtml : `<div class="card"><div class="empty">${t('ts_no_schedule')}</div></div>`}
   `;
+}
+/* The trainer cannot make it (or the customer asked to move): the booking is cancelled and the customer is told.
+   Nothing was deducted yet, so the customer keeps the session. */
+async function cancelBookingByTrainer(id){
+  if(finishLocks.has('c'+id)) return;
+  finishLocks.add('c'+id);
+  try{
+    clearRenderCaches();
+    const b = await dbGet('booking:'+id);
+    if(!b || b.status!=='confirmed') return;
+    const ok = await askConfirm({title:t('tcan_title'),
+      body:tt('tcan_body', {name:b.customerName, date:fmtDate(b.bookingDate), time:fmtTime(b.bookingTime)}),
+      ok:t('tcan_ok'), cancel:t('tcan_no')});
+    if(!ok) return;
+    const fresh = await dbGet('booking:'+id);
+    if(!fresh || fresh.status!=='confirmed') return;
+    fresh.status = 'cancelled';
+    await dbSet('booking:'+id, fresh);
+    await pushNotification(fresh.customerId, 'nav_c_mybookings', 'notif_cancelled_by_trainer', {trainer:fresh.trainerName, date:fmtDate(fresh.bookingDate), time:fmtTime(fresh.bookingTime)}, fresh.id);
+    toast(t('tcan_toast'));
+    renderView(); renderNav();
+  } finally { finishLocks.delete('c'+id); }
 }
 const finishLocks = new Set();
 /* Recording a session uses it up. While the package is still waiting for the trainer to see the
@@ -3493,21 +3596,50 @@ async function finishBookingNow(id, noShow){
 
 async function renderTCustomers(){
   const bookings = await trainerBookings();
-  const doneBookings = bookings.filter(b=>b.status==='completed');
-  const custIds = [...new Set(bookings.map(b=>b.customerId))];
-  const custMap = new Map((custIds.length ? await dbGetAll('customer:') : []).map(x=>[x.id, x]));
-  const rows = custIds.map(cid=>{
-    const b = bookings.find(x=>x.customerId===cid);
-    const doneCount = doneBookings.filter(x=>x.customerId===cid).length;
-    return {name:b.customerName, id:cid, doneCount, photo:(custMap.get(cid)||{}).photo};
-  });
+  const pkgsAll = (await dbGetAll('custpkg:')).filter(p=>p.trainerId===session.id && p.status!=='cancelled');
+  const ids = [...new Set(bookings.map(b=>b.customerId).concat(pkgsAll.map(p=>p.customerId)))];
+  const custMap = new Map((ids.length ? await dbGetAll('customer:') : []).map(x=>[x.id, x]));
+  const today = localDateStr();
+  const rows = ids.map(cid=>{
+    const bs = bookings.filter(b=>b.customerId===cid);
+    const ps = pkgsAll.filter(p=>p.customerId===cid);
+    const done = bs.filter(b=>b.status==='completed');
+    const noshow = bs.filter(b=>b.status==='no_show').length;
+    const first = done.map(b=>b.bookingDate).sort()[0] || null;
+    const days = first ? Math.max(0, dayDiff(first, today)) : null;
+    const left = ps.filter(p=>pkgUsable(p, today, session.id)).reduce((n,p)=> n + (p.remainingSessions||0), 0);
+    const lapsed = ps.filter(p=>p.status==='active' && p.remainingSessions>0 && p.expiryDate<today).reduce((n,p)=> n + p.remainingSessions, 0);
+    const bought = ps.reduce((n,p)=> n + (p.totalSessions||0), 0);
+    const next = bs.filter(b=>b.status==='confirmed' && b.bookingDate>=today).sort((x,y)=> (x.bookingDate+x.bookingTime).localeCompare(y.bookingDate+y.bookingTime))[0] || null;
+    const c = custMap.get(cid) || {};
+    const rank = (ps.length && left>0 && left<=2) ? 0 : (ps.length && left===0) ? 1 : 2;
+    return {id:cid, name:c.name || (bs[0] && bs[0].customerName) || '—', photo:c.photo, done:done.length, noshow, first, days, left, lapsed, bought, courses:ps.length, renewals:Math.max(0, ps.length-1), next, rank};
+  }).sort((a,b)=> a.rank-b.rank || (a.next && b.next ? (a.next.bookingDate+a.next.bookingTime).localeCompare(b.next.bookingDate+b.next.bookingTime) : a.next ? -1 : b.next ? 1 : 0) || a.name.localeCompare(b.name));
+  const card = r=>{
+    const badge = !r.courses ? `<span class="badge badge-role">${t('tcs_nopkg')}</span>`
+      : r.left===0 ? `<span class="badge badge-rejected">${t('tcs_out')}</span>`
+      : r.left<=2 ? `<span class="badge badge-pending">${t('tcs_low')}</span>` : '';
+    const foot = [
+      r.first ? tt('tcs_since',{date:fmtDate(r.first)}) : t('tcs_not_started'),
+      r.courses ? tt('tcs_bought',{n:r.bought, c:r.courses}) : '',
+      r.noshow ? tt('tcs_noshow',{n:r.noshow}) : '',
+      r.lapsed ? tt('tcs_lapsed',{n:r.lapsed}) : ''
+    ].filter(Boolean);
+    return `
+      <div class="cu-card">
+        <div class="cu-head">${avatarHtml(r.name, r.photo)}<div class="cu-id"><div class="cu-name">${esc(r.name)}</div><div class="cu-next">${r.next ? tt('tcs_next',{date:fmtDate(r.next.bookingDate), time:fmtTime(r.next.bookingTime)}) : t('tcs_no_next')}</div></div>${badge}</div>
+        <div class="cu-stats">
+          <div class="cu-stat main ${r.courses && r.left<=2 ? 'low' : ''}"><b>${r.left}</b><span>${t('tcs_left')}</span></div>
+          <div class="cu-stat"><b>${r.done}</b><span>${t('tcs_done')}</span></div>
+          <div class="cu-stat"><b>${r.days===null ? '—' : r.days}</b><span>${t('tcs_days')}</span></div>
+          <div class="cu-stat"><b>${r.renewals}</b><span>${t('tcs_renew')}</span></div>
+        </div>
+        <div class="cu-foot">${foot.map(x=>`<span>${esc(x)}</span>`).join('')}</div>
+      </div>`;
+  };
   return `
     <div class="page-head"><div><div class="eyebrow">${t('tc_eyebrow')}</div><h1>${t('tc_h1')}</h1><p>${t('tc_p')}</p></div></div>
-    <div class="card">
-      ${rows.length ? rows.map(r=>`
-        <div class="trainer-row">${avatarHtml(r.name, r.photo)}<div class="meta"><div class="n">${esc(r.name)}</div><div class="s">${tt('tc_sessions_done',{n:r.doneCount})}</div></div></div>
-      `).join('') : `<div class="empty">${t('tc_empty')}</div>`}
-    </div>
+    ${rows.length ? rows.map(card).join('') : `<div class="card"><div class="empty">${t('tc_empty')}</div></div>`}
   `;
 }
 
@@ -3672,11 +3804,32 @@ async function renderAdminView(){
   return renderADashboard();
 }
 
+/* The numbers on the admin pages: the server counts them (one small answer). A database without that call falls back to counting the lists. */
+async function adminStats(){
+  if(listCache.has('@stats')) return listCache.get('@stats');
+  let st = null;
+  try{
+    needSignIn();
+    const r = await rpc('app_admin_stats', {p_token:authToken});
+    if(r && r.ok && r.trainers != null && r.customers != null){
+      st = {trainers:Number(r.trainers), customers:Number(r.customers), apps:Number(r.apps), appsPending:Number(r.appsPending),
+            packages:Number(r.packages), bookings:Number(r.bookings), activePkgs:Number(r.activePkgs)};
+    }
+  }catch(e){ if(!(e instanceof DbError)) throw e; }
+  if(!st){
+    const [trainers, customers, apps, packages, bookings, custPkgs] = await Promise.all([
+      dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
+      dbGetAll('tpkg:'), dbGetAll('booking:'), dbGetAll('custpkg:')
+    ]);
+    st = {trainers:trainers.length, customers:customers.length, apps:apps.length, appsPending:apps.filter(a=>a.status==='pending').length,
+          packages:packages.filter(p=>p.status==='active' && Number(p.price)>0).length, bookings:bookings.length,
+          activePkgs:custPkgs.filter(p=>p.status==='active').length};
+  }
+  listCache.set('@stats', st);
+  return st;
+}
 async function renderADashboard(){
-  const [trainers, customers, apps, packages, bookings, custPkgs] = await Promise.all([
-    dbGetAll('trainer:'), dbGetAll('customer:'), dbGetAll('trainerApp:'),
-    dbGetAll('tpkg:'), dbGetAll('booking:'), dbGetAll('custpkg:')
-  ]);
+  const st = await adminStats();
   const maintRec = await dbGet('system:maintenance');
   const lastCleanup = maintRec && maintRec.ts;
   const sbConnected = (connState==='online');
@@ -3696,17 +3849,17 @@ async function renderADashboard(){
         ตั้งค่า Key ไว้แล้ว: ${diag.hasKey ? 'ใช่' : '❌ ไม่ใช่ — ตัวแปร SUPABASE_ANON_KEY ว่างอยู่ในไฟล์นี้'}<br>
         สร้างการเชื่อมต่อสำเร็จ: ${diag.clientCreated ? 'ใช่' : '❌ ไม่ใช่ — ไลบรารี Supabase อาจโหลดไม่สำเร็จ (เช็คเน็ต/ตัวบล็อกโฆษณา)'}<br>
         ทดสอบอ่านข้อมูลจริงได้: ${diag.connected ? 'ใช่' : '❌ ไม่ได้ — เช็ค RLS policy หรือชื่อตารางในโปรเจกต์ Supabase'}<br>
-        จำนวนคำขอสมัครเทรนเนอร์ที่ดึงเจอ (ทุกสถานะ): <b>${apps.length}</b> รายการ<br>
+        จำนวนคำขอสมัครเทรนเนอร์ที่ดึงเจอ (ทุกสถานะ): <b>${st.apps}</b> รายการ<br>
         เวอร์ชันเว็บ: <b>${APP_BUILD}</b> · โปรเจกต์ฐานข้อมูล: <b>${dbProjectId()}</b>
       </div>
     </details>
     <div class="grid-4">
-      <div class="stat-card"><div class="lbl">${t('ad_stat_trainers')}</div><div class="val">${trainers.length}</div></div>
-      <div class="stat-card"><div class="lbl">${t('ad_stat_customers')}</div><div class="val">${customers.length}</div></div>
-      <div class="stat-card"><div class="lbl">${t('ad_stat_pending')}</div><div class="val accent">${apps.filter(a=>a.status==='pending').length}</div></div>
-      <div class="stat-card"><div class="lbl">${t('ad_stat_packages')}</div><div class="val">${packages.filter(p=>p.status==='active' && Number(p.price)>0).length}</div></div>
-      <div class="stat-card"><div class="lbl">${t('ad_stat_bookings')}</div><div class="val">${bookings.length}</div></div>
-      <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${custPkgs.filter(p=>p.status==='active').length}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_trainers')}</div><div class="val">${st.trainers}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_customers')}</div><div class="val">${st.customers}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_pending')}</div><div class="val accent">${st.appsPending}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_packages')}</div><div class="val">${st.packages}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_bookings')}</div><div class="val">${st.bookings}</div></div>
+      <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${st.activePkgs}</div></div>
     </div>
     <div class="card" style="margin-top:16px">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
@@ -4294,6 +4447,7 @@ function wireView(){
   document.querySelectorAll('[data-reject-booking]').forEach(el=>el.addEventListener('click', ()=> respondBooking(el.dataset.rejectBooking, false)));
   document.querySelectorAll('[data-complete-booking]').forEach(el=>el.addEventListener('click', ()=> finishBooking(el.dataset.completeBooking, false)));
   document.querySelectorAll('[data-noshow-booking]').forEach(el=>el.addEventListener('click', ()=> finishBooking(el.dataset.noshowBooking, true)));
+  document.querySelectorAll('[data-cancel-booking]').forEach(el=>el.addEventListener('click', ()=> cancelBookingByTrainer(el.dataset.cancelBooking)));
 
   const pfSaveBtn = document.getElementById('pfSaveBtn'); if(pfSaveBtn) pfSaveBtn.addEventListener('click', ()=> withBusy(pfSaveBtn, saveTrainerProfile));
   const copyLinkBtn = document.getElementById('copyTrainerLinkBtn');
@@ -4409,16 +4563,33 @@ function shouldSkipAutoRefresh(){
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
 }
 let refreshBusy = false;
-async function softRefresh(){
+async function softRefresh(force){
   if(!session || gateActive || refreshBusy || connState==='offline') return;
   if(document.hidden) return;
   if(shouldSkipAutoRefresh()) return;
+  if(force !== true && Date.now() - lastRefreshAt < REFRESH_MIN_GAP_MS) return;   // flicking back and forth does not re-download
   refreshBusy = true;
+  lastRefreshAt = Date.now();                                                      // a failing server is not hammered either
   try{ await renderRoot(true); } finally { refreshBusy = false; }
 }
-setInterval(softRefresh, 15000);
+/* Every refresh downloads the lists again, so it is paced: once a minute while somebody is using the page, once every
+   five minutes after they stop touching it, never while the page is hidden, and straight away (when the data is older
+   than 20 seconds) when they come back to it. The timer itself only wakes up every 15 seconds and costs nothing. */
+function refreshTick(){
+  const idle = Date.now() - lastActivityAt > IDLE_AFTER_MS;
+  const gap = idle ? REFRESH_IDLE_MS : REFRESH_ACTIVE_MS;
+  if(Date.now() - lastRefreshAt >= gap - 1000) softRefresh();
+}
+function noteActivity(){
+  const now = Date.now();
+  const wasIdle = now - lastActivityAt > IDLE_AFTER_MS;
+  lastActivityAt = now;
+  if(wasIdle) softRefresh();                       // back at a page that was left alone: show current data
+}
+['pointerdown','keydown','touchstart','wheel'].forEach(ev=> window.addEventListener(ev, noteActivity, {passive:true, capture:true}));
+setInterval(refreshTick, 15000);
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) softRefresh(); });
-window.addEventListener('focus', softRefresh);
+window.addEventListener('focus', ()=> softRefresh());
 
 /* ---------------- service worker ---------------- */
 if('serviceWorker' in navigator && !window.frameElement){
