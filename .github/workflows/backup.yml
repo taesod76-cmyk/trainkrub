@@ -1,0 +1,144 @@
+name: Nightly backup and check
+# Every night: read the data with a read-only login, check it against the last good night, pack it,
+# lock it with the PUBLIC certificate in backup/backup_cert.pem (only the private key on the owner's own computer opens it),
+# and keep the locked file as a workflow artifact for 90 days.
+# If the data looks like it went missing, or the backup cannot be made, this job FAILS and GitHub emails the owner.
+# Setup and restore: backup/README.md
+on:
+  schedule:
+    - cron: "40 20 * * *"        # 20:40 UTC = 03:40 in Thailand
+  workflow_dispatch:
+    inputs:
+      accept:
+        description: "Take tonight's numbers as the new normal (after a drop that was meant)"
+        type: boolean
+        default: false
+      simulate_alarm:
+        description: "Pretend data went missing, to test that the alert email arrives"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: write           # only used to keep the schedules switched on (see the last step)
+    env:
+      PGHOST: ${{ vars.BACKUP_DB_HOST }}
+      PGPORT: "5432"
+      PGDATABASE: postgres
+      PGUSER: backup_ro.eauzvihirpfcjkwyqgel
+      PGPASSWORD: ${{ secrets.BACKUP_DB_PASSWORD }}
+      PGSSLMODE: require
+    steps:
+      - name: Check the setup
+        run: |
+          missing=""
+          [ -n "$PGHOST" ] || missing="$missing BACKUP_DB_HOST(variable)"
+          [ -n "$PGPASSWORD" ] || missing="$missing BACKUP_DB_PASSWORD(secret)"
+          if [ -n "$missing" ]; then echo "::error title=Backup is not set up::Missing:$missing. See backup/README.md"; exit 1; fi
+
+      - name: Get the scripts
+        uses: actions/checkout@v4
+
+      - name: Get yesterday's numbers
+        uses: actions/cache/restore@v4
+        with:
+          path: state-enc
+          key: tk-state-none
+          restore-keys: tk-state-
+
+      - name: Open yesterday's numbers
+        run: |
+          mkdir -p state
+          if [ -f state-enc/last.json.enc ]; then
+            if openssl enc -d -aes-256-cbc -pbkdf2 -pass env:PGPASSWORD -in state-enc/last.json.enc -out state/last.json 2>/dev/null; then
+              echo "yesterday's numbers found"
+            else
+              rm -f state/last.json; echo "yesterday's numbers could not be opened (password changed?): tonight is a new starting point"
+            fi
+          else
+            echo "no earlier numbers: tonight is the starting point"
+          fi
+
+      - name: Back up and check
+        id: bk
+        env:
+          ACCEPT: ${{ inputs.accept && '1' || '' }}
+          SIMULATE_ALARM: ${{ inputs.simulate_alarm && '1' || '' }}
+        run: |
+          set +e
+          bash backup/backup.sh
+          rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Keep tonight's numbers (locked with the password)
+        if: always() && hashFiles('state/last.json') != ''
+        run: |
+          mkdir -p state-enc
+          openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:PGPASSWORD -in state/last.json -out state-enc/last.json.enc
+      - name: Save tonight's numbers
+        if: always() && hashFiles('state-enc/last.json.enc') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: state-enc
+          key: tk-state-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Keep the locked backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-${{ github.run_id }}
+          path: out/*.cms
+          retention-days: 90
+          if-no-files-found: ignore
+
+      - name: Keep the schedules switched on
+        # GitHub switches scheduled jobs off after 60 days without any change in a public repository; this resets that clock.
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for wf in backup.yml keepalive.yml; do
+            gh api -X PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/${wf}/enable" >/dev/null 2>&1 && echo "$wf: schedule kept on" || echo "$wf: could not refresh (not important)"
+          done
+
+      - name: Result
+        run: |
+          rc="${{ steps.bk.outputs.rc }}"
+          if [ "$rc" = "0" ]; then echo "Backup done, data looks normal."; exit 0; fi
+          if [ "$rc" = "2" ]; then
+            echo "::error title=DATA LOOKS MISSING::The nightly check found that data went missing since the last good night (see the log). A backup was still made. Open backup/README.md, section 'If the alarm comes'."
+            exit 1
+          fi
+          echo "::error title=BACKUP FAILED::The backup could not be made (see the log). Open backup/README.md, section 'If the backup fails'."
+          exit 1
+
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: The website answers
+        run: |
+          set -e
+          code=$(curl -s -o page.html -w '%{http_code}' -m 30 "https://taesod76-cmyk.github.io/trainkrub/?check=$(date +%s)" || true)
+          if [ "$code" != "200" ]; then echo "::error title=WEBSITE DOWN::The app page answered HTTP $code"; exit 1; fi
+          grep -q "TRAINKUB" page.html || { echo "::error title=WEBSITE LOOKS WRONG::The app page does not look like the app"; exit 1; }
+          echo "the website answers"
+      - name: The database door answers
+        env:
+          KEY: sb_publishable_TYxnhvbPvCHCycPFWioahA_k16FmgnQ     # the public key that is already inside index.html
+        run: |
+          curl -fsS -m 30 -X POST "https://eauzvihirpfcjkwyqgel.supabase.co/rest/v1/rpc/app_ping" \
+            -H "apikey: ${KEY}" -H "Authorization: Bearer ${KEY}" -H "Content-Type: application/json" -d '{}' \
+            || { echo "::error title=DATABASE DOES NOT ANSWER::The app database did not answer (paused or down?)"; exit 1; }
