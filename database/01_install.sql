@@ -743,6 +743,17 @@ language sql stable as $$
     or exists (select 1 from public.kv_store where key like 'order:%'   and value->>'trainerId' = p_trainer and value->>'customerId' = p_customer))
 $$;
 
+-- may this trainer see this customer's health information?  Only while they really work together:
+-- a package of theirs (not cancelled) or a booking that was not cancelled / refused
+create or replace function app_private.trainer_sees_health(p_trainer text, p_customer text) returns boolean
+language sql stable as $$
+  select p_trainer is not null and p_customer is not null and (
+       exists (select 1 from public.kv_store where key like 'custpkg:%' and value->>'trainerId' = p_trainer and value->>'customerId' = p_customer
+                 and value->>'status' in ('active','used_up','expired'))
+    or exists (select 1 from public.kv_store where key like 'booking:%' and value->>'trainerId' = p_trainer and value->>'customerId' = p_customer
+                 and value->>'status' in ('pending','confirmed','completed','no_show')))
+$$;
+
 -- a customer may see a trainer only after adding them with the trainer's code (or already having a booking/package/order with them)
 create or replace function app_private.customer_knows_trainer(p_customer text, p_trainer text) returns boolean
 language sql stable as $$
@@ -774,11 +785,13 @@ begin
     if c.role = 'admin' then return v - 'password'; end if;
     return null;
   elsif pfx = 'customer' then
-    if c.role = 'admin' then return v - 'password' - 'photo'; end if;
+    if c.role = 'admin' then return v - 'password' - 'photo' - 'health'; end if;
     if c.role = 'customer' and v->>'id' = c.uid then return v - 'password'; end if;
     if c.role = 'trainer' and app_private.rel_trainer_customer(c.uid, v->>'id') then
       return jsonb_strip_nulls(jsonb_build_object('id', v->'id', 'name', v->'name', 'phone', v->'phone', 'photo', v->'photo',
-                                                   'status', v->'status', 'role', v->'role'));
+                                                   'status', v->'status', 'role', v->'role'))
+             || case when coalesce(v->'health'->>'consent', '') = 'true' and app_private.trainer_sees_health(c.uid, v->>'id')
+                     then jsonb_build_object('health', v->'health') else '{}'::jsonb end;
     end if;
     return null;
   elsif pfx = 'trainer' then
@@ -867,19 +880,45 @@ end $$;
 -- ---------------------------------------------------------------------
 create or replace function app_private.w_customer(c app_private.ctx_t, p_key text, o jsonb, n jsonb) returns jsonb
 language plpgsql as $$
-declare nm text; ph text; photo text; arr jsonb; x jsonb;
+declare nm text; ph text; photo text; arr jsonb; x jsonb; h jsonb; hn jsonb; filled boolean; consent boolean; now_s text :=
+          to_char(now() at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"');
 begin
   if o is null then perform app_private.err(403, 'forbidden'); end if;
   if c.role = 'admin' then
-    -- the admin's view has no profile picture, so only the status of what was sent counts; the stored row is kept as it is
-    if n->>'status' in ('active','suspended') and app_private.same_except(o, n, array['status','photo']) then
+    -- the admin's view has no profile picture and no health information, so only the status of what was sent counts; the stored row is kept as it is
+    if n->>'status' in ('active','suspended') and app_private.same_except(o, n, array['status','photo','health']) then
       return o || jsonb_build_object('status', n->>'status');
     end if;
     perform app_private.err(403, 'forbidden');
   end if;
   if c.role <> 'customer' or o->>'id' <> c.uid then perform app_private.err(403, 'forbidden'); end if;
-  if not app_private.same_except(o, n, array['name','phone','username','photo','pinnedTrainerIds','myTrainerIds']) then
+  if not app_private.same_except(o, n, array['name','phone','username','photo','pinnedTrainerIds','myTrainerIds','health']) then
     perform app_private.err(403, 'forbidden');
+  end if;
+  -- health information (the person's own, optional): text with limits, and the person's agreement that the trainers they work with may see it
+  if n ? 'health' then
+    h := n->'health';
+    if h is null or jsonb_typeof(h) = 'null' then
+      n := n - 'health';
+    else
+      if jsonb_typeof(h) <> 'object' then perform app_private.err(400, 'invalid'); end if;
+      hn := jsonb_build_object(
+        'conditions', app_private.clean_text(h->>'conditions', 400), 'injuries', app_private.clean_text(h->>'injuries', 400),
+        'meds', app_private.clean_text(h->>'meds', 300), 'goal', app_private.clean_text(h->>'goal', 300),
+        'emName', app_private.clean_text(h->>'emName', 60), 'emPhone', app_private.clean_text(h->>'emPhone', 20),
+        'age', app_private.clean_text(h->>'age', 3), 'weight', app_private.clean_text(h->>'weight', 6), 'height', app_private.clean_text(h->>'height', 6));
+      if hn->>'emPhone' <> '' and not app_private.valid_phone(hn->>'emPhone') then perform app_private.err(400, 'invalid'); end if;
+      -- numbers are optional; a wrong one is refused (written with CASE so a bad text is never cast)
+      if hn->>'age' <> '' and not (case when hn->>'age' ~ '^[0-9]{1,3}$' then (hn->>'age')::int between 1 and 120 else false end) then perform app_private.err(400, 'invalid'); end if;
+      if hn->>'weight' <> '' and not (case when hn->>'weight' ~ '^[0-9]{1,3}(\.[0-9])?$' then (hn->>'weight')::numeric between 10 and 400 else false end) then perform app_private.err(400, 'invalid'); end if;
+      if hn->>'height' <> '' and not (case when hn->>'height' ~ '^[0-9]{2,3}(\.[0-9])?$' then (hn->>'height')::numeric between 50 and 260 else false end) then perform app_private.err(400, 'invalid'); end if;
+      filled := exists (select 1 from jsonb_each_text(hn) e where e.value <> '');
+      consent := coalesce(h->>'consent', '') = 'true';
+      if filled and not consent then perform app_private.err(400, 'consent_needed'); end if;
+      hn := hn || jsonb_build_object('consent', consent, 'updatedAt', now_s,
+              'consentAt', case when not consent then null when coalesce(o->'health'->>'consent', '') = 'true' and o->'health'->>'consentAt' is not null then o->'health'->'consentAt' else to_jsonb(now_s) end);
+      n := n || jsonb_build_object('health', jsonb_strip_nulls(hn));
+    end if;
   end if;
   nm := app_private.clean_text(n->>'name', 60);
   if nm = '' then perform app_private.err(400, 'invalid'); end if;
@@ -986,7 +1025,7 @@ begin
     if t is null or t->>'status' <> 'active' then perform app_private.err(400, 'trainer_unavailable'); end if;
     pid := coalesce(n->>'packageInstanceId', '');
     select value into pkg from public.kv_store where key = 'custpkg:' || pid;
-    if pkg is null or pkg->>'customerId' <> c.uid or (pkg->>'trainerId' is not null and pkg->>'trainerId' <> tid)
+    if pkg is null or pkg->>'customerId' <> c.uid or pkg->>'trainerId' is distinct from tid
        or pkg->>'status' <> 'active' or coalesce((pkg->>'remainingSessions')::int, 0) <= 0
        or coalesce(pkg->>'expiryDate', '9999-12-31') < app_private.today()::text then
       perform app_private.err(400, 'no_package');
@@ -997,6 +1036,8 @@ begin
     end if;
     begin d := (n->>'bookingDate')::date; exception when others then perform app_private.err(400, 'invalid'); end;
     if d < app_private.today() or d > app_private.today() + 90 then perform app_private.err(400, 'invalid_date'); end if;
+    -- a session cannot be booked for a day after the package runs out
+    if coalesce(pkg->>'expiryDate', '9999-12-31') < n->>'bookingDate' then perform app_private.err(400, 'no_package'); end if;
     start_ts := ((n->>'bookingDate') || ' ' || tm)::timestamp at time zone 'Asia/Bangkok';
     lead := case when coalesce(t->>'leadHours','') ~ '^[0-9]+(\.[0-9]+)?$' then (t->>'leadHours')::numeric else 1 end;
     if start_ts - now() < make_interval(secs => lead * 3600) then perform app_private.err(409, 'too_soon'); end if;

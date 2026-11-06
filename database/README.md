@@ -42,6 +42,11 @@ Run it **before** publishing the website version that goes with it.
 - `06_update_push.sql` — pop-up notifications on phones (see the section below). It only adds new things; nothing the
   website uses today changes. It is safe to run before or after the `push-send` function is added.
 
+- `07_update_trainer_rules.sql` — a booking needs a package of **that** trainer, and health information (see the section
+  below). It only replaces server functions; no stored data is changed. Run it **before** publishing the website version
+  of round 17. The last lines show a check list: the first line must say `ok`; the second tells how many active packages
+  name no trainer (old packages from the former admin catalogue). Those can no longer be used for booking.
+
 ## Pop-up notifications on phones
 
 Every new in-app notification can also pop up on the person's phone (like Facebook or LINE), even when the app is
@@ -79,3 +84,32 @@ code and the sign-in token in one step, and the app opens the trainer dashboard 
 Certificate pictures are uploaded one by one before that step with a single-use upload token. If the
 upload step is cut off, the application is completed the next time the applicant signs in with the same
 password or the same Google account. The admin can still suspend any trainer from the admin page.
+
+## Packages belong to their trainer
+
+A package bought from a trainer only works with that trainer. The server refuses a booking whose package belongs to
+another trainer, or names no trainer at all (the old packages from the former admin catalogue), and refuses a day after
+the package's expiry date. The website shows the same rule: the booking page says which trainer the customer's packages
+work with and offers the "buy a package" button.
+
+## Health information
+
+A customer can fill in health information on the profile page: long-term conditions, injuries, medicines / allergies,
+goal, age, weight, height and an emergency contact. Filling anything in needs the customer's tick on the agreement
+(the server answers `consent_needed` without it). It is stored in the customer's row (`health`).
+
+- the customer reads and edits their own;
+- a trainer reads it only when the customer agreed **and** they really work together: the customer has a package with
+  that trainer (active, used up or expired) or a booking that stands (waiting, confirmed, done or no-show). When the
+  package is cancelled and no booking stands, the trainer sees the basic profile but not the health information;
+- the admin never sees it (it is left out of every admin read and list; suspending a customer keeps it untouched);
+- nobody else can read or write it.
+
+Read access is decided in `app_private.read_view` and `app_private.trainer_sees_health`; writing is validated in
+`app_private.w_customer` (text limits, number ranges, phone format).
+
+## Booking up to 14 days ahead
+
+The booking page lets a customer pick several days and times and book them all at once (the website books them one by
+one; each is checked by the server as before: the package of that trainer, sessions left minus open bookings, the
+trainer's notice time, first come first served, at most 30 open bookings per customer).
