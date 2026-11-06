@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trainkrub-cache-v26';
+const CACHE_NAME = 'trainkrub-cache-v27';
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -85,7 +85,7 @@ self.addEventListener('push', (event) => {
   let d = {};
   try { d = event.data ? event.data.json() : {}; }
   catch (e) { try { d = { body: event.data.text() }; } catch (e2) { d = {}; } }
-  const title = String(d.title || 'เทรนครับ');
+  const title = String(d.title || 'เทรนคับ');
   const options = {
     body: String(d.body || ''),
     icon: 'icons/icon-192.png',

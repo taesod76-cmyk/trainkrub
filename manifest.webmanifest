@@ -1,6 +1,6 @@
 {
-  "name": "TRAINKRUB เทรนครับ",
-  "short_name": "เทรนครับ",
+  "name": "TRAINKUB เทรนคับ",
+  "short_name": "เทรนคับ",
   "description": "แพลตฟอร์มจองเทรนเนอร์และจัดการตารางเทรน",
   "start_url": "./index.html",
   "scope": "./",

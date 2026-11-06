@@ -52,6 +52,14 @@ Run it **before** publishing the website version that goes with it.
   otherwise. Run it **before** publishing the website version of round 18. The last lines show a check list: the first line
   must say `ok`; the second tells how many trainers take more than one person per time (0 right after the first run).
 
+- `09_backup_access.sql` — the read-only login used by the nightly backup (see `backup/README.md`). It is **not** part of
+  `01_install.sql`: run it once on every database that should be backed up (also on a brand-new one). It creates the login
+  `backup_ro` (it can only read the five data tables, it cannot write or call any function) and closes a small gap: functions
+  made by the earlier update scripts were left callable by everyone inside the private schema, they are closed now. The result
+  shows a one-time password; copy it straight into GitHub as the secret `BACKUP_DB_PASSWORD`. Running it again makes a new
+  password (the old one stops working), so update the secret too. The last line must say `0` for
+  "private functions open to everyone".
+
 ## Pop-up notifications on phones
 
 Every new in-app notification can also pop up on the person's phone (like Facebook or LINE), even when the app is

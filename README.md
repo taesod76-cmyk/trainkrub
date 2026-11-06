@@ -1,4 +1,6 @@
-# TRAINKRUB (เทรนครับ)
+# TRAINKUB (เทรนคับ)
+
+(Formerly TRAINKRUB / เทรนครับ. The web address and the repository name keep the old spelling so that links keep working.)
 
 A single-page PWA for booking and managing personal trainers.
 
@@ -10,6 +12,7 @@ A single-page PWA for booking and managing personal trainers.
 - `icons/` — app icons in all standard sizes, plus `favicon.ico`
 - `vendor/` — the Supabase client library, served from this site
 - `database/` — the Supabase setup scripts (not published on the website)
+- `backup/` and `.github/workflows/backup.yml` — the nightly encrypted backup with a daily check that warns when data goes missing (start with `backup/README.md`, Thai guide in `backup/GUIDE_TH.md`)
 
 ## Database (Supabase)
 
