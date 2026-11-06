@@ -810,7 +810,8 @@ begin
     if c.role = 'customer' and v->>'status' in ('pending','confirmed') and app_private.customer_knows_trainer(c.uid, v->>'trainerId') then
       -- other people's requests: only the fact that the slot is taken
       return jsonb_strip_nulls(jsonb_build_object('id', v->'id', 'trainerId', v->'trainerId', 'bookingDate', v->'bookingDate',
-                                                   'bookingTime', v->'bookingTime', 'status', v->'status', 'sessionMode', v->'sessionMode'));
+                                                   'bookingTime', v->'bookingTime', 'status', v->'status', 'sessionMode', v->'sessionMode',
+                                                   'private', v->'private'));
     end if;
     return null;
   elsif pfx in ('custpkg','order') then
@@ -964,7 +965,7 @@ begin
     perform app_private.err(403, 'forbidden');
   end if;
   if c.role <> 'trainer' or o->>'id' <> c.uid then perform app_private.err(403, 'forbidden'); end if;
-  if not app_private.same_except(o, n, array['name','phone','username','specialty','bio','ready','certs','photo','leadHours']) then
+  if not app_private.same_except(o, n, array['name','phone','username','specialty','bio','ready','certs','photo','leadHours','maxPerSlot']) then
     perform app_private.err(403, 'forbidden');
   end if;
   nm := app_private.clean_text(n->>'name', 60);
@@ -986,6 +987,11 @@ begin
   if n ? 'leadHours' then
     begin lead := (n->>'leadHours')::numeric; exception when others then perform app_private.err(400, 'invalid'); end;
     if lead < 0 or lead > 168 then perform app_private.err(400, 'invalid'); end if;
+  end if;
+  -- how many customers may train in the same time slot (1 = one at a time, 2 = pair, 3 = small group)
+  if n ? 'maxPerSlot' then
+    if jsonb_typeof(n->'maxPerSlot') <> 'number' or (n->>'maxPerSlot') !~ '^[1-3]$' then perform app_private.err(400, 'invalid'); end if;
+    n := n || jsonb_build_object('maxPerSlot', (n->>'maxPerSlot')::int);
   end if;
   if n ? 'photo' then
     photo := n->>'photo';
@@ -1011,11 +1017,32 @@ begin
   return n;
 end $$;
 
+-- someone joined a time that already had people in it: tell each of them (an in-app notice; the phone pop-up follows by itself).
+-- The text is written in Thai here; the app shows it in the reader's own language from 'k' and 'p'.
+create or replace function app_private.notify_joined(p_trainer text, p_tname text, p_date text, p_time text, p_exclude text, p_n int) returns void
+language plpgsql as $$
+declare r record; nid text; d date := p_date::date; ds text;
+begin
+  ds := extract(day from d)::int::text || ' ' ||
+        (array['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'])[extract(month from d)::int];
+  for r in select value from public.kv_store
+            where key like 'booking:%' and value->>'trainerId' = p_trainer and value->>'bookingDate' = p_date
+              and value->>'bookingTime' = p_time and value->>'status' in ('pending','confirmed') and value->>'customerId' <> p_exclude loop
+    nid := 'notif_' || substr(md5(random()::text || clock_timestamp()::text || (r.value->>'id')), 1, 16);
+    insert into public.kv_store(key, value, updated_at) values ('notif:' || nid, jsonb_build_object(
+      'id', nid, 'userId', r.value->>'customerId', 'title', 'การจองของฉัน',
+      'message', 'มีคนเข้าร่วมรอบเทรนของคุณกับ ' || coalesce(p_tname, '') || ' วันที่ ' || ds || ' เวลา ' || p_time || ' ตอนนี้ ' || p_n || ' คน',
+      'isRead', false, 'createdAt', to_char(now() at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
+      'bookingId', r.value->>'id', 'k', 'notif_joined',
+      'p', jsonb_build_object('trainer', coalesce(p_tname, ''), 'date', p_date, 'time', p_time, 'n', p_n)), now());
+  end loop;
+end $$;
+
 create or replace function app_private.w_booking(c app_private.ctx_t, p_key text, o jsonb, n jsonb) returns jsonb
 language plpgsql as $$
 declare
   t jsonb; pkg jsonb; cu jsonb; d date; tm text; start_ts timestamptz; lead numeric; tid text; open_n int; pid text;
-  mode text; pn jsonb; other_conf int; from_s text; to_s text;
+  mode text; pn jsonb; other_conf int; from_s text; to_s text; cap int; at_n int; has_private boolean; priv boolean;
 begin
   if o is null then
     if c.role <> 'customer' or n->>'customerId' is distinct from c.uid then perform app_private.err(403, 'forbidden'); end if;
@@ -1047,10 +1074,19 @@ begin
                   and value->>'bookingTime' = tm and value->>'status' in ('pending','confirmed') and value->>'customerId' = c.uid) then
       perform app_private.err(409, 'already_mine');
     end if;
-    -- the first customer to book a time gets it: it goes onto the trainer's schedule straight away
-    if exists (select 1 from public.kv_store where key like 'booking:%' and value->>'trainerId' = tid and value->>'bookingDate' = n->>'bookingDate'
-                  and value->>'bookingTime' = tm and value->>'status' in ('pending','confirmed')) then
-      perform app_private.err(409, 'locked');
+    -- how many people may train at the same time: the trainer's own setting (1 = one customer per time, as it always was;
+    -- 2 = pair; 3 = small group). A booking goes onto the trainer's schedule straight away; whoever books while there is still room joins in.
+    cap := case when coalesce(t->>'maxPerSlot', '') ~ '^[1-3]$' then (t->>'maxPerSlot')::int else 1 end;
+    select count(*), coalesce(bool_or(coalesce((value->>'private')::boolean, false)), false) into at_n, has_private
+      from public.kv_store where key like 'booking:%' and value->>'trainerId' = tid and value->>'bookingDate' = n->>'bookingDate'
+       and value->>'bookingTime' = tm and value->>'status' in ('pending','confirmed');
+    -- full, or the first person asked to train alone: nobody else gets in
+    if at_n >= cap or has_private then perform app_private.err(409, 'locked'); end if;
+    -- "I want this time to myself" only works for a time nobody has booked yet, and only where the trainer takes more than one person
+    priv := false;
+    if coalesce(n->>'private', '') = 'true' and cap >= 2 then
+      if at_n > 0 then perform app_private.err(409, 'not_alone'); end if;
+      priv := true;
     end if;
 
     select count(*) into open_n from public.kv_store
@@ -1061,9 +1097,11 @@ begin
       perform app_private.err(429, 'too_many_open');
     end if;
     cu := (select value from public.kv_store where key = c.ukey);
+    -- the people already booked at this time are told that someone joined (they cannot see who: customers never see each other)
+    if at_n > 0 then perform app_private.notify_joined(tid, t->>'name', n->>'bookingDate', tm, c.uid, at_n + 1); end if;
     return jsonb_build_object('id', substr(p_key, 9), 'customerId', c.uid, 'customerName', cu->>'name', 'trainerId', tid,
         'trainerName', t->>'name', 'packageInstanceId', pid, 'bookingDate', n->>'bookingDate', 'bookingTime', tm,
-        'status', 'confirmed', 'sessionMode', 'solo', 'partnerNames', '[]'::jsonb,
+        'status', 'confirmed', 'sessionMode', 'solo', 'partnerNames', '[]'::jsonb, 'private', priv,
         'createdAt', to_char(now() at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'), 'completedAt', null);
   end if;
 
@@ -1089,7 +1127,9 @@ begin
       select count(*) into other_conf from public.kv_store where key like 'booking:%' and key <> p_key
          and value->>'trainerId' = o->>'trainerId' and value->>'bookingDate' = o->>'bookingDate'
          and value->>'bookingTime' = o->>'bookingTime' and value->>'status' = 'confirmed';
-      if other_conf >= 2 or (other_conf >= 1 and mode is distinct from 'duo') then perform app_private.err(409, 'locked'); end if;
+      select case when coalesce(value->>'maxPerSlot', '') ~ '^[1-3]$' then (value->>'maxPerSlot')::int else 1 end into cap
+        from public.kv_store where key = 'trainer:' || (o->>'trainerId');
+      if other_conf >= greatest(coalesce(cap, 1), case when mode = 'duo' then 2 else 1 end) then perform app_private.err(409, 'locked'); end if;
     end if;
     if to_s in ('completed','no_show') and from_s = 'confirmed' then
       n := n || jsonb_build_object('completedAt', to_char(now() at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'));

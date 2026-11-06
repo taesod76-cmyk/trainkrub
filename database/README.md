@@ -47,6 +47,11 @@ Run it **before** publishing the website version that goes with it.
   of round 17. The last lines show a check list: the first line must say `ok`; the second tells how many active packages
   name no trainer (old packages from the former admin catalogue). Those can no longer be used for booking.
 
+- `08_update_group_sessions.sql` — pair / small-group training: a trainer can take up to 3 customers in the same time. It only
+  replaces server functions; no stored data is changed and every trainer stays at 1 person per time until they choose
+  otherwise. Run it **before** publishing the website version of round 18. The last lines show a check list: the first line
+  must say `ok`; the second tells how many trainers take more than one person per time (0 right after the first run).
+
 ## Pop-up notifications on phones
 
 Every new in-app notification can also pop up on the person's phone (like Facebook or LINE), even when the app is
@@ -113,3 +118,29 @@ Read access is decided in `app_private.read_view` and `app_private.trainer_sees_
 The booking page lets a customer pick several days and times and book them all at once (the website books them one by
 one; each is checked by the server as before: the package of that trainer, sessions left minus open bookings, the
 trainer's notice time, first come first served, at most 30 open bookings per customer).
+
+## Pair and small-group training (up to 3 people in the same time)
+
+Each trainer chooses how many customers can train together in the same time: 1, 2 or 3 (`maxPerSlot` on the trainer, no
+value = 1, the way it always worked). It is set on the trainer's Schedule page ("Maximum per session") and can be changed
+later; sessions that are already booked stay as they are.
+
+- A time with room stays open: the next customer who books it joins, which makes a pair and then a group. No acceptance by the
+  trainer is needed. Each person uses one session of their own package and needs a package of that trainer, exactly as before.
+- Customers see only three states in the time grid: free (nobody booked), booked (someone booked, there is room, tap to join)
+  and full (cannot be picked). They never see who else is in the time: other customers' bookings are shown without names.
+- A customer who wants the time to themselves ticks "I do not want to train with others" on a free time. The server then marks
+  the booking `private` and the time looks full to everybody else. It is refused (`not_alone`) if somebody booked the same time
+  first. The flag is set when the booking is made and cannot be changed afterwards.
+- When someone joins, the people already booked in that time get a notice ("someone joined your session ... there are now N
+  people"), written by the server (`app_private.notify_joined`) because a customer may not write notices for other customers.
+  Like every notice it also pops up on phones. The notice carries its numbers so it reads in the person's own language.
+- The trainer's schedule groups the people of one time into one card with a seat counter. Each person keeps their own
+  done / no-show / cancel buttons, and one button records everybody as done.
+- Booking is checked under a lock per trainer, day and time, so two customers racing for the last place can never both get it.
+  Answers: `locked` (full, or the time was asked for alone) and `not_alone`.
+
+Where it lives: `app_private.w_trainer` (validates `maxPerSlot`, 1 to 3), `app_private.w_booking` (the rules above),
+`app_private.notify_joined` and `app_private.read_view` (other customers' bookings are shown without names, with only the
+`private` flag).
+

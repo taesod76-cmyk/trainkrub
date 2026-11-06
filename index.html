@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-UPvGNOvOa85crnT+6Gdj2f+Ne7FIr/8t4W6n/T+Ti8A='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-l1250ENF+4ASeMym0WdDPTsThOV33NIoq5Mv9Y0zgSM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนครับ (TRAINKRUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -772,6 +772,54 @@
   .lead-pill.sel{background:linear-gradient(180deg,#f43b51,#d8233a);border-color:#ff5f72;color:#fff}
   .lead-hint{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--text-faint)}
   @media(max-width:560px){.lead-pill{flex:1 1 calc(20% - 8px);min-width:56px;padding:10px 6px}}
+  .cap-pills{display:flex;gap:8px}
+  .cap-pill{flex:1;min-height:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 4px;border-radius:13px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-dim);cursor:pointer;font-family:var(--f-body)}
+  .cap-pill .ppl{display:flex;gap:2px;color:var(--text-dim)}
+  .cap-pill b{font:600 17px/1.2 var(--f-display);color:var(--text)}
+  .cap-pill small{font-size:12.5px;color:var(--text-faint)}
+  .cap-pill.sel{background:var(--red-glow);border-color:var(--red-bright);box-shadow:inset 0 0 0 1px var(--red-bright)}
+  .cap-pill.sel .ppl{color:var(--red-bright)}
+  .cap-pill.sel small{color:var(--text-dim)}
+  .cap-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+  .cap-list li{display:flex;gap:10px;font-size:13px;line-height:1.55;color:var(--text-faint)}
+  .cap-list li::before{content:'\2713';color:var(--green);font-weight:700;flex:none}
+  .cap-note{display:flex;align-items:center;gap:8px;margin:0 0 14px;font-size:13.5px;color:var(--text-dim)}
+  .cap-note svg{flex:none;width:18px;height:18px}
+  .time-slot.has-sub{flex-direction:column;gap:6px;min-height:58px;padding:6px 4px}
+  .time-slot .ts-sub{font:600 12px/1 var(--f-body);text-decoration:none}
+  .time-slot .ts-sub.free{color:var(--green)}
+  .time-slot .ts-sub.joinable{color:var(--amber)}
+  .time-slot .ts-sub.full{color:var(--text-faint)}
+  .time-slot.sel .ts-sub{color:#fff}
+  .time-slot.taken.is-full{opacity:.55;text-decoration:none;border-style:dashed}
+  .slot-legend{display:grid;gap:6px;margin:-8px 0 14px;font-size:12.5px;line-height:1.5;color:var(--text-faint)}
+  .slot-legend span{display:flex;gap:8px;align-items:baseline}
+  .slot-legend b{flex:none;min-width:44px;font-weight:600}
+  .lgt-free{color:var(--green)}.lgt-booked{color:var(--amber)}.lgt-full{color:var(--text-faint)}
+  .pick-notes{display:grid;gap:8px;margin-top:12px}
+  .pick-note{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:13.5px;line-height:1.55;color:var(--text-dim)}
+  .pick-note b{color:var(--text);font-weight:600}
+  .pick-note small{display:block;margin-top:2px;font-size:12.5px;color:var(--text-faint)}
+  .pick-note.join{border-color:rgba(240,171,60,.55)}
+  .pick-note.alone{cursor:pointer}
+  .pick-note input{flex:none;width:22px;height:22px;margin:1px 0 0;accent-color:var(--red)}
+  .modal-list .md{display:block;margin-top:2px;font-size:12.5px;color:var(--amber)}
+  .req-card .t.grp{color:var(--amber)}
+  .req-card .t.grp.alone{color:var(--text-faint)}
+  .sch-group{border:1px solid rgba(240,171,60,.5);border-radius:var(--r-md);background:rgba(240,171,60,.04);padding:12px;margin-bottom:10px}
+  .sch-ghead{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;padding:2px 4px 12px}
+  .sch-ghead .gt{display:flex;align-items:baseline;gap:4px 12px;flex-wrap:wrap}
+  .sch-ghead .gt b{font:600 25px/1.1 var(--f-display)}
+  .sch-ghead .gt span{font-size:13px;color:var(--text-faint)}
+  .sch-seats{display:flex;align-items:center;gap:8px}
+  .sch-seats .dots{display:flex;gap:5px}
+  .sch-seats .dots i{width:10px;height:10px;box-sizing:border-box;border-radius:50%;background:var(--red-bright)}
+  .sch-seats .dots i.free{background:transparent;border:2px solid var(--text-faint)}
+  .sch-group .sch-row{grid-template-columns:1fr auto;margin-bottom:8px}
+  .sch-group .sch-row .sch-time{display:none}
+  @media(max-width:560px){.sch-group .sch-row{grid-template-columns:1fr}}
+  .sch-gall{margin-top:4px}
+  .sch-gnote{margin-top:8px;font-size:12.5px;color:var(--text-faint);text-align:center}
   .lead-note{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;margin:0 0 14px;border-radius:14px;border:1px solid rgba(240,171,60,.6);background:rgba(240,171,60,.13);color:var(--text);line-height:1.5}
   .lead-note svg{flex:none;width:24px;height:24px;margin-top:1px;color:var(--amber)}
   .lead-note-t{font-size:15px;font-weight:500}
@@ -973,7 +1021,7 @@ const i18n = {
     duo_notice_body:'มีลูกค้าอีก 1 คนขอเวลา {time} วันที่ {date} ไว้แล้ว ถ้าคุณขอเวลาเดียวกัน จะเป็นการ “ขอเทรนคู่” เทรนเนอร์จะเลือกว่ารับทั้งสองคนพร้อมกัน หรือรับแค่คนเดียว ถ้ารับแค่คนเดียว อีกคนต้องเลือกเวลาใหม่',
     duo_submit_btn:'ส่งคำขอเทรนคู่',
     duo_sum_mode:'รูปแบบ', duo_sum_mode_duo:'ขอเทรนคู่ (มีคนขอแล้ว 1 คน)', duo_sum_mode_solo:'เทรนเดี่ยว',
-    cb_slot_locked:'เวลานี้มีคนจองไปแล้ว กรุณาเลือกเวลาอื่น',
+    cb_slot_locked:'เวลานี้เต็มแล้ว หรือมีคนจองไปก่อน กรุณาเลือกเวลาอื่น',
     cb_slot_full_requests:'เวลานี้มีคนขอครบ 2 คนแล้ว กรุณาเลือกเวลาอื่น',
     cb_slot_already_mine:'คุณขอเวลานี้ไว้แล้ว',
     notif_slot_lost:'{trainer} เลือกรับเทรนเดี่ยวในวันที่ {date} เวลา {time} คำขอของคุณจึงถูกยกเลิก กรุณาเลือกเวลาใหม่',
@@ -1059,6 +1107,7 @@ const i18n = {
     tlead_opt_one:'1 ชั่วโมง', tlead_opt_hours:'{n} ชั่วโมง', tlead_opt_day_one:'1 วัน (24 ชั่วโมง)', tlead_opt_days:'{n} วัน ({h} ชั่วโมง)',
     tlead_example:'ตัวอย่าง: ลูกค้าอยากเทรนเวลา 18:00 ต้องนัดก่อน {time} หลังจากนั้นจะไม่มีเวลา 18:00 ให้เลือก',
     tlead_toast:'บันทึกแล้ว ลูกค้าต้องนัดล่วงหน้า {label}',
+    tcap_title:'รับสูงสุดต่อรอบ', tcap_sub:'จำนวนลูกค้าที่เข้าเทรนพร้อมกันในเวลาเดียวกัน', tcap_n:'{n} คน', tcap_s1:'แบบเดิม', tcap_s2:'เทรนคู่', tcap_s3:'กลุ่มเล็ก', tcap_h1:'ลูกค้าคนที่ 2 และ 3 จองเข้ารอบเดียวกันได้เองจนเต็ม ไม่ต้องรอคุณกดรับ', tcap_h2:'ลูกค้าแต่ละคนตัดแพ็กเกจของตัวเอง คนละ 1 ครั้ง', tcap_h3:'ปรับตัวเลขทีหลังได้ นัดที่จองไว้แล้วไม่เปลี่ยน', tcap_h4:'ตั้งต้นที่ 1 คน เหมือนที่ใช้อยู่ตอนนี้', tcap_toast:'บันทึกแล้ว รับรอบละ {n} คน', cb_cap_note:'เทรนร่วมกันได้สูงสุด {n} คนต่อรอบ', cb_slot_free:'ว่าง', cb_slot_booked:'จองแล้ว', cb_slot_full:'เต็ม', cb_lg_free:'ยังไม่มีใครจอง', cb_lg_booked:'มีคนจองไว้ กดจองเวลาเดียวกันเพื่อเทรนร่วมกับเขาได้', cb_lg_full:'รับครบแล้ว กดไม่ได้', cb_join_pair:'จะเป็นเทรนคู่ กับอีก {n} คนที่จองไว้', cb_join_group:'จะเป็นเทรนกลุ่ม กับอีก {n} คนที่จองไว้', cb_alone_label:'ไม่ขอเทรนร่วมกับคนอื่น', cb_alone_hint:'ใช้ได้กับรอบที่ว่าง คนอื่นจะเห็นรอบนี้เป็นเต็ม', cb_slot_not_alone:'มีคนจองเวลานี้ไปก่อนแล้ว จึงขอเทรนคนเดียวไม่ได้ ลองจองแบบเทรนร่วมกัน หรือเลือกเวลาอื่น', cb_mode_pair:'เทรนคู่', cb_mode_group:'เทรนกลุ่ม', cb_done_join:'{mode} กับอีก {n} คน', mb_grp:'{mode} {n} คน รวมคุณ', mb_grp_full:'{mode} {n} คน เต็มแล้ว', mb_alone:'คุณเทรนคนเดียว', mb_alone_now:'ตอนนี้มีคุณคนเดียว', ts_grp_title:'{mode} {n} คน', ts_seats_left:'เหลือ {n} ที่', ts_seats_full:'เต็ม {n} คน', ts_all_done:'เสร็จแล้วทั้ง {n} คน', ts_all_note:'ตัดแพ็กเกจของแต่ละคน คนละ 1 ครั้ง', ts_private:'เทรนคนเดียว', tgrp_title:'บันทึกเสร็จทั้งรอบ?', tgrp_body:'จะบันทึกว่าเทรนเสร็จแล้วให้ทั้ง {n} คน และตัดแพ็กเกจของแต่ละคนคนละ 1 ครั้ง', tgrp_ok:'บันทึกเลย', tgrp_no:'ยังก่อน', tgrp_toast:'บันทึกเสร็จแล้ว {n} คน', notif_joined:'มีคนเข้าร่วมรอบเทรนของคุณกับ {trainer} วันที่ {date} เวลา {time} ตอนนี้ {n} คน',
     tlead_bar_title:'ลูกค้าต้องนัดล่วงหน้าอย่างน้อย', tlead_bar_hint:'ใช้กับทุกนัดใหม่ ลูกค้ากดนัดเวลาที่เหลือน้อยกว่านี้ไม่ได้', tlead_short_none:'ไม่ต้อง', tlead_short_h:'{n} ชม.', tlead_short_d:'{n} วัน',
     push_card_title:'แจ้งเตือนเด้งขึ้นมือถือ', push_card_off:'เมื่อมีนัดใหม่ มีการยกเลิก หรือมีเรื่องที่เกี่ยวกับคุณ ข้อความจะเด้งขึ้นหน้าจอเครื่องนี้ทันที แม้ไม่ได้เปิดแอปอยู่', push_btn_on:'เปิดแจ้งเตือนบนเครื่องนี้', push_state_on:'เปิดอยู่บนเครื่องนี้', push_on_hint:'ถ้าใช้หลายเครื่อง ให้เปิดแอปในเครื่องนั้นแล้วกดเปิดอีกครั้ง ข้อความแจ้งเตือนอาจแสดงบนหน้าจอล็อก', push_btn_test:'ส่งแจ้งเตือนทดสอบ', push_btn_off:'ปิดบนเครื่องนี้', push_denied:'เครื่องนี้ปิดกั้นการแจ้งเตือนของเว็บนี้ไว้ ต้องไปเปิดที่การตั้งค่าของเบราว์เซอร์ (หัวข้อการแจ้งเตือน → อนุญาต) แล้วกลับมากดเปิดอีกครั้ง', push_ios:'บน iPhone / iPad ต้องเพิ่มแอปลงหน้าจอโฮมก่อน: เปิดเว็บนี้ใน Safari → กดปุ่มแชร์ → “เพิ่มลงหน้าจอโฮม” แล้วเปิดแอปจากไอคอนบนหน้าจอ จึงจะเปิดแจ้งเตือนได้ (ต้องเป็น iOS 16.4 ขึ้นไป)', push_unsupported:'เบราว์เซอร์นี้ยังไม่รองรับการแจ้งเตือนเด้ง ลองใช้ Chrome หรือ Edge', push_toast_on:'เปิดแจ้งเตือนแล้ว', push_toast_off:'ปิดแจ้งเตือนบนเครื่องนี้แล้ว', push_toast_denied:'ยังไม่ได้รับอนุญาตให้แจ้งเตือน จึงเปิดไม่ได้', push_toast_fail:'เปิดแจ้งเตือนไม่สำเร็จ ลองใหม่อีกครั้ง',
     push_err_label:'รหัสสาเหตุ:', push_toast_test:'ส่งแล้ว อีกสักครู่จะเด้งขึ้นที่เครื่องนี้', push_test_title:'ทดสอบการแจ้งเตือน', push_test_body:'ใช้งานได้แล้ว! ต่อไปนัดใหม่และเรื่องต่าง ๆ จะเด้งขึ้นหน้าจอแบบนี้', push_banner_t:'ให้แจ้งเตือนเด้งขึ้นมือถือ', push_banner_s:'จะไม่พลาดนัดใหม่หรือการยกเลิก แม้ปิดแอปอยู่', push_banner_btn:'เปิด', push_banner_later:'ไว้ก่อน',
@@ -1170,7 +1219,7 @@ const i18n = {
     duo_notice_body:'Another customer has already requested {time} on {date}. Booking the same slot counts as asking for a pair session — the trainer decides whether to take you both together or just one of you. If they pick a solo session, the other request is cancelled and that person has to choose a new time.',
     duo_submit_btn:'Request a pair session',
     duo_sum_mode:'Session type', duo_sum_mode_duo:'Pair request (1 person already booked)', duo_sum_mode_solo:'Solo session',
-    cb_slot_locked:'Someone has just booked this time. Please pick another time.',
+    cb_slot_locked:'This time is full, or someone has just booked it. Please pick another time.',
     cb_slot_full_requests:'This slot already has 2 requests. Please pick another time.',
     cb_slot_already_mine:'You have already requested this slot.',
     notif_slot_lost:'{trainer} chose a solo session on {date} at {time}, so your request was cancelled. Please pick another time.',
@@ -1256,6 +1305,7 @@ const i18n = {
     tlead_opt_one:'1 hour', tlead_opt_hours:'{n} hours', tlead_opt_day_one:'1 day (24 hours)', tlead_opt_days:'{n} days ({h} hours)',
     tlead_example:'Example: for an 18:00 session, customers must book before {time}. After that, 18:00 is no longer offered.',
     tlead_toast:'Saved. Customers must book at least {label} ahead',
+    tcap_title:'Maximum per session', tcap_sub:'How many customers can train in the same time slot', tcap_n:'{n} person(s)', tcap_s1:'As before', tcap_s2:'Pair', tcap_s3:'Small group', tcap_h1:'The 2nd and 3rd customer can join the same session on their own until it is full. You do not have to accept them.', tcap_h2:'Each customer uses a session of their own package, one each', tcap_h3:'You can change the number later. Sessions already booked stay as they are.', tcap_h4:'It starts at 1, the same as it works now', tcap_toast:'Saved. You take {n} per session', cb_cap_note:'Up to {n} people can train together in a session', cb_slot_free:'Free', cb_slot_booked:'Booked', cb_slot_full:'Full', cb_lg_free:'nobody has booked yet', cb_lg_booked:'someone booked it. Book the same time to train together with them', cb_lg_full:'no room left, cannot be picked', cb_join_pair:'This becomes a pair session with {n} other person who booked', cb_join_group:'This becomes a group session with {n} others who booked', cb_alone_label:'I do not want to train with others', cb_alone_hint:'Works for a free time. Others will see this time as full.', cb_slot_not_alone:'Someone booked this time first, so you cannot have it to yourself. Book it to train together, or pick another time.', cb_mode_pair:'Pair session', cb_mode_group:'Group session', cb_done_join:'{mode} with {n} other(s)', mb_grp:'{mode}, {n} people including you', mb_grp_full:'{mode}, {n} people, full', mb_alone:'You train alone', mb_alone_now:'Only you so far', ts_grp_title:'{mode}, {n} people', ts_seats_left:'{n} place(s) left', ts_seats_full:'Full, {n} people', ts_all_done:'Mark all {n} done', ts_all_note:'Each person uses one session of their own package', ts_private:'Training alone', tgrp_title:'Record the whole session?', tgrp_body:'All {n} people are recorded as done and each uses one session of their own package.', tgrp_ok:'Record it', tgrp_no:'Not yet', tgrp_toast:'Recorded for {n} people', notif_joined:'Someone joined your session with {trainer} on {date} at {time}. There are now {n} people.',
     tlead_bar_title:'Customers must book at least', tlead_bar_hint:'Applies to every new booking. Customers cannot book a time that starts sooner than this.', tlead_short_none:'None', tlead_short_h:'{n} h', tlead_short_d:'{n} d',
     push_card_title:'Phone alerts', push_card_off:'New bookings, cancellations and updates for you pop up on this device right away, even when the app is closed.', push_btn_on:'Turn on for this device', push_state_on:'On for this device', push_on_hint:'Using more than one device? Open the app on it and turn it on there too. Alerts can show on the lock screen.', push_btn_test:'Send a test alert', push_btn_off:'Turn off here', push_denied:'Alerts from this site are blocked on this device. Allow them in the browser settings (Notifications → Allow), then come back and turn them on.', push_ios:'On iPhone / iPad, add the app to the Home Screen first: open this site in Safari → tap Share → “Add to Home Screen”, then open the app from its icon. Needs iOS 16.4 or newer.', push_unsupported:'This browser cannot show pop-up alerts yet. Try Chrome or Edge.', push_toast_on:'Alerts are on', push_toast_off:'Alerts are off on this device', push_toast_denied:'Permission was not given, so alerts stay off', push_toast_fail:'Could not turn alerts on. Please try again.',
     push_err_label:'Reason code:', push_toast_test:'Sent. It should pop up on this device in a moment.', push_test_title:'Alert test', push_test_body:'It works! New bookings and updates will pop up on your screen like this.', push_banner_t:'Get alerts on your phone', push_banner_s:'Never miss a new booking or a cancellation, even with the app closed', push_banner_btn:'Turn on', push_banner_later:'Not now',
@@ -1294,7 +1344,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-06.1';
+const APP_BUILD = '2026-11-06.2';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -1452,7 +1502,7 @@ async function rpc(fn, args, o){
 }
 const API_ERR_KEY = {locked:'cb_slot_locked', full:'cb_slot_full_requests', already_mine:'cb_slot_already_mine', no_package:'cb_no_package',
   pay_not_found:'pay_not_found', pay_no_qr:'pay_no_qr', pay_need_slip:'pay_need_slip', pay_dup:'pay_dup', phone_used:'auth_toast_phone_used',
-  rate_limited:'err_rate', too_many_open:'err_too_many', invalid_image:'err_image', invalid:'err_invalid', invalid_date:'err_invalid',
+  not_alone:'cb_slot_not_alone', rate_limited:'err_rate', too_many_open:'err_too_many', invalid_image:'err_image', invalid:'err_invalid', invalid_date:'err_invalid',
   bad_transition:'err_changed', forbidden:'err_forbidden', trainer_unavailable:'err_trainer_unavailable', consent_needed:'hl_consent_need'};
 function apiErrText(e){
   if(e instanceof ApiError){
@@ -2996,8 +3046,15 @@ function ringHtml(pkg){
     </div>`;
 }
 
+/* A notice the server wrote itself (someone joined your time) carries a key and its numbers, so it reads in the person's own language. */
+function notifText(n){
+  if(n && n.k === 'notif_joined' && n.p && typeof n.p === 'object'){
+    return tt('notif_joined', {trainer:String(n.p.trainer || ''), date:fmtDate(String(n.p.date || '')), time:fmtTime(String(n.p.time || '')), n:Number(n.p.n) || 2});
+  }
+  return n.message;
+}
 function notifRow(n){
-  return `<div class="notif-item ${n.isRead?'':'unread'}"><div class="notif-ico">${navIcon('bell')}</div><div class="body"><div>${esc(n.message)}</div><div class="when">${n.isRead? fmtDateTime(n.createdAt) : t('notif_when_now')}</div></div></div>`;
+  return `<div class="notif-item ${n.isRead?'':'unread'}"><div class="notif-ico">${navIcon('bell')}</div><div class="body"><div>${esc(notifText(n))}</div><div class="when">${n.isRead? fmtDateTime(n.createdAt) : t('notif_when_now')}</div></div></div>`;
 }
 function fmtDateTime(iso){ try{ const d=new Date(iso); return d.toLocaleString(lang==='th'?'th-TH':'en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';} }
 
@@ -3100,7 +3157,7 @@ function bookingDays(){
   return arr;
 }
 const TIMES = { morning:['06:00','07:00','08:00','09:00','10:00','11:00'], afternoon:['13:00','14:00','15:00','16:00'], evening:['17:00','18:00','19:00','20:00'] };
-let bookingState = { trainerId:null, day:localDateStr(), cat:'morning', picks:[] };   // picks: 'YYYY-MM-DD|HH:MM', as many as the person taps
+let bookingState = { trainerId:null, day:localDateStr(), cat:'morning', picks:[], alone:[] };   // picks: 'YYYY-MM-DD|HH:MM', as many as the person taps
 let bookingCtx = null;                                                                   // what the page was drawn from (trainer, bookings, room left on packages)
 
 /* ======================================================================
@@ -3117,12 +3174,18 @@ const ACTIVE_BOOKING_STATUSES = ['pending','confirmed'];
 function bookingsAtSlot(all, trainerId, date, time){
   return all.filter(b=> b.trainerId===trainerId && b.bookingDate===date && b.bookingTime===time && ACTIVE_BOOKING_STATUSES.includes(b.status));
 }
-/* Returns why (if at all) a customer cannot book this slot. */
-function slotAvailability(all, trainerId, date, time, customerId){
+/* How many customers a trainer takes in the same time: 1 (as it always was), 2 (pair) or 3 (small group). */
+function slotCapOf(tr){
+  const n = Number(tr && tr.maxPerSlot);
+  return (n===1 || n===2 || n===3) ? n : 1;
+}
+/* Returns why (if at all) a customer cannot book this slot, and how many are in it already (n).
+   A time that has room is open to join: that is how a pair or a group is made. A time someone asked to have alone is closed. */
+function slotAvailability(all, trainerId, date, time, customerId, cap){
   const at = bookingsAtSlot(all, trainerId, date, time);
-  if(customerId && at.some(b=>b.customerId===customerId)) return {ok:false, reason:'already_mine', pending:0};
-  if(at.length) return {ok:false, reason:'locked', pending:0};
-  return {ok:true, reason:null, pending:0};
+  if(customerId && at.some(b=>b.customerId===customerId)) return {ok:false, reason:'already_mine', n:at.length};
+  if(at.length >= (cap || 1) || at.some(b=>b.private)) return {ok:false, reason:'locked', n:at.length};
+  return {ok:true, reason:null, n:at.length};
 }
 
 /* ---- minimum booking notice (set by each trainer, default 1 hour) ---- */
@@ -3180,6 +3243,31 @@ async function saveLeadHours(h){
   renderView();
 }
 
+/* The trainer chooses how many customers train in the same time: one tap saves. */
+function capBarHtml(tr){
+  const cur = slotCapOf(tr);
+  const person = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+  return `
+    <div class="card lead-bar cap-bar">
+      <div class="lead-top"><div class="lead-title">${t('tcap_title')}</div><div class="lead-now">${esc(tt('tcap_n',{n:cur}))}</div></div>
+      <p class="lead-hint" style="margin:-6px 0 12px">${t('tcap_sub')}</p>
+      <div class="cap-pills" role="radiogroup" aria-label="${esc(t('tcap_title'))}">
+        ${[1,2,3].map(n=>`<button type="button" role="radio" aria-checked="${n===cur}" class="cap-pill ${n===cur?'sel':''}" data-cap-pill="${n}"><span class="ppl" aria-hidden="true">${person.repeat(n)}</span><b>${esc(tt('tcap_n',{n}))}</b><small>${t('tcap_s'+n)}</small></button>`).join('')}
+      </div>
+      <ul class="cap-list"><li>${t('tcap_h1')}</li><li>${t('tcap_h2')}</li><li>${t('tcap_h3')}</li><li>${t('tcap_h4')}</li></ul>
+    </div>`;
+}
+async function saveSlotCap(n){
+  if(!(n===1 || n===2 || n===3)) return;
+  clearRenderCaches();
+  const tr = await dbGet('trainer:'+session.id);
+  if(!tr) return;
+  tr.maxPerSlot = n;
+  await dbSet('trainer:'+tr.id, tr);
+  toast(tt('tcap_toast',{n}));
+  renderView();
+}
+
 function pickKey(date, time){ return date + '|' + time; }
 function pickSplit(k){ const i = k.indexOf('|'); return {date:k.slice(0,i), time:k.slice(i+1)}; }
 function sortedPicks(){ return bookingState.picks.slice().sort(); }          // 'YYYY-MM-DD|HH:MM' sorts by day, then time
@@ -3207,14 +3295,26 @@ function slotState(date, time){
   if(!c || !c.trainer) return 'taken';
   if(c.lastDay && date > c.lastDay) return 'beyond';
   if(slotTooSoon(c.trainer, date, time)) return 'late';
-  const av = slotAvailability(c.allBookings, c.trainer.id, date, time, session.id);
+  const av = slotAvailability(c.allBookings, c.trainer.id, date, time, session.id, slotCapOf(c.trainer));
   return av.ok ? 'ok' : (av.reason==='already_mine' ? 'mine' : 'taken');
+}
+/* how many people are booked in a time already (never who) */
+function slotCount(date, time){
+  const c = bookingCtx;
+  return (c && c.trainer) ? bookingsAtSlot(c.allBookings, c.trainer.id, date, time).length : 0;
+}
+/* "train alone" can be asked for only on a time nobody has booked, and only where the trainer takes more than one person */
+function aloneOk(k){
+  const c = bookingCtx;
+  if(!c || !c.trainer || slotCapOf(c.trainer) < 2) return false;
+  const p = pickSplit(k);
+  return slotCount(p.date, p.time) === 0;
 }
 /* Adds or removes one picked time. Returns false (with a message) when it cannot be added. */
 function togglePick(date, time){
   const c = bookingCtx, k = pickKey(date, time);
   const i = bookingState.picks.indexOf(k);
-  if(i >= 0){ bookingState.picks.splice(i, 1); return true; }
+  if(i >= 0){ bookingState.picks.splice(i, 1); bookingState.alone = bookingState.alone.filter(x=>x!==k); return true; }
   if(!c || !c.rooms.length){ toast(t('cb_no_package')); return false; }
   if(slotState(date, time) !== 'ok') return false;
   const now = bookingState.picks.length;
@@ -3270,11 +3370,20 @@ function bookingDynHtml(){
     const label = fmtDate(d) + (np ? ' · ' + tt('cb_sum_n',{n:np}) : '') + (nh ? ' · ' + t('cb_legend_have') : '');
     return `<div class="day-pill ${bookingState.day===d?'sel':''} ${np?'has-pick':''} ${nh?'has-book':''} ${(c.lastDay && d>c.lastDay)?'off':''} ${d===today?'today':''}" data-day="${d}" role="button" aria-pressed="${bookingState.day===d}" aria-label="${esc(label)}"><div class="d">${weekdayShort(dt.getDay())}</div><div class="n">${dt.getDate()}</div><i class="dot"></i>${np ? `<span class="cnt">${np}</span>` : ''}</div>`;
   }).join('');
+  const cap = slotCapOf(trainer);
   const timeGrid = (TIMES[bookingState.cat]||[]).map(tm=>{
     const st = slotState(bookingState.day, tm);
     const on = bookingState.picks.includes(pickKey(bookingState.day, tm));
-    return `<div class="time-slot ${on?'sel':''} ${st==='ok'?'':'taken'} ${st==='mine'?'mine':''}" data-time="${tm}" aria-pressed="${on}">${fmtTime(tm)}${st==='mine' ? `<span class="ts-tag">${t('cb_slot_mine_tag')}</span>` : ''}</div>`;
+    // with a trainer who takes more than one person every time says what it is: free, booked (you can still join) or full
+    let sub = '', subCls = '';
+    if(cap > 1 && (st==='ok' || st==='taken')){
+      if(st==='ok'){ const n = slotCount(bookingState.day, tm); sub = t(n ? 'cb_slot_booked' : 'cb_slot_free'); subCls = n ? 'joinable' : 'free'; }
+      else { sub = t('cb_slot_full'); subCls = 'full'; }
+    }
+    return `<div class="time-slot ${on?'sel':''} ${st==='ok'?'':'taken'} ${st==='mine'?'mine':''} ${sub?'has-sub':''} ${subCls==='full'?'is-full':''}" data-time="${tm}" aria-pressed="${on}">${fmtTime(tm)}${sub ? `<span class="ts-sub ${subCls}">${esc(sub)}</span>` : ''}${st==='mine' ? `<span class="ts-tag">${t('cb_slot_mine_tag')}</span>` : ''}</div>`;
   }).join('');
+  const capNote = cap > 1 ? `<div class="cap-note" role="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>${esc(tt('cb_cap_note',{n:cap}))}</span></div>` : '';
+  const slotLegend = cap > 1 ? `<div class="slot-legend"><span><b class="lgt-free">${t('cb_slot_free')}</b>${t('cb_lg_free')}</span><span><b class="lgt-booked">${t('cb_slot_booked')}</b>${t('cb_lg_booked')}</span><span><b class="lgt-full">${t('cb_slot_full')}</b>${t('cb_lg_full')}</span></div>` : '';
   const leadH = leadHoursOf(trainer);
   const leadNote = leadH>0 ? `<div class="lead-note" role="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div class="lead-note-t">${t('cb_lead_note_a')} <b class="lead-note-n">${esc(leadLabel(leadH))}</b><span class="lead-note-s">${t('cb_lead_note_b')}</span></div></div>` : '';
   const beyond = (c.lastDay && c.lastDay < c.days[c.days.length-1]) ? `<p class="slot-hint">${tt('cb_beyond_pkg',{date:fmtDate(c.lastDay)})}</p>` : '';
@@ -3285,6 +3394,7 @@ function bookingDynHtml(){
   }).join('');
   const more = Math.max(0, c.maxN - picks.length);
   return `
+    ${capNote}
     ${usual}
     <label>${t('cb_days_label')}</label>
     <div class="day-strip day-grid" id="dayStrip">${dayPills}</div>
@@ -3300,11 +3410,25 @@ function bookingDynHtml(){
     ${leadNote}
     <div class="time-grid" id="timeGrid">${timeGrid}</div>
     <p class="slot-hint" style="margin:-8px 0 14px">${t('cb_tap_hint')}</p>
+    ${slotLegend}
     <div class="picks-box ${picks.length?'has':''}" id="picksBox">
       <div class="picks-head"><b>${t('cb_picks_title')}</b><span class="picks-n">${picks.length}</span><span class="picks-left">${tt('cb_picks_left',{n:more})}</span></div>
       ${picks.length ? `<div class="picks-list">${chips}</div>` : `<div class="picks-none">${t('cb_picks_none')}</div>`}
+      ${picks.length ? pickNotesHtml() : ''}
     </div>
     <button class="btn btn-primary btn-block" id="submitBookingBtn" ${!c.rooms.length?'disabled':''}>${picks.length>1 ? tt('cb_submit_n',{n:picks.length}) : t('cb_submit_btn')}</button>`;
+}
+/* Under the picked times: which ones become a pair or a group, and (where it is possible) the choice to train alone. */
+function pickNotesHtml(){
+  const c = bookingCtx;
+  if(!c || slotCapOf(c.trainer) < 2) return '';
+  const rows = sortedPicks().map(k=>{
+    const p = pickSplit(k), n = slotCount(p.date, p.time), when = esc(fmtDate(p.date)) + ' ' + esc(fmtTime(p.time));
+    if(n > 0) return `<div class="pick-note join"><span><b>${when}</b> ${esc(tt(n===1 ? 'cb_join_pair' : 'cb_join_group', {n}))}</span></div>`;
+    const on = bookingState.alone.includes(k);
+    return `<label class="pick-note alone"><input type="checkbox" data-alone="${esc(k)}" ${on?'checked':''}><span><b>${when}</b> ${esc(t('cb_alone_label'))}<small>${esc(t('cb_alone_hint'))}</small></span></label>`;
+  });
+  return rows.length ? `<div class="pick-notes">${rows.join('')}</div>` : '';
 }
 function bookingSumHtml(){
   const c = bookingCtx, trainer = c.trainer;
@@ -3338,7 +3462,13 @@ function wireBooking(){
   }));
   dyn.querySelectorAll('[data-unpick]').forEach(el=>el.addEventListener('click', ()=>{
     bookingState.picks = bookingState.picks.filter(k=>k!==el.dataset.unpick);
+    bookingState.alone = bookingState.alone.filter(k=>k!==el.dataset.unpick);
     refreshBookingDyn();
+  }));
+  dyn.querySelectorAll('[data-alone]').forEach(el=>el.addEventListener('change', ()=>{
+    const k = el.dataset.alone;
+    bookingState.alone = bookingState.alone.filter(x=>x!==k);
+    if(el.checked) bookingState.alone.push(k);
   }));
   const usualBtn = document.getElementById('usualBtn');
   if(usualBtn) usualBtn.addEventListener('click', applyUsual);
@@ -3348,7 +3478,7 @@ function wireBooking(){
 
 async function renderCBooking(){
   if(routeParams.trainerId){            // arriving from a "book" button / QR link: take the trainer once, then let the drop-down decide
-    bookingState.trainerId = routeParams.trainerId; bookingState.picks = [];
+    bookingState.trainerId = routeParams.trainerId; bookingState.picks = []; bookingState.alone = [];
     routeParams = Object.assign({}, routeParams); delete routeParams.trainerId;
   }
   const days = bookingDays();
@@ -3376,7 +3506,8 @@ async function renderCBooking(){
   if(trainer){
     const still = bookingState.picks.filter(k=>{ const p = pickSplit(k); return days.includes(p.date) && slotState(p.date, p.time)==='ok'; });
     bookingState.picks = assignPicks(still, rooms).assigned.map(x=>x.key).slice(0, bookingCtx.maxN);
-  } else bookingState.picks = [];
+    bookingState.alone = bookingState.alone.filter(k=> bookingState.picks.includes(k) && aloneOk(k));
+  } else { bookingState.picks = []; bookingState.alone = []; }
 
   const noPkg = !pkg ? (waitingPay ? `<div class="pay-wait">${t('cb_pay_waiting')}</div>` : `
       <div class="auth-error">${expiredUnused ? t('cb_expired_package') : tt('cb_no_pkg_trainer',{name:esc(trainer?trainer.name:'')})}</div>
@@ -3430,18 +3561,22 @@ async function submitBooking(){
   const fresh = await dbGetAll('booking:');
   const plan = assignPicks(keys, pkgRoom(pkgs, fresh));
   const done = [], failed = plan.over.map(k=>({key:k, why:t('cb_cap_zero')}));
+  const cap = slotCapOf(trainer), joined = new Map();      // joined: how many others were already in the time a booking joined
   let fatal = null;
   try{
     for(const {key, pkg} of plan.assigned){
       const {date, time} = pickSplit(key);
       if(slotTooSoon(trainer, date, time)){ failed.push({key, why:tt('cb_slot_too_soon',{label:leadLabel(leadHoursOf(trainer))})}); continue; }
       // re-check against fresh data so two customers racing for the same time never both get it
-      const av = slotAvailability(fresh, trainer.id, date, time, session.id);
+      const av = slotAvailability(fresh, trainer.id, date, time, session.id, cap);
       if(!av.ok){ failed.push({key, why: av.reason==='already_mine' ? t('cb_slot_already_mine') : t('cb_slot_locked')}); continue; }
+      const wantAlone = cap > 1 && bookingState.alone.includes(key);
+      if(wantAlone && av.n > 0){ failed.push({key, why:t('cb_slot_not_alone')}); continue; }      // someone booked it while the person was choosing: never put them in with others against their choice
+      const alone = wantAlone;
       const booking = {
         id:newId('bk'), customerId:session.id, customerName:session.name, trainerId:trainer.id, trainerName:trainer.name,
         packageInstanceId: pkg.id, bookingDate: date, bookingTime: time,
-        status:'confirmed', sessionMode:'solo', partnerNames:[], createdAt:new Date().toISOString(), completedAt:null
+        status:'confirmed', sessionMode:'solo', partnerNames:[], private:alone, createdAt:new Date().toISOString(), completedAt:null
       };
       try{ await dbSet('booking:'+booking.id, booking); }
       catch(e){
@@ -3451,12 +3586,13 @@ async function submitBooking(){
         }
         throw e;
       }
-      fresh.push(booking); done.push(booking);
+      fresh.push(booking); done.push(booking); joined.set(booking.id, av.n);
     }
   }catch(e){ fatal = e; }
   // whatever happened, the times that were booked leave the selection; the ones that failed stay until the page checks them again
   const gone = new Set(done.map(b=>pickKey(b.bookingDate, b.bookingTime)));
   bookingState.picks = bookingState.picks.filter(k=>!gone.has(k));
+  bookingState.alone = bookingState.alone.filter(k=>!gone.has(k));
   if(done.length){ try{ await notifyTrainerBooked(trainer, done); }catch(e){ console.warn('trainer notice not sent', e && e.message); } }
   if(fatal){ if(done.length) renderView(); throw fatal; }
   if(!done.length){
@@ -3473,6 +3609,8 @@ async function submitBooking(){
   sorted.forEach(b=>{
     const li = document.createElement('li');
     const a1 = document.createElement('span'); a1.textContent = fmtDate(b.bookingDate);
+    const jn = joined.get(b.id) || 0;
+    if(jn > 0){ const md = document.createElement('span'); md.className = 'md'; md.textContent = tt('cb_done_join', {mode:t(jn===1 ? 'cb_mode_pair' : 'cb_mode_group'), n:jn}); a1.appendChild(md); }
     const a2 = document.createElement('b'); a2.textContent = fmtTime(b.bookingTime);
     li.appendChild(a1); li.appendChild(a2); list.appendChild(li);
   });
@@ -3493,8 +3631,18 @@ function closeBookingModal(goNext){
   if(goNext) go('mybookings'); else renderView();
 }
 
+/* The line under a booking that says whether it is a pair or a group. Only how many, never who. */
+function groupLineHtml(b, all, tr){
+  if(!ACTIVE_BOOKING_STATUSES.includes(b.status)) return '';
+  const n = Math.max(1, bookingsAtSlot(all, b.trainerId, b.bookingDate, b.bookingTime).length), cap = slotCapOf(tr);
+  if(n >= 2) return `<div class="t grp">${esc(tt(n >= cap ? 'mb_grp_full' : 'mb_grp', {mode:t(n===2 ? 'cb_mode_pair' : 'cb_mode_group'), n}))}</div>`;
+  if(b.private) return `<div class="t grp alone">${esc(t('mb_alone'))}</div>`;
+  if(cap > 1) return `<div class="t grp alone">${esc(t('mb_alone_now'))}</div>`;
+  return '';
+}
 async function renderCMyBookings(){
   const all = await dbGetAll('booking:');
+  const trMap = new Map((await dbGetAll('trainer:')).map(x=>[x.id, x]));
   const mine = all.filter(b=>b.customerId===session.id).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
   return `
     <div class="page-head"><div><div class="eyebrow">${t('mb_eyebrow')}</div><h1>${t('mb_h1')}</h1><p>${t('mb_p')}</p></div></div>
@@ -3506,6 +3654,7 @@ async function renderCMyBookings(){
               <div class="n">${esc(b.trainerName)}</div>
               <div class="t">${fmtDate(b.bookingDate)} · ${fmtTime(b.bookingTime)}</div>
               ${b.sessionMode==='duo' && (b.partnerNames||[]).length ? `<div class="t" style="color:var(--amber)">${tt('duo_partner',{name:esc(b.partnerNames.join(', '))})}</div>` : ''}
+              ${groupLineHtml(b, all, trMap.get(b.trainerId))}
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
               ${b.sessionMode==='duo' ? `<span class="badge badge-duo">${t('duo_badge')}</span>` : ''}
@@ -4054,6 +4203,7 @@ async function renderTSchedule(){
     else if(b.id===nextId) chips.push(`<span class="badge badge-next">${t('ts_next')}</span>`);
     if(phase==='late') chips.push(`<span class="badge badge-pending">${t('ts_record')}</span>`);
     if(b.sessionMode==='duo') chips.push(`<span class="badge badge-duo">${t('duo_badge')}</span>`);
+    if(b.private) chips.push(`<span class="badge badge-role">${t('ts_private')}</span>`);
     if(healthWatch(c.health)) chips.push(`<button type="button" class="badge badge-pending chip-btn" data-open-health="${esc(b.customerId)}">${t('hl_flag')}</button>`);
     const prov = provChip(b, provSet);
     const canRecord = phase !== 'future';
@@ -4071,6 +4221,32 @@ async function renderTSchedule(){
         </div>
       </div>`;
   };
+  /* people booked at the same time share one card (a pair or a group); one person alone stays a normal row */
+  const capNow = slotCapOf(meTrainer);
+  const groupHtml = g=>{
+    const n = g.rows.length, phase = g.rows[0].phase, full = n >= capNow;
+    const end = minToHm(hmToMin(g.time) + SESSION_MIN);
+    const dots = Array.from({length:Math.max(capNow, n)}, (_, i)=>`<i class="${i<n?'':'free'}"></i>`).join('');
+    const ids = g.rows.map(r=>r.b.id);
+    return `
+      <div class="sch-group">
+        <div class="sch-ghead">
+          <div class="gt"><b>${lang==='th' ? g.time : fmtTime(g.time)}</b><span>${esc(tt('ts_grp_title',{mode:t(n===2 ? 'cb_mode_pair' : 'cb_mode_group'), n}))} · ${phase==='late' ? esc(fmtDate(g.date)) : esc(tt('ts_until',{time:fmtTime(end)}))}</span></div>
+          <div class="sch-seats"><span class="dots" aria-hidden="true">${dots}</span><span class="badge ${full?'badge-pending':'badge-confirmed'}">${esc(full ? tt('ts_seats_full',{n}) : tt('ts_seats_left',{n:capNow-n}))}</span></div>
+        </div>
+        ${g.rows.map(rowHtml).join('')}
+        ${phase!=='future' ? `<button type="button" class="btn btn-primary btn-block sch-gall" data-complete-group="${esc(ids.join(','))}">${esc(tt('ts_all_done',{n}))}</button><div class="sch-gnote">${t('ts_all_note')}</div>` : ''}
+      </div>`;
+  };
+  const slotsHtml = items=>{
+    const out = [];
+    items.forEach(r=>{
+      const last = out[out.length-1];
+      if(last && last.date===r.b.bookingDate && last.time===r.b.bookingTime) last.rows.push(r);
+      else out.push({date:r.b.bookingDate, time:r.b.bookingTime, rows:[r]});
+    });
+    return out.map(g=> g.rows.length === 1 ? rowHtml(g.rows[0]) : groupHtml(g)).join('');
+  };
   const days = [];
   coming.forEach(r=>{
     let g = days[days.length-1];
@@ -4079,14 +4255,15 @@ async function renderTSchedule(){
   });
   const lateHtml = late.length ? `
     <div class="sch-day late"><b>${t('ts_late_title')}</b><span>${tt('ts_late_hint',{n:late.length})}</span></div>
-    ${late.map(rowHtml).join('')}` : '';
+    ${slotsHtml(late)}` : '';
   const daysHtml = days.map(g=>`
     <div class="sch-day"><b>${esc(dayHeading(g.date, today))}</b><span>${g.date===today || dayHeading(g.date, today)!==fmtDate(g.date) ? fmtDate(g.date) + ' · ' : ''}${tt('ts_day_count',{n:g.items.length})}</span></div>
-    ${g.items.map(rowHtml).join('')}`).join('');
+    ${slotsHtml(g.items)}`).join('');
 
   return `
     <div class="page-head"><div><div class="eyebrow">${t('ts_eyebrow')}</div><h1>${t('ts_h1')}</h1><p>${t('ts_p')}</p></div></div>
     ${leadBarHtml(meTrainer)}
+    ${capBarHtml(meTrainer)}
     <div class="sch-sum">
       <div class="sch-sum-i"><b>${todayN}</b><span>${t('ts_sum_today')}</span></div>
       <div class="sch-sum-i"><b>${coming.length}</b><span>${t('ts_sum_upcoming')}</span></div>
@@ -4120,7 +4297,7 @@ async function cancelBookingByTrainer(id){
 const finishLocks = new Set();
 /* Recording a session uses it up. While the package is still waiting for the trainer to see the
    money, ask first (one tap) so a session is never used up on an unchecked payment. */
-async function finishBooking(id, noShow){
+async function finishBooking(id, noShow, quiet){
   if(finishLocks.has(id)) return;
   finishLocks.add(id);
   try{
@@ -4140,12 +4317,12 @@ async function finishBooking(id, noShow){
         if(!again || again.status!=='confirmed') return;
       }
     }
-    await finishBookingNow(id, noShow);
+    return await finishBookingNow(id, noShow, quiet);
   } finally { finishLocks.delete(id); }
 }
-async function finishBookingNow(id, noShow){
+async function finishBookingNow(id, noShow, quiet){
   const b = await dbGet('booking:'+id);
-  if(!b || b.status!=='confirmed') return; // guard against double-deduction
+  if(!b || b.status!=='confirmed') return false; // guard against double-deduction
   b.status = noShow ? 'no_show' : 'completed';
   b.completedAt = new Date().toISOString();
   await dbSet('booking:'+id, b);
@@ -4162,8 +4339,26 @@ async function finishBookingNow(id, noShow){
       if(pkg.remainingSessions<=0) await pushNotification(b.customerId, 'nav_c_package', 'notif_full', {}, b.id);
     }
   }
-  toast(noShow? t('ts_toast_noshow') : t('ts_toast_done'));
-  renderView();
+  if(!quiet){ toast(noShow? t('ts_toast_noshow') : t('ts_toast_done')); renderView(); }
+  return true;
+}
+/* One tap for the whole group: everyone in the time is recorded as done, each using a session of their own package. */
+async function finishGroup(idsCsv){
+  const ids = String(idsCsv || '').split(',').filter(Boolean);
+  const lk = 'g:' + ids.join(',');
+  if(!ids.length || finishLocks.has(lk)) return;
+  finishLocks.add(lk);
+  try{
+    clearRenderCaches();
+    const ok = await askConfirm({title:t('tgrp_title'), body:tt('tgrp_body',{n:ids.length}), ok:t('tgrp_ok'), cancel:t('tgrp_no')});
+    if(!ok) return;
+    let done = 0;
+    for(const id of ids){
+      try{ if(await finishBooking(id, false, true)) done++; }catch(e){ console.warn('group record failed', e && e.message); }
+    }
+    toast(tt('tgrp_toast',{n:done}));
+    renderView(); renderNav();
+  } finally { finishLocks.delete(lk); }
 }
 
 async function renderTCustomers(){
@@ -4998,7 +5193,7 @@ function wireView(){
 
 
   const trainerSelect = document.getElementById('bookTrainerSelect');
-  if(trainerSelect) trainerSelect.addEventListener('change', ()=>{ bookingState.trainerId = trainerSelect.value || null; bookingState.picks = []; renderView(); });
+  if(trainerSelect) trainerSelect.addEventListener('change', ()=>{ bookingState.trainerId = trainerSelect.value || null; bookingState.picks = []; bookingState.alone = []; renderView(); });
   wireBooking();
 
   document.querySelectorAll('[data-pay-pkg]').forEach(el=>el.addEventListener('click', ()=> go('pay', {id:el.dataset.payPkg})));
@@ -5030,6 +5225,7 @@ function wireView(){
   document.querySelectorAll('[data-complete-booking]').forEach(el=>el.addEventListener('click', ()=> finishBooking(el.dataset.completeBooking, false)));
   document.querySelectorAll('[data-noshow-booking]').forEach(el=>el.addEventListener('click', ()=> finishBooking(el.dataset.noshowBooking, true)));
   document.querySelectorAll('[data-cancel-booking]').forEach(el=>el.addEventListener('click', ()=> cancelBookingByTrainer(el.dataset.cancelBooking)));
+  document.querySelectorAll('[data-complete-group]').forEach(el=>el.addEventListener('click', ()=> finishGroup(el.dataset.completeGroup)));
 
   const pfSaveBtn = document.getElementById('pfSaveBtn'); if(pfSaveBtn) pfSaveBtn.addEventListener('click', ()=> withBusy(pfSaveBtn, saveTrainerProfile));
   const copyLinkBtn = document.getElementById('copyTrainerLinkBtn');
@@ -5083,6 +5279,7 @@ function wireView(){
   document.querySelectorAll('[data-push-test]').forEach(b=>b.addEventListener('click', ()=> withBusy(b, pushTestFlow)));
   document.querySelectorAll('[data-push-later]').forEach(b=>b.addEventListener('click', ()=>{ if(session) pushListAdd(PUSH_NUDGE, session.id); const bn = b.closest('.push-banner'); if(bn) bn.remove(); }));
   document.querySelectorAll('[data-lead-pill]').forEach(el=>el.addEventListener('click', ()=> saveLeadHours(Number(el.dataset.leadPill))));
+  document.querySelectorAll('[data-cap-pill]').forEach(el=>el.addEventListener('click', ()=> saveSlotCap(Number(el.dataset.capPill))));
   document.querySelectorAll('[data-google-link]').forEach(b=>b.addEventListener('click', ()=> signInWithGoogle(b, {role:'trainer', mode:'link', trainerId:session.id})));
   document.querySelectorAll('[data-google-unlink]').forEach(b=>b.addEventListener('click', ()=> withBusy(b, unlinkGoogleTrainer)));
 }
