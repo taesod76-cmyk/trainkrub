@@ -30,7 +30,11 @@ If the database password is changed (running `09_backup_access.sql` again makes 
 
 ## If the backup fails (the e-mail says BACKUP FAILED)
 
-Open the log. The usual causes: the password in the secret is old (run `09_backup_access.sql` again and update the secret), the Supabase project is paused (open the Supabase dashboard and restore it), or the host is not the Session pooler.
+Open the run page: the error line **What the backup said** gives the reason, and **Password check** shows how many characters the password has (the setup script makes 64).
+
+The usual causes: the password in the secret is old or half copied (run `09_backup_access.sql` again, copy the cell with *right click > Copy cell*, update the secret), the Supabase project is paused (open the Supabase dashboard and restore it), or the host is not the Session pooler.
+
+**After a password change the Supabase pooler can keep the old password for a few minutes** (it caches it; every new connection attempt refreshes it). If the length is 64 and the log still says `password authentication failed`, change nothing, wait 5 minutes and run the job once more. Changing the password again only restarts that wait.
 
 ## Restoring
 
