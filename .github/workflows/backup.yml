@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   backup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: read
@@ -77,9 +77,16 @@ jobs:
           SIMULATE_ALARM: ${{ inputs.simulate_alarm && '1' || '' }}
         run: |
           set +e
-          bash backup/backup.sh
-          rc=$?
+          command -v psql >/dev/null 2>&1 || { sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client >/dev/null; }
+          echo "psql: $(psql --version 2>&1 | head -1) | openssl: $(openssl version 2>&1 | head -1)"
+          bash backup/backup.sh 2>&1 | tee backup-output.txt
+          rc=${PIPESTATUS[0]}
           echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          if [ "$rc" != "0" ]; then
+            # the first lines of what the backup said, so the reason shows on the run page (the script never prints a password, a count or a name)
+            msg=$(head -c 900 backup-output.txt | tr '\n' ' ' | sed -e 's/%/%25/g' -e 's/\r//g')
+            echo "::error title=What the backup said::${msg}"
+          fi
           exit 0
 
       - name: Keep tonight's numbers (locked with the password)
@@ -125,7 +132,7 @@ jobs:
           exit 1
 
   site:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: The website answers
