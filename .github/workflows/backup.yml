@@ -37,15 +37,19 @@ jobs:
       PGPORT: "5432"
       PGDATABASE: postgres
       PGUSER: backup_ro.eauzvihirpfcjkwyqgel
-      PGPASSWORD: ${{ secrets.BACKUP_DB_PASSWORD }}
+      BACKUP_PW_RAW: ${{ secrets.BACKUP_DB_PASSWORD }}
       PGSSLMODE: require
     steps:
       - name: Check the setup
         run: |
           missing=""
           [ -n "$PGHOST" ] || missing="$missing BACKUP_DB_HOST(variable)"
-          [ -n "$PGPASSWORD" ] || missing="$missing BACKUP_DB_PASSWORD(secret)"
+          [ -n "$BACKUP_PW_RAW" ] || missing="$missing BACKUP_DB_PASSWORD(secret)"
           if [ -n "$missing" ]; then echo "::error title=Backup is not set up::Missing:$missing. See backup/README.md"; exit 1; fi
+          # a pasted password often carries a space, a new line or a quote at the end: take those away
+          pw="$(printf '%s' "$BACKUP_PW_RAW" | tr -d '[:space:]"\047')"
+          echo "::notice title=Password check::the password has ${#pw} characters after cleaning (${#BACKUP_PW_RAW} as pasted); the setup script makes 64"
+          echo "PGPASSWORD=$pw" >> "$GITHUB_ENV"
 
       - name: Get the scripts
         uses: actions/checkout@v4
