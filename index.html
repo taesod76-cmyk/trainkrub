@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-AgjcJ7acTmlsWtkQYY3EbB0nQ74kCAy1UjprAwt3ufY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-iqjMO+cn6NjgXuDldD9cPZzmIBIv+PwUOFA2fYM6RqU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนคับ (TRAINKUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -572,6 +572,22 @@
   .device-frame-shell{border-radius:30px;border:8px solid #131010;background:#000;box-shadow:0 24px 70px rgba(0,0,0,.6);overflow:hidden;max-width:94vw;max-height:80vh}
   .device-frame-shell iframe{display:block;width:100%;height:100%;border:none;background:var(--bg)}
 
+  /* round 20: easier to use */
+  .pw-wrap{position:relative;display:block}
+  .pw-wrap input[type=password],.pw-wrap input[type=text]{padding-right:52px}
+  .pw-eye{position:absolute;right:3px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:transparent;color:var(--text-dim);display:flex;align-items:center;justify-content:center;border-radius:50%;padding:0;cursor:pointer}
+  .pw-eye svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .pw-eye:active{background:var(--surface-3)}
+  .nw{white-space:nowrap}
+  .set-head{font:600 18px/1.3 var(--f-display);margin:30px 0 12px;color:var(--text)}
+  @media (pointer:coarse){
+    .btn-sm{min-height:44px}
+    .req-actions .btn{min-height:44px}
+  }
+  @media(max-width:520px){
+    .user-chip b{display:none!important}
+    .nav button{font-size:13px}
+  }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   }
@@ -922,7 +938,7 @@ const i18n = {
   th:{
     brand_sub:'นัดเทรนกับเทรนเนอร์ส่วนตัว',
     role_customer:'ลูกค้า', role_trainer:'เทรนเนอร์', role_admin:'ผู้ดูแลระบบ',
-    nav_c_dashboard:'หน้าแรก', nav_c_trainers:'เทรนเนอร์ของฉัน', nav_c_booking:'นัดเวลาเทรน', nav_c_mybookings:'นัดของฉัน', nav_c_package:'แพ็กเกจของฉัน', nav_c_notif:'การแจ้งเตือน', nav_c_profile:'โปรไฟล์ของฉัน',
+    nav_c_dashboard:'หน้าแรก', nav_c_trainers:'เทรนเนอร์ของฉัน', nav_c_booking:'จองเทรน', nav_c_mybookings:'การจองของฉัน', nav_c_package:'แพ็กเกจของฉัน', nav_c_notif:'การแจ้งเตือน', nav_c_profile:'โปรไฟล์ของฉัน',
     nav_t_dashboard:'ภาพรวม', nav_t_requests:'คำขอนัดเทรน', nav_t_schedule:'ตารางเทรน', nav_t_customers:'ลูกค้าของฉัน', nav_t_profile:'โปรไฟล์ของฉัน', nav_t_notif:'การแจ้งเตือน',
     nav_a_dashboard:'ภาพรวมระบบ', nav_a_apps:'ตรวจสอบเทรนเนอร์', nav_a_users:'จัดการผู้ใช้งาน', nav_a_packages:'จัดการแพ็กเกจ',
     logout:'ออกจากระบบ',
@@ -975,12 +991,12 @@ const i18n = {
     c_dash_remaining:'ครั้งคงเหลือ', c_dash_upcoming:'นัดเทรนที่กำลังจะถึง', c_dash_notif:'แจ้งเตือนล่าสุด', c_dash_no_upcoming:'ยังไม่มีนัดเทรนที่กำลังจะถึง',
     ct_eyebrow:'เทรนเนอร์', ct_h1:'เทรนเนอร์ของฉัน', ct_p:'ขอโค้ดจากเทรนเนอร์ของคุณ แล้วใส่โค้ดเพื่อเพิ่มเทรนเนอร์เข้ารายชื่อ',
     ct_search_ph:'เช่น AB7K', ct_search_btn:'เพิ่ม', ct_no_results:'ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ดด้านบนเพื่อเริ่มต้น', ct_code_badge:'โค้ด',
-    tr_view_profile:'ดูโปรไฟล์', tr_book:'นัดเวลา', tr_ready:'พร้อมรับลูกค้า', tr_full:'ยังไม่เปิดรับ',
+    tr_view_profile:'ดูโปรไฟล์', tr_book:'จองเทรน', tr_ready:'พร้อมรับลูกค้า', tr_full:'ยังไม่เปิดรับ',
     tr_pin_btn:'ปักหมุดไว้บนสุด', tr_unpin_btn:'เลิกปักหมุด', tr_pinned_badge:'ปักหมุดไว้บนสุด',
     tr_pin_hint:'เทรนเนอร์ที่ปักหมุดไว้จะแสดงอยู่บนสุดของรายการเสมอ เพื่อให้หาเจอไวขึ้นครั้งต่อไป',
     tr_pinned_toast:'ปักหมุด {name} ไว้บนสุดแล้ว', tr_unpinned_toast:'เลิกปักหมุด {name} แล้ว',
     tp_back:'กลับไปหน้ารายชื่อเทรนเนอร์', tp_contact_label:'เบอร์ติดต่อ', tp_about_label:'เกี่ยวกับเทรนเนอร์', tp_certs_label:'ใบรับรองและวุฒิบัตร', tp_no_certs:'เทรนเนอร์ยังไม่ได้แนบใบรับรอง', tp_code_label:'โค้ดเทรนเนอร์',
-    cb_eyebrow:'นัดเวลาเทรน', cb_h1:'นัดเวลาเทรน', cb_p:'เลือกเทรนเนอร์ แล้วแตะวันและเวลาที่สะดวกได้หลายวันในครั้งเดียว จองล่วงหน้าได้ 14 วัน กดจองทีเดียวนัดทั้งหมดจะขึ้นตารางของเทรนเนอร์ทันที ไม่ต้องรอตอบรับ จำนวนครั้งจะถูกตัดตอนเทรนเสร็จเท่านั้น',
+    cb_eyebrow:'จองเวลาเทรน', cb_h1:'จองเวลาเทรน', cb_p:'เลือกวันและเวลาได้หลายวันในครั้งเดียว จองล่วงหน้าได้ 14 วัน นัดขึ้นตารางเทรนเนอร์ทันที ไม่ต้องรอตอบรับ และตัดจำนวนครั้งเมื่อเทรนเสร็จเท่านั้น',
     cb_pick_trainer:'เลือกเทรนเนอร์', cb_empty:'เลือกเทรนเนอร์ก่อน แล้วค่อยเลือกเวลา',
     cb_selected_hint:'เทรนเนอร์ที่เลือก', cb_date_label:'เลือกวันที่', cb_cat_label:'ช่วงเวลา',
     cb_cat_morning:'รอบเช้า (06:00–12:00)', cb_cat_afternoon:'รอบบ่าย (13:00–16:00)', cb_cat_evening:'รอบเย็น (17:00–20:00)',
@@ -988,8 +1004,8 @@ const i18n = {
     cb_expired_package:'แพ็กเกจของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้ง ซื้อแพ็กเกจใหม่ก่อนจึงจะนัดเวลาเทรนได้',
     cb_summary_title:'สรุปนัดเทรน', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะ', cb_status_after:'ยืนยันทันที ขึ้นตารางเทรนเนอร์',
     cb_no_time_selected:'กรุณาเลือกเวลาก่อนจอง', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
-    modal_title:'จองสำเร็จแล้ว!', modal_body:'นัดของคุณขึ้นตารางของเทรนเนอร์เรียบร้อย ไม่ต้องรอยืนยัน มาให้ตรงเวลานะครับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ดของเทรนเนอร์ก่อนจึงจะนัดเวลาเทรนได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูนัดของฉัน", modal_redirect:"กำลังพาไปหน้า “นัดของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว", tab_c_dashboard:"หน้าแรก", tab_c_trainers:"เทรนเนอร์", tab_c_booking:"นัดเวลา", tab_c_mybookings:"นัดของฉัน", tab_t_dashboard:"ภาพรวม", tab_t_requests:"คำขอ", tab_t_schedule:"ตาราง", tab_t_customers:"ลูกค้า", tab_a_dashboard:"ภาพรวม", tab_a_apps:"ตรวจสอบ", tab_a_users:"ผู้ใช้", tab_a_packages:"แพ็กเกจ",
-    mb_eyebrow:'ประวัตินัดเทรน', mb_h1:'นัดของฉัน', mb_p:'ดูสถานะนัดเทรนทั้งหมดของคุณ', mb_empty:'คุณยังไม่มีนัดเทรน',
+    modal_title:'จองสำเร็จแล้ว!', modal_body:'นัดของคุณขึ้นตารางของเทรนเนอร์เรียบร้อย ไม่ต้องรอยืนยัน มาให้ตรงเวลานะครับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ดของเทรนเนอร์ก่อนจึงจะนัดเวลาเทรนได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูการจองของฉัน", modal_redirect:"กำลังพาไปหน้า “การจองของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว", tab_c_dashboard:"หน้าแรก", tab_c_trainers:"เทรนเนอร์", tab_c_booking:"จองเทรน", tab_c_mybookings:"การจองของฉัน", tab_t_dashboard:"ภาพรวม", tab_t_requests:"คำขอ", tab_t_schedule:"ตาราง", tab_t_customers:"ลูกค้า", tab_a_dashboard:"ภาพรวม", tab_a_apps:"ตรวจสอบ", tab_a_users:"ผู้ใช้", tab_a_packages:"แพ็กเกจ", mb_upcoming:"นัดที่กำลังจะถึง", mb_history:"ประวัติ", mb_empty_cta:"จองเทรนตอนนี้", pw_show:"แสดงรหัสผ่าน", pw_hide:"ซ่อนรหัสผ่าน", ts_settings_title:"ตั้งค่าการรับนัด",
+    mb_eyebrow:'ประวัตินัดเทรน', mb_h1:'การจองของฉัน', mb_p:'ดูสถานะนัดเทรนทั้งหมดของคุณ', mb_empty:'คุณยังไม่มีนัดเทรน',
     cp_eyebrow:'ภาพรวม', cp_h1:'แพ็กเกจของฉัน', cp_p:'ติดตามจำนวนครั้งคงเหลือและซื้อแพ็กเกจเพิ่มเติม',
     cp_remaining_title:'จำนวนครั้งคงเหลือ', cp_no_of:'จาก {total} ครั้ง', cp_expiry:'หมดอายุ', cp_status:'สถานะ',
     cp_no_package:'คุณยังไม่มีแพ็กเกจที่ใช้งานอยู่', cp_buy_title:'แพ็กเกจที่เปิดขาย', cp_buy_btn:'ซื้อแพ็กเกจนี้', cp_toast_bought:'ซื้อแพ็กเกจ "{name}" เรียบร้อย',
@@ -1120,7 +1136,7 @@ const i18n = {
   en:{
     brand_sub:'Book sessions with your trainer',
     role_customer:'Customer', role_trainer:'Trainer', role_admin:'Admin',
-    nav_c_dashboard:'Home', nav_c_trainers:'My trainers', nav_c_booking:'Book a session', nav_c_mybookings:'My sessions', nav_c_package:'My package', nav_c_notif:'Notifications', nav_c_profile:'My profile',
+    nav_c_dashboard:'Home', nav_c_trainers:'My trainers', nav_c_booking:'Book a session', nav_c_mybookings:'My bookings', nav_c_package:'My package', nav_c_notif:'Notifications', nav_c_profile:'My profile',
     nav_t_dashboard:'Dashboard', nav_t_requests:'Session requests', nav_t_schedule:'Schedule', nav_t_customers:'My customers', nav_t_profile:'My profile', nav_t_notif:'Notifications',
     nav_a_dashboard:'Dashboard', nav_a_apps:'Trainer approval', nav_a_users:'Manage users', nav_a_packages:'Manage packages',
     logout:'Log out',
@@ -1178,7 +1194,7 @@ const i18n = {
     tr_pin_hint:'Pinned trainers always show at the top of the list, so they are quicker to find next time.',
     tr_pinned_toast:'Pinned {name} to the top', tr_unpinned_toast:'Unpinned {name}',
     tp_back:'Back to trainer list', tp_contact_label:'Contact', tp_about_label:'About the trainer', tp_certs_label:'Certificates', tp_no_certs:'No certificates attached yet', tp_code_label:'Trainer code',
-    cb_eyebrow:'Book a session', cb_h1:'Book a session', cb_p:'Pick a trainer, then tap the days and times you want, up to 14 days ahead. One tap on Book puts every session straight onto the trainer’s schedule, with no waiting for a reply. A session is only deducted after the training is done.',
+    cb_eyebrow:'Book a session', cb_h1:'Book a session', cb_p:'Pick several days and times at once, up to 14 days ahead. Sessions go straight onto the trainer’s schedule with no waiting for a reply, and one is only deducted after training is done.',
     cb_pick_trainer:'Choose a trainer', cb_empty:'Please choose a trainer to start booking.',
     cb_selected_hint:'Selected trainer', cb_date_label:'Select date', cb_cat_label:'Time of day',
     cb_cat_morning:'Morning (6:00 AM–12:00 PM)', cb_cat_afternoon:'Afternoon (1:00 PM–4:00 PM)', cb_cat_evening:'Evening (5:00 PM–8:00 PM)',
@@ -1186,8 +1202,8 @@ const i18n = {
     cb_expired_package:'Your package has expired. Even with sessions remaining, please buy a new package before booking.',
     cb_summary_title:'Session summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status', cb_status_after:'Confirmed at once, on the trainer’s schedule',
     cb_no_time_selected:'Please select a time before booking', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
-    modal_title:'Booked!', modal_body:'Your session is on the trainer’s schedule. No need to wait for a reply, just show up on time.', modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my sessions", modal_redirect:"Taking you to “My sessions”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied", tab_c_dashboard:"Home", tab_c_trainers:"Trainers", tab_c_booking:"Book", tab_c_mybookings:"Sessions", tab_t_dashboard:"Overview", tab_t_requests:"Requests", tab_t_schedule:"Schedule", tab_t_customers:"Clients", tab_a_dashboard:"Overview", tab_a_apps:"Approvals", tab_a_users:"Users", tab_a_packages:"Packages",
-    mb_eyebrow:'History', mb_h1:'My sessions', mb_p:'Track the status of all your sessions', mb_empty:"You have no sessions yet",
+    modal_title:'Booked!', modal_body:'Your session is on the trainer’s schedule. No need to wait for a reply, just show up on time.', modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my bookings", modal_redirect:"Taking you to “My bookings”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied", tab_c_dashboard:"Home", tab_c_trainers:"Trainers", tab_c_booking:"Book", tab_c_mybookings:"My bookings", tab_t_dashboard:"Overview", tab_t_requests:"Requests", tab_t_schedule:"Schedule", tab_t_customers:"Clients", tab_a_dashboard:"Overview", tab_a_apps:"Approvals", tab_a_users:"Users", tab_a_packages:"Packages", mb_upcoming:"Upcoming", mb_history:"History", mb_empty_cta:"Book a session now", pw_show:"Show password", pw_hide:"Hide password", ts_settings_title:"Booking settings",
+    mb_eyebrow:'History', mb_h1:'My bookings', mb_p:'Track the status of all your sessions', mb_empty:"You have no sessions yet",
     cp_eyebrow:'Overview', cp_h1:'My package', cp_p:'Track remaining sessions and buy more.',
     cp_remaining_title:'Sessions remaining', cp_no_of:'of {total} sessions', cp_expiry:'Expires', cp_status:'Status',
     cp_no_package:"You don't have an active package", cp_buy_title:'Packages on sale', cp_buy_btn:'Buy this package', cp_toast_bought:'Purchased "{name}"',
@@ -1344,7 +1360,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-06.3';
+const APP_BUILD = '2026-11-12.1';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -2442,6 +2458,35 @@ function doLogout(){
   toast(t('auth_toast_logout'));
   renderRoot();
 }
+/* ---------------- show / hide password ----------------
+   Every password box gets an eye button. The box keeps its id and value; only its type flips. */
+const PW_EYE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const PW_EYE_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.2A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.5 6.6A17 17 0 0 0 2 12s3.6 7 10 7c1.7 0 3.2-.4 4.5-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+function enhancePasswordFields(){
+  document.querySelectorAll('input[type=password]:not([data-pw])').forEach(inp=>{
+    inp.setAttribute('data-pw', '1');
+    const wrap = document.createElement('div'); wrap.className = 'pw-wrap';
+    const hadFocus = document.activeElement === inp;
+    inp.parentNode.insertBefore(wrap, inp);
+    wrap.appendChild(inp);
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'pw-eye';
+    const paint = ()=>{
+      const shown = inp.type === 'text';
+      btn.innerHTML = shown ? PW_EYE_OFF : PW_EYE;
+      btn.setAttribute('aria-label', t(shown ? 'pw_hide' : 'pw_show'));
+      btn.setAttribute('aria-pressed', shown ? 'true' : 'false');
+    };
+    btn.addEventListener('click', ()=>{ inp.type = inp.type === 'password' ? 'text' : 'password'; paint(); try{ inp.focus(); }catch(e){} });
+    paint();
+    wrap.appendChild(btn);
+    if(hadFocus){ try{ inp.focus(); }catch(e){} }
+  });
+}
+try{
+  new MutationObserver(()=>enhancePasswordFields()).observe(document.body, {childList:true, subtree:true});
+  enhancePasswordFields();
+}catch(e){}
+
 /* ---------------- light / dark theme ---------------- */
 const THEME_ICON_SUN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.2M12 19v2.2M2.8 12H5M19 12h2.2M5.5 5.5l1.6 1.6M16.9 16.9l1.6 1.6M18.5 5.5l-1.6 1.6M7.1 16.9l-1.6 1.6"/></svg>';
 const THEME_ICON_MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2z"/></svg>';
@@ -3009,13 +3054,13 @@ async function renderCDashboard(){
         ${pkg ? ringHtml(pkg) : `<div class="empty">${t('cp_no_package')}</div>`}
         ${otherPkgsHtml(myPkgs.slice(1))}
         ${legacyNoteHtml(legacyN)}
-        <button class="btn btn-block" style="margin-top:14px" data-goto="package">${t('nav_c_package')}</button>
+        <button class="btn btn-block${pkg ? '' : ' btn-primary'}" style="margin-top:14px" data-goto="package">${t(pkg ? 'nav_c_package' : 'cb_buy_first_btn')}</button>
       </div>
       <div class="c-dash-main">
         <div class="card">
           <div class="card-head"><h3>${t('c_dash_upcoming')}</h3></div>
           ${upcoming.length ? upcoming.slice(0,5).map(b=>`
-            <div class="sched-row"><div class="time">${esc(b.bookingTime)}</div><div class="who">${esc(b.trainerName)} · ${fmtDate(b.bookingDate)}</div>${badgeFor(b.status)}</div>
+            <div class="sched-row"><div class="time">${esc(b.bookingTime)}</div><div class="who">${esc(b.trainerName)} · <span class="nw">${fmtDate(b.bookingDate)}</span></div>${badgeFor(b.status)}</div>
           `).join('') : `<div class="empty">${t('c_dash_no_upcoming')}</div>`}
         </div>
         <div class="card">
@@ -3643,11 +3688,13 @@ function groupLineHtml(b, all, tr){
 async function renderCMyBookings(){
   const all = await dbGetAll('booking:');
   const trMap = new Map((await dbGetAll('trainer:')).map(x=>[x.id, x]));
-  const mine = all.filter(b=>b.customerId===session.id).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
-  return `
-    <div class="page-head"><div><div class="eyebrow">${t('mb_eyebrow')}</div><h1>${t('mb_h1')}</h1><p>${t('mb_p')}</p></div></div>
-    <div class="card">
-      ${mine.length ? mine.map(b=>`
+  const today = localDateStr();
+  const mineAll = all.filter(b=>b.customerId===session.id);
+  const isUp = b=> (b.status==='pending' || b.status==='confirmed') && b.bookingDate>=today;
+  const when = b=> String(b.bookingDate||'') + String(b.bookingTime||'');
+  const upcoming = mineAll.filter(isUp).sort((a,b)=> when(a).localeCompare(when(b)));
+  const history = mineAll.filter(b=>!isUp(b)).sort((a,b)=> when(b).localeCompare(when(a)));
+  const bookingCard = b=>`
         <div class="req-card">
           <div class="req-top">
             <div>
@@ -3661,9 +3708,17 @@ async function renderCMyBookings(){
               ${badgeFor(b.status)}
             </div>
           </div>
-        </div>
-      `).join('') : `<div class="empty">${t('mb_empty')}</div>`}
+        </div>`;
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('mb_eyebrow')}</div><h1>${t('mb_h1')}</h1><p>${t('mb_p')}</p></div></div>
+    <div class="card">
+      <div class="card-head"><h3>${t('mb_upcoming')}</h3></div>
+      ${upcoming.length ? upcoming.map(bookingCard).join('') : `<div class="empty">${t('mb_empty')}</div><button class="btn btn-primary btn-block" style="margin-top:6px" data-goto="booking">${t('mb_empty_cta')}</button>`}
     </div>
+    ${history.length ? `<div class="card">
+      <div class="card-head"><h3>${t('mb_history')}</h3></div>
+      ${history.map(bookingCard).join('')}
+    </div>` : ''}
   `;
 }
 
@@ -4044,22 +4099,31 @@ async function renderTDashboard(){
       <div class="pc-row">${pcItems.map(i=>`<span class="pc-chip ${i[0]?'ok':''}">${i[0]?'✓':'○'} ${esc(i[1])}</span>`).join('')}</div>
       <button class="btn btn-primary btn-block" style="margin-top:14px" data-goto="profile">${t('pc_go')}</button>
     </div>` : '';
-  return `
-    <div class="page-head"><div><div class="eyebrow">${t('tq_eyebrow')}</div><h1>${tt('t_dash_h1',{name:esc(session.name)})}</h1><p>${t('t_dash_p')}</p></div></div>
-    ${pushBannerHtml(await pushUiState())}
-    <div class="t-top">${codeCard}${completeCard}</div>
-    ${payCard}
+  const statsHtml = `
     <div class="grid-4" style="margin-bottom:20px">
       <div class="stat-card"><div class="lbl">${t('td_stat_today')}</div><div class="val accent">${todayN}</div></div>
       <div class="stat-card"><div class="lbl">${t('td_stat_upcoming')}</div><div class="val">${confirmed}</div></div>
       <div class="stat-card"><div class="lbl">${t('tq_done_label')}</div><div class="val">${done}</div></div>
       <div class="stat-card"><div class="lbl">${t('tq_noshow_label')}</div><div class="val">${noshow}</div></div>
-    </div>
+    </div>`;
+  const nextHtml = `
     <div class="card">
       <div class="card-head"><h3>${t('td_next_title')}</h3><button class="btn btn-sm btn-ghost" data-goto="schedule">${t('td_next_all')}</button></div>
       ${coming.length ? coming.slice(0,4).map(b=>`
         <div class="sch-mini"><div class="mt">${lang==='th' ? b.bookingTime : fmtTime(b.bookingTime)}<div class="md">${b.bookingDate===today ? t('ts_today') : fmtDate(b.bookingDate)}</div></div><div class="mn">${esc(b.customerName)}</div></div>`).join('') : `<div class="empty">${t('td_next_empty')}</div>`}
-    </div>
+    </div>`;
+  const setupHtml = `<div class="t-top">${codeCard}${completeCard}</div>`;
+  /* a trainer who already has sessions comes here to see them: sessions first, set-up cards after;
+     a brand-new trainer still sees the code and set-up cards first. A payment waiting for a decision always comes first. */
+  const workFirst = coming.length > 0;
+  const body = workFirst
+    ? statsHtml + nextHtml + setupHtml + (pendingPay.length ? '' : payCard)
+    : setupHtml + (pendingPay.length ? '' : payCard) + statsHtml + nextHtml;
+  return `
+    <div class="page-head"><div><div class="eyebrow">${t('tq_eyebrow')}</div><h1>${tt('t_dash_h1',{name:esc(session.name)})}</h1><p>${t('t_dash_p')}</p></div></div>
+    ${pushBannerHtml(await pushUiState())}
+    ${pendingPay.length ? payCard : ''}
+    ${body}
     <div class="card">
       <div class="card-head"><h3>${t('c_dash_notif')}</h3></div>
       ${notifs.length ? notifs.map(n=>notifRow(n)).join('') : `<div class="empty">${t('notif_empty')}</div>`}
@@ -4262,14 +4326,13 @@ async function renderTSchedule(){
 
   return `
     <div class="page-head"><div><div class="eyebrow">${t('ts_eyebrow')}</div><h1>${t('ts_h1')}</h1><p>${t('ts_p')}</p></div></div>
-    ${leadBarHtml(meTrainer)}
-    ${capBarHtml(meTrainer)}
+    ${all.length ? '' : leadBarHtml(meTrainer) + capBarHtml(meTrainer)}
     <div class="sch-sum">
       <div class="sch-sum-i"><b>${todayN}</b><span>${t('ts_sum_today')}</span></div>
       <div class="sch-sum-i"><b>${coming.length}</b><span>${t('ts_sum_upcoming')}</span></div>
       <div class="sch-sum-i ${late.length?'warn':''}"><b>${late.length}</b><span>${t('ts_sum_record')}</span></div>
     </div>
-    ${all.length ? lateHtml + daysHtml : `<div class="card"><div class="empty">${t('ts_no_schedule')}</div></div>`}
+    ${all.length ? lateHtml + daysHtml + `<h2 class="set-head">${t('ts_settings_title')}</h2>` + leadBarHtml(meTrainer) + capBarHtml(meTrainer) : `<div class="card"><div class="empty">${t('ts_no_schedule')}</div></div>`}
   `;
 }
 /* The trainer cannot make it (or the customer asked to move): the booking is cancelled and the customer is told.
@@ -4429,7 +4492,7 @@ async function renderTProfile(){
         </div>
         <div class="field"><label>${t('tpz_bio_label')}</label><textarea id="pfBio" rows="3">${esc(tr.bio||'')}</textarea></div>
         <div class="field" style="display:flex;align-items:center;gap:10px">
-          <input type="checkbox" id="pfReady" ${tr.ready?'checked':''} style="width:auto">
+          <input type="checkbox" id="pfReady" ${tr.ready?'checked':''} style="width:22px;height:22px;min-height:0;flex:none">
           <label style="margin:0" for="pfReady">${t('tpz_ready_label')}</label>
         </div>
         <button class="btn btn-primary btn-block" id="pfSaveBtn">${t('tpz_save_btn')}</button>
@@ -4784,8 +4847,8 @@ async function renderAuth(){
         <p style="font-size:13px;color:var(--text-faint);margin-top:6px">${t('auth_as')}: ${t('role_'+authRole)}</p>
       </div>
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
-      <div class="field"><label>${idLabel}</label><input type="text" id="authId" placeholder="${idPh}"></div>
-      <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="authPw"></div>
+      <div class="field"><label>${idLabel}</label><input type="text" id="authId" placeholder="${idPh}" autocomplete="username"></div>
+      <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="authPw" autocomplete="current-password"></div>
       <button class="btn btn-primary btn-block" id="loginBtn">${t('auth_login_btn')}</button>
       ${authRole==='customer' ? googleBtnHtml('google_login') : authRole==='trainer' ? googleBtnHtml('google_login','trainer') : ''}
     `;
@@ -4799,7 +4862,7 @@ async function renderAuth(){
       <div style="text-align:center;margin-bottom:22px"><div class="auth-mark">${navIcon('user')}</div><h2 style="font-family:var(--font-display);font-size:22px">${t('auth_register_heading')}</h2></div>
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
       <div class="field"><label>${t('auth_name_label')}</label><input type="text" id="regName" value="${esc(regDraft.name)}"></div>
-      <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="regPhone" value="${esc(regDraft.phone)}"></div>
+      <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="regPhone" value="${esc(regDraft.phone)}" inputmode="tel" autocomplete="tel"></div>
       <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="regPw" value="${esc(regDraft.pw)}" autocomplete="new-password"><div class="slot-hint" style="margin:6px 0 0">${t('auth_pw_rule')}</div></div>
       <button class="btn btn-primary btn-block" id="registerBtn">${t('auth_register_btn')}</button>
       ${googleBtnHtml('google_signup')}
@@ -4822,7 +4885,7 @@ async function renderAuth(){
       <div class="field"><label>${t('auth_name_label')}</label><input type="text" id="apName" value="${esc(applyDraft.name)}"></div>
       <div class="field-row">
         <div class="field"><label>${t('auth_specialty_label')}</label><input type="text" id="apSpecialty" value="${esc(applyDraft.specialty)}"></div>
-        <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="apPhone" value="${esc(applyDraft.phone)}"></div>
+        <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="apPhone" value="${esc(applyDraft.phone)}" inputmode="tel" autocomplete="tel"></div>
       </div>
       ${googleApplicant ? '' : `<div class="field"><label>${t('auth_password_label')}</label><input type="password" id="apPw" value="${esc(applyDraft.pw)}" autocomplete="new-password"><div class="slot-hint" style="margin:6px 0 0">${t('auth_pw_rule')}</div></div>`}
       <div class="field"><label>${t('auth_bio_label')}</label><textarea id="apBio" rows="2">${esc(applyDraft.bio)}</textarea></div>
