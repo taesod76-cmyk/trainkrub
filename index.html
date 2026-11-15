@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-iqjMO+cn6NjgXuDldD9cPZzmIBIv+PwUOFA2fYM6RqU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-BCGGs4/AHPqslLS/2wRsutAnC+XR68siZkIZXZM1Oqw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนคับ (TRAINKUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -580,6 +580,21 @@
   .pw-eye:active{background:var(--surface-3)}
   .nw{white-space:nowrap}
   .set-head{font:600 18px/1.3 var(--f-display);margin:30px 0 12px;color:var(--text)}
+  .quick-box{margin:0 0 16px}
+  .quick-t{font:600 14px/1.4 var(--f-display);margin-bottom:8px}
+  .quick-l{display:flex;flex-wrap:wrap;gap:8px}
+  .quick-slot{flex:1 1 130px;min-height:48px;padding:8px 12px;border-radius:13px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);font:500 14px/1.3 var(--f-body);text-align:center;cursor:pointer}
+  .quick-slot b{display:block;font:600 14px/1.3 var(--f-display)}
+  .quick-slot.sel{background:linear-gradient(180deg,#f43b51,#d8233a);border-color:#ff5f72;color:#fff}
+  .qb-rep{display:flex;align-items:center;flex-wrap:wrap;gap:12px 18px;border-color:var(--line-strong)}
+  .qb-info{flex:1 1 230px;min-width:0}
+  .qb-t{font:600 15px/1.4 var(--f-display)}
+  .qb-w{font:600 19px/1.35 var(--f-display);margin-top:2px;overflow-wrap:anywhere}
+  .qb-s{font:400 12.5px/1.5 var(--f-body);color:var(--text-faint);margin-top:3px}
+  .qb-acts{display:flex;flex-direction:column;gap:6px;flex:1 1 170px;max-width:260px}
+  @media(max-width:520px){ .qb-acts{max-width:none;flex-basis:100%} }
+  .sch-mini .btn{flex:none}
+  #submitBookingBtn{scroll-margin-bottom:120px}      /* when the page scrolls to it, the tab bar at the bottom of a phone must not cover it */
   @media (pointer:coarse){
     .btn-sm{min-height:44px}
     .req-actions .btn{min-height:44px}
@@ -1004,7 +1019,7 @@ const i18n = {
     cb_expired_package:'แพ็กเกจของคุณหมดอายุแล้ว แม้จะเหลือจำนวนครั้ง ซื้อแพ็กเกจใหม่ก่อนจึงจะนัดเวลาเทรนได้',
     cb_summary_title:'สรุปนัดเทรน', cb_sum_trainer:'เทรนเนอร์', cb_sum_date:'วันที่', cb_sum_time:'เวลา', cb_sum_sessions:'เหลือครั้งเทรน', cb_sum_status:'สถานะ', cb_status_after:'ยืนยันทันที ขึ้นตารางเทรนเนอร์',
     cb_no_time_selected:'กรุณาเลือกเวลาก่อนจอง', cb_slot_taken:'ช่วงเวลานี้เพิ่งถูกจองไปแล้ว กรุณาเลือกเวลาอื่น',
-    modal_title:'จองสำเร็จแล้ว!', modal_body:'นัดของคุณขึ้นตารางของเทรนเนอร์เรียบร้อย ไม่ต้องรอยืนยัน มาให้ตรงเวลานะครับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ดของเทรนเนอร์ก่อนจึงจะนัดเวลาเทรนได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูการจองของฉัน", modal_redirect:"กำลังพาไปหน้า “การจองของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว", tab_c_dashboard:"หน้าแรก", tab_c_trainers:"เทรนเนอร์", tab_c_booking:"จองเทรน", tab_c_mybookings:"การจองของฉัน", tab_t_dashboard:"ภาพรวม", tab_t_requests:"คำขอ", tab_t_schedule:"ตาราง", tab_t_customers:"ลูกค้า", tab_a_dashboard:"ภาพรวม", tab_a_apps:"ตรวจสอบ", tab_a_users:"ผู้ใช้", tab_a_packages:"แพ็กเกจ", mb_upcoming:"นัดที่กำลังจะถึง", mb_history:"ประวัติ", mb_empty_cta:"จองเทรนตอนนี้", pw_show:"แสดงรหัสผ่าน", pw_hide:"ซ่อนรหัสผ่าน", ts_settings_title:"ตั้งค่าการรับนัด",
+    modal_title:'จองสำเร็จแล้ว!', modal_body:'นัดของคุณขึ้นตารางของเทรนเนอร์เรียบร้อย ไม่ต้องรอยืนยัน มาให้ตรงเวลานะครับ', modal_close:'รับทราบ', splash_slow:"กำลังเชื่อมต่อฐานข้อมูล… ถ้าเน็ตช้าอาจใช้เวลาสักครู่", ct_code_title:"ใส่โค้ดเทรนเนอร์", ct_code_hint:"เทรนเนอร์แต่ละคนมีโค้ดเฉพาะตัว (เช่น #AB7K) ขอโค้ดหรือสแกน QR จากเทรนเนอร์ของคุณ แล้วพิมพ์ที่นี่เพื่อเพิ่มเข้ารายชื่อ", ct_code_empty:"กรอกโค้ดเทรนเนอร์ก่อน", ct_code_notfound:"ไม่พบโค้ดนี้ ตรวจสอบกับเทรนเนอร์อีกครั้ง", ct_code_throttle:"ลองผิดหลายครั้ง รออีก {s} วินาทีแล้วลองใหม่", ct_code_added:"เพิ่ม {name} เข้ารายชื่อของคุณแล้ว", ct_code_already:"{name} อยู่ในรายชื่อของคุณอยู่แล้ว", ct_mine_title:"เทรนเนอร์ของฉัน", ct_not_mine:"ต้องใส่โค้ดของเทรนเนอร์คนนี้ก่อน จึงจะดูโปรไฟล์และจองได้", cd_start_title:"เริ่มต้นที่นี่: ใส่โค้ดเทรนเนอร์ของคุณ", cd_start_hint:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ด # ที่เทรนเนอร์ให้ไว้ แล้วระบบจะพาไปหน้าโปรไฟล์ให้เอง", cb_no_mine:"ยังไม่มีเทรนเนอร์ในรายชื่อ ใส่โค้ดของเทรนเนอร์ก่อนจึงจะนัดเวลาเทรนได้", cb_enter_code_btn:"ใส่โค้ดเทรนเนอร์", cb_buy_first_btn:"ไปซื้อแพ็กเกจ", modal_go:"ดูการจองของฉัน", modal_redirect:"กำลังพาไปหน้า “การจองของฉัน”…", photo_add:"เพิ่มรูป", photo_change:"เปลี่ยนรูป", photo_remove:"ลบรูป", photo_saved:"บันทึกรูปโปรไฟล์แล้ว", photo_removed:"ลบรูปแล้ว", photo_bad:"เปิดไฟล์นี้ไม่ได้ กรุณาเลือกรูปภาพ (JPG/PNG)", photo_too_big:"ไฟล์ใหญ่เกินไป (ไม่เกิน 20 MB)", photo_hint:"ระบบจะย่อรูปให้อัตโนมัติ ไม่ต้องกังวลเรื่องขนาดไฟล์", ap_photo_label:"รูปโปรไฟล์ (ไม่บังคับ)", cert_img_label:"แนบรูปใบรับรอง (ไม่บังคับ)", cert_img_pick:"เลือกรูป", cert_img_view:"ดูรูป", cert_img_loading:"กำลังโหลดรูป…", cert_img_missing:"ไม่พบรูปใบรับรอง", prof_complete_title:"ทำโปรไฟล์ให้น่าเชื่อถือ", prof_complete_body:"ลูกค้าจะเห็นรูป แนะนำตัว และใบรับรองของคุณก่อนตัดสินใจจอง", pc_photo:"รูปโปรไฟล์", pc_certs:"ใบรับรอง", pc_bio:"แนะนำตัว", pc_go:"ไปแก้ไขโปรไฟล์", td_code_title:"โค้ดเทรนเนอร์ของคุณ", td_code_hint:"ให้ลูกค้าพิมพ์โค้ดนี้ในช่อง “ใส่โค้ดเทรนเนอร์” (หรือสแกน QR ในหน้าโปรไฟล์)", td_code_copy:"คัดลอกโค้ด", td_code_copied:"คัดลอกโค้ดแล้ว", tab_c_dashboard:"หน้าแรก", tab_c_trainers:"เทรนเนอร์", tab_c_booking:"จองเทรน", tab_c_mybookings:"การจองของฉัน", tab_t_dashboard:"ภาพรวม", tab_t_requests:"คำขอ", tab_t_schedule:"ตาราง", tab_t_customers:"ลูกค้า", tab_a_dashboard:"ภาพรวม", tab_a_apps:"ตรวจสอบ", tab_a_users:"ผู้ใช้", tab_a_packages:"แพ็กเกจ", mb_upcoming:"นัดที่กำลังจะถึง", mb_history:"ประวัติ", bk_quick_title:"เวลาว่างใกล้สุด แตะเลือกได้เลย", rb_title:"จองต่อเหมือนเดิม", rb_hint:"วันและเวลาเดียวกับครั้งล่าสุดของคุณ กดจองอีกครั้งเพื่อยืนยัน", rb_btn:"จองเวลานี้", rb_other:"เลือกเวลาอื่น", rb_ready:"เลือกเวลาไว้ให้แล้ว กดปุ่มจองด้านล่างเพื่อยืนยัน", rb_gone:"เวลานี้ไม่ว่างแล้ว เลือกเวลาอื่นได้เลย", dash_book_title:"จองเวลาเทรน", dash_book_hint:"เลือกได้หลายวันในครั้งเดียว ลงตารางโค้ชให้ทันที", dash_book_btn:"เลือกวันและเวลา", mb_empty_cta:"จองเทรนตอนนี้", pw_show:"แสดงรหัสผ่าน", pw_hide:"ซ่อนรหัสผ่าน", ts_settings_title:"ตั้งค่าการรับนัด",
     mb_eyebrow:'ประวัตินัดเทรน', mb_h1:'การจองของฉัน', mb_p:'ดูสถานะนัดเทรนทั้งหมดของคุณ', mb_empty:'คุณยังไม่มีนัดเทรน',
     cp_eyebrow:'ภาพรวม', cp_h1:'แพ็กเกจของฉัน', cp_p:'ติดตามจำนวนครั้งคงเหลือและซื้อแพ็กเกจเพิ่มเติม',
     cp_remaining_title:'จำนวนครั้งคงเหลือ', cp_no_of:'จาก {total} ครั้ง', cp_expiry:'หมดอายุ', cp_status:'สถานะ',
@@ -1202,7 +1217,7 @@ const i18n = {
     cb_expired_package:'Your package has expired. Even with sessions remaining, please buy a new package before booking.',
     cb_summary_title:'Session summary', cb_sum_trainer:'Trainer', cb_sum_date:'Date', cb_sum_time:'Time', cb_sum_sessions:'Sessions left', cb_sum_status:'Status', cb_status_after:'Confirmed at once, on the trainer’s schedule',
     cb_no_time_selected:'Please select a time before booking', cb_slot_taken:'This slot was just booked by someone else — please pick another time',
-    modal_title:'Booked!', modal_body:'Your session is on the trainer’s schedule. No need to wait for a reply, just show up on time.', modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my bookings", modal_redirect:"Taking you to “My bookings”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied", tab_c_dashboard:"Home", tab_c_trainers:"Trainers", tab_c_booking:"Book", tab_c_mybookings:"My bookings", tab_t_dashboard:"Overview", tab_t_requests:"Requests", tab_t_schedule:"Schedule", tab_t_customers:"Clients", tab_a_dashboard:"Overview", tab_a_apps:"Approvals", tab_a_users:"Users", tab_a_packages:"Packages", mb_upcoming:"Upcoming", mb_history:"History", mb_empty_cta:"Book a session now", pw_show:"Show password", pw_hide:"Hide password", ts_settings_title:"Booking settings",
+    modal_title:'Booked!', modal_body:'Your session is on the trainer’s schedule. No need to wait for a reply, just show up on time.', modal_close:'Got it', splash_slow:"Connecting to the database… this may take a moment on a slow network", ct_code_title:"Enter trainer code", ct_code_hint:"Every trainer has their own code (e.g. #AB7K). Ask your trainer for it or scan their QR, then type it here to add them to your list.", ct_code_empty:"Enter the trainer code first", ct_code_notfound:"That code was not found. Please check it with your trainer.", ct_code_throttle:"Too many tries. Please wait {s}s and try again.", ct_code_added:"{name} was added to your trainers", ct_code_already:"{name} is already in your trainers", ct_mine_title:"My trainers", ct_not_mine:"Enter this trainer's code first to view their profile and book", cd_start_title:"Start here: enter your trainer's code", cd_start_hint:"No trainers yet. Type the # code your trainer gave you and we will take you straight to their profile.", cb_no_mine:"No trainers in your list yet — enter your trainer's code before booking", cb_enter_code_btn:"Enter trainer code", cb_buy_first_btn:"Buy a package", modal_go:"View my bookings", modal_redirect:"Taking you to “My bookings”…", photo_add:"Add photo", photo_change:"Change photo", photo_remove:"Remove photo", photo_saved:"Profile photo saved", photo_removed:"Photo removed", photo_bad:"Could not open that file. Please choose an image (JPG/PNG).", photo_too_big:"File too large (max 20 MB)", photo_hint:"Photos are resized automatically — no need to worry about file size.", ap_photo_label:"Profile photo (optional)", cert_img_label:"Attach a photo of the certificate (optional)", cert_img_pick:"Choose photo", cert_img_view:"View photo", cert_img_loading:"Loading photo…", cert_img_missing:"Certificate photo not found", prof_complete_title:"Complete your profile", prof_complete_body:"Customers see your photo, bio and certificates before they book.", pc_photo:"Profile photo", pc_certs:"Certificates", pc_bio:"Bio", pc_go:"Edit my profile", td_code_title:"Your trainer code", td_code_hint:"Customers type this in “Enter trainer code” (or scan the QR on your profile page).", td_code_copy:"Copy code", td_code_copied:"Code copied", tab_c_dashboard:"Home", tab_c_trainers:"Trainers", tab_c_booking:"Book", tab_c_mybookings:"My bookings", tab_t_dashboard:"Overview", tab_t_requests:"Requests", tab_t_schedule:"Schedule", tab_t_customers:"Clients", tab_a_dashboard:"Overview", tab_a_apps:"Approvals", tab_a_users:"Users", tab_a_packages:"Packages", mb_upcoming:"Upcoming", mb_history:"History", bk_quick_title:"Next free times: tap to pick", rb_title:"Book again", rb_hint:"Same day and time as your last session. You still tap Book to confirm.", rb_btn:"Book this time", rb_other:"Pick another time", rb_ready:"Time picked for you. Tap Book below to confirm.", rb_gone:"That time is no longer free. Pick another one.", dash_book_title:"Book a session", dash_book_hint:"Pick several days at once. They go straight onto the trainer’s schedule.", dash_book_btn:"Pick day and time", mb_empty_cta:"Book a session now", pw_show:"Show password", pw_hide:"Hide password", ts_settings_title:"Booking settings",
     mb_eyebrow:'History', mb_h1:'My bookings', mb_p:'Track the status of all your sessions', mb_empty:"You have no sessions yet",
     cp_eyebrow:'Overview', cp_h1:'My package', cp_p:'Track remaining sessions and buy more.',
     cp_remaining_title:'Sessions remaining', cp_no_of:'of {total} sessions', cp_expiry:'Expires', cp_status:'Status',
@@ -1360,7 +1375,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-12.1';
+const APP_BUILD = '2026-11-15.1';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -3048,6 +3063,7 @@ async function renderCDashboard(){
     <div class="page-head"><div><div class="eyebrow">${t('cp_eyebrow')}</div><h1>${tt('c_dash_h1',{name:esc(session.name)})}</h1><p>${t('c_dash_p')}</p></div></div>
     ${pushBannerHtml(await pushUiState())}
     ${noTrainersYet ? codeCardHtml('D','cd_start_title','cd_start_hint') : ''}
+    ${noTrainersYet ? '' : await bookCardHtml(true)}
     <div class="grid-2">
       <div class="card c-dash-pkg">
         <div class="card-head"><h3>${t('c_dash_remaining')}</h3></div>
@@ -3202,7 +3218,7 @@ function bookingDays(){
   return arr;
 }
 const TIMES = { morning:['06:00','07:00','08:00','09:00','10:00','11:00'], afternoon:['13:00','14:00','15:00','16:00'], evening:['17:00','18:00','19:00','20:00'] };
-let bookingState = { trainerId:null, day:localDateStr(), cat:'morning', picks:[], alone:[] };   // picks: 'YYYY-MM-DD|HH:MM', as many as the person taps
+let bookingState = { trainerId:null, day:localDateStr(), cat:'morning', picks:[], alone:[], uid:null };   // picks: 'YYYY-MM-DD|HH:MM', as many as the person taps
 let bookingCtx = null;                                                                   // what the page was drawn from (trainer, bookings, room left on packages)
 
 /* ======================================================================
@@ -3400,6 +3416,100 @@ function applyUsual(){
   refreshBookingDyn();
 }
 
+/* ---- round 21: fewer taps ---- */
+const MY_DONE_STATUSES = ['confirmed','completed','no_show'];
+function lastBookingOf(all, trainerIds){
+  return all.filter(b=> b.customerId===session.id && (!trainerIds || trainerIds.includes(b.trainerId)) && MY_DONE_STATUSES.includes(b.status))
+    .sort((x,y)=> (String(y.bookingDate)+String(y.bookingTime)).localeCompare(String(x.bookingDate)+String(x.bookingTime)))[0] || null;
+}
+/* The trainer the booking page opens on, so the person does not have to pick from a list first:
+   the only trainer they have a package with, or the one they trained with last. Nothing when it is not clear. */
+async function guessBookingTrainer(trainers){
+  if(!trainers.length) return null;
+  const withPkg = [];
+  for(const x of trainers){ if((await getActivePackages(session.id, x.id)).length) withPkg.push(x); }
+  const pool = withPkg.length ? withPkg : (trainers.length === 1 ? trainers : []);
+  if(!pool.length) return null;
+  if(pool.length === 1) return pool[0].id;
+  const last = lastBookingOf(await dbGetAll('booking:'), pool.map(x=>x.id));
+  return last ? last.trainerId : pool[0].id;
+}
+function allTimesList(){ return [].concat(TIMES.morning, TIMES.afternoon, TIMES.evening); }
+function catOfTime(tm){ return ['morning','afternoon','evening'].find(k=>TIMES[k].includes(tm)) || null; }
+/* The first days that have a free time, one suggestion per day: the free time closest to the hour this person trained at last. */
+function nextFreeSlots(){
+  const c = bookingCtx;
+  if(!c || !c.trainer || !c.maxN) return [];
+  const out = [], all = allTimesList();
+  for(const d of c.days){
+    if(out.length >= 3) break;
+    const free = all.filter(tm=> slotState(d, tm) === 'ok');
+    if(!free.length) continue;
+    let pick = free[0];
+    if(c.favTime){
+      const want = hmToMin(c.favTime);
+      pick = free.reduce((best, tm)=> Math.abs(hmToMin(tm) - want) < Math.abs(hmToMin(best) - want) ? tm : best, free[0]);
+    }
+    out.push({date:d, time:pick});
+  }
+  return out;
+}
+function quickSlotsHtml(){
+  const list = nextFreeSlots();
+  if(!list.length) return '';
+  const today = bookingCtx.days[0];
+  return `<div class="quick-box"><div class="quick-t">${t('bk_quick_title')}</div><div class="quick-l">${list.map(q=>{
+    const k = pickKey(q.date, q.time), on = bookingState.picks.includes(k);
+    return `<button type="button" class="quick-slot ${on?'sel':''}" data-quick="${esc(k)}" aria-pressed="${on}" aria-label="${esc(fmtDate(q.date))} ${esc(fmtTime(q.time))}"><b>${esc(dayHeading(q.date, today))}</b>${esc(fmtTime(q.time))}</button>`;
+  }).join('')}</div></div>`;
+}
+/* "Book again": the weekday and time of the last session, one week later (or the first such day after today). Only when that time is free,
+   fits the package (sessions left, not expired) and is inside the booking window. */
+async function repeatSuggestion(){
+  const all = await dbGetAll('booking:');
+  const last = lastBookingOf(all, null);
+  if(!last || !allTimesList().includes(last.bookingTime)) return null;
+  const trainers = await getMyTrainers();
+  if(!trainers.some(x=>x.id===last.trainerId)) return null;
+  const tr = await dbGet('trainer:'+last.trainerId);
+  if(!tr) return null;
+  const days = bookingDays();
+  const myOpen = all.filter(b=>b.customerId===session.id && ACTIVE_BOOKING_STATUSES.includes(b.status) && b.bookingDate>=days[0]).length;
+  if(myOpen >= 30) return null;
+  const pkgs = await getActivePackages(session.id, tr.id);
+  const rooms = pkgRoom(pkgs, all);
+  if(!rooms.some(r=>r.room > 0)) return null;
+  let d = new Date(last.bookingDate + 'T00:00:00');
+  if(isNaN(d.getTime())) return null;
+  d.setDate(d.getDate() + 7);                    // one week after the last session ...
+  let guard = 0;
+  while(localDateStr(d) <= days[0] && guard++ < 60) d.setDate(d.getDate() + 7);      // ... or the first same weekday after today
+  const date = localDateStr(d), key = pickKey(date, last.bookingTime);
+  if(!days.includes(date)) return null;
+  if(assignPicks([key], rooms).over.length) return null;
+  if(slotTooSoon(tr, date, last.bookingTime)) return null;
+  if(!slotAvailability(all, tr.id, date, last.bookingTime, session.id, slotCapOf(tr)).ok) return null;
+  return {trainer:tr, date, time:last.bookingTime, key};
+}
+/* The card at the top of the customer home / My bookings. withGeneric: when nothing to repeat, still offer one clear "book" button. */
+async function bookCardHtml(withGeneric){
+  const sug = await repeatSuggestion();
+  if(sug){
+    return `<div class="card qb-rep" id="rebookCard">
+      <div class="qb-info"><div class="qb-t">${t('rb_title')}</div><div class="qb-w">${esc(sug.trainer.name)} · ${esc(fmtDate(sug.date))} · ${esc(fmtTime(sug.time))}</div><div class="qb-s">${t('rb_hint')}</div></div>
+      <div class="qb-acts"><button type="button" class="btn btn-primary" data-rebook="${esc(sug.key)}" data-rebook-trainer="${esc(sug.trainer.id)}">${t('rb_btn')}</button><button type="button" class="btn btn-sm btn-ghost" data-rebook-other="${esc(sug.trainer.id)}">${t('rb_other')}</button></div>
+    </div>`;
+  }
+  if(!withGeneric) return '';
+  const pkgs = await getActivePackages(session.id);
+  if(!pkgs.length || !pkgRoom(pkgs, await dbGetAll('booking:')).some(r=>r.room > 0)) return '';
+  return `<div class="card qb-rep" id="bookCard">
+      <div class="qb-info"><div class="qb-t">${t('dash_book_title')}</div><div class="qb-s">${t('dash_book_hint')}</div></div>
+      <div class="qb-acts"><button type="button" class="btn btn-primary" data-goto="booking">${t('dash_book_btn')}</button></div>
+    </div>`;
+}
+let bookScrollNext = false;      // set when the page should end with the Book button in view
+
 /* The part of the booking page that changes with every tap. It is drawn from bookingCtx and bookingState alone
    (no new download per tap), so tapping many times stays quick. */
 function bookingDynHtml(){
@@ -3440,6 +3550,7 @@ function bookingDynHtml(){
   const more = Math.max(0, c.maxN - picks.length);
   return `
     ${capNote}
+    ${quickSlotsHtml()}
     ${usual}
     <label>${t('cb_days_label')}</label>
     <div class="day-strip day-grid" id="dayStrip">${dayPills}</div>
@@ -3517,6 +3628,13 @@ function wireBooking(){
   }));
   const usualBtn = document.getElementById('usualBtn');
   if(usualBtn) usualBtn.addEventListener('click', applyUsual);
+  dyn.querySelectorAll('[data-quick]').forEach(el=>el.addEventListener('click', ()=>{
+    const p = pickSplit(el.dataset.quick), was = bookingState.picks.includes(el.dataset.quick);
+    const ok = togglePick(p.date, p.time);
+    if(ok && !was){ bookingState.day = p.date; bookingState.cat = catOfTime(p.time) || bookingState.cat; }      // show the part of the day the time is in, so it is seen as picked
+    refreshBookingDyn();
+    if(ok && !was){ const sb = document.getElementById('submitBookingBtn'); if(sb && sb.scrollIntoView) sb.scrollIntoView({block:'nearest', behavior: (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth'}); }
+  }));
   const submitBtn = document.getElementById('submitBookingBtn');
   if(submitBtn) submitBtn.addEventListener('click', ()=> withBusy(submitBtn, submitBooking));
 }
@@ -3526,10 +3644,22 @@ async function renderCBooking(){
     bookingState.trainerId = routeParams.trainerId; bookingState.picks = []; bookingState.alone = [];
     routeParams = Object.assign({}, routeParams); delete routeParams.trainerId;
   }
+  if(bookingState.uid !== session.id){          // another person on the same screen: nothing carries over
+    bookingState = { trainerId:null, day:localDateStr(), cat:'morning', picks:[], alone:[], uid:session.id };
+  }
+  let rebookKey = null;
+  if(routeParams.rebook){                        // arriving from "book again": take it once
+    rebookKey = String(routeParams.rebook);
+    routeParams = Object.assign({}, routeParams); delete routeParams.rebook;
+  }
   const days = bookingDays();
   if(!days.includes(bookingState.day)) bookingState.day = days[0];
   const trainers = await getMyTrainers();      // only trainers the customer added with a code
   const pinnedIds = await getPinnedTrainerIds();
+  /* first visit (or the trainer that was open is gone): open on the likely trainer. Choosing "—" on purpose is left alone. */
+  if(bookingState.trainerId === null || (bookingState.trainerId && !trainers.some(x=>x.id===bookingState.trainerId))){
+    bookingState.trainerId = (await guessBookingTrainer(trainers)) || null;
+  }
   const trainer = (bookingState.trainerId && trainers.some(x=>x.id===bookingState.trainerId)) ? await dbGet('trainer:'+bookingState.trainerId) : null;
   const pkgs = trainer ? await getActivePackages(session.id, trainer.id) : [];     // only this trainer's packages
   const pkg = pkgs[0] || null;
@@ -3545,7 +3675,8 @@ async function renderCBooking(){
     trainer, days, allBookings, rooms,
     maxN: Math.max(0, Math.min(rooms.reduce((n,r)=> n + r.room, 0), 30 - myOpen)),       // the server allows 30 open bookings per person
     lastDay: pkgs.length ? pkgs.map(p=>p.expiryDate).sort().pop() : null,
-    usual: (trainer && pkg) ? usualTimes(allBookings, trainer.id) : []
+    usual: (trainer && pkg) ? usualTimes(allBookings, trainer.id) : [],
+    favTime: trainer ? ((lastBookingOf(allBookings, [trainer.id]) || {}).bookingTime || null) : null
   };
   // times picked a while ago can have been taken, fallen inside the notice window, or no longer fit the sessions left
   if(trainer){
@@ -3553,6 +3684,16 @@ async function renderCBooking(){
     bookingState.picks = assignPicks(still, rooms).assigned.map(x=>x.key).slice(0, bookingCtx.maxN);
     bookingState.alone = bookingState.alone.filter(k=> bookingState.picks.includes(k) && aloneOk(k));
   } else { bookingState.picks = []; bookingState.alone = []; }
+  if(trainer && rebookKey){                      // "book again": the time is picked already, the person only confirms
+    const rp = pickSplit(rebookKey);
+    if(days.includes(rp.date) && !bookingState.picks.includes(rebookKey)) togglePick(rp.date, rp.time);
+    if(bookingState.picks.includes(rebookKey)){
+      bookingState.day = rp.date;
+      bookingState.cat = catOfTime(rp.time) || bookingState.cat;
+      bookScrollNext = true;
+      toast(t('rb_ready'));
+    } else { toast(t('rb_gone')); }
+  }
 
   const noPkg = !pkg ? (waitingPay ? `<div class="pay-wait">${t('cb_pay_waiting')}</div>` : `
       <div class="auth-error">${expiredUnused ? t('cb_expired_package') : tt('cb_no_pkg_trainer',{name:esc(trainer?trainer.name:'')})}</div>
@@ -3711,6 +3852,7 @@ async function renderCMyBookings(){
         </div>`;
   return `
     <div class="page-head"><div><div class="eyebrow">${t('mb_eyebrow')}</div><h1>${t('mb_h1')}</h1><p>${t('mb_p')}</p></div></div>
+    ${await bookCardHtml(false)}
     <div class="card">
       <div class="card-head"><h3>${t('mb_upcoming')}</h3></div>
       ${upcoming.length ? upcoming.map(bookingCard).join('') : `<div class="empty">${t('mb_empty')}</div><button class="btn btn-primary btn-block" style="margin-top:6px" data-goto="booking">${t('mb_empty_cta')}</button>`}
@@ -4109,8 +4251,8 @@ async function renderTDashboard(){
   const nextHtml = `
     <div class="card">
       <div class="card-head"><h3>${t('td_next_title')}</h3><button class="btn btn-sm btn-ghost" data-goto="schedule">${t('td_next_all')}</button></div>
-      ${coming.length ? coming.slice(0,4).map(b=>`
-        <div class="sch-mini"><div class="mt">${lang==='th' ? b.bookingTime : fmtTime(b.bookingTime)}<div class="md">${b.bookingDate===today ? t('ts_today') : fmtDate(b.bookingDate)}</div></div><div class="mn">${esc(b.customerName)}</div></div>`).join('') : `<div class="empty">${t('td_next_empty')}</div>`}
+      ${coming.length ? coming.slice(0,4).map(b=>{ const ph = sessionPhase(b, today, nowMinutes()); return `
+        <div class="sch-mini"><div class="mt">${lang==='th' ? b.bookingTime : fmtTime(b.bookingTime)}<div class="md">${b.bookingDate===today ? t('ts_today') : fmtDate(b.bookingDate)}</div></div><div class="mn">${esc(b.customerName)}</div>${(ph==='now' || ph==='late') ? `<button type="button" class="btn btn-sm btn-primary" data-complete-booking="${b.id}">${t('ts_mark_done')}</button>` : ''}</div>`; }).join('') : `<div class="empty">${t('td_next_empty')}</div>`}
     </div>`;
   const setupHtml = `<div class="t-top">${codeCard}${completeCard}</div>`;
   /* a trainer who already has sessions comes here to see them: sessions first, set-up cards after;
@@ -5250,14 +5392,21 @@ async function doApply(){
    ====================================================================== */
 function wireView(){
   document.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click', ()=> go(el.dataset.goto)));
+  document.querySelectorAll('[data-rebook]').forEach(el=>el.addEventListener('click', ()=> go('booking', {trainerId:el.dataset.rebookTrainer, rebook:el.dataset.rebook})));
+  document.querySelectorAll('[data-rebook-other]').forEach(el=>el.addEventListener('click', ()=> go('booking', {trainerId:el.dataset.rebookOther})));
   document.querySelectorAll('[data-view-trainer]').forEach(el=>el.addEventListener('click', ()=> go('trainerProfile', {id:el.dataset.viewTrainer})));
   document.querySelectorAll('[data-book-trainer]').forEach(el=>el.addEventListener('click', ()=> go('booking', {trainerId:el.dataset.bookTrainer})));
   document.querySelectorAll('[data-pin-trainer]').forEach(el=>el.addEventListener('click', (e)=>{ e.stopPropagation(); togglePinTrainer(el.dataset.pinTrainer); }));
 
 
   const trainerSelect = document.getElementById('bookTrainerSelect');
-  if(trainerSelect) trainerSelect.addEventListener('change', ()=>{ bookingState.trainerId = trainerSelect.value || null; bookingState.picks = []; bookingState.alone = []; renderView(); });
+  if(trainerSelect) trainerSelect.addEventListener('change', ()=>{ bookingState.trainerId = trainerSelect.value || ''; bookingState.picks = []; bookingState.alone = []; renderView(); });
   wireBooking();
+  if(bookScrollNext){                              // after "book again": end with the Book button in view
+    bookScrollNext = false;
+    const sb = document.getElementById('submitBookingBtn');
+    if(sb && sb.scrollIntoView) sb.scrollIntoView({block:'nearest', behavior: (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth'});
+  }
 
   document.querySelectorAll('[data-pay-pkg]').forEach(el=>el.addEventListener('click', ()=> go('pay', {id:el.dataset.payPkg})));
   document.querySelectorAll('[data-buy-from]').forEach(el=>el.addEventListener('click', ()=> go('package', {trainerId:el.dataset.buyFrom})));
