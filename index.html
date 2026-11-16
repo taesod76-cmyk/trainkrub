@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-BCGGs4/AHPqslLS/2wRsutAnC+XR68siZkIZXZM1Oqw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.qrserver.com; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VjHtHgtHrlpvzYEKQeyJPFzanro5a541ShQLOHPrR/o=' 'sha256-QrVwF5pDsTLOMfkENYLLSgxPsEzCWO2qMAbyCCriRd4=' https://*.line-scdn.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.line-scdn.net https://*.line.me; font-src 'self'; connect-src 'self' https://eauzvihirpfcjkwyqgel.supabase.co https://*.line.me https://*.line-apps.com https://*.line-scdn.net; frame-src https://*.line.me https://*.line-apps.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>เทรนคับ (TRAINKUB)</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -362,6 +362,23 @@
   .btn-google svg{width:18px;height:18px;flex:none}
   @media(hover:hover){.btn-google:hover:not(:disabled){background:#f6f8fb;border-color:#c6cbd1}}
   .btn-google:disabled{opacity:.7}
+  .btn-line{background:#06c755;border:1px solid #06c755;color:#fff;font-weight:600;gap:10px}
+  .btn-line svg{width:20px;height:20px;flex:none;fill:currentColor}
+  @media(hover:hover){.btn-line:hover:not(:disabled){background:#05b34c;border-color:#05b34c}}
+  .btn-line:disabled{opacity:.7}
+  .btn-line + .btn-google{margin-top:10px}
+  .chk-row{display:flex;gap:10px;align-items:flex-start;margin:14px 0;font:400 13px/1.6 var(--f-body);color:var(--text-dim);cursor:pointer}
+  .chk-row input{width:22px;height:22px;min-height:0;flex:none;margin-top:1px;accent-color:var(--red-bright)}
+  .chk-row a{color:var(--red-bright);text-decoration:underline;text-underline-offset:3px}
+  .qr-box{background:#fff;border-radius:10px;padding:8px;width:176px;height:176px;box-sizing:border-box;overflow:hidden}
+  .qr-box svg{display:block;width:160px;height:160px}
+  .qr-fail{font-size:11px;line-height:1.4;word-break:break-all;color:#000;overflow:auto}
+  .legal-links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin-top:14px;font-size:13px}
+  .legal-links a{color:var(--text-dim);text-decoration:underline;text-underline-offset:3px;min-height:36px;display:inline-flex;align-items:center}
+  .card > .legal-links{margin-top:0}
+  .ln-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .ln-stat .lbl{font-size:13px;color:var(--text-dim)}
+  .ln-stat .num{font:600 26px/1.2 var(--f-display);margin-top:4px}
   .auth-switch a{color:var(--red-bright);font-weight:600;cursor:pointer}
   .auth-back{text-align:center;font-size:14px;color:var(--text-dim);margin-top:16px;display:block;cursor:pointer}
   .auth-error{background:var(--red-glow);color:#ff9aa6;font-size:13.5px;padding:11px 13px;border-radius:12px;margin-bottom:14px;line-height:1.55}
@@ -941,6 +958,7 @@
 </div>
 
 <script src="vendor/supabase-js-2.118.0.js"></script>
+<script src="vendor/qrcode-1.4.4.min.js"></script>
 <script>
 /* ======================================================================
    HUG YIM PLUS FITNESS — Customer / Trainer / Admin (3 separate systems)
@@ -1146,7 +1164,68 @@ const i18n = {
     cb_lead_note_a:'เทรนเนอร์คนนี้ให้นัดล่วงหน้าอย่างน้อย', cb_lead_note_b:'เวลาที่เหลือน้อยกว่านี้จะกดไม่ได้ (ช่องที่ขีดฆ่าสีจาง)',
     cb_slot_too_soon:'เวลานี้เลยกำหนดนัดล่วงหน้าแล้ว (ต้องนัดล่วงหน้าอย่างน้อย {label}) กรุณาเลือกเวลาอื่น',
     theme_to_light:'เปลี่ยนเป็นโหมดสว่าง', theme_to_dark:'เปลี่ยนเป็นโหมดมืด',
-    footer_note:'ข้อมูลทั้งหมดอยู่ในฐานข้อมูลกลางเดียวกัน ลูกค้า เทรนเนอร์ และผู้ดูแลระบบจึงเห็นข้อมูลตรงกันทันที'
+    footer_note:'ข้อมูลทั้งหมดอยู่ในฐานข้อมูลกลางเดียวกัน ลูกค้า เทรนเนอร์ และผู้ดูแลระบบจึงเห็นข้อมูลตรงกันทันที',
+    line_login:"เข้าสู่ระบบด้วย LINE",
+    line_signup:"สมัครด้วย LINE",
+    line_failed:"เชื่อมต่อ LINE ไม่สำเร็จ ลองใหม่อีกครั้ง",
+    line_choose_title:"ยังไม่พบบัญชีที่ผูกกับ LINE นี้",
+    line_choose_hint:"เลือกว่าจะทำอะไรต่อ",
+    line_new_btn:"สร้างบัญชีลูกค้าด้วย LINE นี้",
+    line_have_btn:"ฉันมีบัญชีเทรนคับอยู่แล้ว",
+    line_trainer_btn:"ฉันเป็นเทรนเนอร์",
+    line_back:"ใช้วิธีเข้าสู่ระบบอื่น",
+    line_have_hint:"เข้าสู่ระบบด้วยเบอร์โทรและรหัสผ่านด้านล่าง แล้วระบบจะผูกบัญชีนี้กับ LINE ให้อัตโนมัติ (ถ้าคุณใช้ Google ให้เปิดเว็บในเบราว์เซอร์ปกติ แล้วผูก LINE จากหน้าโปรไฟล์)",
+    line_trainer_hint:"เข้าสู่ระบบเทรนเนอร์ด้านล่าง แล้วระบบจะผูกบัญชีนี้กับ LINE ให้อัตโนมัติ ถ้ายังไม่มีบัญชีเทรนเนอร์ให้สมัครก่อน",
+    line_welcome:"ยินดีต้อนรับสู่เทรนคับ",
+    line_linked_toast:"ผูก LINE กับบัญชีนี้แล้ว",
+    line_link_taken:"LINE นี้ผูกกับบัญชีอื่นอยู่แล้ว",
+    line_link_other:"บัญชีนี้ผูกกับ LINE อื่นอยู่แล้ว ยกเลิกการผูกก่อนจึงจะผูกใหม่ได้",
+    line_offer_title:"ผูกบัญชีกับ LINE ไหม?",
+    line_offer_body:"เข้าสู่ระบบด้วยการแตะครั้งเดียว และรับแจ้งเตือนนัดเทรนใน LINE",
+    line_offer_ok:"ผูก LINE",
+    line_offer_no:"ไว้ทีหลัง",
+    line_card_title:"LINE",
+    line_card_hint:"ผูก LINE เพื่อเข้าสู่ระบบด้วยการแตะครั้งเดียว และรับแจ้งเตือนนัดเทรนใน LINE",
+    line_card_linked:"ผูก LINE กับบัญชีนี้แล้ว",
+    line_card_friend:"เพิ่มบัญชีทางการเป็นเพื่อนแล้ว แจ้งเตือนจะเข้า LINE ของคุณ",
+    line_card_nofriend:"ยังไม่ได้เพิ่มบัญชีทางการเป็นเพื่อน จึงยังไม่ได้รับแจ้งเตือนใน LINE",
+    line_add_friend:"เพิ่มเพื่อนบัญชีทางการ",
+    line_link_btn:"ผูก LINE",
+    line_unlink_btn:"ยกเลิกการผูก LINE",
+    line_unlink_title:"ยกเลิกการผูก LINE?",
+    line_unlink_body:"จะไม่ได้รับแจ้งเตือนใน LINE และเข้าสู่ระบบด้วย LINE ไม่ได้ บัญชีและข้อมูลของคุณยังอยู่ครบ",
+    line_unlink_ok:"ยกเลิกการผูก",
+    line_unlinked:"ยกเลิกการผูก LINE แล้ว",
+    line_only_line:"บัญชีนี้สร้างด้วย LINE จึงยกเลิกการผูกไม่ได้ ถ้าไม่ต้องการใช้แล้วให้ลบบัญชี",
+    sec_line_note:"บัญชีนี้เข้าสู่ระบบด้วย LINE จึงไม่มีรหัสผ่านในแอป",
+    ln_admin_title:"LINE",
+    ln_admin_linked:"ผูก LINE แล้ว",
+    ln_admin_friends:"เป็นเพื่อนบัญชีทางการ",
+    ln_admin_month:"ข้อความที่ส่งเดือนนี้",
+    au_line_acct:"LINE",
+    del_title:"ลบบัญชี",
+    del_hint:"ลบบัญชีและข้อมูลส่วนตัวของคุณออกจากเทรนคับถาวร นัดที่ยังไม่ถึงจะถูกยกเลิกและแจ้งเทรนเนอร์ ลบแล้วกู้คืนไม่ได้",
+    del_btn:"ลบบัญชีของฉัน",
+    del_confirm_title:"ลบบัญชีถาวร?",
+    del_confirm_body:"นัดที่ยังไม่ถึงจะถูกยกเลิก แพ็กเกจที่ใช้อยู่จะถูกปิด และชื่อของคุณจะถูกนำออกจากประวัติของเทรนเนอร์ ลบแล้วกู้คืนไม่ได้",
+    del_pw_label:"ใส่รหัสผ่านเพื่อยืนยัน",
+    del_ok:"ลบบัญชีถาวร",
+    del_cancel:"ยกเลิก",
+    del_done:"ลบบัญชีแล้ว ขอบคุณที่ใช้เทรนคับ",
+    del_wrong:"รหัสผ่านไม่ถูกต้อง",
+    del_failed:"ลบบัญชีไม่สำเร็จ ลองใหม่อีกครั้ง หรือติดต่อเราทาง LINE",
+    del_trainer_note:"บัญชีเทรนเนอร์ต้องลบผ่านผู้ดูแลระบบ เพราะมีลูกค้าและแพ็กเกจที่เกี่ยวข้อง ติดต่อเราทาง LINE ทางการได้เลย",
+    consent_title:"ข้อกำหนดและความเป็นส่วนตัว",
+    consent_body:"ก่อนใช้งานต่อ กรุณาอ่านและยอมรับข้อกำหนดการใช้งานกับนโยบายความเป็นส่วนตัวของเทรนคับ",
+    consent_pre:"ฉันอายุ 20 ปีขึ้นไป (หรือได้รับความยินยอมจากผู้ปกครองแล้ว) และยอมรับ",
+    consent_and:"กับ",
+    consent_ok:"ยอมรับและใช้งานต่อ",
+    consent_decline:"ไม่ยอมรับ (ออกจากระบบ)",
+    consent_reg_need:"กรุณาติ๊กยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวก่อน",
+    legal_terms:"ข้อกำหนดการใช้งาน",
+    legal_privacy:"นโยบายความเป็นส่วนตัว",
+    legal_contact:"ติดต่อเรา (LINE)",
+    tpz_code_copy_web:"คัดลอกลิงก์เว็บธรรมดา"
   },
   en:{
     brand_sub:'Book sessions with your trainer',
@@ -1344,7 +1423,68 @@ const i18n = {
     cb_lead_note_a:'This trainer needs at least', cb_lead_note_b:'notice. Times that start sooner cannot be booked (the faded, struck-through ones).',
     cb_slot_too_soon:'This slot starts too soon (at least {label} notice is needed). Please pick another time.',
     theme_to_light:'Switch to light mode', theme_to_dark:'Switch to dark mode',
-    footer_note:'All data lives in one shared database, so customers, trainers and admins always see the same information.'
+    footer_note:'All data lives in one shared database, so customers, trainers and admins always see the same information.',
+    line_login:"Sign in with LINE",
+    line_signup:"Sign up with LINE",
+    line_failed:"Could not connect to LINE. Please try again.",
+    line_choose_title:"No account is linked to this LINE yet",
+    line_choose_hint:"Choose what to do next",
+    line_new_btn:"Create a customer account with this LINE",
+    line_have_btn:"I already have a TRAINKUB account",
+    line_trainer_btn:"I am a trainer",
+    line_back:"Use another way to sign in",
+    line_have_hint:"Sign in with your phone number and password below and this account will be linked to your LINE automatically. (If you use Google, open the website in your normal browser and link LINE from your profile.)",
+    line_trainer_hint:"Sign in as a trainer below and this account will be linked to your LINE automatically. If you have no trainer account yet, apply first.",
+    line_welcome:"Welcome to TRAINKUB",
+    line_linked_toast:"LINE is now linked to this account",
+    line_link_taken:"This LINE is already linked to another account",
+    line_link_other:"This account is linked to a different LINE. Unlink it first to link a new one.",
+    line_offer_title:"Link this account to LINE?",
+    line_offer_body:"Sign in with one tap and get session alerts in LINE.",
+    line_offer_ok:"Link LINE",
+    line_offer_no:"Not now",
+    line_card_title:"LINE",
+    line_card_hint:"Link LINE to sign in with one tap and get session alerts in LINE.",
+    line_card_linked:"LINE is linked to this account.",
+    line_card_friend:"You are a friend of the official account, so alerts arrive in your LINE.",
+    line_card_nofriend:"You have not added the official account as a friend yet, so no alerts arrive in LINE.",
+    line_add_friend:"Add the official account",
+    line_link_btn:"Link LINE",
+    line_unlink_btn:"Unlink LINE",
+    line_unlink_title:"Unlink LINE?",
+    line_unlink_body:"You will stop getting alerts in LINE and cannot sign in with LINE. Your account and data stay as they are.",
+    line_unlink_ok:"Unlink",
+    line_unlinked:"LINE unlinked",
+    line_only_line:"This account was created with LINE, so it cannot be unlinked. If you no longer want it, delete the account.",
+    sec_line_note:"This account signs in with LINE, so there is no password in the app.",
+    ln_admin_title:"LINE",
+    ln_admin_linked:"Linked to LINE",
+    ln_admin_friends:"Official account friends",
+    ln_admin_month:"Messages sent this month",
+    au_line_acct:"LINE",
+    del_title:"Delete account",
+    del_hint:"Permanently deletes your account and personal data from TRAINKUB. Upcoming sessions are cancelled and the trainer is told. This cannot be undone.",
+    del_btn:"Delete my account",
+    del_confirm_title:"Delete your account for good?",
+    del_confirm_body:"Upcoming sessions are cancelled, active packages are closed and your name is removed from your trainers' records. This cannot be undone.",
+    del_pw_label:"Enter your password to confirm",
+    del_ok:"Delete account for good",
+    del_cancel:"Cancel",
+    del_done:"Your account is deleted. Thank you for using TRAINKUB.",
+    del_wrong:"The password is not correct",
+    del_failed:"Could not delete the account. Try again, or contact us on LINE.",
+    del_trainer_note:"Trainer accounts are deleted by an administrator because customers and packages are involved. Contact us on the official LINE account.",
+    consent_title:"Terms and privacy",
+    consent_body:"Before you continue, please read and accept the TRAINKUB terms of use and privacy policy.",
+    consent_pre:"I am 20 or older (or have my guardian's consent) and I accept the",
+    consent_and:"and the",
+    consent_ok:"Accept and continue",
+    consent_decline:"Decline (sign out)",
+    consent_reg_need:"Please tick the box to accept the terms and privacy policy first.",
+    legal_terms:"Terms of use",
+    legal_privacy:"Privacy policy",
+    legal_contact:"Contact us (LINE)",
+    tpz_code_copy_web:"Copy plain web link"
   }
 };
 let lang = 'th';
@@ -1375,7 +1515,7 @@ const SUPABASE_TABLE = 'kv_store';
       poison the rest of the session.
    4. A visible banner tells the person when the server can't be reached, and the app keeps
       retrying by itself. */
-const APP_BUILD = '2026-11-15.1';
+const APP_BUILD = '2026-11-16.1';
 /* the preview-on-phone helper button only shows when the address ends in ?dev=1 */
 try{ if(/[?&]dev=1(&|$)/.test(location.search)) document.documentElement.classList.add('dev'); }catch(e){}
 const NAV_ICON = {
@@ -1833,9 +1973,38 @@ function newId(prefix){ return prefix + '_' + Date.now().toString(36) + Math.ran
 function trainerJoinUrl(code){
   return location.origin + location.pathname + '?t=' + encodeURIComponent(code);
 }
-function trainerQrImgUrl(code){
-  const data = encodeURIComponent(trainerJoinUrl(code));
-  return 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + data;
+/* The link a trainer hands out. Once the LINE Login channel is published (LINE_LAUNCHED = true) it opens inside the LINE app
+   and signs the customer in; until then (the channel only lets its own testers in) it is the plain web address. */
+function trainerShareUrl(code){
+  return LINE_LAUNCHED ? (LINE_LIFF_URL + '?t=' + encodeURIComponent(code)) : trainerJoinUrl(code);
+}
+/* The QR picture is drawn here, by the small library in vendor/, so a trainer's link never leaves this device. */
+function qrSvg(text){
+  const q = qrcode(0, 'M'); q.addData(text); q.make();
+  const n = q.getModuleCount(), m = 4;
+  let d = '';
+  for(let r = 0; r < n; r++){
+    let c = 0;
+    while(c < n){
+      if(q.isDark(r, c)){ const s = c; while(c < n && q.isDark(r, c)) c++; d += 'M' + (s + m) + ' ' + (r + m) + 'h' + (c - s) + 'v1h' + (s - c) + 'z'; }
+      else c++;
+    }
+  }
+  const w = n + 2 * m;
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + w + ' ' + w + '" width="160" height="160" shape-rendering="crispEdges" aria-hidden="true"><rect width="' + w + '" height="' + w + '" fill="#fff"/><path d="' + d + '" fill="#000"/></svg>';
+}
+function trainerQrHtml(code){
+  const url = trainerShareUrl(code);
+  let svg = '';
+  try{ if(typeof qrcode === 'function') svg = qrSvg(url); }catch(e){ svg = ''; }
+  return svg ? '<div class="qr-box" role="img" aria-label="QR">' + svg + '</div>' : '<div class="qr-box qr-fail">' + esc(url) + '</div>';
+}
+async function copyLinkText(url){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(url);
+    else { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+    toast(t('tpz_code_copied'));
+  }catch(e){ toast(url); }
 }
 /* Picked up once at page load from a ?t=CODE link/QR scan, then applied
    (and cleared, so it only fires once) the moment a customer session
@@ -1848,6 +2017,438 @@ let pendingTrainerCode = null;
     if(p) pendingTrainerCode = p.toUpperCase();
   }catch(e){}
 })();
+
+/* ======================================================================
+   LINE (round 22): sign in with LINE, link an account, notifications in LINE.
+   LINE's own sign-in (LIFF) hands this page a signed ID token. The page never decides who a person is: it
+   sends the token to our "line" server function, which asks LINE to verify it and then talks to the database.
+   Nothing about LINE is trusted from this side. The LIFF script is only loaded inside the LINE app or after a
+   person taps a LINE button, so people who never use LINE load nothing from LINE.
+   ====================================================================== */
+const LINE_LIFF_ID = '2012632218-KR7p4DNo';
+const LINE_LIFF_URL = 'https://liff.line.me/' + LINE_LIFF_ID;
+const LINE_OA_URL = 'https://line.me/R/ti/p/@658xrfmy';
+const LINE_FN_URL = SUPABASE_URL + '/functions/v1/line';
+const LINE_SDK_URL = 'https://static.line-scdn.net/liff/edge/2/sdk.js';
+const LINE_INTENT_KEY = 'trainkub:lineIntent';
+const LINE_TRY_KEY = 'trainkub:lineTry';
+const LINE_CODE_KEY = 'trainkub:lineCode';
+const LINE_OFFER_KEY = 'trainkub:lineOfferAt';
+const TERMS_VERSION = '2026-11-16';          // change this date when the terms or privacy policy change: everybody is asked again
+let LINE_LAUNCHED = false;                   // true once the LINE Login channel is published (trainer links/QR then open in LINE)
+let lineCtx = null;                          // {idToken, name}: a LINE person who has no account here yet (kept in memory only)
+let linePendingLink = null;                  // {role}: sign in the usual way now, then this LINE gets attached
+let pendingGo = null;                        // a page to open once somebody is signed in (?go=notif ...)
+let authNote = '';
+let consentDraft = false;
+let consentDoneFor = null, consentBusy = false;
+let lineSdkP = null, lineInitP = null;
+const LINE_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.6 1.6 4.9 4.1 6.4-.2.8-.7 2.5-.8 2.9 0 .3.1.4.4.3.4-.1 3.1-1.9 4.1-2.6.7.1 1.4.2 2.2.2 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg>';
+const GO_OK = {
+  customer: ['dashboard','trainers','mybookings','notif','profile'],
+  trainer: ['dashboard','requests','schedule','customers','payments','notif','profile'],
+  admin: ['dashboard','apps','users']
+};
+function goAllowed(g){ return !!session && (GO_OK[session.role] || []).indexOf(g) >= 0; }
+
+function inLineApp(){ try{ return /\bLine\//i.test(navigator.userAgent || ''); }catch(e){ return false; } }
+function inLineContext(){
+  if(inLineApp()) return true;
+  try{ const sp = new URLSearchParams(location.search); if(sp.has('liff.state') || sp.has('liffClientId')) return true; }catch(e){}
+  return false;
+}
+/* ?t=CODE and ?go=PAGE can also arrive inside liff.state when LINE opened the page through a LIFF link. */
+function lineAbsorbParams(){
+  try{
+    const sp = new URLSearchParams(location.search);
+    const st = sp.get('liff.state');
+    if(st){
+      const q = st.indexOf('?') >= 0 ? st.slice(st.indexOf('?') + 1) : st.replace(/^\//, '');
+      new URLSearchParams(q).forEach((v, k)=>{ if(!sp.has(k)) sp.set(k, v); });
+    }
+    let code = sp.get('t');
+    if(!code){ try{ code = sessionStorage.getItem(LINE_CODE_KEY); }catch(e){} }
+    if(code && /^[A-Za-z0-9_-]{1,24}$/.test(code) && !pendingTrainerCode) pendingTrainerCode = code.toUpperCase();
+    const go = sp.get('go');
+    if(go && /^[a-z]{1,16}$/.test(go) && !pendingGo) pendingGo = go;
+  }catch(e){}
+}
+function writeLineIntent(o){
+  const raw = JSON.stringify(Object.assign({}, o, {ts: Date.now()}));
+  try{ sessionStorage.setItem(LINE_INTENT_KEY, raw); }catch(e){}
+  try{ localStorage.setItem(LINE_INTENT_KEY, raw); }catch(e){}
+}
+function clearLineIntent(){
+  try{ sessionStorage.removeItem(LINE_INTENT_KEY); }catch(e){}
+  try{ localStorage.removeItem(LINE_INTENT_KEY); }catch(e){}
+}
+/* null = no LINE trip was started from this browser in the last 30 minutes. */
+function readLineIntent(){
+  let it = null;
+  for(const st of [sessionStorage, localStorage]){ try{ const raw = st.getItem(LINE_INTENT_KEY); if(raw && !it) it = JSON.parse(raw); }catch(e){} }
+  if(!it) return null;
+  if((Date.now() - (it.ts || 0)) > 30 * 60 * 1000){ clearLineIntent(); return null; }
+  return {mode: it.mode === 'link' ? 'link' : 'login', role: it.role === 'trainer' ? 'trainer' : 'customer', create: it.create === true, consent: it.consent === true};
+}
+function lineCode(x){
+  if(x instanceof Error) return /^LI-[A-Z]+$/.test(x.message) ? x.message : 'LI-ERR';
+  return 'FN-' + String((x && x.reason) || 'err').replace(/[^a-z_]/g, '').slice(0, 20);
+}
+function lineFailText(x){ return t('line_failed') + ' (' + lineCode(x) + ')'; }
+
+function lineLoadSdk(){
+  if(window.liff) return Promise.resolve(window.liff);
+  if(lineSdkP) return lineSdkP;
+  lineSdkP = new Promise((resolve, reject)=>{
+    const s = document.createElement('script');
+    s.src = LINE_SDK_URL; s.async = true;
+    s.onload = ()=>{ if(window.liff) resolve(window.liff); else { lineSdkP = null; reject(new Error('LI-SDK')); } };
+    s.onerror = ()=>{ lineSdkP = null; reject(new Error('LI-SDK')); };
+    document.head.appendChild(s);
+  });
+  return lineSdkP;
+}
+function lineInit(){
+  if(lineInitP) return lineInitP;
+  lineInitP = lineLoadSdk().then(async liff=>{
+    try{ await liff.init({liffId: LINE_LIFF_ID}); }catch(e){ throw new Error('LI-INIT'); }
+    return liff;
+  });
+  lineInitP.catch(()=>{ lineInitP = null; });
+  return lineInitP;
+}
+function lineReturnUrl(){
+  const sp = new URLSearchParams(location.search), keep = new URLSearchParams();
+  ['t', 'go'].forEach(k=>{ if(sp.get(k)) keep.set(k, sp.get(k)); });
+  if(pendingTrainerCode && !keep.has('t')) keep.set('t', pendingTrainerCode);
+  const q = keep.toString();
+  return location.origin + location.pathname + (q ? '?' + q : '');
+}
+/* The signed ID token, or null when this page has just been sent to LINE's sign-in (it comes back here afterwards).
+   mode: 'no' = never send anywhere, 'auto' = send once (not again within 90 s, so a failing sign-in cannot loop), 'user' = a button was tapped. */
+async function lineIdToken(mode){
+  const liff = await lineInit();
+  if(!liff.isLoggedIn()){
+    if(mode === 'no') return null;
+    if(mode === 'auto'){
+      let last = 0; try{ last = Number(sessionStorage.getItem(LINE_TRY_KEY) || 0); }catch(e){}
+      if(Date.now() - last < 90 * 1000) throw new Error('LI-LOOP');
+    }
+    try{ sessionStorage.setItem(LINE_TRY_KEY, String(Date.now())); }catch(e){}
+    try{ if(pendingTrainerCode) sessionStorage.setItem(LINE_CODE_KEY, pendingTrainerCode); }catch(e){}
+    liff.login({redirectUri: lineReturnUrl()});
+    return null;
+  }
+  const tok = liff.getIDToken();
+  if(!tok) throw new Error('LI-TOKEN');
+  return tok;
+}
+async function lineCall(body){
+  let res;
+  try{ res = await sbFetch(LINE_FN_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body), credentials:'omit', referrerPolicy:'no-referrer'}); }
+  catch(e){ throw new Error('LI-NET'); }
+  let data = null; try{ data = await res.json(); }catch(e){}
+  if(!data || typeof data !== 'object') data = {ok:false, reason:'bad_response'};
+  data.status = res.status;
+  return data;
+}
+
+/* Sign in with a verified LINE identity. true = a session now exists; false = a screen is set up for the person. */
+async function lineLoginWith(tok, o){
+  o = o || {};
+  const r = await lineCall({cmd:'login', idToken:tok, role:o.role || null, create:!!o.create, dev: inLineApp() ? 'LINE app' : 'LINE web'});
+  if(r.ok && r.token && r.user){
+    startSession(r.token, r.user);
+    authError = ''; authNote = ''; lineCtx = null; linePendingLink = null;
+    route = (r.created && r.role === 'customer') ? 'trainers' : 'dashboard'; routeParams = {};
+    if(r.created){ if(o.consent) await recordConsent(); toast(t('line_welcome')); }
+    return true;
+  }
+  if(r.reason === 'none'){
+    if(o.role === 'trainer'){ linePendingLink = {role:'trainer'}; lineCtx = {idToken:tok}; authRole = 'trainer'; authMode = 'login'; authError = ''; authNote = t('line_trainer_hint'); }
+    else { lineCtx = {idToken:tok, name:String(r.lineName || '')}; authRole = 'customer'; authMode = 'line'; authError = ''; authNote = ''; }
+    return false;
+  }
+  authRole = o.role === 'trainer' ? 'trainer' : 'customer'; authMode = 'login';
+  authError = r.reason === 'suspended' ? t('auth_toast_suspended') : r.reason === 'rate_limited' ? t('auth_toast_rate') : lineFailText(r);
+  return false;
+}
+/* Runs at boot: inside the LINE app a linked person is signed in by itself; a person coming back from LINE's sign-in page finishes what the button started. */
+async function lineBoot(){
+  const intent = readLineIntent();
+  const ctx = inLineContext();
+  if(!ctx && !intent) return;
+  lineAbsorbParams();
+  try{
+    if(session){
+      if(intent && intent.mode === 'link'){ const tok = await lineIdToken('no'); if(tok) await lineLinkNow(tok); }
+      return;
+    }
+    if(intent && intent.mode === 'link') return;
+    const tok = await lineIdToken(intent ? 'no' : 'auto');
+    if(!tok) return;
+    await lineLoginWith(tok, {role: intent ? intent.role : null, create: !!(intent && intent.create), consent: !!(intent && intent.consent)});
+  }catch(e){
+    console.warn('LINE sign-in could not finish:', e);
+    if(!(e instanceof Error && e.message === 'LI-LOOP')){ authRole = 'customer'; authMode = 'login'; authError = lineFailText(e); }
+  }finally{ if(intent) clearLineIntent(); }
+}
+function lineBtnHtml(labelKey, role, mode){
+  return `<button type="button" class="btn btn-block btn-line" data-line-btn data-line-role="${role === 'trainer' ? 'trainer' : 'customer'}" data-line-mode="${mode}">${LINE_SVG}<span>${t(labelKey)}</span></button>`;
+}
+/* "or" + the LINE button + (outside the LINE app, where Google refuses to sign in) the Google button */
+function socialBtnsHtml(role, gKey, lKey, mode){
+  return `<div class="auth-divider"><span>${t('google_or')}</span></div>${lineBtnHtml(lKey, role, mode)}${inLineApp() ? '' : googleBtnOnlyHtml(gKey, role)}`;
+}
+async function lineBtnPressed(btn){
+  const role = btn.dataset.lineRole === 'trainer' ? 'trainer' : 'customer';
+  const create = btn.dataset.lineMode === 'signup';
+  if(create && !consentDraft){ authError = t('consent_reg_need'); renderAuth(); return; }
+  await withBusy(btn, async ()=>{
+    try{
+      writeLineIntent({mode:'login', role, create, consent:create});
+      lineAbsorbParams();
+      const tok = await lineIdToken('user');
+      if(!tok) return;                              // off to LINE's sign-in page: this page starts again from the boot code
+      clearLineIntent();
+      const ok = await lineLoginWith(tok, {role, create, consent:create});
+      if(ok){ if(session.role === 'customer') await applyPendingTrainerCodeIfAny(); renderRoot(); } else renderAuth();
+    }catch(e){ clearLineIntent(); authRole = role; authMode = 'login'; authError = lineFailText(e); renderAuth(); }
+  });
+}
+async function lineCreateAccount(btn){
+  if(!consentDraft){ authError = t('consent_reg_need'); renderAuth(); return; }
+  await withBusy(btn, async ()=>{
+    try{
+      const tok = (lineCtx && lineCtx.idToken) || await lineIdToken('user');
+      if(!tok) return;
+      const ok = await lineLoginWith(tok, {role:'customer', create:true, consent:true});
+      if(ok){ await applyPendingTrainerCodeIfAny(); renderRoot(); } else renderAuth();
+    }catch(e){ authError = lineFailText(e); renderAuth(); }
+  });
+}
+/* Attach this LINE person to the account that is signed in right now. */
+async function lineLinkNow(tok){
+  if(!session || !authToken) return false;
+  let r;
+  try{ r = await lineCall({cmd:'link', idToken:tok, token:authToken}); }
+  catch(e){ toast(lineFailText(e)); return false; }
+  if(r.ok){
+    clearRenderCaches(); toast(t('line_linked_toast'));
+    if(session && route === 'profile'){ try{ await renderView(); }catch(e){} }
+    return true;
+  }
+  toast(r.reason === 'taken' ? t('line_link_taken') : r.reason === 'other' ? t('line_link_other') : r.reason === 'rate_limited' ? t('err_rate') : lineFailText(r));
+  return false;
+}
+async function lineStartLink(btn){
+  await withBusy(btn, async ()=>{
+    try{
+      writeLineIntent({mode:'link', role: session ? session.role : 'customer'});
+      lineAbsorbParams();
+      const tok = await lineIdToken('user');
+      if(!tok) return;
+      clearLineIntent();
+      await lineLinkNow(tok);
+    }catch(e){ clearLineIntent(); toast(lineFailText(e)); }
+  });
+}
+async function lineLinkPending(){
+  const p = linePendingLink; linePendingLink = null;
+  if(!p || !session || p.role !== session.role) return false;
+  try{
+    const tok = (lineCtx && lineCtx.idToken) || await lineIdToken('no');
+    lineCtx = null;
+    if(!tok) return false;
+    return await lineLinkNow(tok);
+  }catch(e){ toast(lineFailText(e)); return false; }
+}
+async function lineStatusGet(){
+  try{ const r = await rpc('app_line_status', {p_token: authToken}, {retries:0}); return (r && r.ok) ? r : null; }
+  catch(e){ return null; }                          // an older database without the door: the card simply stays hidden
+}
+function lineCardHtml(ls, style, lineOnly){
+  if(!ls) return '';
+  const st = style ? ` style="${style}"` : '';
+  if(ls.linked){
+    return `
+      <div class="card" id="lineCard"${st}>
+        <div class="card-head"><h3>${t('line_card_title')}</h3></div>
+        <p class="slot-hint">${t('line_card_linked')}</p>
+        <p class="slot-hint">${t(ls.friend ? 'line_card_friend' : 'line_card_nofriend')}</p>
+        ${ls.friend ? '' : `<a class="btn btn-block btn-line" href="${LINE_OA_URL}" target="_blank" rel="noopener" style="margin-bottom:10px">${LINE_SVG}<span>${t('line_add_friend')}</span></a>`}
+        ${lineOnly ? `<p class="slot-hint" id="lineOnlyNote">${t('line_only_line')}</p>` : `<button type="button" class="btn btn-block btn-ghost" data-line-unlink>${t('line_unlink_btn')}</button>`}
+      </div>`;
+  }
+  return `
+      <div class="card" id="lineCard"${st}>
+        <div class="card-head"><h3>${t('line_card_title')}</h3></div>
+        <p class="slot-hint">${t('line_card_hint')}</p>
+        <button type="button" class="btn btn-block btn-line" data-line-link>${LINE_SVG}<span>${t('line_link_btn')}</span></button>
+      </div>`;
+}
+async function lineUnlink(){
+  const ok = await askConfirm({title:t('line_unlink_title'), body:t('line_unlink_body'), ok:t('line_unlink_ok'), cancel:t('sec_cancel')});
+  if(!ok) return;
+  let r;
+  try{ r = await rpc('app_line_unlink', {p_token: authToken}); }
+  catch(e){ if(e instanceof ApiError && e.status === 401) return; throw e; }
+  if(r && r.ok){ clearRenderCaches(); toast(t('line_unlinked')); renderView(); }
+  else toast(r && r.reason === 'only_line' ? t('line_only_line') : t('err_invalid'));
+}
+/* Inside the LINE app a person who signed in another way is offered the link, at most once every 30 days. */
+function lineOfferSoon(){ setTimeout(()=>{ lineOfferAfterLogin().catch(()=>{}); }, 1500); }
+async function lineOfferAfterLogin(){
+  if(!session || session.role === 'admin' || !authToken || !inLineContext()) return;
+  let last = 0; try{ last = Number(localStorage.getItem(LINE_OFFER_KEY) || 0); }catch(e){}
+  if(Date.now() - last < 30 * 24 * 60 * 60 * 1000) return;
+  const ls = await lineStatusGet();
+  if(!ls || ls.linked) return;
+  try{ localStorage.setItem(LINE_OFFER_KEY, String(Date.now())); }catch(e){}
+  const ok = await askConfirm({title:t('line_offer_title'), body:t('line_offer_body'), ok:t('line_offer_ok'), cancel:t('line_offer_no')});
+  if(!ok || !session) return;
+  try{
+    writeLineIntent({mode:'link', role:session.role});
+    const tok = await lineIdToken('user');
+    if(!tok) return;
+    clearLineIntent();
+    await lineLinkNow(tok);
+  }catch(e){ clearLineIntent(); toast(lineFailText(e)); }
+}
+async function lineAdminCardHtml(){
+  let r = null;
+  try{ r = await rpc('app_line_admin', {p_token: authToken}, {retries:0}); }catch(e){ return ''; }
+  if(!(r && r.ok)) return '';
+  return `
+    <div class="card" id="lineAdminCard" style="margin-top:16px">
+      <div class="card-head"><h3>${t('ln_admin_title')}</h3></div>
+      <div class="ln-stats">
+        <div class="ln-stat"><div class="lbl">${t('ln_admin_linked')}</div><div class="num">${Number(r.linked) || 0}</div></div>
+        <div class="ln-stat"><div class="lbl">${t('ln_admin_friends')}</div><div class="num">${Number(r.friends) || 0}</div></div>
+        <div class="ln-stat"><div class="lbl">${t('ln_admin_month')}</div><div class="num">${Number(r.month) || 0} / ${Number(r.quota) || 0}</div></div>
+      </div>
+    </div>`;
+}
+
+/* ---------------- terms, privacy policy, consent ---------------- */
+function legalLinksHtml(){
+  return `<div class="legal-links"><a href="terms.html" target="_blank" rel="noopener">${t('legal_terms')}</a><a href="privacy.html" target="_blank" rel="noopener">${t('legal_privacy')}</a><a href="${LINE_OA_URL}" target="_blank" rel="noopener">${t('legal_contact')}</a></div>`;
+}
+function legalCardHtml(style){
+  return `<div class="card"${style ? ` style="${style}"` : ''}>${legalLinksHtml()}</div>`;
+}
+function consentLabelHtml(){
+  return `${esc(t('consent_pre'))} <a href="terms.html" target="_blank" rel="noopener">${esc(t('legal_terms'))}</a> ${esc(t('consent_and'))} <a href="privacy.html" target="_blank" rel="noopener">${esc(t('legal_privacy'))}</a>`;
+}
+function consentRowHtml(id){
+  return `<label class="chk-row"><input type="checkbox" id="${id}" data-consent-chk${consentDraft ? ' checked' : ''}><span>${consentLabelHtml()}</span></label>`;
+}
+async function recordConsent(){
+  try{
+    const r = await rpc('app_consent', {p_token: authToken, p_ver: TERMS_VERSION}, {retries:1});
+    if(r && r.ok) consentDoneFor = authToken;
+  }catch(e){}
+}
+function consentModal(){
+  return new Promise(resolve=>{
+    const ov = document.createElement('div');
+    ov.className = 'modal-overlay show'; ov.style.zIndex = '280'; ov.id = 'consentGate';
+    ov.innerHTML = `<div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="cgT"><h2 id="cgT">${esc(t('consent_title'))}</h2><p>${esc(t('consent_body'))}</p>
+      <label class="chk-row"><input type="checkbox" id="cgChk"><span>${consentLabelHtml()}</span></label>
+      <button class="btn btn-primary btn-block" id="cgOk" type="button" disabled>${esc(t('consent_ok'))}</button>
+      <button class="btn btn-block btn-ghost" style="margin-top:10px" id="cgNo" type="button">${esc(t('consent_decline'))}</button></div>`;
+    const chk = ov.querySelector('#cgChk'), ok = ov.querySelector('#cgOk');
+    chk.addEventListener('change', ()=>{ ok.disabled = !chk.checked; });
+    ok.addEventListener('click', ()=>{ ov.remove(); resolve(true); });
+    ov.querySelector('#cgNo').addEventListener('click', ()=>{ ov.remove(); resolve(false); });
+    document.body.appendChild(ov);
+    chk.focus();
+  });
+}
+/* After every sign-in (any way) a person who has not accepted the current terms is asked once. A server that cannot be asked never blocks anybody. */
+async function consentGate(){
+  if(!session || session.role === 'admin' || !authToken || consentDoneFor === authToken || consentBusy) return;
+  consentBusy = true;
+  const tok = authToken;
+  try{
+    let r = null;
+    try{ r = await rpc('app_consent', {p_token: tok}, {retries:1}); }catch(e){ return; }
+    if(!(r && r.ok)) return;
+    if(String(r.ver || '') >= TERMS_VERSION){ consentDoneFor = tok; return; }
+    const yes = await consentModal();
+    if(authToken !== tok) return;
+    if(!yes){ doLogout(); return; }
+    try{
+      const a = await rpc('app_consent', {p_token: tok, p_ver: TERMS_VERSION}, {retries:1});
+      if(a && a.ok) consentDoneFor = tok;
+    }catch(e){ if(!(e instanceof DbError)) throw e; }
+  } finally { consentBusy = false; }
+}
+
+/* ---------------- delete my account (customers) ---------------- */
+function deleteCardHtml(style){
+  return `
+      <div class="card" id="delCard"${style ? ` style="${style}"` : ''}>
+        <div class="card-head"><h3>${t('del_title')}</h3></div>
+        <p class="slot-hint">${t('del_hint')}</p>
+        <button type="button" class="btn btn-block btn-danger-outline" id="delAccountBtn">${t('del_btn')}</button>
+      </div>`;
+}
+function trainerDeleteNoteHtml(){
+  return `
+      <div class="card" id="delCard">
+        <div class="card-head"><h3>${t('del_title')}</h3></div>
+        <p class="slot-hint">${t('del_trainer_note')}</p>
+        <a class="btn btn-block" href="${LINE_OA_URL}" target="_blank" rel="noopener">${t('legal_contact')}</a>
+      </div>`;
+}
+function deleteModal(needPw){
+  return new Promise(resolve=>{
+    const ov = document.createElement('div');
+    ov.className = 'modal-overlay show'; ov.style.zIndex = '270';
+    ov.innerHTML = `<div class="modal-box" role="dialog" aria-modal="true"><h2>${esc(t('del_confirm_title'))}</h2><p>${esc(t('del_confirm_body'))}</p>
+      ${needPw ? `<div class="field" style="margin-top:12px"><label>${esc(t('del_pw_label'))}</label><input type="password" id="delPw" autocomplete="current-password"></div>` : ''}
+      <button class="btn btn-block btn-danger-outline" id="delOk" type="button">${esc(t('del_ok'))}</button>
+      <button class="btn btn-block btn-ghost" style="margin-top:10px" id="delNo" type="button">${esc(t('del_cancel'))}</button></div>`;
+    const done = v=>{ document.removeEventListener('keydown', onKey, true); ov.remove(); resolve(v); };
+    const onKey = e=>{ if(e.key === 'Escape'){ e.preventDefault(); done(null); } };
+    document.addEventListener('keydown', onKey, true);
+    ov.addEventListener('click', e=>{ if(e.target === ov) done(null); });
+    ov.querySelector('#delNo').addEventListener('click', ()=> done(null));
+    ov.querySelector('#delOk').addEventListener('click', ()=>{
+      const pwEl = ov.querySelector('#delPw');
+      if(needPw && !(pwEl && pwEl.value)){ toast(t('auth_toast_fill')); return; }
+      done({pw: pwEl ? pwEl.value : ''});
+    });
+    document.body.appendChild(ov);
+    const first = ov.querySelector('#delPw') || ov.querySelector('#delOk'); if(first) first.focus();
+  });
+}
+async function deleteMyAccount(){
+  if(!session || session.role !== 'customer') return;
+  const c = await dbGet('customer:' + session.id);
+  let needPw = !(c && (c.authProvider === 'google' || c.authProvider === 'line'));
+  for(;;){
+    const res = await deleteModal(needPw);
+    if(!res) return;
+    let r;
+    try{ r = await rpc('app_delete_account', {p_token: authToken, p_pw: needPw ? res.pw : null}); }
+    catch(e){
+      if(e instanceof ApiError && e.status !== 401){ toast(e.status === 429 ? t('err_rate') : t('del_failed')); return; }
+      throw e;
+    }
+    if(r && r.ok){
+      session = null; authToken = null; route = 'dashboard'; routeParams = {}; pushSynced = {};
+      clearActiveSession(); clearRenderCaches();
+      toast(t('del_done'));
+      renderRoot();
+      return;
+    }
+    if(r && r.reason === 'wrong'){ toast(t('del_wrong')); needPw = true; continue; }
+    toast(t('del_failed'));
+    return;
+  }
+}
 
 /* ---------------- sign in with Google (customers) ----------------
    Supabase Auth does the Google part. The browser comes back to this page with
@@ -2415,6 +3016,7 @@ async function renderRootInner(silent, ld){
     await renderAuth();
     return;
   }
+  if(pendingGo){ const g2 = pendingGo; pendingGo = null; if(goAllowed(g2)){ route = g2; routeParams = {}; } }
   chip.classList.add('show');
   chip.innerHTML = `<span class="signed-label">${t('auth_signed_in_as')}</span> <b>${esc(session.name)}</b> <span class="role-pill">${t('role_'+session.role)}</span> <button id="logoutBtn" title="${esc(t('logout'))}" aria-label="${esc(t('logout'))}">${navIcon('logout')}<span class="lbl">${t('logout')}</span></button>`;
   document.getElementById('logoutBtn').onclick = doLogout;
@@ -2446,6 +3048,7 @@ async function renderRootInner(silent, ld){
   }
   nav.style.display = 'flex';
   pushSyncSoon();
+  consentGate().catch(()=>{});
   await renderNav();
   await renderView(silent, ld);
 }
@@ -4058,7 +4661,10 @@ async function renderCProfile(){
       <button class="btn btn-primary btn-block" id="cProfSave">${t('prof_save')}</button>
     </div>
     ${healthCardHtml(c.health)}
+    ${lineCardHtml(await lineStatusGet(), 'max-width:480px;margin-top:16px', c.authProvider === 'line')}
     ${securityCardHtml(c, 'max-width:480px;margin-top:16px')}
+    ${deleteCardHtml('max-width:480px;margin-top:16px')}
+    ${legalCardHtml('max-width:480px;margin-top:16px')}
   `;
 }
 async function saveCProfile(){
@@ -4641,26 +5247,30 @@ async function renderTProfile(){
       </div>
       <div class="card" id="certsCard">${certsCardInner(tr)}</div>
       ${googleCardHtml(tr)}
+      ${lineCardHtml(await lineStatusGet())}
       ${securityCardHtml(tr)}
       ${tr.code ? `
       <div class="card">
         <div class="card-head"><h3>${t('tpz_code_title')}</h3></div>
         <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:14px">${t('tpz_code_hint')}</p>
         <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
-          <img src="${trainerQrImgUrl(tr.code)}" alt="QR" width="160" height="160" style="border-radius:10px;background:#fff;padding:8px">
+          ${trainerQrHtml(tr.code)}
           <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;letter-spacing:2px">#${esc(tr.code)}</div>
           <button class="btn btn-block" id="copyTrainerLinkBtn" data-trainer-code="${esc(tr.code)}">${t('tpz_code_copy_btn')}</button>
+          ${LINE_LAUNCHED ? `<button class="btn btn-block btn-ghost" id="copyTrainerWebBtn" data-trainer-code="${esc(tr.code)}">${t('tpz_code_copy_web')}</button>` : ''}
         </div>
       </div>` : ''}
+      ${trainerDeleteNoteHtml()}
+      ${legalCardHtml()}
     </div>
   `;
 }
 function securityCardHtml(rec, style){
-  const google = !!rec && rec.authProvider === 'google';
+  const google = !!rec && (rec.authProvider === 'google' || rec.authProvider === 'line');
   return `
       <div class="card" id="secCard"${style ? ` style="${style}"` : ''}>
         <div class="card-head"><h3>${t('sec_title')}</h3></div>
-        ${google ? `<p class="slot-hint">${t('sec_google_note')}</p>` : `
+        ${google ? `<p class="slot-hint">${t(rec.authProvider === 'line' ? 'sec_line_note' : 'sec_google_note')}</p>` : `
         <p class="slot-hint">${t('sec_hint')}</p>
         <div class="field"><label>${t('sec_pw_old')}</label><input type="password" id="secPwOld" autocomplete="current-password"></div>
         <div class="field"><label>${t('sec_pw_new')}</label><input type="password" id="secPwNew" autocomplete="new-password"><div class="slot-hint" style="margin:6px 0 0">${t('auth_pw_rule')}</div></div>
@@ -4836,6 +5446,7 @@ async function renderADashboard(){
       <div class="stat-card"><div class="lbl">${t('ad_stat_bookings')}</div><div class="val">${st.bookings}</div></div>
       <div class="stat-card"><div class="lbl">${t('ad_stat_active_pkg')}</div><div class="val">${st.activePkgs}</div></div>
     </div>
+    ${await lineAdminCardHtml()}
     <div class="card" style="margin-top:16px">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
         <div>
@@ -4915,13 +5526,13 @@ async function renderAUsers(){
           ${rows.map(u=>`
             <tr>
               <td data-label="${t('au_th_name')}">${esc(u.name)}${u.code?`<div style="font-size:11px;color:var(--text-faint);font-family:var(--font-mono)">#${esc(u.code)}</div>`:''}</td>
-              <td data-label="${t('au_th_role')}"><span class="badge badge-role">${u.roleLabel}</span>${u.authProvider==='google' ? ` <span class="badge badge-role">${t('au_google_acct')}</span>` : ''}</td>
-              <td data-label="${t('au_th_phone')}">${esc(u.phone||(u.authProvider==='google' ? u.email : u.username)||'')}</td>
+              <td data-label="${t('au_th_role')}"><span class="badge badge-role">${u.roleLabel}</span>${u.authProvider==='google' ? ` <span class="badge badge-role">${t('au_google_acct')}</span>` : u.authProvider==='line' ? ` <span class="badge badge-role">${t('au_line_acct')}</span>` : ''}</td>
+              <td data-label="${t('au_th_phone')}">${esc(u.phone||(u.authProvider==='google' ? u.email : u.authProvider==='line' ? 'LINE' : u.username)||'')}</td>
               <td data-label="${t('au_th_status')}"><span class="badge ${u.status==='active'?'badge-active':'badge-suspended'}">${u.status==='active'?t('au_status_active'):t('au_status_suspended')}</span></td>
               <td class="td-actions">${u.status==='active'
                 ? `<button class="btn btn-sm btn-danger-outline" data-suspend-user="${u.role}:${u.id}">${t('au_suspend_btn')}</button>`
                 : `<button class="btn btn-sm btn-primary" data-activate-user="${u.role}:${u.id}">${t('au_activate_btn')}</button>`}
-                ${u.authProvider==='google' ? '' : `<button class="btn btn-sm" data-reset-pw="${u.role}:${u.id}">${t('au_reset_btn')}</button>`}
+                ${(u.authProvider==='google' || u.authProvider==='line') ? '' : `<button class="btn btn-sm" data-reset-pw="${u.role}:${u.id}">${t('au_reset_btn')}</button>`}
               </td>
             </tr>
           `).join('')}
@@ -4989,10 +5600,11 @@ async function renderAuth(){
         <p style="font-size:13px;color:var(--text-faint);margin-top:6px">${t('auth_as')}: ${t('role_'+authRole)}</p>
       </div>
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
+      ${authNote ? `<div class="auth-hint" style="margin-bottom:14px">${esc(authNote)}</div>` : ''}
       <div class="field"><label>${idLabel}</label><input type="text" id="authId" placeholder="${idPh}" autocomplete="username"></div>
       <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="authPw" autocomplete="current-password"></div>
       <button class="btn btn-primary btn-block" id="loginBtn">${t('auth_login_btn')}</button>
-      ${authRole==='customer' ? googleBtnHtml('google_login') : authRole==='trainer' ? googleBtnHtml('google_login','trainer') : ''}
+      ${authRole==='customer' ? socialBtnsHtml('customer','google_login','line_login','login') : authRole==='trainer' ? socialBtnsHtml('trainer','google_login','line_login','login') : ''}
     `;
     if(authRole==='admin'){
       inner += `<div class="auth-hint">${t('seed_note_admin')}</div>`;
@@ -5006,8 +5618,9 @@ async function renderAuth(){
       <div class="field"><label>${t('auth_name_label')}</label><input type="text" id="regName" value="${esc(regDraft.name)}"></div>
       <div class="field"><label>${t('auth_phone_label')}</label><input type="text" id="regPhone" value="${esc(regDraft.phone)}" inputmode="tel" autocomplete="tel"></div>
       <div class="field"><label>${t('auth_password_label')}</label><input type="password" id="regPw" value="${esc(regDraft.pw)}" autocomplete="new-password"><div class="slot-hint" style="margin:6px 0 0">${t('auth_pw_rule')}</div></div>
+      ${consentRowHtml('regConsent')}
       <button class="btn btn-primary btn-block" id="registerBtn">${t('auth_register_btn')}</button>
-      ${googleBtnHtml('google_signup')}
+      ${socialBtnsHtml('customer','google_signup','line_signup','signup')}
       <a class="auth-back" id="backToLogin">← ${t('auth_back_to_login')}</a>
     `;
   } else if(authMode==='apply'){
@@ -5016,7 +5629,7 @@ async function renderAuth(){
       ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
       ${googleApplicant
         ? `<div class="auth-hint" style="margin-bottom:16px">${tt('google_apply_note',{email:esc(googleApplicant.email||'')})}</div>`
-        : `${googleBtnOnlyHtml('google_signup','trainer')}<div class="auth-divider"><span>${t('google_or_fill')}</span></div>
+        : `${inLineApp() ? '' : googleBtnOnlyHtml('google_signup','trainer') + `<div class="auth-divider"><span>${t('google_or_fill')}</span></div>`}
       <div class="auth-hint" style="margin-bottom:16px">${t('auth_apply_note')}</div>`}
       <div class="field"><label>${t('ap_photo_label')}</label>
         <div class="photo-edit" style="margin-bottom:0">
@@ -5044,32 +5657,53 @@ async function renderAuth(){
         <div class="cert-attach" style="margin-top:10px"><label class="btn btn-sm file-btn">📷 ${esc(t('cert_img_pick'))}<input type="file" accept="image/*" id="apCertFile"></label><span id="apCertPreview"></span></div>
         <div id="apCertList" style="margin-top:10px">${apCertListHtml()}</div>
       </div>
+      ${consentRowHtml('apConsent')}
       <button class="btn btn-primary btn-block" id="applyBtn">${t('auth_apply_submit')}</button>
       <a class="auth-back" id="backToLogin2">← ${t('auth_back_to_login')}</a>
+    `;
+  } else if(authMode==='line'){
+    inner += `
+      <div style="text-align:center;margin-bottom:20px"><div class="auth-mark">${navIcon('user')}</div>
+        <h2 style="font-family:var(--font-display);font-size:21px">${t('line_choose_title')}</h2>
+        <p style="font-size:13px;color:var(--text-faint);margin-top:6px">${t('line_choose_hint')}</p></div>
+      ${authError ? `<div class="auth-error">${esc(authError)}</div>` : ''}
+      ${consentRowHtml('lineConsent')}
+      <button class="btn btn-primary btn-block" id="lineNewBtn" type="button">${t('line_new_btn')}</button>
+      <div class="auth-divider"><span>${t('google_or')}</span></div>
+      <button class="btn btn-block" id="lineHaveBtn" type="button">${t('line_have_btn')}</button>
+      <button class="btn btn-block" id="lineTrainerBtn" type="button" style="margin-top:10px">${t('line_trainer_btn')}</button>
+      <a class="auth-back" id="lineBackBtn">← ${t('line_back')}</a>
     `;
   }
 
   app.innerHTML = `
     <div class="view ${firstAuthPaint ? 'anim-in' : ''}">
-      <div class="role-tab" id="authRoleTab">
+      ${authMode==='line' ? '' : `<div class="role-tab" id="authRoleTab">
         <button data-role="customer" class="${authRole==='customer'?'active':''}">${t('role_customer')}</button>
         <button data-role="trainer" class="${authRole==='trainer'?'active':''}">${t('role_trainer')}</button>
         <button data-role="admin" class="${authRole==='admin'?'active':''}">${t('role_admin')}</button>
-      </div>
+      </div>`}
       <div class="auth-wrap" style="min-height:auto;padding-top:0"><div class="auth-box card">${inner}</div></div>
       <div class="footer-note">${t('footer_note')}</div>
+      ${legalLinksHtml()}
       <div class="build-tag">${esc(buildTagText())}</div>
     </div>
   `;
 
   document.querySelectorAll('#authRoleTab button').forEach(b=>b.addEventListener('click', ()=>{
-    clearGoogleApplicant(); authRole = b.dataset.role; authMode='login'; authError=''; renderAuth();
+    clearGoogleApplicant(); authRole = b.dataset.role; authMode='login'; authError=''; authNote=''; renderAuth();
   }));
-  const toReg = document.getElementById('toRegister'); if(toReg) toReg.addEventListener('click', ()=>{ authMode='register'; authError=''; regDraft={name:'',phone:'',pw:''}; renderAuth(); });
+  const toReg = document.getElementById('toRegister'); if(toReg) toReg.addEventListener('click', ()=>{ authMode='register'; authError=''; authNote=''; consentDraft=false; regDraft={name:'',phone:'',pw:''}; renderAuth(); });
   const toApp = document.getElementById('toApply'); if(toApp) toApp.addEventListener('click', ()=>{ clearGoogleApplicant(); authMode='apply'; authError=''; pendingApplicationCerts=[]; pendingApplicationPhoto=''; applyDraft={name:'',specialty:'',phone:'',pw:'',bio:''}; renderAuth(); });
   const back1 = document.getElementById('backToLogin'); if(back1) back1.addEventListener('click', ()=>{ authMode='login'; authError=''; renderAuth(); });
   const back2 = document.getElementById('backToLogin2'); if(back2) back2.addEventListener('click', ()=>{ clearGoogleApplicant(); authMode='login'; authError=''; renderAuth(); });
   const loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.addEventListener('click', doLogin);
+  document.querySelectorAll('[data-line-btn]').forEach(b=>b.addEventListener('click', ()=> lineBtnPressed(b)));
+  document.querySelectorAll('[data-consent-chk]').forEach(el=>el.addEventListener('change', ()=>{ consentDraft = el.checked; }));
+  const lnNew = document.getElementById('lineNewBtn'); if(lnNew) lnNew.addEventListener('click', ()=> lineCreateAccount(lnNew));
+  const lnHave = document.getElementById('lineHaveBtn'); if(lnHave) lnHave.addEventListener('click', ()=>{ linePendingLink = {role:'customer'}; authRole = 'customer'; authMode = 'login'; authError = ''; authNote = t('line_have_hint'); renderAuth(); });
+  const lnTr = document.getElementById('lineTrainerBtn'); if(lnTr) lnTr.addEventListener('click', ()=>{ linePendingLink = {role:'trainer'}; authRole = 'trainer'; authMode = 'login'; authError = ''; authNote = t('line_trainer_hint'); renderAuth(); });
+  const lnBack = document.getElementById('lineBackBtn'); if(lnBack) lnBack.addEventListener('click', ()=>{ linePendingLink = null; lineCtx = null; authRole = 'customer'; authMode = 'login'; authError = ''; authNote = ''; renderAuth(); });
   document.querySelectorAll('[data-google-btn]').forEach(b=>b.addEventListener('click', ()=> signInWithGoogle(b, {role: b.dataset.googleRole==='trainer' ? 'trainer' : 'customer', mode:'login'})));
   const authIdEl = document.getElementById('authId'); if(authIdEl) authIdEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   const authPwEl = document.getElementById('authPw'); if(authPwEl) authPwEl.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
@@ -5129,8 +5763,9 @@ async function doLoginInner(){
   catch(e){ if(authApiErr(e)) return; throw e; }
   if(!(r && r.ok && r.token && r.user)){ authError = loginFailText(r); renderAuth(); return; }
   startSession(r.token, r.user);
-  authError=''; route='dashboard'; routeParams={};
+  authError=''; authNote=''; route='dashboard'; routeParams={};
   if(session.role==='customer') await applyPendingTrainerCodeIfAny();
+  if(linePendingLink) await lineLinkPending(); else if(session.role!=='admin') lineOfferSoon();
   renderRoot();
 }
 
@@ -5142,6 +5777,7 @@ async function doRegisterInner(){
     const phone = (document.getElementById('regPhone').value||'').trim();
     const pw = (document.getElementById('regPw').value||'').trim();
     if(!name || !phone || !pw){ authError = t('auth_toast_fill'); renderAuth(); return; }
+    if(!consentDraft){ authError = t('consent_reg_need'); renderAuth(); return; }
     let r;
     try{ r = await rpc('app_register_customer', {p_name:name, p_phone:phone, p_pw:pw}); }
     catch(e){ if(authApiErr(e)) return; throw e; }
@@ -5150,6 +5786,7 @@ async function doRegisterInner(){
       renderAuth(); return;
     }
     startSession(r.token, r.user);
+    await recordConsent(); consentDraft = false;
     regDraft = {name:'', phone:'', pw:''};
     toast(t('auth_toast_registered'));
     authError=''; route='trainers'; routeParams={};
@@ -5169,6 +5806,7 @@ async function doApplyInner(){
     const pw = gApp ? '' : (document.getElementById('apPw').value||'').trim();
     const bio = (document.getElementById('apBio').value||'').trim();
     if(!name || !phone || (!pw && !gApp)){ authError = t('auth_toast_fill'); renderAuth(); return; }
+    if(!consentDraft){ authError = t('consent_reg_need'); renderAuth(); return; }
     const app = {name, specialty, phone, bio, certs: pendingApplicationCerts.map(c=>({name:c.name, issuer:c.issuer, year:c.year}))};
     if(pendingApplicationPhoto) app.photo = pendingApplicationPhoto;
     let r;
@@ -5203,6 +5841,7 @@ async function doApplyInner(){
       authMode='login'; authError=''; renderAuth(); return;
     }
     startSession(f.token, f.user);
+    await recordConsent(); consentDraft = false;
     authError=''; route='dashboard'; routeParams={};
     toast(t(failedPictures ? 'auth_toast_applied_noimg' : 'auth_toast_applied'));
     renderRoot();
@@ -5430,6 +6069,9 @@ function wireView(){
   document.querySelectorAll('[data-open-health]').forEach(el=>el.addEventListener('click', ()=>{ healthOpen.add(el.dataset.openHealth); go('customers'); }));
   const secPwSave = document.getElementById('secPwSave'); if(secPwSave) secPwSave.addEventListener('click', ()=> withBusy(secPwSave, changeMyPassword));
   const secLogoutAll = document.getElementById('secLogoutAll'); if(secLogoutAll) secLogoutAll.addEventListener('click', ()=> withBusy(secLogoutAll, logoutEverywhere));
+  document.querySelectorAll('[data-line-link]').forEach(el=>el.addEventListener('click', ()=> lineStartLink(el)));
+  document.querySelectorAll('[data-line-unlink]').forEach(el=>el.addEventListener('click', ()=> withBusy(el, lineUnlink)));
+  const delAccBtn = document.getElementById('delAccountBtn'); if(delAccBtn) delAccBtn.addEventListener('click', ()=> withBusy(delAccBtn, deleteMyAccount));
 
   document.querySelectorAll('[data-accept-booking]').forEach(el=>el.addEventListener('click', ()=> respondBooking(el.dataset.acceptBooking, true)));
   document.querySelectorAll('[data-accept-duo]').forEach(el=>el.addEventListener('click', ()=> acceptDuo(el.dataset.acceptDuo)));
@@ -5442,13 +6084,15 @@ function wireView(){
   const pfSaveBtn = document.getElementById('pfSaveBtn'); if(pfSaveBtn) pfSaveBtn.addEventListener('click', ()=> withBusy(pfSaveBtn, saveTrainerProfile));
   const copyLinkBtn = document.getElementById('copyTrainerLinkBtn');
   if(copyLinkBtn) copyLinkBtn.addEventListener('click', async ()=>{
-    const url = trainerJoinUrl(copyLinkBtn.dataset.trainerCode);
+    const url = trainerShareUrl(copyLinkBtn.dataset.trainerCode);
     try{
       if(navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(url);
       else { const ta=document.createElement('textarea'); ta.value=url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
       toast(t('tpz_code_copied'));
     }catch(e){ toast(url); }
   });
+  const copyWebBtn = document.getElementById('copyTrainerWebBtn');
+  if(copyWebBtn) copyWebBtn.addEventListener('click', ()=> copyLinkText(trainerJoinUrl(copyWebBtn.dataset.trainerCode)));
   const addCertBtn = document.getElementById('addCertBtn'); if(addCertBtn) addCertBtn.addEventListener('click', ()=> withBusy(addCertBtn, addCert));
   document.querySelectorAll('[data-remove-cert]').forEach(el=>el.addEventListener('click', ()=> removeCert(Number(el.dataset.removeCert))));
 
@@ -5636,19 +6280,23 @@ async function bootApp(){
   const slowNote = setTimeout(()=>{ const n = document.getElementById('splashNote'); if(n) n.textContent = t('splash_slow'); }, 5000);
   try{
   if(!(await finishGoogleLogin())) await resumeActiveSession();
+  await lineBoot();                                 // inside the LINE app a linked person is signed in here
   await applyPendingTrainerCodeIfAny();
-  try{                                              // opened from a pop-up: go straight to the notifications
+  try{                                              // opened from a pop-up or the LINE menu: go straight to that page (?go=notif ...)
     const sp0 = new URLSearchParams(location.search);
-    if(sp0.get('go') === 'notif'){
-      if(session && session.role !== 'admin') route = 'notif';
+    const g0 = sp0.get('go');
+    if(g0){
+      if(/^[a-z]{1,16}$/.test(g0) && !pendingGo) pendingGo = g0;
       sp0.delete('go');
       history.replaceState(null, '', location.pathname + (sp0.toString() ? '?' + sp0.toString() : '') + location.hash);
     }
+    if(pendingGo && session){ const g1 = pendingGo; pendingGo = null; if(goAllowed(g1)){ route = g1; routeParams = {}; } }
   }catch(e){}
   } finally { clearTimeout(slowNote); }
   if(!session && googleApplicant){ authRole = 'trainer'; authMode = 'apply'; if(!applyDraft.name) applyDraft.name = googleApplicant.name || ''; }
   await renderRoot();
   if(googleNote){ toast(googleNote); googleNote = ''; }
+  if(session && session.role !== 'admin') lineOfferSoon();
 }
 /* Starts (or restarts, from the "Retry" button / when the connection comes back) the app. */
 async function runBoot(){

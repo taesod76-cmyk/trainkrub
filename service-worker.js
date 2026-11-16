@@ -1,11 +1,12 @@
-const CACHE_NAME = 'trainkrub-cache-v29';
+const CACHE_NAME = 'trainkrub-cache-v30';
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './vendor/supabase-js-2.118.0.js'
+  './vendor/supabase-js-2.118.0.js',
+  './vendor/qrcode-1.4.4.min.js'
 ];
 
 self.addEventListener('install', (event) => {

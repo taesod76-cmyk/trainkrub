@@ -29,8 +29,8 @@ jobs:
       - name: Publish only what the app needs (not the database scripts, notes or workflows)
         run: |
           mkdir _site
-          cp index.html manifest.webmanifest service-worker.js _site/
-          cp -r icons vendor _site/
+          cp index.html privacy.html terms.html manifest.webmanifest service-worker.js _site/
+          cp -r icons vendor richmenu _site/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

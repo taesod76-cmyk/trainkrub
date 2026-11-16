@@ -152,3 +152,17 @@ Where it lives: `app_private.w_trainer` (validates `maxPerSlot`, 1 to 3), `app_p
 `app_private.notify_joined` and `app_private.read_view` (other customers' bookings are shown without names, with only the
 `private` flag).
 
+## Round 22: LINE, accepted terms, delete my account
+
+- `10_update_line.sql` — sign in with LINE, notices as LINE messages, the record of accepted terms and the door a customer uses to
+  delete their own account. It adds tables and functions only (`app_private.line_link`, `line_usage`, `line_log`, `consent`; the doors
+  `app_line_*`, `app_consent`, `app_delete_account`) and replaces two functions so that accounts made with LINE are understood
+  (`app_reset_password`, `w_customer`). Safe to run more than once; run it **before** publishing the website version of round 22.
+  The last lines show a check list: every line must say `ok`. `01_install.sql` already contains all of it.
+- After the SQL: paste `supabase/functions/line/index.ts` as an Edge Function named `line` (Verify JWT off), add the three secrets
+  `LINE_CHANNEL_SECRET`, `LINE_CHANNEL_ACCESS_TOKEN` and `DB_SECRET` (read once with `select app_private.line_show_secret();`),
+  and set the webhook of the Official Account to `<project url>/functions/v1/line`.
+- Checks and set-up from the SQL editor: `select app_private.line_ping();` (is LINE reachable?) and `select app_private.line_setup();`
+  (makes the two chat menus). Their answers are written to `select * from app_private.line_log order by id desc limit 5;`.
+- The LINE tables are not in the nightly backup (it covers the five data tables); a customer account made with LINE has an id that is
+  worked out from the LINE user id, so signing in again links it back.
